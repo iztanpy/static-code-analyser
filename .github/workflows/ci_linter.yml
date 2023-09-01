@@ -9,4 +9,4 @@ jobs:
     - run: pip install cpplint
     - run: |
         cd Team16/Code16/src/spa
-        cpplint --recursive extensions=cpp,h .
+        cpplint --recursive --filter=-legal/copyright,-runtime/references --linelength=120 extensions=cpp,h .
