@@ -26,14 +26,29 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Build Project
-        shell: bash
+        shell: powershell
         run: |
-          cd Team16/Code16
+          cd .\Team16\Code16\
           mkdir build
-          cd build
-          cmake -A Win32 ..
+          cd .\build\
+          cmake ..
           cmake --build . --target unit_testing --config Release
           cmake --build . --target integration_testing --config Release
           cmake --build . --target autotester --config Release
-          cd ../..
+          cd ..\..\..
+
+      - name: Run Unit Tests
+        shell: powershell
+        run: |
+          cd .\Team16\Code16\build\src\
+          .\unit_testing\Release\unit_testing.exe
+          cd ..\..\..\..
+      
+      - name: Run Integration Tests
+        shell: powershell
+        run: |
+          cd .\Team16\Code16\build\src\
+          .\integration_testing\Release\integration_testing.exe
+          cd ..\..\..\..
