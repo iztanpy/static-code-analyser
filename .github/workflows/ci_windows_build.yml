@@ -52,3 +52,10 @@ jobs:
           cd .\Team16\Code16\build\src\
           .\integration_testing\Release\integration_testing.exe
           cd ..\..\..\..
+      
+      - name: Run Autotester
+        shell: powershell
+        run: |
+          cd .\Team16\Code16\
+          .\build\src\autotester\Release\autotester.exe .\tests\Sample_source.txt .\tests\Sample_queries.txt .\tests\out.xml
+          cd ..\..
