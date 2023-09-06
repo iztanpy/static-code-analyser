@@ -13,7 +13,5 @@ class ClauseBuilder {
  public:
     // pure virtual function
     virtual bool validateClause() = 0;
-    void setKeyword(std::string kw) {
-        keyword = kw;
-    }
+    void setKeyword(std::string kw);
 };

@@ -1,6 +1,3 @@
-//
-// Created by Thia Su Mian on 6/9/23.
-//
 // ai-gen start (gpt3, 2)
 #include <iostream>
 #include <string>

@@ -1,7 +1,3 @@
-//
-// Created by Thia Su Mian on 4/9/23.
-//
-
 #pragma once
 
 #include <stdio.h>
@@ -12,5 +8,5 @@
 class ClauseDirector {
  public:
     static bool dummyMethod();
-    SelectClause makeSelectClause(SelectClauseBuilder builder, std::string query);
+    void makeSelectClause(SelectClauseBuilder builder, std::string query);
 };
