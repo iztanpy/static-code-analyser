@@ -6,7 +6,7 @@
 #include "SelectClause.h"
 #include "SelectClauseBuilder.h"
 
-void ClauseDirector::makeSelectClause(SelectClauseBuilder builder, std::string query) {
+SelectClause ClauseDirector::makeSelectClause(SelectClauseBuilder builder, std::string query) {
     builder.setDeclaration(query);
     builder.setKeyword(query);
     builder.setSynonym(query);
