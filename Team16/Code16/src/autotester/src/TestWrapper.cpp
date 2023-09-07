@@ -1,4 +1,7 @@
 #include "TestWrapper.h"
+#include "qps/ClauseBuilder.h"
+#include "qps/ParsedQuery.h"
+#include "qps/QueryEvaluator.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
@@ -17,15 +20,22 @@ TestWrapper::TestWrapper() {
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
+  // call your parser to do the parsing
   // ...rest of your code...
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-// call your evaluator to evaluate the query here
+void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
+  // call your evaluator to evaluate the query here
   // ...code to evaluate query...
 
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
+  ClauseBuilder builder;
+  ParsedQuery parsed_query = builder.build(query);
+  QueryEvaluator evaluator;
+  std::list<std::string> raw_results = evaluator.evaluate(parsed_query);
+
+  // Then populate results with raw_results
+  results.assign(raw_results.begin(), raw_results.end());
 }
