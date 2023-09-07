@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Declaration.h"
+#include "qps/declaration.h"
 
 struct ParsedQuery {
   Declaration select;

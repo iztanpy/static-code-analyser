@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "DesignEntity.h"
+#include "qps/design_entity.h"
 
 struct Declaration {
   std::string synonym;

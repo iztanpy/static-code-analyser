@@ -1,6 +1,6 @@
 #include "TestWrapper.h"
-#include "qps/ParsedQuery.h"
-#include "qps/QueryEvaluator.h"
+#include "qps/parsed_query.h"
+#include "qps/query_evaluator.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;

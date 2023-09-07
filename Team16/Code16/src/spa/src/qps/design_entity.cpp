@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 
-#include "DesignEntity.h"
+#include "qps/design_entity.h"
 
 // ai-gen start (gpt3, 1)
 std::string toString(DesignEntity entity) {

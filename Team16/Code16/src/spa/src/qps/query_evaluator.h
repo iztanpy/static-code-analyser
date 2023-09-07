@@ -3,7 +3,7 @@
 #include <string>
 #include <list>
 
-#include "ParsedQuery.h"
+#include "qps/parsed_query.h"
 
 class QueryEvaluator {
  public:
