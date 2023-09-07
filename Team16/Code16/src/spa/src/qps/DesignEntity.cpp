@@ -1,7 +1,3 @@
-//
-// Created by Cuong Ngo on 7/9/23.
-//
-
 #include <iostream>
 #include <string>
 #include <map>
@@ -26,7 +22,7 @@ std::string toString(DesignEntity entity) {
   return entity_to_string.at(entity);
 }
 
-DesignEntity ofString(const std::string& entity_str) {
+DesignEntity fromString(const std::string& entity_str) {
   static const std::map<std::string, DesignEntity> string_to_entity = {
       {"stmt", DesignEntity::STMT},
       {"READ", DesignEntity::READ},

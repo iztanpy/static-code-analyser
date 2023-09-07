@@ -1,6 +1,3 @@
-//
-// Created by Cuong Ngo on 7/9/23.
-//
 #pragma once
 
 #include <string>
@@ -10,5 +7,5 @@
 
 class QueryEvaluator {
  public:
-  std::list<std::string> evaluate(ParsedQuery &query);
+  std::list<std::string> evaluate(ParsedQuery& query);
 };

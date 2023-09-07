@@ -1,5 +1,4 @@
 #include "TestWrapper.h"
-#include "qps/ClauseBuilder.h"
 #include "qps/ParsedQuery.h"
 #include "qps/QueryEvaluator.h"
 
@@ -31,11 +30,10 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
-  ClauseBuilder builder;
-  ParsedQuery parsed_query = builder.build(query);
-  QueryEvaluator evaluator;
-  std::list<std::string> raw_results = evaluator.evaluate(parsed_query);
+//  ClauseBuilder builder;
+//  ParsedQuery parsed_query = builder.build(query);
+//  QueryEvaluator evaluator;
+//  std::list<std::string> raw_results = evaluator.evaluate(parsed_query);
 
-  // Then populate results with raw_results
-  results.assign(raw_results.begin(), raw_results.end());
+//  results.assign(raw_results.begin(), raw_results.end());
 }
