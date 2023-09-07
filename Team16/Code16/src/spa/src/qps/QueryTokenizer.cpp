@@ -4,7 +4,7 @@
 #include <vector>
 #include <set>
 #include <sstream>
-#include "qps/query_tokenizer.h"
+#include "QueryTokenizer.h"
 
 std::vector<QueryToken> QueryTokenizer::tokenize(const std::string &query) {
     std::vector<QueryToken> tokens;
@@ -60,5 +60,16 @@ std::vector<QueryToken> QueryTokenizer::tokenize(const std::string &query) {
     }
 
     return tokens;
+}
+
+// Helper function to split a string based on a delimiter
+std::vector<std::string> QueryTokenizer::splitString(const std::string &str, char delimiter) {
+    std::vector<std::string> parts;
+    std::istringstream stream(str);
+    std::string part;
+    while (std::getline(stream, part, delimiter)) {
+        parts.push_back(part);
+    }
+    return parts;
 }
 // ai-gen end

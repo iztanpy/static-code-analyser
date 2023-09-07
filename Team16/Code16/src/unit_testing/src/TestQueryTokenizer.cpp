@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "qps/query_tokenizer.h"
+#include "QPS/QueryTokenizer.h"
 
 TEST_CASE("Tokenizer can tokenize simple select clause with variable") {
     std::string query = "variable v; Select v";
