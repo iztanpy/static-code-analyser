@@ -150,8 +150,34 @@ TEST_CASE("Tokenizer can tokenize simple select clause with variable + multiple 
     REQUIRE(tokens[5].text == "v");
 }
 
-TEST_CASE("Tokenizer can tokenize select clause with whitespaces") {
-    std::string query = "variable \n     v; Select v";
+TEST_CASE("Tokenizer can tokenize select clause with new lines") {
+    std::string query = "variable\nv\n;\nSelect\nv";
+    std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
+    REQUIRE(tokens[0].type == TokenType::DECLARATION);
+    REQUIRE(tokens[0].text == "variable");
+    REQUIRE(tokens[1].type == TokenType::SYNONYM);
+    REQUIRE(tokens[1].text == "v");
+    REQUIRE(tokens[2].type == TokenType::SELECT);
+    REQUIRE(tokens[2].text == "Select");
+    REQUIRE(tokens[3].type == TokenType::SYNONYM);
+    REQUIRE(tokens[3].text == "v");
+}
+
+TEST_CASE("Tokenizer can tokenize select clause with multiple spaces") {
+    std::string query = "variable      v   ;   Select  v  ";
+    std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
+    REQUIRE(tokens[0].type == TokenType::DECLARATION);
+    REQUIRE(tokens[0].text == "variable");
+    REQUIRE(tokens[1].type == TokenType::SYNONYM);
+    REQUIRE(tokens[1].text == "v");
+    REQUIRE(tokens[2].type == TokenType::SELECT);
+    REQUIRE(tokens[2].text == "Select");
+    REQUIRE(tokens[3].type == TokenType::SYNONYM);
+    REQUIRE(tokens[3].text == "v");
+}
+
+TEST_CASE("Tokenizer can tokenize select clause with tabs") {
+    std::string query = "variable\tv\t;\tSelect\tv";
     std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
     REQUIRE(tokens[0].type == TokenType::DECLARATION);
     REQUIRE(tokens[0].text == "variable");

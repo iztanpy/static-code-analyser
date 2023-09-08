@@ -5,6 +5,7 @@
 #include <set>
 #include <sstream>
 #include "qps/query_tokenizer.h"
+#include "qps/design_entity.h"
 
 std::vector<QueryToken> QueryTokenizer::tokenize(const std::string &query) {
     std::vector<QueryToken> tokens;
@@ -28,15 +29,14 @@ std::vector<QueryToken> QueryTokenizer::tokenize(const std::string &query) {
 
     std::istringstream tokenizer(sanitizedQuery);
     std::string token;
-    std::set<std::string> designEntities{"stmt", "read", "print", "while", "if", "assign",
-                                         "variable", "constant", "procedure"};
+    std::set<std::string> stringDesignEntities = Entity::getStringDesignEntities();
 
     while (std::getline(tokenizer, token, ' ')) {
         if (!token.empty()) {
             // Determine the token type
             TokenType type;
             // if token contains a design entity ==> it is a declaration
-            if (designEntities.find(token) != designEntities.end()) {
+            if (stringDesignEntities.find(token) != stringDesignEntities.end()) {
                 type = TokenType::DECLARATION;
             } else if (token == "Select") {
                 type = TokenType::SELECT;

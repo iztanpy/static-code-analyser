@@ -11,5 +11,7 @@ class QueryParser {
  public:
     static ParsedQuery ParseTokenizedQuery(const std::vector<QueryToken>& tokens);
     static std::vector<Declaration> ExtractDeclarations(const std::vector<QueryToken>& tokens);
-    static SelectClause ExtractSelectClause(const QueryToken& token, const std::vector<Declaration>& declarations);
+    static std::vector<SelectClause>
+    ExtractSelectClauses(const std::vector<QueryToken>& selectTokens, const std::vector<Declaration>& declarations);
+    static std::vector<QueryToken> ExtractSelectTokens(const std::vector<QueryToken> &tokens);
 };

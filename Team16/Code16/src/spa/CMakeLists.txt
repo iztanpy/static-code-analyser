@@ -18,7 +18,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_tokenizer.h
         src/qps/query_parser.cpp
         src/qps/query_parser.h
-        src/qps/clause.h)
+        src/qps/clause.h
+        src/qps/select_clause.cpp)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
