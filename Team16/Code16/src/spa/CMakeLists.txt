@@ -3,12 +3,23 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_
 add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator.cpp
         src/qps/query_evaluator.h
-        src/qps/parsed_query.cpp
         src/qps/parsed_query.h
         src/qps/declaration.cpp
         src/qps/declaration.h
         src/qps/design_entity.cpp
-        src/qps/design_entity.h)
+        src/qps/design_entity.h
+        src/qps/clause_director.cpp
+        src/qps/clause_director.h
+        src/qps/select_clause.h
+        src/qps/clause_builder.h
+        src/qps/select_clause_builder.cpp
+        src/qps/select_clause_builder.h
+        src/qps/query_tokenizer.cpp
+        src/qps/query_tokenizer.h
+        src/qps/query_parser.cpp
+        src/qps/query_parser.h
+        src/qps/clause.h
+        src/qps/select_clause.cpp)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

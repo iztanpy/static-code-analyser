@@ -1,7 +1,8 @@
 #pragma once
 
-#include "qps/declaration.h"
+#include "qps/select_clause.h"
 
 struct ParsedQuery {
-  Declaration select;
+    SelectClause select;
+    /* TODO: such that and pattern clauses */
 };
