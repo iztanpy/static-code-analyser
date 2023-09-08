@@ -4,7 +4,7 @@
 
 
 std::vector<std::pair<TokenType, std::regex>> regex_rules = {
-    // operators 
+    // operators
     { TokenType::kOperatorPlus, std::regex("^(\\+)") },
     { TokenType::kOperatorMinus, std::regex("^(-)") },
     { TokenType::kOperatorMultiply, std::regex("^(\\*)") },
@@ -21,7 +21,7 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     { TokenType::kOperatorMod, std::regex("^(%)") },
 
 
-    // entity 
+    // entity
     { TokenType::kEntityIf, std::regex("^(\\bif\\b)") },
     { TokenType::kEntityElse, std::regex("^(\\belse\\b)") },
     { TokenType::kEntityWhile, std::regex("^(\\bwhile\\b)") },
@@ -31,8 +31,7 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     { TokenType::kEntityAssign, std::regex("^(=)") },
     { TokenType::kEntityCall, std::regex("^(\\bcall\\b)") },
 
- 
-    // separators 
+    // separators
     { TokenType::kSepComma, std::regex("^(,)")},
     { TokenType::kSepSemicolon, std::regex("^(;)") },
     { TokenType::kSepOpenParen, std::regex("^(\\()") },
@@ -40,23 +39,22 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     { TokenType::kSepOpenBrace, std::regex("^(\\{)") },
     { TokenType::kSepCloseBrace, std::regex("^(\\})") },
 
-    // Others 
+    // Others
     {  TokenType::kWhiteSpace,  std::regex("^(\\s+)") },
 
-    // literals 
+    // literals
     { TokenType::kLiteralInteger, std::regex("^(\\b[+-]?\\d+\\b)") },
     { TokenType::kLiteralName, std::regex("^(\\b[0-9a-zA-Z]+\\b)") },
 
 
     //{ kLiteralLetter, std::regex("^([A-Za-z])")},
-    //{ kLiteralDigit, std::regex("^([0-9])")}, 
+    //{ kLiteralDigit, std::regex("^([0-9])")},
 };
 
 
 
 // Performs the delineation of the source program
-std::vector<std::string> SPtokeniser::splitLines(const std::string& input)
-{
+std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
     std::istringstream iss(input);
     std::vector<std::string> result;
     std::string line;
@@ -72,12 +70,7 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input)
                     currentToken = line.substr(start, i - start);
                     result.push_back(currentToken);
                 }
-
-                // Add the delimiter or bracket itself as a token
-           /*     currentToken = line[i];
-                result.push_back(currentToken);*/
-
-                start = i + 1; // Move the start position after the delimiter or bracket
+                start = i + 1;
             }
         }
 
@@ -121,12 +114,10 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
 
             if (matchedType == TokenType::kWhiteSpace && linePosition + matchedValue.length() < line.length()) {
                 linePosition++;
-            }
-            else if (matchedType == TokenType::kLiteralName) {
+            } else if (matchedType == TokenType::kLiteralName) {
                 if (std::isdigit(matchedValue[0])) {
                     throw std::runtime_error("Invalid Token: Name cannot start with a digit");
-                }
-                else {
+                } else {
                     Token token{ matchedType, matchedValue, lineNumber, linePosition };
                     tokens.push_back(token);
                     linePosition += matchedValue.length();
@@ -137,9 +128,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 linePosition += matchedValue.length();
             }
         }
-
-        lineNumber++; 
-    } 
-
+        lineNumber++;
+    }
     return tokens;
 }

@@ -1,5 +1,5 @@
-#ifndef TOKENTYPES_H
-#define TOKENTYPES_H
+#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
+#define TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
 
 enum TokenType {
     // Keywords
@@ -15,7 +15,6 @@ enum TokenType {
     kEntityCall,
     kEntityVariable,
     kEntityConstant,
- 
 
     // Literals
     kLiteralLetter,
@@ -48,13 +47,10 @@ enum TokenType {
     kSepOpenBrace,
     kSepCloseBrace,
 
-    // Error 
+    // Error
     kUnknownTokenType,
 
     // Others
     kWhiteSpace,
-
 };
-
-
-#endif
+#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_

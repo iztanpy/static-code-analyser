@@ -8,11 +8,11 @@
 #include "Token.h"
 #include <regex>
 #include <set>
+#include <utility>
 
 class SPtokeniser {
-private: 
+ private:
     std::vector<std::string> splitLines(const std::string& input);
-
-public:
+ public:
     std::vector<struct Token> tokenise(const std::string& input);
 };

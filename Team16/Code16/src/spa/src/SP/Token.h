@@ -1,6 +1,7 @@
-#ifndef TOKEN_H
-#define TOKEN_H
+#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TOKEN_H_
+#define TEAM16_CODE16_SRC_SPA_SRC_SP_TOKEN_H_
 #include "TokenTypes.h"
+#include <string>
 
 struct Token {
     TokenType tokenType;
@@ -9,4 +10,4 @@ struct Token {
     int linePosition;
 };
 
-#endif
+#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TOKEN_H_
