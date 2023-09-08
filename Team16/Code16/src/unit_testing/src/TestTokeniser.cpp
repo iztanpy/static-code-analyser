@@ -70,6 +70,22 @@ TEST_CASE("Test Line Numbers") {
     REQUIRE(tokens[0].lineNumber == 1);
     REQUIRE(tokens[1].lineNumber == 2);
     REQUIRE(tokens[2].lineNumber == 3);
+
+    REQUIRE(tokens[0].linePosition == 0);
+    REQUIRE(tokens[1].linePosition == 0);
+    REQUIRE(tokens[2].linePosition == 0);
+
+
+    std::vector<struct Token> tokens_q = tokeniser.tokenise("cenX = a + b;");
+    REQUIRE(tokens_q[0].lineNumber == 1);
+    REQUIRE(tokens_q[1].lineNumber == 1);
+    REQUIRE(tokens_q[2].lineNumber == 1);
+
+    REQUIRE(tokens_q[0].linePosition == 0);
+    REQUIRE(tokens_q[1].linePosition == 4);
+    REQUIRE(tokens_q[2].linePosition == 5);
+    REQUIRE(tokens_q[3].linePosition == 6);
+    REQUIRE(tokens_q[4].linePosition == 7);
 }
 
 

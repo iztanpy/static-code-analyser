@@ -93,9 +93,10 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     int lineNumber = 1;
 
     for (const std::string& line : lines) {
+        int linePositionWithWhiteSpace = 0;
         int linePosition = 0;
 
-        while (linePosition < line.length()) {
+        while (linePositionWithWhiteSpace < line.length()) {
             TokenType matchedType = TokenType::kUnknownTokenType;
             std::string matchedValue;
 
@@ -103,7 +104,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 std::regex regex_pattern = regex_rule.second;
                 std::smatch match;
 
-                if (std::regex_search(line.begin() + linePosition, line.end(), match, regex_pattern)) {
+                if (std::regex_search(line.begin() + linePositionWithWhiteSpace, line.end(), match, regex_pattern)) {
                     matchedType = regex_rule.first;
                     matchedValue = match[0];
                     break;
@@ -112,20 +113,22 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
 
             if (matchedType == TokenType::kUnknownTokenType) { throw std::runtime_error("Invalid Token Type"); }
 
-            if (matchedType == TokenType::kWhiteSpace && linePosition + matchedValue.length() < line.length()) {
-                linePosition++;
+            if (matchedType == TokenType::kWhiteSpace) {
+                linePositionWithWhiteSpace++;
             } else if (matchedType == TokenType::kLiteralName) {
                 if (std::isdigit(matchedValue[0])) {
                     throw std::runtime_error("Invalid Token: Name cannot start with a digit");
                 } else {
                     Token token{ matchedType, matchedValue, lineNumber, linePosition };
                     tokens.push_back(token);
+                    linePositionWithWhiteSpace += matchedValue.length();
                     linePosition += matchedValue.length();
                 }
             } else {
                 Token token{ matchedType, matchedValue, lineNumber, linePosition };
                 tokens.push_back(token);
                 linePosition += matchedValue.length();
+                linePositionWithWhiteSpace += matchedValue.length();
             }
         }
         lineNumber++;
