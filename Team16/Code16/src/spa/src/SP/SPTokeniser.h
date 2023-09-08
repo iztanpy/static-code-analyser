@@ -4,8 +4,15 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "TokenTypes.h"
+#include "Token.h"
+#include <regex>
+#include <set>
 
 class SPtokeniser {
+private: 
+    std::vector<std::string> splitLines(const std::string& input);
+
 public:
-    std::vector<std::string> tokenise(const std::string& input);
+    std::vector<struct Token> tokenise(const std::string& input);
 };

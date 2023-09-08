@@ -17,3 +17,13 @@ TEST_CASE("1st Test") {
 }
 
 
+TEST_CASE("2nd Test") {
+
+	TNode T;
+
+
+
+	require(1 == 1);
+}
+
+

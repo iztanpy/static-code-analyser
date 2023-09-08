@@ -31,7 +31,7 @@ void TestWrapper::parse(std::string filename) {
 	}
 
 	SPtokeniser tokeniser; // Create an instance of the SPtokeniser class
-	std::vector<std::string> tokens = tokeniser.tokenise(input);
+	std::vector<struct Token> tokens = tokeniser.tokenise(input);
 
 }
 
