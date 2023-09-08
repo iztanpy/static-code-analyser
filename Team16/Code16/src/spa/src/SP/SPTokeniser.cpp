@@ -53,6 +53,8 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 };
 
 
+
+// Performs the delineation of the source program
 std::vector<std::string> SPtokeniser::splitLines(const std::string& input)
 {
     std::istringstream iss(input);
@@ -60,11 +62,37 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input)
     std::string line;
 
     while (std::getline(iss, line)) {
-        result.push_back(line);
+        std::string currentToken;
+        size_t start = 0;
+
+        for (size_t i = 0; i < line.length(); ++i) {
+            if (line[i] == ';' || line[i] == '{' || line[i] == '}') {
+                // Add the token before the delimiter or bracket
+                if (i > start) {
+                    currentToken = line.substr(start, i - start);
+                    result.push_back(currentToken);
+                }
+
+                // Add the delimiter or bracket itself as a token
+           /*     currentToken = line[i];
+                result.push_back(currentToken);*/
+
+                start = i + 1; // Move the start position after the delimiter or bracket
+            }
+        }
+
+        // Add the remaining portion of the line as a token
+        if (start < line.length()) {
+            currentToken = line.substr(start);
+            result.push_back(currentToken);
+        }
     }
+
 
     return result;
 }
+
+
 
 std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     std::vector<Token> tokens;
