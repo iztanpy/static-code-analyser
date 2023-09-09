@@ -17,8 +17,22 @@ TestWrapper::TestWrapper() {
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
-  // ...rest of your code...
+	std::ifstream file(filename);
+	std::string file_contents;
+
+	if (!file.is_open()) {
+		std::cerr << "Error: Unable to open file " << filename << std::endl;
+	}
+
+	std::string input;
+	std::string line;
+	while (std::getline(file, line)) {
+		input += line + "\n";
+	}
+
+	SPtokeniser tokeniser; // Create an instance of the SPtokeniser class
+	std::vector<struct Token> tokens = tokeniser.tokenise(input);
+
 }
 
 // method to evaluating a query

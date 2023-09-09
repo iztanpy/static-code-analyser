@@ -3,6 +3,10 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_
 add_library(spa ${srcs} ${headers}
         src/SP/SimpleParser.cpp
         src/SP/SimpleParser.h
+        src/SP/SPTokeniser.cpp
+        src/SP/SPTokeniser.h
+        src/SP/TokenTypes.h
+        src/SP/Token.h
         src/SP/Visitor.cpp
         src/SP/Visitor.h
         src/SP/DesignExtractor.h
