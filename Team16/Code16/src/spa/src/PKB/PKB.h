@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
+
 
 
 
@@ -39,7 +41,7 @@ class PKB {
      void setConstants(std::vector<std::string> constants);
      void setUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>>  UsesConst);
      void setUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>>  UsesVar);
-     void setLineUses(std::unordered_map<int, std::unordered_set<std::string>> LineUses );
+     void setLineUses(std::unordered_map<int, std::unordered_set<std::string>> LineUses);
 
      std::vector<int> getAssignments();
      std::vector<std::string> getVariables();

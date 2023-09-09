@@ -2,8 +2,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "PKB/PKB.h"
 #include <unordered_set>
+#include <unordered_map>
+#include "PKB/PKB.h"
 
 class WriteFacade {
  private:
@@ -21,5 +22,4 @@ class WriteFacade {
      void storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
 
      void storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants);
-
 };
