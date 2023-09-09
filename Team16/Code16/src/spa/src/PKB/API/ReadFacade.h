@@ -13,4 +13,5 @@ class ReadFacade {
      std::vector<int> getAllAssigns();
      std::vector<std::string> getAllVariables();
      std::vector<std::string> getAllConstants();
+     std::unordered_set<std::string> getVariablesUsedBy(int lineNumber);
 };

@@ -17,3 +17,7 @@ std::vector<std::string> ReadFacade::getAllVariables() {
 std::vector<std::string> ReadFacade::getAllConstants() {
     return pkb->getConstants();
 }
+
+std::unordered_set<std::string> ReadFacade::getVariablesUsedBy(int lineNumber) {
+    return pkb->getVariablesUsedBy(lineNumber);
+}
