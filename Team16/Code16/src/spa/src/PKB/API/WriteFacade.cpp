@@ -23,6 +23,6 @@ void WriteFacade::storeUsesVar(std::unordered_map<std::string, std::unordered_se
     pkb->setUsesVar(LHSAndRHS);
 }
 
-void WriteFacade::storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants){
+void WriteFacade::storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants) {
     pkb->setLineUses(usesVariableAndConstants);
 }
