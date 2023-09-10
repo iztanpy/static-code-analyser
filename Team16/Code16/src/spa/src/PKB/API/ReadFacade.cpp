@@ -1,21 +1,20 @@
 #include <stdio.h>
 #include <iostream>
-#include <vector>
 #include <unordered_set>
 
 #include "PKB/API/ReadFacade.h"
 
 ReadFacade::ReadFacade(PKB* pkbptr) : pkb(pkbptr) { }
 
-std::vector<int> ReadFacade::getAllAssigns() {
+std::unordered_set<int> ReadFacade::getAllAssigns() {
     return pkb->getAssignments();
 }
 
-std::vector<std::string> ReadFacade::getAllVariables() {
+std::unordered_set<std::string> ReadFacade::getAllVariables() {
     return pkb->getVariables();
 }
 
-std::vector<std::string> ReadFacade::getAllConstants() {
+std::unordered_set<std::string> ReadFacade::getAllConstants() {
     return pkb->getConstants();
 }
 

@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <vector>
 #include <unordered_set>
 #include <unordered_map>
 #include "PKB/PKB.h"
@@ -13,10 +12,10 @@ class WriteFacade {
  public:
      explicit WriteFacade(PKB* pkbptr);
 
-     void storeAssignments(std::vector<int> assignments);
+     void storeAssignments(std::unordered_set<int> assignments);
 
-     void storeVariables(std::vector<std::string> variables);
-     void storeConstants(std::vector<std::string> constants);
+     void storeVariables(std::unordered_set<std::string> variables);
+     void storeConstants(std::unordered_set<std::string> constants);
 
      void storeUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
      void storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);

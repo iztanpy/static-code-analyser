@@ -1,15 +1,14 @@
 #include<stdio.h>
 #include <iostream>
 #include <string>
-#include <vector>
 #include <unordered_set>
 
 #include "PKB.h"
 
 
-PKB::PKB(std::vector<int> assignments,
-         std::vector<std::string> variables,
-         std::vector<std::string> constants,
+PKB::PKB(std::unordered_set<int> assignments,
+         std::unordered_set<std::string> variables,
+         std::unordered_set<std::string> constants,
          std::unordered_map<std::string, std::unordered_set<std::string>>  UsesConst,
          std::unordered_map<std::string, std::unordered_set<std::string>>  UsesVar,
          std::unordered_map<int, std::unordered_set<std::string>> LineUses) {
@@ -19,9 +18,9 @@ PKB::PKB(std::vector<int> assignments,
 PKB::PKB() {
 }
 
-void PKB::setPKB(std::vector<int> assignments,
-                 std::vector<std::string> variables,
-                 std::vector<std::string> constants,
+void PKB::setPKB(std::unordered_set<int> assignments,
+                 std::unordered_set<std::string> variables,
+                 std::unordered_set<std::string> constants,
                  std::unordered_map<std::string, std::unordered_set<std::string>>  UsesConst,
                  std::unordered_map<std::string, std::unordered_set<std::string>>  UsesVar,
                  std::unordered_map<int, std::unordered_set<std::string>> LineUses) {
@@ -33,13 +32,13 @@ void PKB::setPKB(std::vector<int> assignments,
     this->LineUses = LineUses;
 }
 
-void PKB::setAssignments(std::vector<int> assignments) {
+void PKB::setAssignments(std::unordered_set<int> assignments) {
     this->assignments = assignments;
 }
-void PKB::setVariables(std::vector<std::string> variables) {
+void PKB::setVariables(std::unordered_set<std::string> variables) {
     this->variables = variables;
 }
-void PKB::setConstants(std::vector<std::string> constants) {
+void PKB::setConstants(std::unordered_set<std::string> constants) {
     this->constants = constants;
 }
 
@@ -55,15 +54,15 @@ void PKB::setLineUses(std::unordered_map<int, std::unordered_set<std::string>> L
     this->LineUses = LineUses;
 }
 
-std::vector<int> PKB::getAssignments() {
+std::unordered_set<int> PKB::getAssignments() {
     return this->assignments;
 }
 
-std::vector<std::string> PKB::getVariables() {
+std::unordered_set<std::string> PKB::getVariables() {
     return this->variables;
 }
 
-std::vector<std::string> PKB::getConstants() {
+std::unordered_set<std::string> PKB::getConstants() {
     return this->constants;
 }
 

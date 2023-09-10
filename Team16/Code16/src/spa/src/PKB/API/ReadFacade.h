@@ -11,8 +11,8 @@ class ReadFacade {
  public:
      explicit ReadFacade(PKB* pkbptr);
 
-     std::vector<int> getAllAssigns();
-     std::vector<std::string> getAllVariables();
-     std::vector<std::string> getAllConstants();
+     std::unordered_set<int> getAllAssigns();
+     std::unordered_set<std::string> getAllVariables();
+     std::unordered_set<std::string> getAllConstants();
      std::unordered_set<std::string> getVariablesUsedBy(int lineNumber);
 };
