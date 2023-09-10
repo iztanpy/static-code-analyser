@@ -1,0 +1,56 @@
+#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
+#define TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
+
+#include "TNode.h"
+#include <unordered_set>
+#include <string>
+#include <unordered_map>
+
+class TNode;
+class AssignTNode;
+class VariableTNode;
+class ConstantTNode;
+class PlusTNode;
+class MinusTNode;
+
+class Visitor {
+ public:
+    virtual void visit(const AssignTNode* node, std::string& key) = 0;
+    virtual void visit(const VariableTNode* node, std::string& key) = 0;
+    virtual void visit(const ConstantTNode* node, std::string& key) = 0;
+    virtual void visit(const PlusTNode* node, std::string& key) = 0;
+    virtual void visit(const MinusTNode* node, std::string& key) = 0;
+
+    std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
+    std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
+    std::unordered_set<std::string> variablesHashset;
+    std::unordered_set<std::string> constantsHashset;
+    std::string currKey;
+
+    std::unordered_set<std::string> getVariablesHashset() const {
+        std::cout << "Visitor getVariablesHashset called size " << variablesHashset.size() << std::endl;
+        return variablesHashset;
+    }
+    std::unordered_set<std::string> getConstantsHashset() const {
+        return constantsHashset;
+    }
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap() const {
+        return assignVarHashmap;
+    }
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap() const {
+        return assignConstHashmap;
+    }
+};
+
+class ASTVisitor : public Visitor {
+ public:
+    ASTVisitor() = default;
+
+    void visit(const AssignTNode* node, std::string& key) override;
+    void visit(const VariableTNode* node, std::string& key) override;
+    void visit(const ConstantTNode* node, std::string& key) override;
+    void visit(const PlusTNode* node, std::string& key) override;
+    void visit(const MinusTNode* node, std::string& key) override;
+};
+
+#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_"

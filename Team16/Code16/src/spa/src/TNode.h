@@ -1,7 +1,0 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_TNODE_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_TNODE_H_
-
-class TNode {
- public:
-};
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_TNODE_H_

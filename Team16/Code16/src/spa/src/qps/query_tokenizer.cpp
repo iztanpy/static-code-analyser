@@ -7,7 +7,7 @@
 #include "qps/query_tokenizer.h"
 #include "qps/design_entity.h"
 
-std::vector<QueryToken> QueryTokenizer::tokenize(const std::string &query) {
+std::vector<QueryToken> QueryTokenizer::tokenize(const std::string& query) {
     std::vector<QueryToken> tokens;
     std::string sanitizedQuery;
 
@@ -34,24 +34,24 @@ std::vector<QueryToken> QueryTokenizer::tokenize(const std::string &query) {
     while (std::getline(tokenizer, token, ' ')) {
         if (!token.empty()) {
             // Determine the token type
-            TokenType type;
+            PQLTokenType type;
             // if token contains a design entity ==> it is a declaration
             if (stringDesignEntities.find(token) != stringDesignEntities.end()) {
-                type = TokenType::DECLARATION;
+                type = PQLTokenType::DECLARATION;
             } else if (token == "Select") {
-                type = TokenType::SELECT;
+                type = PQLTokenType::SELECT;
             } else if (token == "such" || token == "that") {
-                type = TokenType::SUCH_THAT;
+                type = PQLTokenType::SUCH_THAT;
                 /*
                  * TODO: must handle this case during validation
-                 * - a TokenType::SUCH_THAT comes in a PAIR of tokens
-                 * - tokens = [...,{text: 'such', TokenType::SUCH_THAT}, {text: 'that', TokenType::SUCH_THAT},...]
+                 * - a PQLTokenType::SUCH_THAT comes in a PAIR of tokens
+                 * - tokens = [...,{text: 'such', PQLTokenType::SUCH_THAT}, {text: 'that', PQLTokenType::SUCH_THAT},...]
                  * - otherwise the query is invalid
                  */
             } else if (token == "pattern") {
-                type = TokenType::PATTERN;
+                type = PQLTokenType::PATTERN;
             } else {
-                type = TokenType::SYNONYM;
+                type = PQLTokenType::SYNONYM;
             }
 
             // Store the token and its type

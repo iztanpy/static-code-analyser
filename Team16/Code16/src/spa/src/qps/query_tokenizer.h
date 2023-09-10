@@ -4,20 +4,20 @@
 #include <vector>
 
 // Token types
-enum class TokenType {
-    SYNONYM,
-    DECLARATION,
-    SELECT,
-    SUCH_THAT,
-    PATTERN
+enum class PQLTokenType {
+  SYNONYM,
+  DECLARATION,
+  SELECT,
+  SUCH_THAT,
+  PATTERN
 };
 
 struct QueryToken {
-    std::string text;
-    TokenType type;
+  std::string text;
+  PQLTokenType type;
 };
 
 class QueryTokenizer {
  public:
-    static std::vector<QueryToken> tokenize(const std::string& query);
+  static std::vector<QueryToken> tokenize(const std::string& query);
 };

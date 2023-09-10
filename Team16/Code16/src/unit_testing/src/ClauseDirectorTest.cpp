@@ -12,10 +12,10 @@ TEST_CASE("Select Clause Builder successfully sets attributes of clause") {
 
 TEST_CASE("Clause Director can create select clause") {
     SelectClauseBuilder builder;
-    QueryToken token = {"v", TokenType::SYNONYM};
+    QueryToken token = {"v", PQLTokenType::SYNONYM};
 
     std::vector<Declaration> declarations;
-    declarations.push_back({ "v", DesignEntity::VARIABLE });
+    declarations.push_back({"v", DesignEntity::VARIABLE});
     SelectClause selectClause = ClauseDirector::makeSelectClause(builder, token, declarations);
     REQUIRE(selectClause.synonym == "v");
     REQUIRE(selectClause.design_entity == DesignEntity::VARIABLE);

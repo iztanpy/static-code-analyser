@@ -3,7 +3,11 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_
 add_executable(unit_testing ${srcs}
         src/ClauseDirectorTest.cpp
         src/TestQueryTokenizer.cpp
-        src/TestQueryParser.cpp)
+        src/TestQueryParser.cpp
+        src/PKB/PKB.cpp
+        src/TestTokeniser.cpp
+        src/TestSimpleParser.cpp
+)
 
 target_link_libraries(unit_testing spa)
 

@@ -25,7 +25,7 @@ set(AUTOTESTER_ROOT "${CMAKE_CURRENT_LIST_DIR}/lib/autotester/${CMAKE_SYSTEM_PRO
 
 list(APPEND CMAKE_PREFIX_PATH "${AUTOTESTER_ROOT}")
 find_package(autotester REQUIRED)
-include_directories("${CMAKE_CURRENT_LIST_DIR}/lib")#include catch.hpp
+include_directories("${CMAKE_CURRENT_LIST_DIR}/lib")
 
 add_subdirectory(src/spa)
 add_subdirectory(src/autotester)

@@ -6,7 +6,7 @@
 
 #include "qps/parsed_query.h"
 #include "qps/query_evaluator/select_evaluator.h"
-#include "pkb/api/read_facade.h"
+#include "pkb/api/ReadFacade.h"
 
 // Entry point for Query Evaluator
 class QueryEvaluator {
