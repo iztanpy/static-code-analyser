@@ -18,6 +18,7 @@ add_library(spa ${srcs} ${headers}
         src/SP/DesignExtractor.cpp
         src/SP/TNode.cpp
         src/SP/Token.h
+        src/PKB/PKB.cpp
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
