@@ -26,7 +26,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens) {
         Token next = tokens[curr_index + 1];
         std::shared_ptr<TNode> currentNode = TNodeFactory::createNode(tokens[curr_index]);
 
-        // check if next is ; add curr as rhs to root
+        // check if next is ; add curr as rhs toc root
         if (next.tokenType == TokenType::kSepSemicolon || next.lineNumber != curr.lineNumber) {
             std::cout << "ROOT print " << root->leftChild->content << std::endl;
 
@@ -76,6 +76,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens) {
     return curr_index;
 }
 
+SimpleParser::SimpleParser(WriteFacade* writeFacadePtr) : writeFacade(writeFacadePtr) { }
 int SimpleParser::parse(const std::vector<Token>& tokens) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
@@ -104,6 +105,11 @@ int SimpleParser::parse(const std::vector<Token>& tokens) {
                 "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
+    std::cout << "test" << std::endl;
+    writeFacade->storeVariables(assignmentParser->getVariablesHashset());
+    writeFacade->storeConstants(assignmentParser->getConstantsHashset());
+    writeFacade->storeUsesVar(assignmentParser->getAssignVarHashmap());
+    writeFacade->storeUsesConst(assignmentParser->getAssignConstHashmap());
     return curr_index;
 }
 
@@ -122,4 +128,9 @@ std::unordered_set<std::string> AssignmentParser::getVariablesHashset() {
 
 std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
     return visitor->getConstantsHashset();
+}
+
+void SimpleParser::tokenise(std::string code) {
+    std::vector<struct Token> tokens = tokeniser.tokenise(code);
+    parse(tokens);
 }

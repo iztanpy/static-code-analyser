@@ -7,7 +7,7 @@ Constraint SelectEvaluator::evaluate() {
   auto values = [&]() -> std::unordered_set<std::string> {
     switch (select_clause.design_entity) {
       case DesignEntity::ASSIGN: {
-        std::unordered_set<int> assigns = pkb_reader.GetAllAssigns();
+        std::unordered_set<int> assigns = pkb_reader.getAllAssigns();
 
         // Convert from int to string
         std::unordered_set<std::string> assigns_string;
@@ -17,9 +17,9 @@ Constraint SelectEvaluator::evaluate() {
         }
         return assigns_string;
       }
-      case DesignEntity::CONSTANT:return pkb_reader.GetAllConstants();
+      case DesignEntity::CONSTANT:return pkb_reader.getAllConstants();
 
-      case DesignEntity::VARIABLE:return pkb_reader.GetAllVariables();
+      case DesignEntity::VARIABLE:return pkb_reader.getAllVariables();
 
       default:throw std::runtime_error("Haven't implemented yet");
     }

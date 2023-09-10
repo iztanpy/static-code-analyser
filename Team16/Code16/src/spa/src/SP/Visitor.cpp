@@ -14,15 +14,15 @@ void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
         std::cout << "this node is a key" << std::endl;
         currKey = node->content;
         std::cout << "currKey is now " << currKey << std::endl;
-    } else {
-        variablesHashset.insert(node->content);
-        std::cout << "inserting {" << node->content << "} into variablesHashset" << std::endl;
+    }
 
-        if (!currKey.empty()) {
-            std::unordered_set<std::string>& set = assignVarHashmap[currKey];
-            set.insert(node->content);
-            std::cout << "inserting {" << currKey << " : " << node->content << "} into assignVarHashmap" << std::endl;
-        }
+    variablesHashset.insert(node->content);
+    std::cout << "inserting {" << node->content << "} into variablesHashset" << std::endl;
+
+    if (!currKey.empty()) {
+        std::unordered_set<std::string>& set = assignVarHashmap[currKey];
+        set.insert(node->content);
+        std::cout << "inserting {" << currKey << " : " << node->content << "} into assignVarHashmap" << std::endl;
     }
 }
 

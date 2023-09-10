@@ -82,6 +82,12 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
                     currentToken = line.substr(start, i - start);
                     result.push_back(currentToken);
                 }
+
+                if (line[i] == ';') {
+                    currentToken = ";";
+                    result.push_back(currentToken);
+                }
+
                 start = i + 1;
             }
         }
