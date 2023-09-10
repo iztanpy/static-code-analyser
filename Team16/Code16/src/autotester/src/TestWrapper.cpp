@@ -5,8 +5,8 @@
 #include "qps/query_evaluator/query_evaluator.h"
 #include "qps/query_tokenizer.h"
 #include "qps/query_parser.h"
-#include "pkb/api/ReadFacade.h"
-#include "pkb/PKB.h"
+#include "PKB/API/ReadFacade.h"
+#include "PKB/PKB.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
