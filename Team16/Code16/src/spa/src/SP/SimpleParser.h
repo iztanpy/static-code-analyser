@@ -4,33 +4,6 @@
 
 #include <vector>
 #include <string>
-#include "../TNode.h"
-#include "ParseVisitor.h"
-
-struct Token {
-    std::string type;
-    int line;
-
-    std::string name;
-    std::string intValue;
-
-    Token() : type(), line(), name(), intValue() {};
-    Token(std::string t) : type(t), line(), name(), intValue() {};
-    Token(std::string t, int l) : type(t), line(l), name(), intValue() {};
-    Token(std::string t, int l, int i) : type(t), line(l), name(), intValue(std::to_string(i)) {};
-    Token(std::string t, int l, std::string n) : type(t), line(l), name(n), intValue() {};
-
-    std::string getValue() {
-        if (type == "variable") {
-            return name;
-        } else if (type == "constant") {
-            return intValue;
-        } else {
-            return type;
-        }
-    }
-};
-
 #include "TNode.h"
 #include "Token.h"
 #include "DesignExtractor.h"
