@@ -13,7 +13,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens) {
 
     curr_index = curr_index + 2;
 
-    while(curr_index <= tokens.size()) {
+    while (curr_index <= tokens.size()) {
         Token curr = tokens[curr_index];
         if (isDebug) { std::cout << "curr token: " << curr.getValue() << std::endl; }
 
@@ -77,8 +77,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens) {
 }
 
 int SimpleParser::parse(const std::vector<Token>& tokens) {
-
-    while(curr_index < tokens.size()) {
+    while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
 
         if (isDebug) { std::cout << "curr token: " << curr_token.getValue() << std::endl; }
@@ -101,22 +100,26 @@ int SimpleParser::parse(const std::vector<Token>& tokens) {
                 }
             }
         } else {
-            throw std::runtime_error("Invalid token. Sorry this is not being handled by the parser yet. We can only handle assignment statements currently.");
+            throw std::runtime_error(
+                "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
     return curr_index;
 }
 
-unordered_map<string, unordered_set<string>> AssignmentParser::getAssignVarHashmap() {
+std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignVarHashmap() {
     return visitor->getAssignVarHashmap();
 }
-unordered_map<string, unordered_set<string>> AssignmentParser::getAssignConstHashmap() {
+
+std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignConstHashmap() {
     return visitor->getAssignConstHashmap();
-};
-unordered_set<string> AssignmentParser::getVariablesHashset() {
+}
+
+std::unordered_set<std::string> AssignmentParser::getVariablesHashset() {
     std::cout << "getVariablesHashset called" << std::endl;
     return visitor->getVariablesHashset();
-};
-unordered_set<string> AssignmentParser::getConstantsHashset() {
+}
+
+std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
     return visitor->getConstantsHashset();
-};
+}

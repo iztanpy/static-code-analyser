@@ -1,9 +1,10 @@
-#pragma once
+#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
+#define TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
 
-#ifndef SPA_VISITOR_H
-#define SPA_VISITOR_H
 #include "TNode.h"
 #include <unordered_set>
+#include <string>
+#include <unordered_map>
 
 class TNode;
 class AssignTNode;
@@ -12,20 +13,18 @@ class ConstantTNode;
 class PlusTNode;
 class MinusTNode;
 
-using namespace std;
-
 class Visitor {
-public:
-    virtual void visit(const AssignTNode *node, std::string& key) = 0;
-    virtual void visit(const VariableTNode *node, std::string& key) = 0;
-    virtual void visit(const ConstantTNode *node, std::string& key) = 0;
-    virtual void visit(const PlusTNode *node, std::string& key) = 0;
-    virtual void visit(const MinusTNode *node, std::string& key) = 0;
+ public:
+    virtual void visit(const AssignTNode* node, std::string& key) = 0;
+    virtual void visit(const VariableTNode* node, std::string& key) = 0;
+    virtual void visit(const ConstantTNode* node, std::string& key) = 0;
+    virtual void visit(const PlusTNode* node, std::string& key) = 0;
+    virtual void visit(const MinusTNode* node, std::string& key) = 0;
 
-    unordered_map<string, unordered_set<string>> assignVarHashmap;
-    unordered_map<string, unordered_set<string>> assignConstHashmap;
-    unordered_set<string> variablesHashset;
-    unordered_set<string> constantsHashset;
+    std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
+    std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
+    std::unordered_set<std::string> variablesHashset;
+    std::unordered_set<std::string> constantsHashset;
     std::string currKey;
 
     std::unordered_set<std::string> getVariablesHashset() const {
@@ -35,16 +34,16 @@ public:
     std::unordered_set<std::string> getConstantsHashset() const {
         return constantsHashset;
     }
-    unordered_map<string, unordered_set<string>> getAssignVarHashmap() const {
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap() const {
         return assignVarHashmap;
     }
-    unordered_map<string, unordered_set<string>> getAssignConstHashmap() const {
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap() const {
         return assignConstHashmap;
     }
 };
 
-class ASTVisitor: public Visitor {
-public:
+class ASTVisitor : public Visitor {
+ public:
     ASTVisitor() = default;
 
     void visit(const AssignTNode* node, std::string& key) override;
@@ -53,4 +52,5 @@ public:
     void visit(const PlusTNode* node, std::string& key) override;
     void visit(const MinusTNode* node, std::string& key) override;
 };
-#endif //SPA_VISITOR_H
+
+#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_"

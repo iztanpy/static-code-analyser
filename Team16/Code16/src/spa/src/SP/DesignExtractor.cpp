@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
-
-//#include "PKB.h"
 #include "SP/DesignExtractor.h"
-#include "TNode.h"
-#include "Visitor.h"
-
-using namespace std;
 
 int DesignExtractor::extractDesign(std::shared_ptr<TNode> root, ASTVisitor* visitor) {
     bool isRightType = root->type == TokenType::kOperatorEqual;

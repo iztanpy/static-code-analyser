@@ -7,9 +7,12 @@
 #include "TNode.h"
 #include "Token.h"
 #include "DesignExtractor.h"
+#include <unordered_map>
+#include <unordered_set>
+#include <memory>
 
 class Parser {
-public:
+ public:
     Parser() = default;
     virtual ~Parser() = default;
     virtual int parse(const std::vector<Token>& tokens) = 0;
@@ -18,27 +21,27 @@ public:
 };
 
 class AssignmentParser : public Parser {
-public:
+ public:
     AssignmentParser() = default;
     int parse(const std::vector<Token>& tokens) override;
     ASTVisitor* visitor = new ASTVisitor();
 
-    unordered_map<string, unordered_set<string>> getAssignVarHashmap();
-    unordered_map<string, unordered_set<string>> getAssignConstHashmap();
-    unordered_set<string> getVariablesHashset();
-    unordered_set<string> getConstantsHashset();
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
+    std::unordered_set<std::string> getVariablesHashset();
+    std::unordered_set<std::string> getConstantsHashset();
 };
 
 class SimpleParser : public Parser {
-    public:
+ public:
         SimpleParser() = default;
         int parse(const std::vector<Token>& tokens) override;
         AssignmentParser* assignmentParser = new AssignmentParser();
 
-        unordered_map<string, unordered_set<string>> getAssignVarHashmap();
-        unordered_map<string, unordered_set<string>> getAssignConstHashmap();
-        unordered_set<string> getVariablesHashset();
-        unordered_set<string> getConstantsHashset();
+        std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
+        std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
+        std::unordered_set<std::string> getVariablesHashset();
+        std::unordered_set<std::string> getConstantsHashset();
 };
 
-#endif //SPA_SIMPLEPARSER_H
+#endif  //  SPA_SIMPLEPARSER_H
