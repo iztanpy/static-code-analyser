@@ -1,7 +1,7 @@
 #ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
 #define TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
 
-enum TokenType {
+enum class TokenType {
     // Keywords
     kEntityIf,
     kEntityElse,
@@ -53,4 +53,5 @@ enum TokenType {
     // Others
     kWhiteSpace,
 };
+
 #endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
