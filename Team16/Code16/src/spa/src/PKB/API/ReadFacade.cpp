@@ -6,18 +6,18 @@
 
 ReadFacade::ReadFacade(PKB* pkbptr) : pkb(pkbptr) {}
 
-std::unordered_set<int> ReadFacade::GetAllAssigns() {
+std::unordered_set<int> ReadFacade::getAllAssigns() {
     return pkb->getAssignments();
 }
 
-std::unordered_set<std::string> ReadFacade::GetAllVariables() {
+std::unordered_set<std::string> ReadFacade::getAllVariables() {
     return pkb->getVariables();
 }
 
-std::unordered_set<std::string> ReadFacade::GetAllConstants() {
+std::unordered_set<std::string> ReadFacade::getAllConstants() {
     return pkb->getConstants();
 }
 
-std::unordered_set<std::string> ReadFacade::GetVariablesUsedBy(int line_number) {
-    return pkb->getVariablesUsedBy(line_number);
+std::unordered_set<std::string> ReadFacade::getVariablesUsedBy(int lineNumber) {
+    return pkb->getVariablesUsedBy(lineNumber);
 }
