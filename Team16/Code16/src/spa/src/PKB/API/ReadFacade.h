@@ -7,12 +7,12 @@
 
 class ReadFacade {
  private:
-     PKB* pkb;
+  PKB* pkb;
  public:
-     explicit ReadFacade(PKB* pkbptr);
+  explicit ReadFacade(PKB* pkbptr);
 
-     std::unordered_set<int> getAllAssigns();
-     std::unordered_set<std::string> getAllVariables();
-     std::unordered_set<std::string> getAllConstants();
-     std::unordered_set<std::string> getVariablesUsedBy(int lineNumber);
+  std::unordered_set<int> GetAllAssigns();
+  std::unordered_set<std::string> GetAllVariables();
+  std::unordered_set<std::string> GetAllConstants();
+  std::unordered_set<std::string> GetVariablesUsedBy(int line_number);
 };

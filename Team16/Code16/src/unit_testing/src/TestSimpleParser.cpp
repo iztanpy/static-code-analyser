@@ -4,7 +4,10 @@
 
 #include "catch.hpp"
 
-using namespace std;
+using std::string;
+using std::unordered_set;
+using std::unordered_map;
+using std::vector;
 
 SimpleParser parser;
 TokenType variableType = TokenType::kLiteralName;
@@ -12,22 +15,22 @@ TokenType constantType = TokenType::kLiteralInteger;
 TokenType endType = TokenType::kSepSemicolon;
 TokenType plusType = TokenType::kOperatorPlus;
 TokenType equalType = TokenType::kEntityAssign;
-Token tokenX = Token(variableType,"x", 0);
-Token tokenY = Token(variableType,"y", 0);
-Token tokenW = Token(variableType,"w", 0);
+Token tokenX = Token(variableType, "x", 0);
+Token tokenY = Token(variableType, "y", 0);
+Token tokenW = Token(variableType, "w", 0);
 Token tokenEqual = Token(equalType, 0);
-Token tokenX2 = Token(variableType,"x", 0);
+Token tokenX2 = Token(variableType, "x", 0);
 Token tokenPlus = Token(plusType);
-Token token1 = Token(constantType,"1", 0);
+Token token1 = Token(constantType, "1", 0);
 Token tokenEnd = Token(endType);
 
-TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
+TEST_CASE("Test SimpleParser") {  // line 0: x = x + 1
     std::vector<Token> my_tokens{tokenX, tokenEqual, tokenX2, tokenPlus, token1, tokenEnd};
     std::cout << "tokens size " << my_tokens.size() << std::endl;
     REQUIRE(parser.parse(my_tokens) == 6);
 }
 
-TEST_CASE("Test DesignExtractor1") { // x = x + 1
+TEST_CASE("Test DesignExtractor1") {  // x = x + 1
     std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.value);
     std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>();
     std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.value);
@@ -44,8 +47,10 @@ TEST_CASE("Test DesignExtractor1") { // x = x + 1
 
     unordered_set<string> varSet = unordered_set<string>({"x"});
     unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
+    unordered_map<string, unordered_set<string>>
+        varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
+    unordered_map<string, unordered_set<string>>
+        constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
 
     REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
     REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
@@ -53,8 +58,7 @@ TEST_CASE("Test DesignExtractor1") { // x = x + 1
     REQUIRE(visitor->getConstantsHashset() == constSet);
 }
 
-
-TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
+TEST_CASE("Test DesignExtractor only using only variables") {  // x = x + y + w
     std::shared_ptr<TNode> nodey = std::make_shared<VariableTNode>(tokenY.value);
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>();
     std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.value);
@@ -75,7 +79,8 @@ TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
     de.extractDesign(nodeEqual, visitor);
 
     unordered_set<string> varSet = unordered_set<string>({"x", "y", "w"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
+    unordered_map<string, unordered_set<string>>
+        varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
     unordered_set<string> constSet = unordered_set<string>({});
     unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({});
 
@@ -85,8 +90,7 @@ TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
     REQUIRE(visitor->getConstantsHashset() == constSet);
 }
 
-
-TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
+TEST_CASE("Test DesignExtractor only using variables and constants") {  // x = x + 1 + w
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>();
     std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.value);
     std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.value);
@@ -107,9 +111,11 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
     de.extractDesign(nodeEqual, visitor);
 
     unordered_set<string> varSet = unordered_set<string>({"x", "w"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
+    unordered_map<string, unordered_set<string>>
+        varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
     unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
+    unordered_map<string, unordered_set<string>>
+        constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
 
     REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
     REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
@@ -117,9 +123,7 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
     REQUIRE(visitor->getConstantsHashset() == constSet);
 }
 
-
-TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
-
+TEST_CASE("Test SimpleParser & DesignExtractor integration") {  // x = x + 1;
     vector<Token> tokenVector;
     tokenVector.push_back(tokenX);
     tokenVector.push_back(tokenEqual);
@@ -130,9 +134,11 @@ TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
     parser.parse(tokenVector);
 
     unordered_set<string> varSet = unordered_set<string>({"x"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
+    unordered_map<string, unordered_set<string>>
+        varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
     unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
+    unordered_map<string, unordered_set<string>>
+        constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
     REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);
@@ -149,10 +155,10 @@ TEST_CASE(("Test SP")) {
 
     unordered_set<string> varSet = unordered_set<string>({"x"});
     unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", varSet}});
+        {{"x", varSet}});
     unordered_set<string> constSet = unordered_set<string>({"1"});
     unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", constSet}});
+        {{"x", constSet}});
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
     REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);

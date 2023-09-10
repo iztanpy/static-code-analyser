@@ -3,10 +3,7 @@
 
 #include "catch.hpp"
 
-using namespace std;
-
 TEST_CASE("Test Token to TNode conversion") {
-
     TokenType variableType = TokenType::kLiteralName;
     TokenType constantType = TokenType::kLiteralInteger;
     TokenType endType = TokenType::kSepSemicolon;
@@ -16,7 +13,7 @@ TEST_CASE("Test Token to TNode conversion") {
     Token tokenX = Token(variableType, "x", 0);
     Token tokenEqual = Token(equalType, 0);
     Token tokenPlus = Token(plusType);
-    Token token1 = Token(constantType,"1", 0);
+    Token token1 = Token(constantType, "1", 0);
     Token tokenEnd = Token(endType);
 
     auto* nodeX = new VariableTNode(tokenX.value);
