@@ -122,10 +122,9 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
         int linePositionWithWhiteSpace = 0;
         int linePosition = 0;
 
+        TokenType matchedType = TokenType::kUnknownTokenType;
+        std::string matchedValue;
         while (linePositionWithWhiteSpace < line.length()) {
-            TokenType matchedType = TokenType::kUnknownTokenType;
-            std::string matchedValue;
-
             for (const auto& regex_rule : regex_rules) {
                 std::regex regex_pattern = regex_rule.second;
                 std::smatch match;
@@ -158,7 +157,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 linePositionWithWhiteSpace += matchedValue.length();
             }
         }
-        lineNumber++;
+        if (matchedType != TokenType::kSepSemicolon) { lineNumber++; }
     }
     return tokens;
 }
