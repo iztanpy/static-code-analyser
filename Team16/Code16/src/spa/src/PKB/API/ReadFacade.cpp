@@ -4,20 +4,20 @@
 
 #include "PKB/API/ReadFacade.h"
 
-ReadFacade::ReadFacade(PKB* pkbptr) : pkb(pkbptr) { }
+ReadFacade::ReadFacade(PKB* pkbptr) : pkb(pkbptr) {}
 
-std::unordered_set<int> ReadFacade::getAllAssigns() {
+std::unordered_set<int> ReadFacade::GetAllAssigns() {
     return pkb->getAssignments();
 }
 
-std::unordered_set<std::string> ReadFacade::getAllVariables() {
+std::unordered_set<std::string> ReadFacade::GetAllVariables() {
     return pkb->getVariables();
 }
 
-std::unordered_set<std::string> ReadFacade::getAllConstants() {
+std::unordered_set<std::string> ReadFacade::GetAllConstants() {
     return pkb->getConstants();
 }
 
-std::unordered_set<std::string> ReadFacade::getVariablesUsedBy(int lineNumber) {
-    return pkb->getVariablesUsedBy(lineNumber);
+std::unordered_set<std::string> ReadFacade::GetVariablesUsedBy(int line_number) {
+    return pkb->getVariablesUsedBy(line_number);
 }

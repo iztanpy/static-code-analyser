@@ -1,14 +1,15 @@
-#include "catch.hpp"
 #include <stdio.h>
+#include <unordered_set>
+#include "catch.hpp"
+
 #include "PKB/PKB.h"
 #include "PKB/API/ReadFacade.h"
 #include "PKB/API/WriteFacade.h"
-#include <unordered_set>
 
 TEST_CASE("Test PKB") {
-    std::unordered_set<int> assignments = { 1, 2, 3 };
-    std::unordered_set<std::string> variables = { "a", "b", "c" };
-    std::unordered_set<std::string> constants = { "1", "2", "3" };
+    std::unordered_set<int> assignments = {1, 2, 3};
+    std::unordered_set<std::string> variables = {"a", "b", "c"};
+    std::unordered_set<std::string> constants = {"1", "2", "3"};
     std::unordered_map<std::string, std::unordered_set<std::string>> UsesConst;
     std::unordered_map<std::string, std::unordered_set<std::string>> UsesVar;
     std::unordered_map<int, std::unordered_set<std::string>> LineUses;
@@ -32,9 +33,9 @@ TEST_CASE("Test PKB") {
 }
 
 TEST_CASE("Test Read and Write Facades") {
-    std::unordered_set<int> assignments = { 1, 2, 3 }; // Change vector to unordered_set
-    std::unordered_set<std::string> variables = { "a", "b", "c" }; // Change vector to unordered_set
-    std::unordered_set<std::string> constants = { "1", "2", "3" }; // Change vector to unordered_set
+    std::unordered_set<int> assignments = {1, 2, 3};  // Change vector to unordered_set
+    std::unordered_set<std::string> variables = {"a", "b", "c"};  // Change vector to unordered_set
+    std::unordered_set<std::string> constants = {"1", "2", "3"};  // Change vector to unordered_set
     std::unordered_map<std::string, std::unordered_set<std::string>> UsesConst;
     std::unordered_map<std::string, std::unordered_set<std::string>> UsesVar;
     std::unordered_map<int, std::unordered_set<std::string>> LineUses;
@@ -56,17 +57,17 @@ TEST_CASE("Test Read and Write Facades") {
         REQUIRE(constants.find(value) != constants.end());
     }
 
-    writeFacade.storeAssignments({ 4, 5, 6 }); 
+    writeFacade.storeAssignments({4, 5, 6});
 
-    writeFacade.storeVariables({ "d", "e", "f" }); 
+    writeFacade.storeVariables({"d", "e", "f"});
 
-    writeFacade.storeConstants({ "4", "5", "6" });
+    writeFacade.storeConstants({"4", "5", "6"});
 
-    writeFacade.storeLineUses({ {1, {"a", "b"}}, {2, {"c", "d"}}, {3, {"e", "f"}} }); 
+    writeFacade.storeLineUses({{1, {"a", "b"}}, {2, {"c", "d"}}, {3, {"e", "f"}}});
 
-    writeFacade.storeUsesConst({ {"a", {"1", "2"}}, {"b", {"3", "4"}} });
+    writeFacade.storeUsesConst({{"a", {"1", "2"}}, {"b", {"3", "4"}}});
 
-    writeFacade.storeUsesVar({ {"a", {"b", "c"}}, {"d", {"e", "f"}} });
+    writeFacade.storeUsesVar({{"a", {"b", "c"}}, {"d", {"e", "f"}}});
 
     for (const auto& value : assignments) {
         REQUIRE(assignments.find(value) != assignments.end());
@@ -80,5 +81,5 @@ TEST_CASE("Test Read and Write Facades") {
         REQUIRE(constants.find(value) != constants.end());
     }
 
-    REQUIRE(readFacade.getVariablesUsedBy(1) == std::unordered_set<std::string>{"a", "b"});
+    REQUIRE(readFacade.GetVariablesUsedBy(1) == std::unordered_set<std::string>{"a", "b"});
 }

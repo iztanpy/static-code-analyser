@@ -2,56 +2,53 @@
 // ai-gen start (gpt3, 2)
 #include "SPTokeniser.h"
 
-
 std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     // operators
-    { TokenType::kOperatorPlus, std::regex("^(\\+)") },
-    { TokenType::kOperatorMinus, std::regex("^(-)") },
-    { TokenType::kOperatorMultiply, std::regex("^(\\*)") },
-    { TokenType::kOperatorDivide, std::regex("^(/)") },
-    { TokenType::kOperatorEqual, std::regex("^(==)") },
-    { TokenType::kOperatorNotEqual, std::regex("^(!=)") },
-    { TokenType::kOperatorLessEqual, std::regex("^(<=)") },
-    { TokenType::kOperatorLess, std::regex("^(<)") },
-    { TokenType::kOperatorGreaterEqual, std::regex("^(>=)") },
-    { TokenType::kOperatorGreater, std::regex("^(>)") },
-    { TokenType::kOperatorLogicalAnd, std::regex("^(&&)") },
-    { TokenType::kOperatorLogicalOr, std::regex("^(\\|\\|)") },
-    { TokenType::kOperatorLogicalNot, std::regex("^(!)") },
-    { TokenType::kOperatorMod, std::regex("^(%)") },
+    {TokenType::kOperatorPlus, std::regex("^(\\+)")},
+    {TokenType::kOperatorMinus, std::regex("^(-)")},
+    {TokenType::kOperatorMultiply, std::regex("^(\\*)")},
+    {TokenType::kOperatorDivide, std::regex("^(/)")},
+    {TokenType::kOperatorEqual, std::regex("^(==)")},
+    {TokenType::kOperatorNotEqual, std::regex("^(!=)")},
+    {TokenType::kOperatorLessEqual, std::regex("^(<=)")},
+    {TokenType::kOperatorLess, std::regex("^(<)")},
+    {TokenType::kOperatorGreaterEqual, std::regex("^(>=)")},
+    {TokenType::kOperatorGreater, std::regex("^(>)")},
+    {TokenType::kOperatorLogicalAnd, std::regex("^(&&)")},
+    {TokenType::kOperatorLogicalOr, std::regex("^(\\|\\|)")},
+    {TokenType::kOperatorLogicalNot, std::regex("^(!)")},
+    {TokenType::kOperatorMod, std::regex("^(%)")},
 
 
     // entity
-    { TokenType::kEntityIf, std::regex("^(\\bif\\b)") },
-    { TokenType::kEntityElse, std::regex("^(\\belse\\b)") },
-    { TokenType::kEntityWhile, std::regex("^(\\bwhile\\b)") },
-    { TokenType::kEntityRead, std::regex("^(\\bread\\b)")},
-    { TokenType::kEntityProcedure, std::regex("^(\\bprocedure\\b)") },
-    { TokenType::kEntityPrint, std::regex("^(\\bprint\\b)") },
-    { TokenType::kEntityAssign, std::regex("^(=)") },
-    { TokenType::kEntityCall, std::regex("^(\\bcall\\b)") },
+    {TokenType::kEntityIf, std::regex("^(\\bif\\b)")},
+    {TokenType::kEntityElse, std::regex("^(\\belse\\b)")},
+    {TokenType::kEntityWhile, std::regex("^(\\bwhile\\b)")},
+    {TokenType::kEntityRead, std::regex("^(\\bread\\b)")},
+    {TokenType::kEntityProcedure, std::regex("^(\\bprocedure\\b)")},
+    {TokenType::kEntityPrint, std::regex("^(\\bprint\\b)")},
+    {TokenType::kEntityAssign, std::regex("^(=)")},
+    {TokenType::kEntityCall, std::regex("^(\\bcall\\b)")},
 
     // separators
-    { TokenType::kSepComma, std::regex("^(,)")},
-    { TokenType::kSepSemicolon, std::regex("^(;)") },
-    { TokenType::kSepOpenParen, std::regex("^(\\()") },
-    { TokenType::kSepCloseParen, std::regex("^(\\))") },
-    { TokenType::kSepOpenBrace, std::regex("^(\\{)") },
-    { TokenType::kSepCloseBrace, std::regex("^(\\})") },
+    {TokenType::kSepComma, std::regex("^(,)")},
+    {TokenType::kSepSemicolon, std::regex("^(;)")},
+    {TokenType::kSepOpenParen, std::regex("^(\\()")},
+    {TokenType::kSepCloseParen, std::regex("^(\\))")},
+    {TokenType::kSepOpenBrace, std::regex("^(\\{)")},
+    {TokenType::kSepCloseBrace, std::regex("^(\\})")},
 
     // Others
-    {  TokenType::kWhiteSpace,  std::regex("^(\\s+)") },
+    {TokenType::kWhiteSpace, std::regex("^(\\s+)")},
 
     // literals
-    { TokenType::kLiteralInteger, std::regex("^(\\b[+-]?\\d+\\b)") },
-    { TokenType::kLiteralName, std::regex("^(\\b[0-9a-zA-Z]+\\b)") },
+    {TokenType::kLiteralInteger, std::regex("^(\\b[+-]?\\d+\\b)")},
+    {TokenType::kLiteralName, std::regex("^(\\b[0-9a-zA-Z]+\\b)")},
 
 
     //{ kLiteralLetter, std::regex("^([A-Za-z])")},
     //{ kLiteralDigit, std::regex("^([0-9])")},
 };
-
-
 
 /**
  * @brief Splits the input source program into separate lines and extracts tokens.
@@ -102,10 +99,8 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
         }
     }
 
-
     return result;
 }
-
 
 /**
  * @brief Tokenizes the input source program into a vector of Token structures.
@@ -151,13 +146,13 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 if (std::isdigit(matchedValue[0])) {
                     throw std::runtime_error("Invalid Token: Name cannot start with a digit");
                 } else {
-                    Token token{ matchedType, matchedValue, lineNumber, linePosition };
+                    Token token{matchedType, matchedValue, lineNumber, linePosition};
                     tokens.push_back(token);
                     linePositionWithWhiteSpace += matchedValue.length();
                     linePosition += matchedValue.length();
                 }
             } else {
-                Token token{ matchedType, matchedValue, lineNumber, linePosition };
+                Token token{matchedType, matchedValue, lineNumber, linePosition};
                 tokens.push_back(token);
                 linePosition += matchedValue.length();
                 linePositionWithWhiteSpace += matchedValue.length();
