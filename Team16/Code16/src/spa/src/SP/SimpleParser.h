@@ -1,6 +1,5 @@
-#pragma once
-#ifndef SPA_SIMPLEPARSER_H
-#define SPA_SIMPLEPARSER_H
+#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
+#define TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
 
 #include <vector>
 #include <string>
@@ -11,6 +10,17 @@
 #include <unordered_set>
 #include <memory>
 
+
+/**
+ * @class Parser
+ * @brief Abstract base class for parsing operations on a sequence of tokens.
+ *
+ * The `Parser` class defines the common interface for parsing operations on a sequence of tokens.
+ * Subclasses of `Parser` are expected to provide specific implementations for parsing different parts of the input.
+ *
+ * @note This class is designed to be abstract and cannot be instantiated directly. Subclasses must override the
+ *       `parse` method to perform custom parsing logic.
+ **/
 class Parser {
  public:
     Parser() = default;
@@ -20,6 +30,14 @@ class Parser {
     DesignExtractor* designExtractor = new DesignExtractor();
 };
 
+
+/**
+ * @class AssignmentParser
+ * @brief A concrete subclass of Parser specialized for parsing assignment statements.
+ *
+ * The `AssignmentParser` class inherits from the `Parser` class and provides an implementation for parsing
+ * assignment statements. It also contains methods for accessing information related to the parsed assignments.
+ */
 class AssignmentParser : public Parser {
  public:
     AssignmentParser() = default;
@@ -32,6 +50,14 @@ class AssignmentParser : public Parser {
     std::unordered_set<std::string> getConstantsHashset();
 };
 
+
+/**
+ * @class SimpleParser
+ * @brief A concrete subclass of Parser for a simplified parsing task.
+ *
+ * The `SimpleParser` class inherits from the `Parser` class and provides an implementation for a simplified
+ * parsing task. It includes an instance of `AssignmentParser` for parsing assignment statements.
+ */
 class SimpleParser : public Parser {
  public:
         SimpleParser() = default;
@@ -44,4 +70,4 @@ class SimpleParser : public Parser {
         std::unordered_set<std::string> getConstantsHashset();
 };
 
-#endif  //  SPA_SIMPLEPARSER_H
+#endif  //  TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_

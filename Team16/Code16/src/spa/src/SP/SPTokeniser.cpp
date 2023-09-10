@@ -53,12 +53,27 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 
 
 
-// Performs the delineation of the source program
+/**
+ * @brief Splits the input source program into separate lines and extracts tokens.
+ *
+ * This function takes an input string representing a source program and splits it into lines.
+ * It then extracts tokens based on delimiters (';', '{', '}') and adds them to the result vector.
+ *
+ * @param input The input source program as a single string.
+ * @return A vector of strings containing the extracted tokens from the source program.
+ */
 std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
+    // Create an input string stream to process the input line by line
     std::istringstream iss(input);
+
+    // Initialize a vector to store the extracted tokens
     std::vector<std::string> result;
+
+    // Initialize a string to store each line
     std::string line;
 
+
+    // Iterate through each character in the line
     while (std::getline(iss, line)) {
         std::string currentToken;
         size_t start = 0;
@@ -86,7 +101,17 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
 }
 
 
-
+/**
+ * @brief Tokenizes the input source program into a vector of Token structures.
+ *
+ * This function takes an input source program as a string and tokenizes it, extracting tokens based on regular expressions.
+ * It processes each line, identifies token types, and creates Token structures for each token found.
+ * The resulting tokens are stored in a vector and returned.
+ *
+ * @param input The input source program as a single string.
+ * @return A vector of Token structures representing the extracted tokens.
+ * @throws std::runtime_error if an invalid token type or name is encountered.
+ */
 std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     std::vector<Token> tokens;
     std::vector<std::string> lines = splitLines(input);
@@ -104,6 +129,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 std::regex regex_pattern = regex_rule.second;
                 std::smatch match;
 
+                // Iterate through defined regular expressions to match token types
                 if (std::regex_search(line.begin() + linePositionWithWhiteSpace, line.end(), match, regex_pattern)) {
                     matchedType = regex_rule.first;
                     matchedValue = match[0];
