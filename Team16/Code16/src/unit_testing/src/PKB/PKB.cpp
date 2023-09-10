@@ -81,5 +81,5 @@ TEST_CASE("Test Read and Write Facades") {
         REQUIRE(constants.find(value) != constants.end());
     }
 
-    REQUIRE(readFacade.GetVariablesUsedBy(1) == std::unordered_set<std::string>{"a", "b"});
+    REQUIRE(readFacade.getVariablesUsedBy(1) == std::unordered_set<std::string>{"a", "b"});
 }
