@@ -4,6 +4,17 @@
 #include "pkb/api/read_facade.h"
 #include "qps/suchthat_clause.h"
 
+/**
+ * @brief Evaluates the SuchThat clause of a query
+ *  Base class that all other SuchThatEvaluators inherit from
+ *  We design it this way so that let's say UsesSEvaluator can override
+ *  the below 9 virtual handle function to handle the different types of parameters
+ *  Children classes can share the "strategy" logic within Evaluate
+ *
+ *  Users of children classes can just call Evaluate() to get back
+ *  the Constraint object which contains the possible values that the
+ *  synonym can take
+ */
 class SuchThatEvaluator {
  public:
   SuchThatEvaluator(ReadFacade& pkb_reader,

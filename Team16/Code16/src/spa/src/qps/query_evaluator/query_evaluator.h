@@ -8,6 +8,7 @@
 #include "qps/query_evaluator/select_evaluator.h"
 #include "pkb/api/read_facade.h"
 
+// Entry point for Query Evaluator
 class QueryEvaluator {
  private:
   ReadFacade& pkb;

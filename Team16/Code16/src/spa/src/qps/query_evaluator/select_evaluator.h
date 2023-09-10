@@ -9,6 +9,7 @@
 #include "pkb/api/read_facade.h"
 #include "utils/hash_utils.h"
 
+// Evaluates the Select clause of a query
 class SelectEvaluator {
  private:
   ReadFacade& pkb_reader;
