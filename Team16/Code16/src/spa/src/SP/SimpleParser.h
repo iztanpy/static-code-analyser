@@ -9,7 +9,11 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include "PKB/PKB.h"
+#include "PKB/API/WriteFacade.h"
+#include "SPTokeniser.h"
 
+class DesignExtractor;  // Forward declaration
 
 /**
  * @class Parser
@@ -27,9 +31,8 @@ class Parser {
     virtual ~Parser() = default;
     virtual int parse(const std::vector<Token>& tokens) = 0;
     int curr_index = 0;
-    DesignExtractor* designExtractor = new DesignExtractor();
+    DesignExtractor* designExtractor = new DesignExtractor();  // Initialize to nullptr in the constructor
 };
-
 
 /**
  * @class AssignmentParser
@@ -42,14 +45,13 @@ class AssignmentParser : public Parser {
  public:
     AssignmentParser() = default;
     int parse(const std::vector<Token>& tokens) override;
-    ASTVisitor* visitor = new ASTVisitor();
+    ASTVisitor* visitor = new ASTVisitor();  // Initialize to nullptr in the constructor
 
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
     std::unordered_set<std::string> getVariablesHashset();
     std::unordered_set<std::string> getConstantsHashset();
 };
-
 
 /**
  * @class SimpleParser
@@ -59,15 +61,21 @@ class AssignmentParser : public Parser {
  * parsing task. It includes an instance of `AssignmentParser` for parsing assignment statements.
  */
 class SimpleParser : public Parser {
- public:
-        SimpleParser() = default;
-        int parse(const std::vector<Token>& tokens) override;
-        AssignmentParser* assignmentParser = new AssignmentParser();
+ private:
+     WriteFacade* writeFacade;
 
-        std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
-        std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
-        std::unordered_set<std::string> getVariablesHashset();
-        std::unordered_set<std::string> getConstantsHashset();
+ public:
+    explicit SimpleParser(WriteFacade* writeFacade);  // Corrected constructor declaration
+    int parse(const std::vector<Token>& tokens) override;
+    SPtokeniser tokeniser;
+    AssignmentParser* assignmentParser = new AssignmentParser();
+
+
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
+    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
+    std::unordered_set<std::string> getVariablesHashset();
+    std::unordered_set<std::string> getConstantsHashset();
+    void tokenise(std::string simpleProgram);
 };
 
-#endif  //  TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
+#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
