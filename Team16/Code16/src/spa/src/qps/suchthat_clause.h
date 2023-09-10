@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <variant>
 
 #include "qps/declaration.h"
 #include "qps/clause.h"
