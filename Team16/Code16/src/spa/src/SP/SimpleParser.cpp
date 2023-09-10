@@ -1,104 +1,122 @@
-#include <stdio.h>
 #include <iostream>
-#include <string>
-#include <utility>
 #include <vector>
 #include "SimpleParser.h"
-//#include "TNode.h"
-//#include "Visitor.h"
-//#include "ParseVisitor.h"
 
-//class ;
-
-// constructor
-SimpleParser::SimpleParser() {}
-AssignmentParser::AssignmentParser() {}
 bool isDebug = false;
 
+int AssignmentParser::parse(const std::vector<Token>& tokens) {
+    std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[curr_index]);
+    std::shared_ptr<TNode> root = TNodeFactory::createNode(tokens[curr_index + 1]);
+    std::shared_ptr<TNode> parentNode = root;
+    root->addChild(lhs);
+    std::cout << "ROOT print " << root->leftChild->content << std::endl;
 
-
-int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    TNode lhs = TNode(tokens[curr_index].type, tokens[curr_index].name);
-    TNode root = TNode(tokens[curr_index + 1].type, tokens[curr_index + 1].name);
-    root.addChild(lhs);
-    // check if rhs is expression
-    curr_index += 2;
+    curr_index = curr_index + 2;
 
     while(curr_index <= tokens.size()) {
         Token curr = tokens[curr_index];
         if (isDebug) { std::cout << "curr token: " << curr.getValue() << std::endl; }
 
-        // check if curr is constant or variable
-        if (curr.type != "constant" && curr.type != "variable") {
-            if (isDebug) { std::cout << "curr token is not a constant or variable" << std::endl; }
+        // throw error if curr is not constant or variable
+        if (curr.tokenType != TokenType::kLiteralInteger && curr.tokenType != TokenType::kLiteralName) {
+            if (isDebug) { std::cout << "Invalid node. Variable or constant expected on rhs of '=' " << std::endl; }
             return -1;
         }
 
         Token next = tokens[curr_index + 1];
+        std::shared_ptr<TNode> currentNode = TNodeFactory::createNode(tokens[curr_index]);
 
-        // check if next is ;
-        if (next.type == ";") {
+        // check if next is ; add curr as rhs to root
+        if (next.tokenType == TokenType::kSepSemicolon || next.lineNumber != curr.lineNumber) {
+            std::cout << "ROOT print " << root->leftChild->content << std::endl;
+
             if (isDebug) { std::cout << "next token is end token" << std::endl; }
-            // add rhs to root
-            root.addChild(TNode(curr.type, curr.getValue()));
+            std::cout << "curr node print" << std::endl;
+            parentNode->addChild(currentNode);
+            std::cout << "ROOT print " << root->leftChild->content << std::endl;
+            root->print();
             curr_index += 1;
+            std::cout << "ROOT print " << root->leftChild->content << std::endl;
+            root->print();
             break;
         }
 
-        // check if next is operator
-        if (next.type != "plus" && next.type != "minus") {
-            if (isDebug) { std::cout << "next token is not operator token" << std::endl; }
+        // throw error if next is not operator
+        if (next.tokenType != TokenType::kOperatorPlus && next.tokenType != TokenType::kOperatorMinus) {
+            if (isDebug) { std::cout << "Invalid node. Operator expected." << std::endl; }
             return -1;
         }
 
         if (isDebug) { std::cout << "next token is operator" << std::endl; }
 
-        // add operator as rhs of root
-        TNode rhs = TNode(next.type, next.getValue());
-        lhs = TNode(curr.type, curr.getValue());
-        rhs.addChild(lhs);
-        root.addChild(rhs);
+        // add operator as rhs of root and add curr as lhs of rhs
+        std::shared_ptr<TNode> rhs = TNodeFactory::createNode(next);
+
+        std::cout << "rhs node print" << std::endl;
+        rhs->print();
+        std::cout << "curr node print" << std::endl;
+        currentNode->print();
+
+        rhs->addChild(currentNode);
+        parentNode->addChild(rhs);
 
         // update lhs and root
-        root = rhs;
+        parentNode = rhs;
 
         // update curr_index
         curr_index += 2;
     }
     curr_index += 1;
     if (isDebug) { std::cout << "next index" << curr_index << std::endl; }
+    if (isDebug) { std::cout << "root " << root->content << std::endl; }
+    std::cout << "ROOT print " << root->leftChild->content << std::endl;
+    root->print();
+    designExtractor->extractDesign(root, visitor);
+
     return curr_index;
 }
 
-int SimpleParser::parse(std::vector<Token> tokens) {
-
-    // Visitor
-//    ParseVisitor* visitor = new ParseVisitor();
-    AssignmentParser* assignmentParser = new AssignmentParser();
-
-    //build ast
-    int curr_index = 0;
+int SimpleParser::parse(const std::vector<Token>& tokens) {
 
     while(curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
-        if (curr_token.type == "variable") {
-            Token next_token = tokens[curr_index + 1];
-            if (next_token.type == "equal") {
-                int next_index = assignmentParser->parse(tokens, curr_index);
+
+        if (isDebug) { std::cout << "curr token: " << curr_token.getValue() << std::endl; }
+        if (curr_token.tokenType == TokenType::kLiteralName) {
+            if (isDebug) { std::cout << "is variable " << std::endl; }
+            if (isDebug) { std::cout << "curr index: " << curr_index << std::endl; }
+
+            Token next_token = tokens.at(curr_index + 1);
+            if (isDebug) { std::cout << "next token: " << curr_token.getValue() << std::endl; }
+            if (next_token.tokenType == TokenType::kEntityAssign) {
+                if (isDebug) { std::cout << "next token is equal " << std::endl; }
+
+                int next_index = assignmentParser->parse(tokens);
+
                 if (next_index == -1) {
                     if (isDebug) { std::cout << "Error: Invalid token in RHS of assignment" << std::endl; }
-                    return -1;
+                    throw std::runtime_error("Error: syntactic error found while building ast.");
                 } else {
                     curr_index = next_index;
                 }
             }
+        } else {
+            throw std::runtime_error("Invalid token. Sorry this is not being handled by the parser yet. We can only handle assignment statements currently.");
         }
-        return curr_index;
     }
-
-    return 0;
+    return curr_index;
 }
 
-std::vector<std::string> SimpleParser::getAllVariables() {
-    return std::vector<std::string>();
+unordered_map<string, unordered_set<string>> AssignmentParser::getAssignVarHashmap() {
+    return visitor->getAssignVarHashmap();
 }
+unordered_map<string, unordered_set<string>> AssignmentParser::getAssignConstHashmap() {
+    return visitor->getAssignConstHashmap();
+};
+unordered_set<string> AssignmentParser::getVariablesHashset() {
+    std::cout << "getVariablesHashset called" << std::endl;
+    return visitor->getVariablesHashset();
+};
+unordered_set<string> AssignmentParser::getConstantsHashset() {
+    return visitor->getConstantsHashset();
+};
