@@ -80,7 +80,7 @@ TEST_CASE("Multiple assign statements") {
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
-    string simpleProgram = "x = z - 3; y = y + 4; i = i + 10";
+    string simpleProgram = "x = z - 3; y = y + 4; i = i + 10;";
     string query_1 = "variable v; Select v";
     string query_2 = "constant c; Select c";
 
