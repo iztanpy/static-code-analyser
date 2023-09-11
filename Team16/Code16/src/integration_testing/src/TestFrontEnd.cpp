@@ -80,13 +80,13 @@ TEST_CASE("Multiple assign statements") {
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
-    string simpleProgram = "x = z - 3; y = y + 4; x = x + 10";
+    string simpleProgram = "x = z - 3; y = y + 4; i = i + 10";
     string query_1 = "variable v; Select v";
     string query_2 = "constant c; Select c";
 
     parser.tokenise(simpleProgram);
 
-    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"x", "y", "z"}));
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"x", "y", "z", "i"}));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"3", "4", "10"}));
 }
 
