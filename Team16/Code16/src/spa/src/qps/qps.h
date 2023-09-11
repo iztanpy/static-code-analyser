@@ -16,5 +16,5 @@ class QPS {
   std::unordered_set<std::string> Evaluate(std::string query);
 
  private:
-  ReadFacade &pkb_reader;
+  QueryEvaluator query_evaluator;
 };
