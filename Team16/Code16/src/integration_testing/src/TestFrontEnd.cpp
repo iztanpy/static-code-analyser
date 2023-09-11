@@ -5,7 +5,7 @@
 #include "SP/SPTokeniser.h"
 #include "PKB/API/WriteFacade.h"
 #include "PKB/API/ReadFacade.h"
-
+#include "qps/qps.h"
 
 #include "catch.hpp"
 
@@ -17,26 +17,26 @@ TEST_CASE("1") {
     ReadFacade readFacade = ReadFacade(&pkb);
     WriteFacade writeFacade = WriteFacade(&pkb);
     SimpleParser parser(&writeFacade);
+    QPS qps(readFacade);
 
     // Initialize SP and SP tokenizer
     string simpleProgram = "x = x + 1;";
     parser.tokenise(simpleProgram);
-    
+
     unordered_set<string> varSet = unordered_set<string>({"x"});
     unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", varSet}});
+        {{"x", varSet}});
     unordered_set<string> constSet = unordered_set<string>({"1"});
     unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", constSet}});
+        {{"x", constSet}});
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
     REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);
     REQUIRE(parser.assignmentParser->getVariablesHashset() == varSet);
     REQUIRE(parser.assignmentParser->getConstantsHashset() == constSet);
 
-  
-    REQUIRE(readFacade.getAllVariables() == std::unordered_set<std::string>{"x"});
-    REQUIRE(readFacade.getAllConstants() == std::unordered_set<std::string>{"1"});
+    REQUIRE(qps.Evaluate("variable v; Select v") == std::unordered_set<std::string>({"x"}));
+    REQUIRE(qps.Evaluate("constant c; Select c") == std::unordered_set<std::string>({"1"}));
 }
 
 TEST_CASE("2") {
@@ -45,11 +45,13 @@ TEST_CASE("2") {
     ReadFacade readFacade = ReadFacade(&pkb);
     WriteFacade writeFacade = WriteFacade(&pkb);
     SimpleParser parser(&writeFacade);
+    QPS qps(readFacade);
 
     string simpleProgram = "x = y + 1;";
     parser.tokenise(simpleProgram);
-    REQUIRE(readFacade.getAllVariables() == std::unordered_set<std::string>{"x", "y"});
-    REQUIRE(readFacade.getAllConstants() == std::unordered_set<std::string>{"1"});
+
+    REQUIRE(qps.Evaluate("variable v; Select v") == std::unordered_set<std::string>({"x", "y"}));
+    REQUIRE(qps.Evaluate("constant c; Select c") == std::unordered_set<std::string>({"1"}));
 }
 
 TEST_CASE("3") {
@@ -58,13 +60,14 @@ TEST_CASE("3") {
     ReadFacade readFacade = ReadFacade(&pkb);
     WriteFacade writeFacade = WriteFacade(&pkb);
     SimpleParser parser(&writeFacade);
+    QPS qps(readFacade);
 
     string simpleProgram = "x = 3; y = 4;";
     parser.tokenise(simpleProgram);
-    REQUIRE(readFacade.getAllVariables() == std::unordered_set<std::string>{"x", "y"});
-    REQUIRE(readFacade.getAllConstants() == std::unordered_set<std::string>{"3", "4"});
-}
 
+    REQUIRE(qps.Evaluate("variable v; Select v") == std::unordered_set<std::string>({"x", "y"}));
+    REQUIRE(qps.Evaluate("constant c; Select c") == std::unordered_set<std::string>({"3", "4"}));
+}
 
 TEST_CASE("4") {
     SPtokeniser tokeniser;
@@ -72,11 +75,13 @@ TEST_CASE("4") {
     ReadFacade readFacade = ReadFacade(&pkb);
     WriteFacade writeFacade = WriteFacade(&pkb);
     SimpleParser parser(&writeFacade);
+    QPS qps(readFacade);
 
     string simpleProgram = "x = z - 3; y = y + 4;";
     parser.tokenise(simpleProgram);
-    REQUIRE(readFacade.getAllVariables() == std::unordered_set<std::string>{"x", "y", "z"});
-    REQUIRE(readFacade.getAllConstants() == std::unordered_set<std::string>{"3", "4"});
+
+    REQUIRE(qps.Evaluate("variable v; Select v") == std::unordered_set<std::string>({"x", "y", "z"}));
+    REQUIRE(qps.Evaluate("constant c; Select c") == std::unordered_set<std::string>({"3", "4"}));
 }
 
 

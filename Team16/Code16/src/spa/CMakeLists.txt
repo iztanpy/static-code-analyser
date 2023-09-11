@@ -25,7 +25,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/select_evaluator.h
         src/qps/query_evaluator/suchthat_evaluator.cpp
         src/qps/query_evaluator/suchthat_evaluator.h
-        src/PKB/pkb.h
+        src/PKB/PKB.h
         src/qps/query_evaluator/usesS_evaluator.cpp
         src/qps/query_evaluator/usesS_evaluator.h
         src/qps/suchthat_clause.cpp
@@ -51,6 +51,8 @@ add_library(spa ${srcs} ${headers}
         src/SP/TNode.cpp
         src/SP/Token.h
         src/PKB/PKB.cpp
+        src/qps/qps.cpp
+        src/qps/qps.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
