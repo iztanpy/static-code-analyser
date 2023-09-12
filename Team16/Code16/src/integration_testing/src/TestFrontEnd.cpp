@@ -120,7 +120,6 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
     string query_2 = "constant c10ueYwh, variable Ur; Select c10ueYwh";
 
     parser.tokenise(simpleProgram);
-
     REQUIRE(qps.Evaluate(query_1)
                 == std::unordered_set<std::string>({"x", "y", "z", "I", "u100", "U48ka", "OoOhd"}));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"3", "4", "100"}));

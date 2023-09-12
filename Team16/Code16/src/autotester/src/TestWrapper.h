@@ -5,6 +5,11 @@
 #include <list>
 #include <fstream>
 #include "SP/SPTokeniser.h"
+#include "PKB/API/ReadFacade.h"
+#include "PKB/API/WriteFacade.h"
+#include "SP/SimpleParser.h"
+#include "PKB/PKB.h"
+#include "qps/qps.h"
 
 // include your other headers here
 #include "AbstractWrapper.h"
@@ -22,4 +27,7 @@ class TestWrapper : public AbstractWrapper {
 
   // method for evaluating a query
   virtual void evaluate(std::string query, std::list<std::string>& results);
+
+ private:
+	PKB pkb;
 };

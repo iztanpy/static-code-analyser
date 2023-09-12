@@ -146,12 +146,14 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                     throw std::runtime_error("Invalid Token: Name cannot start with a digit");
                 } else {
                     Token token{matchedType, matchedValue, lineNumber, linePosition};
+                    std::cout << matchedValue << std::endl;
                     tokens.push_back(token);
                     linePositionWithWhiteSpace += matchedValue.length();
                     linePosition += matchedValue.length();
                 }
             } else {
                 Token token{matchedType, matchedValue, lineNumber, linePosition};
+                std::cout << matchedValue << std::endl;
                 tokens.push_back(token);
                 linePosition += matchedValue.length();
                 linePositionWithWhiteSpace += matchedValue.length();
