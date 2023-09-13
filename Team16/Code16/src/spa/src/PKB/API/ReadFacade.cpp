@@ -6,18 +6,26 @@
 
 ReadFacade::ReadFacade(PKB* pkbptr) : pkb(pkbptr) {}
 
-std::unordered_set<int> ReadFacade::getAllAssigns() {
-    return {1, 2, 3, 4, 5, 6, 7, 8, 9};
+std::unordered_set<statementNumber> ReadFacade::getAllAssigns() {
+    return pkb->getAllAssigns();
 }
 
-std::unordered_set<std::string> ReadFacade::getAllVariables() {
-    return {"x", "y", "z", "a", "b", "c", "d", "e", "f", "g", "h"};
+std::unordered_set<statementNumber> ReadFacade::getAllAssigns(variable LHS, possibleCombinations RHS) {
+    return pkb->getAssigns(LHS, RHS);
+}
+
+std::unordered_set<variable> ReadFacade::getAllVariables() {
+    return pkb->getVariables();
+}
+
+std::unordered_set<variable> ReadFacade::getVariablesUsedBy(statementNumber line) {
+    return pkb ->getVariablesUsedBy(line);
+}
+
+std::unordered_set<constant> ReadFacade::getConstantsUsedBy(statementNumber line) {
+    return pkb -> getConstantsUsedBy(line);
 }
 
 std::unordered_set<std::string> ReadFacade::getAllConstants() {
-    return {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-}
-
-std::unordered_set<std::string> ReadFacade::getVariablesUsedBy(int lineNumber) {
-    return {"x", "y", "z"};
+    return pkb -> getConstants();
 }
