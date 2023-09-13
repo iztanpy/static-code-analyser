@@ -2,22 +2,20 @@
 // Created by Isaac Tan on 13/9/23.
 //
 
-#ifndef SPA_ASSIGNSTORE_H
-#define SPA_ASSIGNSTORE_H
-
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 
 
 class AssignStore {
-private:
+ private:
     typedef std::string variable;
     typedef std::string possibleCombinations;
     typedef int statementNumber;
     std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap;
     std::unordered_map<statementNumber, variable> numLHSMap;
 
-public:
+ public:
     AssignStore();
 
     void addNumRHSMap(std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap);
@@ -27,10 +25,4 @@ public:
     std::unordered_set<statementNumber> getAllAssigns();
 
     std::unordered_set<statementNumber> getAssigns(variable LHS, possibleCombinations RHS);
-
-
-
 };
-
-
-#endif //SPA_ASSIGNSTORE_H

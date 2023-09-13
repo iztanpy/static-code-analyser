@@ -3,6 +3,7 @@
 //
 
 #include "StatementStore.h"
+#include <unordered_map>
 
 typedef std::string variable;
 typedef std::string constant;

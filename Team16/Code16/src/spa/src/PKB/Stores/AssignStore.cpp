@@ -3,6 +3,8 @@
 //
 
 #include "AssignStore.h"
+#include <unordered_map>
+
 typedef std::string variable;
 typedef std::string possibleCombinations;
 typedef int statementNumber;
@@ -12,7 +14,8 @@ AssignStore::AssignStore() {
     this->numRHSMap = std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>>();
 }
 
-void AssignStore::addNumRHSMap(std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap) {
+void AssignStore::addNumRHSMap(std::unordered_map<statementNumber,
+                               std::unordered_set<possibleCombinations>> numRHSMap) {
     this->numRHSMap = numRHSMap;
 }
 
@@ -29,6 +32,7 @@ std::unordered_set<statementNumber> AssignStore::getAllAssigns() {
     }
     return assigns;
 }
+
 
 // get Assign statements that fulfil requirements
 std::unordered_set<statementNumber> AssignStore::getAssigns(AssignStore::variable LHS,

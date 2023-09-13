@@ -2,14 +2,14 @@
 // Created by Isaac Tan on 13/9/23.
 //
 
-#define SPA_STATEMENTSTORE_H
 
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 
 
 class StatementStore {
-private:
+ private:
     typedef std::string variable;
     typedef std::string constant;
     typedef int statementNumber;
@@ -18,13 +18,11 @@ private:
     std::unordered_map<statementNumber, statementType> numTypeMap;
 
 
-public:
+ public:
     StatementStore();
 
     void addStatement(std::unordered_map<statementNumber, statementType> typeMap);
 
     std::unordered_set<statementNumber> getStatements(statementType type);
-
-
 };
 
