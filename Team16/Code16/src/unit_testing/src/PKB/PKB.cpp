@@ -3,18 +3,69 @@
 #include "catch.hpp"
 
 #include "PKB/PKB.h"
+#include "PKB/API/ReadFacade.h"
+#include "PKB/API/WriteFacade.h"
 
 
 TEST_CASE(" 1") {
 	PKB pkb = PKB();
+	WriteFacade writeFacade = WriteFacade(&pkb);
+	ReadFacade readFacade = ReadFacade(&pkb);
 
-	pkb.setAssignments({ {1, {"a", "b"}}, {2, {"c", "d"}}, {3, {"e", "f"}} }, { {1, "a"}, {2, "b"}, {3, "c"} });
+	//make unordered map for <int, string > for assignments
+	std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
+	assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
+	assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
 
-	std::unordered_set<int> assignments = pkb.getAllAssigns();
+	std::unordered_map<statementNumber, variable> assignmentsLHS;
+	assignmentsLHS.insert({ 1, "a" });
+	assignmentsLHS.insert({ 2, "b" });
+	
+	writeFacade.storeAssignments(assignmentsRHS, assignmentsLHS);
 
-	REQUIRE(assignments.size() == 3);
+	for (int value : readFacade.getAllAssigns()) {
+		REQUIRE((value == 1 || value == 2));
+	}
 
+	for (int value : readFacade.getAllAssigns("a", "x + y")) {
+		REQUIRE(value == 1);
+	}
 
+	for (int value : readFacade.getAllAssigns("b", "y + z")) {
+		REQUIRE(value == 2);
+	}
+
+	writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
+
+	for (std::string value : readFacade.getAllVariables()) {
+		REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
+	}
+
+	writeFacade.addLineUsesVar({{1, {"x", "y"}}, {2, {"y", "z"}} });
+
+	for (std::string value : readFacade.getVariablesUsedBy(1)) {
+		REQUIRE((value == "x" || value == "y"));
+	}
+
+	for (std::string value : readFacade.getVariablesUsedBy(2)) {
+		REQUIRE((value == "y" || value == "z"));
+	}
+
+	writeFacade.addLineUsesConst({ {1, {"a", "b"}}, {2, {"b", "c"}} });
+
+	for (std::string value : readFacade.getConstantsUsedBy(1)) {
+		REQUIRE((value == "a" || value == "b"));
+	}
+
+	for (std::string value : readFacade.getConstantsUsedBy(2)) {
+		REQUIRE((value == "b" || value == "c"));
+	}
+
+	writeFacade.storeConstants({ "a", "b", "c" });
+
+	for (std::string value : readFacade.getAllConstants()) {
+		REQUIRE((value == "a" || value == "b" || value == "c"));
+	}
 }
 
 //TEST_CASE("Test PKB") {
