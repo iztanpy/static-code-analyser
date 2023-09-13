@@ -2,8 +2,6 @@
 // Created by Isaac Tan on 13/9/23.
 //
 
-#ifndef SPA_STATEMENTSTORE_H
-#define SPA_STATEMENTSTORE_H
 
 #include <string>
 #include <unordered_set>
