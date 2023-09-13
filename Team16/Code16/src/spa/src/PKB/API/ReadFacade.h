@@ -7,9 +7,9 @@
 
 class ReadFacade {
  private:
-  PKB* pkb;
+  PKB& pkb;
  public:
-  explicit ReadFacade(PKB* pkbptr);
+  explicit ReadFacade(PKB& pkb);
 
   std::unordered_set<int> getAllAssigns();
   std::unordered_set<std::string> getAllVariables();

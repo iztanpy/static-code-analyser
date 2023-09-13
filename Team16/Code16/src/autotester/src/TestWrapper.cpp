@@ -1,10 +1,4 @@
-#include <vector>
-
 #include "TestWrapper.h"
-#include "qps/parsed_query.h"
-#include "qps/query_evaluator/query_evaluator.h"
-#include "qps/query_tokenizer.h"
-#include "qps/query_parser.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
@@ -19,7 +13,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
     // create any objects here as instance variables of this class
     // as well as any initialization required for your spa program
-    this->pkb = PKB();
+    this->pkb_ptr = std::make_unique<PKB>();
 }
 
 // method for parsing the SIMPLE source
@@ -36,10 +30,10 @@ void TestWrapper::parse(std::string filename) {
     std::string input;
     std::string line;
     while (std::getline(file, line)) {
-    /*    std::cout << "TEST" << std::endl;*/
+        /*    std::cout << "TEST" << std::endl;*/
         input += line;
     }
-    WriteFacade writeFacade = WriteFacade(&this->pkb);
+    WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
     SimpleParser parser(&writeFacade);
     parser.tokenise(input);
 }
@@ -49,9 +43,9 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
     // store the answers to the query in the results list (it is initially empty)
     // each result must be a string.
     // Pass the query to a tokenizer
-    ReadFacade readFacade = ReadFacade(&this->pkb);
+    ReadFacade readFacade = ReadFacade(*this->pkb_ptr);
     QPS qps(readFacade);
-  
+
     std::unordered_set<std::string> raw_results = qps.Evaluate(query);
     for (const std::string& result : raw_results) {
         std::cout << result << std::endl;
