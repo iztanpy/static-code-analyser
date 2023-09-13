@@ -1,7 +1,3 @@
-//
-// Created by Isaac Tan on 12/9/23.
-//
-
 #include "ConstantStore.h"
 typedef std::string constant;
 typedef std::string possibleCombinations;

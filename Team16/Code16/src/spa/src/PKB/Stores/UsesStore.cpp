@@ -1,7 +1,3 @@
-//
-// Created by Isaac Tan on 12/9/23.
-//
-
 #include "UsesStore.h"
 #include <unordered_map>
 

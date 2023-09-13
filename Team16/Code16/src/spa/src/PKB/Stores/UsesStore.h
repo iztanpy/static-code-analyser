@@ -1,8 +1,3 @@
-//
-// Created by Isaac Tan on 12/9/23.
-//
-
-
 #include <string>
 #include <unordered_set>
 #include <unordered_map>

@@ -1,7 +1,3 @@
-//
-// Created by Isaac Tan on 12/9/23.
-//
-
 #include "VariableStore.h"
 typedef std::string variable;
 typedef std::string possibleCombinations;
