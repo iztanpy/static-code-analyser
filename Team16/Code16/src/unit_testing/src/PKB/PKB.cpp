@@ -9,8 +9,8 @@
 
 TEST_CASE(" 1") {
 	PKB pkb = PKB();
-	WriteFacade writeFacade = WriteFacade(&pkb);
-	ReadFacade readFacade = ReadFacade(&pkb);
+	auto writeFacade = WriteFacade(pkb);
+	auto readFacade = ReadFacade(pkb);
 
 	//make unordered map for <int, string > for assignments
 	std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
