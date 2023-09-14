@@ -9,7 +9,11 @@ enum class PQLTokenType {
   DECLARATION,
   SELECT,
   SUCH_THAT,
-  PATTERN
+  PATTERN,
+  WILDCARD,
+  RELREF,
+  INTEGER,
+  IDENT
 };
 
 struct QueryToken {
@@ -19,5 +23,6 @@ struct QueryToken {
 
 class QueryTokenizer {
  public:
-  static std::vector<QueryToken> tokenize(const std::string& query);
+  static std::vector<QueryToken> tokenize(const std::string & query);
+  static bool isEnclosedInDoubleQuotes(const std::string & token);
 };
