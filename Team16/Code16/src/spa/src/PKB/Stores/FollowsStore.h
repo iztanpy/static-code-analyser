@@ -5,13 +5,12 @@
 
 
 class FollowsStore {
-private:
+ private:
     typedef int statementNumber;
     std::unordered_map<statementNumber, statementNumber> FollowsMap;
     std::unordered_map<statementNumber, statementNumber> FollowsMapReverse;
 
-public:
-
+ public:
     FollowsStore();
 
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
