@@ -17,8 +17,6 @@ class WriteFacade {
  public:
      explicit WriteFacade(PKB* pkbptr);
 
-     void storeAssignments(std::unordered_set<int> assignments);
-
      void storeAssignments(std::unordered_map<statementNumber,
          std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap);
 

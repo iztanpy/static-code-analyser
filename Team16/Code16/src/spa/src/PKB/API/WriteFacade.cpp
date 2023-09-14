@@ -4,9 +4,6 @@
 
 WriteFacade::WriteFacade(PKB* pkbptr) : pkb(pkbptr) {}
 
-void WriteFacade::storeAssignments(std::unordered_set<int> assignments) {
-}
-
 void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
     std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap) {
     pkb -> setAssignments(numRHSMap, numLHSMap);
