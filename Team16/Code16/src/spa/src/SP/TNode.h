@@ -44,6 +44,19 @@ class TNode {
   }
 };
 
+class ProcedureTNode : public TNode {
+public:
+    ProcedureTNode(const std::string& procedureName) {
+        std::cout << "procedure node created with content: " << procedureName << std::endl;
+        type = TokenType::kEntityProcedure;
+        content = procedureName;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+    void print() const {
+        std::cout << "ProcedureTNode type" << std::endl;
+    }
+};
+
 class AssignTNode : public TNode {
  public:
   AssignTNode() {
@@ -110,7 +123,9 @@ class TNodeFactory {
  public:
   static std::shared_ptr<TNode> createNode(const Token& token) {
       switch (token.tokenType) {
-          case TokenType::kEntityAssign:std::cout << "create assign node " << std::endl;
+          case TokenType::kEntityProcedure:
+              return std::make_shared<ProcedureTNode>(token.value);
+          case TokenType::kEntityAssign:
               return std::make_shared<AssignTNode>();
           case TokenType::kLiteralName: {
               std::string c = token.value;
