@@ -101,7 +101,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens) {
                 }
             }
         } else {
-            throw std::runtime_error(
+            throw InvalidStatementError(
                 "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
@@ -132,5 +132,8 @@ std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
 
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
-    parse(tokens);
+    try { parse(tokens); }
+    catch (InvalidStatementError ise) {
+        ise.log();
+    }
 }

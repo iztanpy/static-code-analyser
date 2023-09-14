@@ -1,10 +1,18 @@
-//#include "SP/SimpleParser.h"
-//#include "SP/DesignExtractor.h"
-//#include "SP/SPTokeniser.h"
-//
-//#include "catch.hpp"
-//
-//using namespace std;
+#include "SP/SimpleParser.h"
+#include "SP/DesignExtractor.h"
+#include "SP/SPTokeniser.h"
+#include "utils/Error.h"
+#include "SP/TNode.h"
+#include "catch.hpp"
+#include "SP/SimpleParser.h"
+#include "PKB/API/WriteFacade.h"
+#include "PKB/API/ReadFacade.h"
+#include "qps/qps.h"
+#include <iostream>
+#include <sstream>
+#include "catch.hpp"
+
+using namespace std;
 //
 //SimpleParser parser;
 //TokenType variableType = TokenType::kLiteralName;
@@ -160,3 +168,5 @@
 //    REQUIRE(parser.assignmentParser->getConstantsHashset() == constSet);
 //}
 //
+
+
