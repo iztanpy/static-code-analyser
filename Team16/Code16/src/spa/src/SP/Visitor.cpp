@@ -1,5 +1,13 @@
 #include "Visitor.h"
 
+void ASTVisitor::visit(const ProcedureTNode* node, std::string& key) {
+    std::cout << "Visiting ProcedureTNode" << std::endl;
+    std::string isKey = "true";
+    std::string isNotKey = "";
+//    node->leftChild->accept(this, isKey);
+//    node->rightChild->accept(this, isNotKey);
+}
+
 void ASTVisitor::visit(const AssignTNode* node, std::string& key) {
     std::cout << "Visiting AssignTNode" << std::endl;
     std::string isKey = "true";

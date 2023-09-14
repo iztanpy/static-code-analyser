@@ -4,7 +4,54 @@
 
 bool isDebug = false;
 
-int AssignmentParser::parse(const std::vector<Token>& tokens) {
+ProcedureParser::ProcedureParser(std::shared_ptr<TNode> rootTNode) : rootTNode(rootTNode) { }
+
+int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
+
+    // validate procedure declaration: procedure (already validated), name, open brace
+    // validations will be refactored into a (syntactic/semantic)evaluator in the future
+    // validate size of procedure declaration
+    if (curr_index + 2 > tokens.size()) {
+        return -1;
+    }
+    // validate procedure name
+    Token procedureNameToken = tokens[curr_index + 1];
+    // check if name is keyword
+    std::unordered_set<TokenType> keywords = {TokenType::kEntityAssign, TokenType::kEntityProcedure,
+                                               TokenType::kEntityRead, TokenType::kEntityPrint,
+                                               TokenType::kEntityWhile, TokenType::kEntityIf,
+                                               TokenType::kEntityElse, TokenType::kEntityCall,
+                                               TokenType::kEntityStmt, TokenType::kEntityConstant,
+                                               TokenType::kEntityVariable};
+
+    if (keywords.find(procedureNameToken.tokenType) != keywords.end()) {
+        // set token to literal
+        procedureNameToken.tokenType = TokenType::kLiteralName;
+    }
+    // check that name is literal
+    if (procedureNameToken.tokenType != TokenType::kLiteralName) {
+        return -1;
+    }
+    // validate procedure open brace
+    size_t openBracesIndex = curr_index + 2;
+    if (tokens[openBracesIndex].tokenType != TokenType::kSepOpenBrace) {
+        return -1;
+    }
+
+    // build procedure ast
+    Token procedure = tokens[curr_index];
+    procedure.value = procedureNameToken.value;
+    std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure);
+
+    // set root node
+    rootTNode = root;
+
+
+    curr_index = curr_index + 3;
+    return curr_index;
+}
+
+int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[curr_index]);
     std::shared_ptr<TNode> root = TNodeFactory::createNode(tokens[curr_index + 1]);
     std::shared_ptr<TNode> parentNode = root;
@@ -77,7 +124,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens) {
 }
 
 SimpleParser::SimpleParser(WriteFacade* writeFacadePtr) : writeFacade(writeFacadePtr) { }
-int SimpleParser::parse(const std::vector<Token>& tokens) {
+int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
 
@@ -91,7 +138,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens) {
             if (next_token.tokenType == TokenType::kEntityAssign) {
                 if (isDebug) { std::cout << "next token is equal " << std::endl; }
 
-                int next_index = assignmentParser->parse(tokens);
+                int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
                     if (isDebug) { std::cout << "Error: Invalid token in RHS of assignment" << std::endl; }
@@ -99,6 +146,13 @@ int SimpleParser::parse(const std::vector<Token>& tokens) {
                 } else {
                     curr_index = next_index;
                 }
+            }
+        } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
+            int next_index = procedureParser->parse(tokens, curr_index);
+            if (next_index == -1) {
+                throw std::runtime_error("Error: syntactic error found while building procedure ast node.");
+            } else {
+                curr_index = next_index;
             }
         } else {
             throw std::runtime_error(
@@ -130,7 +184,12 @@ std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
     return visitor->getConstantsHashset();
 }
 
+std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getProcedureStatementNumberHashmap() {
+    return procedureVisitor->getProcedureStatementNumberHashmap();
+};
+
+
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
-    parse(tokens);
+    parse(tokens, 0);
 }
