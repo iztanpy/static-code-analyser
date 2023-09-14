@@ -2,5 +2,5 @@
 
 class Clause {
  public:
-    virtual ~Clause() = default;
+  virtual ~Clause() = default;
 };
