@@ -32,7 +32,6 @@ TEST_CASE(" 1") {
 	}
 
 	for (int value : readFacade.getAssigns("b", "y + z")) {
-        std::cout << value << std::endl;
 		REQUIRE(value == 2);
 	}
 
@@ -75,7 +74,7 @@ TEST_CASE(" 1") {
 	}
 }
 
-TEST_CASE("test Facades") {
+TEST_CASE("test Facades for AssignStore") {
     PKB pkb = PKB();
     WriteFacade writeFacade = WriteFacade(pkb);
     ReadFacade readFacade = ReadFacade(pkb);
@@ -103,7 +102,6 @@ TEST_CASE("test Facades") {
     }
 
     for (int value : readFacade.getAssigns("b", "y + z")) {
-        std::cout << value << std::endl;
         REQUIRE(value == 2);
     }
 
@@ -118,6 +116,34 @@ TEST_CASE("test Facades") {
     for (std::string value : readFacade.getAllVariables()) {
         REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
     }
+
+    writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
+
+    for (std::string value : readFacade.getVariablesUsedBy(1)) {
+        REQUIRE((value == "x" || value == "y"));
+    }
+
+    for (std::string value : readFacade.getVariablesUsedBy(2)) {
+        REQUIRE((value == "y" || value == "z"));
+    }
+}
+
+TEST_CASE("Test Facades for Variable Store"){
+    PKB pkb = PKB();
+    WriteFacade writeFacade = WriteFacade(pkb);
+    ReadFacade readFacade = ReadFacade(pkb);
+
+    writeFacade.storeVariables({"x", "y", "z", "a", "b"});
+
+    for (std::string value : readFacade.getAllVariables()) {
+        REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
+    }
+}
+
+TEST_CASE("Test Facades for Uses Store") {
+    PKB pkb = PKB();
+    WriteFacade writeFacade = WriteFacade(pkb);
+    ReadFacade readFacade = ReadFacade(pkb);
 
     writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
