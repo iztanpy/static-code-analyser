@@ -115,7 +115,8 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
-    string simpleProgram = "x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd; \t  y = y + 4;";
+    string simpleProgram = "procedure c {x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd;} procedure procedure "
+                           "{ \t  y = y + 4;}";
     string query_1 = "variable Vj5u, v39, constant OvO; Select Vj5u";
     string query_2 = "constant c10ueYwh, variable Ur; Select c10ueYwh";
 
