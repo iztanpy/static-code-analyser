@@ -58,41 +58,52 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     curr_index = curr_index + 2;
     std::shared_ptr<TNode> currentNode = TNodeFactory::createNode(tokens[curr_index], lineNumber);
 
-    while (curr_index <= tokens.size()) {
+    while (curr_index + 1 < tokens.size()) {
         Token curr = tokens[curr_index];
-        // throw error if curr is not constant or variable
-        if (curr.tokenType != TokenType::kLiteralInteger && curr.tokenType != TokenType::kLiteralName) {
-            return -1;
-        }
-
         Token next = tokens[curr_index + 1];
-        std::shared_ptr<TNode> currentNode = TNodeFactory::createNode(tokens[curr_index]);
-
-        // check if next is ; add curr as rhs toc root
-        if (next.tokenType == TokenType::kSepSemicolon || next.lineNumber != curr.lineNumber) {
-
+        // check next token
+        if (next.tokenType == TokenType::kSepSemicolon) {
             parentNode->addChild(currentNode);
-            curr_index += 1;
-            break;
-        }
+                curr_index += 1;
+                break;
+        } else if (next.tokenType == TokenType::kOperatorPlus || next.tokenType == TokenType::kOperatorMinus) {
+            int next_index = curr_index + 1;
+            // create operator node
+            std::shared_ptr<TNode> subtreeRoot = TNodeFactory::createNode(next, lineNumber);
+            // Add operator lhs node to operator node
+            subtreeRoot->addChild(currentNode);
+            // create operator rhs node
+            Token subtreeRHSToken = tokens[curr_index + 2];
+            if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
+                return -1;
+            }
+            std::shared_ptr<TNode> rhsSubtree = TNodeFactory::createNode(subtreeRHSToken, lineNumber);
+            subtreeRoot->addChild(rhsSubtree);
+            // set current node to be operator node
+            currentNode = subtreeRoot;
 
-        // throw error if next is not operator
-        if (next.tokenType != TokenType::kOperatorPlus && next.tokenType != TokenType::kOperatorMinus) {
+            // loop for subsequent operators
+            int temp_index = curr_index + 3;
+            while (temp_index < tokens.size() && (tokens[temp_index].tokenType == TokenType::kOperatorPlus || tokens[temp_index].tokenType == TokenType::kOperatorMinus)) {
+                // create operator node
+                subtreeRoot = TNodeFactory::createNode(tokens[temp_index], lineNumber);
+                // Add operator lhs node to operator node
+                subtreeRoot->addChild(currentNode);
+                // create operator rhs node
+                subtreeRHSToken = tokens[temp_index + 1];
+                if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
+                    return -1;
+                }
+                rhsSubtree = TNodeFactory::createNode(subtreeRHSToken, lineNumber);
+                subtreeRoot->addChild(rhsSubtree);
+                // set current node to be operator node
+                currentNode = subtreeRoot;
+                temp_index += 2;
+            }
+            curr_index = temp_index - 1;
+        } else {
             return -1;
         }
-        // add operator as rhs of root and add curr as lhs of rhs
-        std::shared_ptr<TNode> rhs = TNodeFactory::createNode(next);
-
-        currentNode->print();
-
-        rhs->addChild(currentNode);
-        parentNode->addChild(rhs);
-
-        // update lhs and root
-        parentNode = rhs;
-
-        // update curr_index
-        curr_index += 2;
     }
     curr_index += 1;
     designExtractor->extractDesign(root, visitor);
@@ -127,9 +138,16 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else {
-            throw std::runtime_error(
-                "Invalid token. Sorry the parser can only handle assignment statements currently.");
+            // currently unsupported, skip line for now
+            int temp = curr_index;
+            while (tokens[temp].tokenType != TokenType::kSepSemicolon
+                && tokens[temp].tokenType != TokenType::kSepOpenBrace) {
+                    temp++;
+            }
             lineNumber++;
+            curr_index = temp + 1;
+//            throw std::runtime_error(
+//                "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
     writeFacade->storeVariables(assignmentParser->getVariablesHashset());
