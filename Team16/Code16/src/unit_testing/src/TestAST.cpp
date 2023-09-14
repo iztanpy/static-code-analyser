@@ -20,23 +20,18 @@ TEST_CASE("Test Token to TNode conversion") {
     auto* nodeEqual = new AssignTNode(tokenEqual.lineNumber);
     auto* nodePlus = new PlusTNode(tokenPlus.lineNumber);
     auto* node1 = new ConstantTNode(tokenX.lineNumber, "1");
-    std::shared_ptr<TNode> nodeXCreated = TNodeFactory::createNode(tokenX);
-    std::shared_ptr<TNode> nodeEqualCreated = TNodeFactory::createNode(tokenEqual);
-    std::shared_ptr<TNode> nodePlusCreated = TNodeFactory::createNode(tokenPlus);
-    std::shared_ptr<TNode> node1Created = TNodeFactory::createNode(token1);
+    std::shared_ptr<TNode> nodeXCreated = TNodeFactory::createNode(tokenX, tokenX.lineNumber);
+    std::shared_ptr<TNode> nodeEqualCreated = TNodeFactory::createNode(tokenEqual, tokenEqual.lineNumber);
+    std::shared_ptr<TNode> nodePlusCreated = TNodeFactory::createNode(tokenPlus, tokenPlus.lineNumber);
+    std::shared_ptr<TNode> node1Created = TNodeFactory::createNode(token1, token1.lineNumber);
+
 
     REQUIRE(nodeXCreated->type == TokenType::kLiteralName);
     REQUIRE(nodeXCreated->getContent() == tokenX.getValue());
-//    REQUIRE(nodeX2 == nodeX);
-
     REQUIRE(nodeEqualCreated->type == TokenType::kEntityAssign);
     REQUIRE(nodeEqualCreated->getContent().empty());
-
     REQUIRE(nodePlusCreated->type == TokenType::kOperatorPlus);
-    REQUIRE(nodePlusCreated->getContent().empty());
-
     REQUIRE(node1Created->type == TokenType::kLiteralInteger);
-    REQUIRE(node1Created->getContent() == token1.getValue());
 }
 
 

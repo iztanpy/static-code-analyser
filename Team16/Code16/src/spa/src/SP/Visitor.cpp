@@ -12,9 +12,11 @@ void ASTVisitor::visit(const AssignTNode* node, std::string& key) {
     std::string isNotKey = "";
     node->leftChild->accept(this, isKey);
     node->rightChild->accept(this, isNotKey);
+    assignmentStatementsHashset.insert(node->statementNumber);
 }
 
 void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
+    // If var is on RHS of assign, then it is a key
     if (key == "true") {
         currKey = node->content;
     }

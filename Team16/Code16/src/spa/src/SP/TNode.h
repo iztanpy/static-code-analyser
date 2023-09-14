@@ -108,11 +108,11 @@ class TNodeFactory {
               std::string c = token.value;
               return std::make_shared<ConstantTNode>(statementNumber, c);
           }
-          case TokenType::kOperatorPlus:std::cout << "create plus node " << std::endl;
-              return std::make_shared<PlusTNode>(token.lineNumber);
-          case TokenType::kOperatorMinus:std::cout << "create minus node " << std::endl;
-              return std::make_shared<MinusTNode>(token.lineNumber);
-          default:std::cout << "Error: unknown token type" << std::endl;
+          case TokenType::kOperatorPlus:
+              return std::make_shared<PlusTNode>(statementNumber);
+          case TokenType::kOperatorMinus:
+              return std::make_shared<MinusTNode>(statementNumber);
+          default:
               throw std::invalid_argument("Error: unknown token type");
       }
   }

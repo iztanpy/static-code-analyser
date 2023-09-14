@@ -39,7 +39,7 @@ int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // build procedure ast
     Token procedure = tokens[curr_index];
     procedure.value = procedureNameToken.value;
-    std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure);
+    std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, 0);
 
     // set root node
     rootTNode = root;
@@ -50,12 +50,13 @@ int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
 }
 
 int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[curr_index]);
-    std::shared_ptr<TNode> root = TNodeFactory::createNode(tokens[curr_index + 1]);
+    std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[curr_index], lineNumber);
+    std::shared_ptr<TNode> root = TNodeFactory::createNode(tokens[curr_index + 1], lineNumber);
     std::shared_ptr<TNode> parentNode = root;
     root->addChild(lhs);
 
     curr_index = curr_index + 2;
+    std::shared_ptr<TNode> currentNode = TNodeFactory::createNode(tokens[curr_index], lineNumber);
 
     while (curr_index <= tokens.size()) {
         Token curr = tokens[curr_index];
@@ -108,11 +109,13 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             Token next_token = tokens.at(curr_index + 1);
             if (next_token.tokenType == TokenType::kEntityAssign) {
 
+                assignmentParser->lineNumber = lineNumber;
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
                     throw std::runtime_error("Error: syntactic error found while building ast.");
                 } else {
+                    lineNumber++;
                     curr_index = next_index;
                 }
             }
@@ -126,6 +129,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         } else {
             throw std::runtime_error(
                 "Invalid token. Sorry the parser can only handle assignment statements currently.");
+            lineNumber++;
         }
     }
     writeFacade->storeVariables(assignmentParser->getVariablesHashset());

@@ -33,11 +33,11 @@ TEST_CASE("Test DesignExtractor1") { // x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
-    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.value);
-    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>();
-    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.value);
-    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>();
-    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.value);
+    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
+    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX2.lineNumber, tokenX.value);
+    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
+    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.lineNumber, token1.value);
     nodeEqual->addChild(nodeX);
     nodePlus->addChild(nodeX2);
     nodePlus->addChild(node1);
@@ -63,13 +63,13 @@ TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
-    std::shared_ptr<TNode> nodey = std::make_shared<VariableTNode>(tokenY.value);
-    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>();
-    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.value);
-    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.value);
-    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>();
-    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.value);
-    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>();
+    std::shared_ptr<TNode> nodey = std::make_shared<VariableTNode>(tokenY.lineNumber, tokenY.value);
+    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
+    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
+    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
+    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
 
     nodeEqual->addChild(nodeX);
     nodePlus->addChild(nodeX2);
@@ -98,13 +98,13 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
-    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>();
-    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.value);
-    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.value);
-    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>();
-    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.value);
-    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>();
-    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.value);
+    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenEqual.lineNumber);
+    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
+    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
+    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
+    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.lineNumber, token1.value);
 
     nodeEqual->addChild(nodeX);
     nodePlus->addChild(nodeX2);

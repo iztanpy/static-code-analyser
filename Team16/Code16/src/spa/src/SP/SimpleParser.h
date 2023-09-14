@@ -45,6 +45,7 @@ class AssignmentParser : public Parser {
     AssignmentParser() = default;
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* visitor = new ASTVisitor();  // Initialize to nullptr in the constructor
+    int lineNumber = 0;
 
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
@@ -66,7 +67,6 @@ private:
 public:
     explicit ProcedureParser(std::shared_ptr<TNode> rootTNode);
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    int curr_index = 0;
     ASTVisitor* procedureVisitor = new ASTVisitor();
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap();
 };
@@ -81,11 +81,10 @@ public:
 class SimpleParser : public Parser {
  private:
      WriteFacade* writeFacade;
-
- public:
+    int lineNumber = 1;
+public:
     explicit SimpleParser(WriteFacade* writeFacade);  // Corrected constructor declaration
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    int curr_index = 0;
     std::shared_ptr<TNode> rootTNode = nullptr;
     SPtokeniser tokeniser;
     AssignmentParser* assignmentParser = new AssignmentParser();
