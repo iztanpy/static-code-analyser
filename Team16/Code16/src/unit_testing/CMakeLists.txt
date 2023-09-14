@@ -7,6 +7,7 @@ add_executable(unit_testing ${srcs}
         src/PKB/PKB.cpp
         src/TestTokeniser.cpp
         src/TestSimpleParser.cpp
+        src/PKB/FollowsStoreTest.cpp
 )
 
 target_link_libraries(unit_testing spa)
