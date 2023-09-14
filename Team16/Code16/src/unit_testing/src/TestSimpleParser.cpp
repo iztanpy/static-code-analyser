@@ -21,8 +21,8 @@ Token token1 = Token(constantType,"1", 0);
 Token tokenEnd = Token(endType);
 
 TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     std::vector<Token> my_tokens{tokenX, tokenEqual, tokenX2, tokenPlus, token1, tokenEnd};
     std::cout << "tokens size " << my_tokens.size() << std::endl;
@@ -30,8 +30,8 @@ TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
 }
 
 TEST_CASE("Test DesignExtractor1") { // x = x + 1
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.value);
     std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>();
@@ -60,8 +60,8 @@ TEST_CASE("Test DesignExtractor1") { // x = x + 1
 
 
 TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     std::shared_ptr<TNode> nodey = std::make_shared<VariableTNode>(tokenY.value);
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>();
@@ -95,8 +95,8 @@ TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
 
 
 TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>();
     std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.value);
@@ -130,8 +130,8 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
 
 
 TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     vector<Token> tokenVector;
     tokenVector.push_back(tokenX);
@@ -154,8 +154,8 @@ TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
 }
 
 TEST_CASE(("Test SP single procedure")) {
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
@@ -177,8 +177,8 @@ TEST_CASE(("Test SP single procedure")) {
 }
 
 TEST_CASE(("Test SP multi procedure with keyword names")) {
-    PKB pkb = PKB();
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
