@@ -27,16 +27,18 @@ FollowsStore::statementNumber FollowsStore::getLeader(statementNumber statement)
 
 std::unordered_set<FollowsStore::statementNumber> FollowsStore::getFollowers(statementNumber statement) {
     std::unordered_set<statementNumber> followers;
-    if (this->FollowsMap.find(statement) != this->FollowsMap.end()) {
+    while (this->FollowsMap.find(statement) != this->FollowsMap.end()) {
         followers.insert(this->FollowsMap[statement]);
+        statement = FollowsMap[statement];
     }
     return followers;
 }
 
 std::unordered_set<FollowsStore::statementNumber> FollowsStore::getLeaders(statementNumber statement) {
     std::unordered_set<statementNumber> leaders;
-    if (this->FollowsMapReverse.find(statement) != this->FollowsMapReverse.end()) {
+    while (this->FollowsMapReverse.find(statement) != this->FollowsMapReverse.end()) {
         leaders.insert(this->FollowsMapReverse[statement]);
+        statement = FollowsMapReverse[statement];
     }
     return leaders;
 }
