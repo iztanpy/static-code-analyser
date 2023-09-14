@@ -64,6 +64,8 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/StatementStore.h
         src/PKB/Stores/AssignStore.cpp
         src/utils/statementTypes.h
+        src/PKB/Stores/ModifiesStore.cpp
+        src/PKB/Stores/ModifiesStore.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

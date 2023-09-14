@@ -11,7 +11,9 @@ class UsesStore {
     typedef int statementNumber;
 
     std::unordered_map<statementNumber, std::unordered_set<variable>> UsesVariableMap;
+    std::unordered_map<variable, std::unordered_set<statementNumber>> UsesVariableMapReverse;
     std::unordered_map<statementNumber, std::unordered_set<constant>> UsesConstantMap;
+
 
  public:
     UsesStore();
@@ -21,6 +23,8 @@ class UsesStore {
     void addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> variableUsesMap);
 
     std::unordered_set<variable> getVariablesUsedBy(statementNumber lineNumber);
+
+    std::unordered_set<statementNumber> getStatementsUsing(variable variableName);
 
     std::unordered_set<constant> getConstantsUsedBy(statementNumber lineNumber);
 };
