@@ -1,6 +1,8 @@
 #include "TNode.h"
 #include "Visitor.h"
 
+TNode::TNode(int statementNumber) : statementNumber(statementNumber) {}
+
 void AssignTNode::accept(ASTVisitor *visitor, std::string& key) const {
     std::cout << "AssignTNode node accept visitor" << std::endl;
     visitor->visit(this, key);

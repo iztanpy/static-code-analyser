@@ -16,10 +16,10 @@ TEST_CASE("Test Token to TNode conversion") {
     Token token1 = Token(constantType, "1", 0);
     Token tokenEnd = Token(endType);
 
-    auto* nodeX = new VariableTNode(tokenX.value);
-    auto* nodeEqual = new AssignTNode();
-    auto* nodePlus = new PlusTNode();
-    auto* node1 = new ConstantTNode("1");
+    auto* nodeX = new VariableTNode(tokenX.lineNumber, tokenX.value);
+    auto* nodeEqual = new AssignTNode(tokenEqual.lineNumber);
+    auto* nodePlus = new PlusTNode(tokenPlus.lineNumber);
+    auto* node1 = new ConstantTNode(tokenX.lineNumber, "1");
     std::shared_ptr<TNode> nodeXCreated = TNodeFactory::createNode(tokenX);
     std::shared_ptr<TNode> nodeEqualCreated = TNodeFactory::createNode(tokenEqual);
     std::shared_ptr<TNode> nodePlusCreated = TNodeFactory::createNode(tokenPlus);

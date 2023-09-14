@@ -13,7 +13,9 @@ enum class TokenType;
 
 class TNode {
  public:
+  TNode(int statementNumber);
   virtual ~TNode() = default;
+  int statementNumber = 0;
   TokenType type = TokenType::kUnknownTokenType;
   std::string content = "";
   std::shared_ptr<TNode> leftChild;
@@ -46,7 +48,7 @@ class TNode {
 
 class AssignTNode : public TNode {
  public:
-  AssignTNode() {
+  explicit AssignTNode(int statementNumber) : TNode(statementNumber) {
       std::cout << "assign node created" << std::endl;
       type = TokenType::kEntityAssign;
   }
@@ -58,7 +60,7 @@ class AssignTNode : public TNode {
 
 class VariableTNode : public TNode {
  public:
-  explicit VariableTNode(const std::string& c) {
+  explicit VariableTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
       std::cout << "variable node created with content: " << content << std::endl;
       type = TokenType::kLiteralName;
       content = c;
@@ -71,7 +73,7 @@ class VariableTNode : public TNode {
 
 class ConstantTNode : public TNode {
  public:
-  explicit ConstantTNode(const std::string& c) {
+  explicit ConstantTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
       std::cout << "constant node created with content: " << content << std::endl;
       type = TokenType::kLiteralInteger;
       content = c;
@@ -84,7 +86,7 @@ class ConstantTNode : public TNode {
 
 class PlusTNode : public TNode {
  public:
-  PlusTNode() {
+  explicit PlusTNode(int statementNumber) : TNode(statementNumber) {
       std::cout << "plus node created" << std::endl;
       type = TokenType::kOperatorPlus;
   }
@@ -96,7 +98,7 @@ class PlusTNode : public TNode {
 
 class MinusTNode : public TNode {
  public:
-  MinusTNode() {
+  explicit MinusTNode(int statementNumber) : TNode(statementNumber) {
       std::cout << "minus node created" << std::endl;
       type = TokenType::kOperatorMinus;
   }
@@ -111,19 +113,19 @@ class TNodeFactory {
   static std::shared_ptr<TNode> createNode(const Token& token) {
       switch (token.tokenType) {
           case TokenType::kEntityAssign:std::cout << "create assign node " << std::endl;
-              return std::make_shared<AssignTNode>();
+              return std::make_shared<AssignTNode>(token.lineNumber);
           case TokenType::kLiteralName: {
               std::string c = token.value;
-              return std::make_shared<VariableTNode>(c);
+              return std::make_shared<VariableTNode>(token.lineNumber, c);
           }
           case TokenType::kLiteralInteger: {
               std::string c = token.value;
-              return std::make_shared<ConstantTNode>(c);
+              return std::make_shared<ConstantTNode>(token.lineNumber, c);
           }
           case TokenType::kOperatorPlus:std::cout << "create plus node " << std::endl;
-              return std::make_shared<PlusTNode>();
+              return std::make_shared<PlusTNode>(token.lineNumber);
           case TokenType::kOperatorMinus:std::cout << "create minus node " << std::endl;
-              return std::make_shared<MinusTNode>();
+              return std::make_shared<MinusTNode>(token.lineNumber);
           default:std::cout << "Error: unknown token type" << std::endl;
               throw std::invalid_argument("Error: unknown token type");
       }
