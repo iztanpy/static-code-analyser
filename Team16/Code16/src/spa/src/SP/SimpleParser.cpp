@@ -150,10 +150,12 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
 //                "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
+    writeFacade->storeAssignments(assignmentParser->getAssignmentStatementsHashset());
     writeFacade->storeVariables(assignmentParser->getVariablesHashset());
     writeFacade->storeConstants(assignmentParser->getConstantsHashset());
     writeFacade->storeUsesVar(assignmentParser->getAssignVarHashmap());
     writeFacade->storeUsesConst(assignmentParser->getAssignConstHashmap());
+    writeFacade->storeLineUses(assignmentParser->getUsesStatementNumberHashmap());
     return curr_index;
 }
 
@@ -172,6 +174,18 @@ std::unordered_set<std::string> AssignmentParser::getVariablesHashset() {
 std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
     return visitor->getConstantsHashset();
 }
+
+std::unordered_map<int, std::unordered_set<std::string>> AssignmentParser::getUsesStatementNumberHashmap() {
+    return visitor->getUsesStatementNumberHashmap();
+};
+
+std::unordered_map<int, std::string> AssignmentParser::getUsesStatementNumberVarHashmap() {
+    return visitor->getUsesStatementNumberVarHashmap();
+};
+
+std::unordered_set<int> AssignmentParser::getAssignmentStatementsHashset() {
+    return visitor->getAssignmentStatementsHashset();
+};
 
 std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getProcedureStatementNumberHashmap() {
     return procedureVisitor->getProcedureStatementNumberHashmap();

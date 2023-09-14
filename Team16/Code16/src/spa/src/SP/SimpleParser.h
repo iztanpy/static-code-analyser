@@ -51,6 +51,10 @@ class AssignmentParser : public Parser {
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
     std::unordered_set<std::string> getVariablesHashset();
     std::unordered_set<std::string> getConstantsHashset();
+
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
+    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap();
+    std::unordered_set<int> getAssignmentStatementsHashset();
 };
 
 
@@ -89,17 +93,6 @@ public:
     SPtokeniser tokeniser;
     AssignmentParser* assignmentParser = new AssignmentParser();
     ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
-
-
-    // Assignment/Uses
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
-    std::unordered_set<std::string> getVariablesHashset();
-    std::unordered_set<std::string> getConstantsHashset();
-
-    // Procedures
-    std::unordered_set<std::string> getProcedureStatementNumberHashmap();
-
     void tokenise(std::string simpleProgram);
 };
 

@@ -199,3 +199,62 @@ TEST_CASE(("Test SP multi procedure with keyword names")) {
     REQUIRE(parser.assignmentParser->getConstantsHashset() == constSet);
 }
 
+TEST_CASE(("Test SP storing of statement numbers for Uses")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    SPtokeniser tokeniser;
+
+    string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
+    parser.parse(tokens_simple, 0);
+//
+    unordered_set<string> varSet = unordered_set<string>({"x", "y"});
+    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>(
+            {{"x", {"x"}}, {"y", {"x", "y"}}});
+    unordered_set<string> constSet = unordered_set<string>({"1"});
+    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>(
+            {{"x", constSet}, {"y", constSet}});
+    unordered_map<int, string> usesStatementNumberVarHashmap = unordered_map<int, string>(
+            {{1, "x"}, {2, "y"}, {3, "y"}});
+
+    REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
+    REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);
+    REQUIRE(parser.assignmentParser->getVariablesHashset() == varSet);
+    REQUIRE(parser.assignmentParser->getConstantsHashset() == constSet);
+    REQUIRE(parser.assignmentParser->getUsesStatementNumberVarHashmap() == usesStatementNumberVarHashmap);
+}
+
+
+TEST_CASE(("Test SP storing of assignment statements")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    SPtokeniser tokeniser;
+
+    string simpleProgram = "procedure p {x = x + 1; read r; while(i = 0) { read f;} } procedure wee { y = y + x + 1;}";
+    std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
+    parser.parse(tokens_simple, 0);
+
+    unordered_set<int> assignmentStatementsHashset = unordered_set<int>({1, 5});
+
+    REQUIRE(parser.assignmentParser->getAssignmentStatementsHashset() == assignmentStatementsHashset);
+
+}
+
+
+TEST_CASE(("Test SP assignment pattern")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    SPtokeniser tokeniser;
+
+    string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
+    parser.parse(tokens_simple, 0);
+    unordered_map<int, unordered_set<string>> usesStatementNumberHashmap = unordered_map<int, unordered_set<string>>(
+            {{1, {"x", "1", "x + 1"}}, {2, {"x", "y", "1", "y + x + 1", "y + x"}}, {3, {"y", "x", "1", "y + x + 1", "y + x"}}});
+    unordered_map<int, unordered_set<string>> res = parser.assignmentParser->getUsesStatementNumberHashmap();
+    REQUIRE(res == usesStatementNumberHashmap);
+
+}

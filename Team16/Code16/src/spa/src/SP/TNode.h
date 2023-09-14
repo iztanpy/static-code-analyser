@@ -34,7 +34,7 @@ class TNode {
   bool operator==(const TNode& other) const {
       return type == other.type && content == other.content;
   }
-  std::string getContent() const {
+  virtual std::string getContent() const {
       return content;
   }
 };
@@ -80,6 +80,8 @@ class PlusTNode : public TNode {
       type = TokenType::kOperatorPlus;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+      return leftChild->getContent() + " + " + rightChild->getContent();
   }
 };
 
@@ -89,6 +91,8 @@ class MinusTNode : public TNode {
       type = TokenType::kOperatorMinus;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+      return leftChild->getContent() + " - " + rightChild->getContent();
   }
 };
 

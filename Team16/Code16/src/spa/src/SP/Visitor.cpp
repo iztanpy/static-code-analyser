@@ -19,6 +19,7 @@ void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
     // If var is on RHS of assign, then it is a key
     if (key == "true") {
         currKey = node->content;
+        usesStatementNumberVarHashmap.insert({node->statementNumber, node->content});
     }
 
     variablesHashset.insert(node->content);
@@ -27,6 +28,8 @@ void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
         std::unordered_set<std::string>& set = assignVarHashmap[currKey];
         set.insert(node->content);
     }
+    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
+    set.insert(node->content);
 }
 
 void ASTVisitor::visit(const ConstantTNode* node, std::string& key) {
@@ -40,14 +43,20 @@ void ASTVisitor::visit(const ConstantTNode* node, std::string& key) {
             set.insert(node->content);
         }
     }
+    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
+    set.insert(node->content);
 }
 
 void ASTVisitor::visit(const PlusTNode* node, std::string& key) {
     node->leftChild->accept(this, key);
     node->rightChild->accept(this, key);
+    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
+    set.insert(node->getContent());
 }
 
 void ASTVisitor::visit(const MinusTNode* node, std::string& key) {
     node->leftChild->accept(this, key);
     node->rightChild->accept(this, key);
+    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
+    set.insert(node->getContent());
 }

@@ -25,6 +25,9 @@ class Visitor {
 
     std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
     std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
+    std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
+    std::unordered_map<int, std::string> usesStatementNumberVarHashmap;
+    std::unordered_set<int> assignmentStatementsHashset;
     std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
     std::unordered_set<std::string> variablesHashset;
     std::unordered_set<std::string> constantsHashset;
@@ -45,6 +48,15 @@ class Visitor {
     }
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap() const {
         return assignConstHashmap;
+    }
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
+        return usesStatementNumberHashmap;
+    }
+    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap() const {
+        return usesStatementNumberVarHashmap;
+    }
+    std::unordered_set<int> getAssignmentStatementsHashset() const {
+        return assignmentStatementsHashset;
     }
 };
 

@@ -133,3 +133,21 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
                 == std::unordered_set<std::string>({"x", "y", "z", "I", "u100", "U48ka", "OoOhd"}));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"3", "4", "100"}));
 }
+
+
+TEST_CASE("Selecting Assign statements") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    QPS qps(readFacade);
+
+    string simpleProgram = "procedure c {x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd;} procedure procedure "
+                           "{ \t  read r; y = y + 4;}";
+    string query_1 = "assign a, Select a";
+
+    parser.tokenise(simpleProgram);
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"1", "3"}));
+}
+
