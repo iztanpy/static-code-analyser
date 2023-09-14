@@ -16,16 +16,17 @@ typedef std::string possibleCombinations;
 typedef std::string constant;
 
 class PKB {
-private:
+ private:
     AssignStore* assignStore;
     VariableStore* variableStore;
     UsesStore* usesStore;
     ConstantStore* constantStore;
 
-public:
+ public:
     PKB();
     void setAssignments(std::unordered_map<statementNumber,
-            std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap);
+            std::unordered_set<possibleCombinations>> numRHSMap,
+            std::unordered_map<statementNumber, variable> numLHSMap);
 
     std::unordered_set<statementNumber> getAllAssigns();
 
