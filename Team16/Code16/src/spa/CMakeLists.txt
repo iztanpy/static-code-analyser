@@ -25,7 +25,6 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/select_evaluator.h
         src/qps/query_evaluator/suchthat_evaluator.cpp
         src/qps/query_evaluator/suchthat_evaluator.h
-        src/PKB/PKB.h
         src/qps/query_evaluator/usesS_evaluator.cpp
         src/qps/query_evaluator/usesS_evaluator.h
         src/qps/suchthat_clause.cpp

@@ -24,7 +24,6 @@ class PKB {
 
  public:
      PKB();
-
      void setAssignments(std::unordered_map<statementNumber,
          std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap);
 
