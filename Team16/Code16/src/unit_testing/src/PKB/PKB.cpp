@@ -39,11 +39,13 @@ TEST_CASE("Test Read and Write Facades") {
     std::unordered_map<std::string, std::unordered_set<std::string>> UsesConst;
     std::unordered_map<std::string, std::unordered_set<std::string>> UsesVar;
     std::unordered_map<int, std::unordered_set<std::string>> LineUses;
-    PKB pkb = PKB(assignments, variables, constants, UsesConst, UsesVar, LineUses);
 
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB>
+        pkb_ptr = std::make_unique<PKB>(assignments, variables, constants, UsesConst, UsesVar, LineUses);
 
-    ReadFacade readFacade = ReadFacade(&pkb);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
 
     for (const auto& value : assignments) {
         REQUIRE(assignments.find(value) != assignments.end());
