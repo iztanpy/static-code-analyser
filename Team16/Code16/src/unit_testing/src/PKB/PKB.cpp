@@ -16,24 +16,31 @@ TEST_CASE(" 1") {
 	std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
 	assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
 	assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
+    assignmentsRHS.insert({ 3, { "y + w", "x" } });
 
 	std::unordered_map<statementNumber, variable> assignmentsLHS;
 	assignmentsLHS.insert({ 1, "a" });
 	assignmentsLHS.insert({ 2, "b" });
+    assignmentsLHS.insert({ 3, "b" });
 	
 	writeFacade.storeAssignments(assignmentsRHS, assignmentsLHS);
 
-	for (int value : readFacade.getAllAssigns()) {
-		REQUIRE((value == 1 || value == 2));
-	}
+    REQUIRE(readFacade.getAllAssigns().size() == 3);
 
-	for (int value : readFacade.getAllAssigns("a", "x + y")) {
+	for (int value : readFacade.getAssigns("a", "x + y")) {
 		REQUIRE(value == 1);
 	}
 
-	for (int value : readFacade.getAllAssigns("b", "y + z")) {
+	for (int value : readFacade.getAssigns("b", "y + z")) {
+        std::cout << value << std::endl;
 		REQUIRE(value == 2);
 	}
+
+    REQUIRE(readFacade.getAssigns("_", "x + y").size() == 2);
+
+    REQUIRE(readFacade.getAssigns("_", "_").size() == 3);
+
+    REQUIRE(readFacade.getAssigns("b", "_").size() == 2);
 
 	writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
 
@@ -67,6 +74,62 @@ TEST_CASE(" 1") {
 		REQUIRE((value == "a" || value == "b" || value == "c"));
 	}
 }
+
+TEST_CASE("test Facades") {
+    PKB pkb = PKB();
+    WriteFacade writeFacade = WriteFacade(pkb);
+    ReadFacade readFacade = ReadFacade(pkb);
+
+    std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
+    assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
+    assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
+    assignmentsRHS.insert({ 3, { "y + w", "x" } });
+
+    std::unordered_map<statementNumber, variable> assignmentsLHS;
+    assignmentsLHS.insert({ 1, "a" });
+    assignmentsLHS.insert({ 2, "b" });
+    assignmentsLHS.insert({ 3, "b" });
+
+    writeFacade.storeAssignments(assignmentsRHS, assignmentsLHS);
+
+    REQUIRE(readFacade.getAllAssigns().size() == 3);
+
+//    for (int value: readFacade.getAllAssigns()) {
+//        std::cout << value << std::endl;
+//    }
+
+    for (int value : readFacade.getAssigns("a", "x + y")) {
+        REQUIRE(value == 1);
+    }
+
+    for (int value : readFacade.getAssigns("b", "y + z")) {
+        std::cout << value << std::endl;
+        REQUIRE(value == 2);
+    }
+
+    REQUIRE(readFacade.getAssigns("_", "x + y").size() == 2);
+
+    REQUIRE(readFacade.getAssigns("_", "_").size() == 3);
+
+    REQUIRE(readFacade.getAssigns("b", "_").size() == 2);
+
+    writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
+
+    for (std::string value : readFacade.getAllVariables()) {
+        REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
+    }
+
+    writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
+
+    for (std::string value : readFacade.getVariablesUsedBy(1)) {
+        REQUIRE((value == "x" || value == "y"));
+    }
+
+    for (std::string value : readFacade.getVariablesUsedBy(2)) {
+        REQUIRE((value == "y" || value == "z"));
+    }
+}
+
 
 //TEST_CASE("Test PKB") {
 //    std::unordered_set<int> assignments = {1, 2, 3};

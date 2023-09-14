@@ -36,6 +36,10 @@ std::unordered_set<statementNumber> AssignStore::getAssigns(AssignStore::variabl
     std::unordered_set<statementNumber> assigns;
 
     if (LHS == "_") {
+        if (RHS == "_") {
+            // return all assigns
+            return this->getAllAssigns();
+        }
         // only need to match RHS
         for (auto const& x : this->numRHSMap) {
             for (auto const& y : x.second) {
@@ -43,7 +47,6 @@ std::unordered_set<statementNumber> AssignStore::getAssigns(AssignStore::variabl
                     assigns.insert(x.first);
                 }
             }
-            return assigns;
         }
         return assigns;
     } else if (RHS == "_") {
@@ -66,4 +69,3 @@ std::unordered_set<statementNumber> AssignStore::getAssigns(AssignStore::variabl
     }
     return assigns;
 }
-

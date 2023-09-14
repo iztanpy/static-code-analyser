@@ -9,7 +9,7 @@ std::unordered_set<statementNumber> ReadFacade::getAllAssigns() {
     return pkb.getAllAssigns();
 }
 
-std::unordered_set<statementNumber> ReadFacade::getAllAssigns(variable LHS, possibleCombinations RHS) {
+std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, possibleCombinations RHS) {
     return pkb.getAssigns(LHS, RHS);
 }
 
@@ -27,8 +27,4 @@ std::unordered_set<constant> ReadFacade::getConstantsUsedBy(statementNumber line
 
 std::unordered_set<std::string> ReadFacade::getAllConstants() {
     return pkb.getConstants();
-}
-
-std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, possibleCombinations RHS) {
-    return pkb.getAssigns(LHS, RHS);
 }
