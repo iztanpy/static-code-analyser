@@ -12,10 +12,10 @@ typedef std::string constant;
 
 class WriteFacade {
  private:
-     PKB* pkb;
+    PKB& pkb;
 
  public:
-     explicit WriteFacade(PKB* pkbptr);
+    explicit WriteFacade(PKB& pkb);
 
      void storeAssignments(std::unordered_map<statementNumber,
          std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap);
@@ -28,8 +28,8 @@ class WriteFacade {
 
      void storeConstants(std::unordered_set<constant> constants);
 
-     void storeUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
-     void storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
+    void storeUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
+    void storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
 
-     void storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants);
+    void storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants);
 };

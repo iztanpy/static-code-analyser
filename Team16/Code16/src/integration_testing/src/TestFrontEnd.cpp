@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "SP/TNode.h"
 #include "catch.hpp"
 #include "SP/SimpleParser.h"
@@ -10,9 +12,10 @@
 using namespace std;
 
 TEST_CASE("One assign statement 1") {
-    PKB pkb = PKB();
-    ReadFacade readFacade = ReadFacade(&pkb);
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
@@ -40,9 +43,10 @@ TEST_CASE("One assign statement 1") {
 }
 
 TEST_CASE("One assign statement with white-spaces") {
-    PKB pkb = PKB();
-    ReadFacade readFacade = ReadFacade(&pkb);
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
@@ -57,9 +61,10 @@ TEST_CASE("One assign statement with white-spaces") {
 }
 
 TEST_CASE("Simple assign statements") {
-    PKB pkb = PKB();
-    ReadFacade readFacade = ReadFacade(&pkb);
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
@@ -74,9 +79,10 @@ TEST_CASE("Simple assign statements") {
 }
 
 TEST_CASE("Multiple assign statements") {
-    PKB pkb = PKB();
-    ReadFacade readFacade = ReadFacade(&pkb);
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
@@ -91,9 +97,10 @@ TEST_CASE("Multiple assign statements") {
 }
 
 TEST_CASE("Assign statements with many SIMPLE RHS terms and whitespaces") {
-    PKB pkb = PKB();
-    ReadFacade readFacade = ReadFacade(&pkb);
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
@@ -109,9 +116,10 @@ TEST_CASE("Assign statements with many SIMPLE RHS terms and whitespaces") {
 }
 
 TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") {
-    PKB pkb = PKB();
-    ReadFacade readFacade = ReadFacade(&pkb);
-    WriteFacade writeFacade = WriteFacade(&pkb);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
@@ -120,7 +128,6 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
     string query_2 = "constant c10ueYwh, variable Ur; Select c10ueYwh";
 
     parser.tokenise(simpleProgram);
-
     REQUIRE(qps.Evaluate(query_1)
                 == std::unordered_set<std::string>({"x", "y", "z", "I", "u100", "U48ka", "OoOhd"}));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"3", "4", "100"}));
