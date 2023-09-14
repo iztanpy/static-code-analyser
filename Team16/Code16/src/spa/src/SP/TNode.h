@@ -23,119 +23,90 @@ class TNode {
   virtual void accept(ASTVisitor* visitor, std::string& key) const = 0;
   void addChild(const std::shared_ptr<TNode>& child) {
       if (!leftChild) {
-          std::cout << "TNode addLeftChild with content: " << child->content << std::endl;
           leftChild = child;
       } else if (!rightChild) {
-          std::cout << "TNode addRightChild with content: " << child->content << std::endl;
           rightChild = child;
       } else {
-          std::cout << "Error: TNode already has two children" << std::endl;
           throw std::invalid_argument("Error: TNode already has two children");
       }
   }
 
   bool operator==(const TNode& other) const {
-      std::cout << "TNode operator== called" << std::endl;
       return type == other.type && content == other.content;
   }
   std::string getContent() const {
       return content;
   }
-  void print() const {
-      std::cout << "TNode type" << std::endl;
-  }
 };
 
 class ProcedureTNode : public TNode {
 public:
-    ProcedureTNode(const std::string& procedureName) {
-        std::cout << "procedure node created with content: " << procedureName << std::endl;
+    explicit ProcedureTNode(const std::string& procedureName) : TNode(0) {
         type = TokenType::kEntityProcedure;
         content = procedureName;
     }
     void accept(ASTVisitor* visitor, std::string& key) const override;
-    void print() const {
-        std::cout << "ProcedureTNode type" << std::endl;
-    }
 };
 
 class AssignTNode : public TNode {
  public:
   explicit AssignTNode(int statementNumber) : TNode(statementNumber) {
-      std::cout << "assign node created" << std::endl;
       type = TokenType::kEntityAssign;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  void print() const {
-      std::cout << "AssignTNode type" << std::endl;
-  }
 };
 
 class VariableTNode : public TNode {
  public:
   explicit VariableTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
-      std::cout << "variable node created with content: " << content << std::endl;
       type = TokenType::kLiteralName;
       content = c;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  void print() const {
-      std::cout << "VariableTNode type" << std::endl;
-  }
 };
 
 class ConstantTNode : public TNode {
  public:
   explicit ConstantTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
-      std::cout << "constant node created with content: " << content << std::endl;
       type = TokenType::kLiteralInteger;
       content = c;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  void print() const {
-      std::cout << "ConstantTNode type" << std::endl;
-  }
 };
 
 class PlusTNode : public TNode {
  public:
   explicit PlusTNode(int statementNumber) : TNode(statementNumber) {
-      std::cout << "plus node created" << std::endl;
       type = TokenType::kOperatorPlus;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  void print() const {
-      std::cout << "PlusTNode type" << std::endl;
   }
 };
 
 class MinusTNode : public TNode {
  public:
   explicit MinusTNode(int statementNumber) : TNode(statementNumber) {
-      std::cout << "minus node created" << std::endl;
       type = TokenType::kOperatorMinus;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  void print() const {
-      std::cout << "MinusTNode type" << std::endl;
   }
 };
 
 class TNodeFactory {
  public:
-  static std::shared_ptr<TNode> createNode(const Token& token) {
+  static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
       switch (token.tokenType) {
           case TokenType::kEntityProcedure:
               return std::make_shared<ProcedureTNode>(token.value);
           case TokenType::kEntityAssign:
-              return std::make_shared<AssignTNode>(token.lineNumber);
+              return std::make_shared<AssignTNode>(statementNumber);
           case TokenType::kLiteralName: {
               std::string c = token.value;
-              return std::make_shared<VariableTNode>(token.lineNumber, c);
+              return std::make_shared<VariableTNode>(statementNumber, c);
           }
           case TokenType::kLiteralInteger: {
               std::string c = token.value;
-              return std::make_shared<ConstantTNode>(token.lineNumber, c);
+              return std::make_shared<ConstantTNode>(statementNumber, c);
           }
           case TokenType::kOperatorPlus:std::cout << "create plus node " << std::endl;
               return std::make_shared<PlusTNode>(token.lineNumber);

@@ -154,12 +154,9 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             }
         }
 
-        if (matchedType != TokenType::kWhiteSpace) std::cout << "token: " << matchedValue << std::endl;
-
         if (matchedType == TokenType::kUnknownTokenType) { throw std::runtime_error("Invalid Token Type"); }
 
         if (matchedType == TokenType::kSepOpenBrace or matchedType == TokenType::kSepOpenParen) {
-            std::cout << matchedValue << std::endl;
             braceStack.push(matchedValue[0]);
         }
 
@@ -167,19 +164,15 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             linePositionWithWhiteSpace++;
         } else if (matchedType == TokenType::kSepCloseBrace or matchedType == TokenType::kSepCloseParen) {
             if (braceStack.empty()) {
-                std::cout << matchedValue << std::endl;
                 throw std::runtime_error("Syntactic error: Unmatched closing brace");
             } else {
                 char top = braceStack.top();
                 if (matchedValue[0] == '}' and top == '{') {
                     braceStack.pop();
-                    std::cout << "pop: " << matchedValue << std::endl;
                 } else if (matchedValue[0] == ')' and top == '(') {
                     braceStack.pop();
-                    std::cout << "pop: " << matchedValue << std::endl;
                     // insert ')' as a token
                     Token token{matchedType, matchedValue, lineNumber, linePosition};
-                    std::cout << matchedValue << std::endl;
                     tokens.push_back(token);
                     linePosition += 1;
                     linePositionWithWhiteSpace += 1;
@@ -192,7 +185,6 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 throw std::runtime_error("Invalid Token: Name cannot start with a digit");
             } else {
                 Token token{matchedType, matchedValue, lineNumber, linePosition};
-                std::cout << matchedValue << std::endl;
                 tokens.push_back(token);
                 linePositionWithWhiteSpace += matchedValue.length();
                 linePosition += matchedValue.length();
