@@ -3,6 +3,11 @@
 
 TNode::TNode(int statementNumber) : statementNumber(statementNumber) {}
 
+void ProcedureTNode::accept(ASTVisitor *visitor, std::string& key) const {
+    std::cout << "ProcedureTNode node accept visitor" << std::endl;
+    visitor->visit(this, key);
+}
+
 void AssignTNode::accept(ASTVisitor *visitor, std::string& key) const {
     std::cout << "AssignTNode node accept visitor" << std::endl;
     visitor->visit(this, key);

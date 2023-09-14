@@ -29,8 +29,7 @@ class Parser {
  public:
     Parser() = default;
     virtual ~Parser() = default;
-    virtual int parse(const std::vector<Token>& tokens) = 0;
-    int curr_index = 0;
+    virtual int parse(const std::vector<Token>& tokens, int curr_index) = 0;
     DesignExtractor* designExtractor = new DesignExtractor();  // Initialize to nullptr in the constructor
 };
 
@@ -44,13 +43,32 @@ class Parser {
 class AssignmentParser : public Parser {
  public:
     AssignmentParser() = default;
-    int parse(const std::vector<Token>& tokens) override;
+    int parse(const std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* visitor = new ASTVisitor();  // Initialize to nullptr in the constructor
 
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
     std::unordered_set<std::string> getVariablesHashset();
     std::unordered_set<std::string> getConstantsHashset();
+};
+
+
+/**
+ * @class ProcedureParser
+ * @brief A concrete subclass of Parser specialized for parsing assignment statements.
+ *
+ * The `ProcedureParser` class inherits from the `Parser` class and provides an implementation for parsing
+ * assignment statements. It also contains methods for accessing information related to the parsed assignments.
+ */
+class ProcedureParser : public Parser {
+private:
+    std::shared_ptr<TNode> rootTNode;
+public:
+    explicit ProcedureParser(std::shared_ptr<TNode> rootTNode);
+    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    int curr_index = 0;
+    ASTVisitor* procedureVisitor = new ASTVisitor();
+    std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap();
 };
 
 /**
@@ -66,15 +84,23 @@ class SimpleParser : public Parser {
 
  public:
     explicit SimpleParser(WriteFacade* writeFacade);  // Corrected constructor declaration
-    int parse(const std::vector<Token>& tokens) override;
+    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    int curr_index = 0;
+    std::shared_ptr<TNode> rootTNode = nullptr;
     SPtokeniser tokeniser;
     AssignmentParser* assignmentParser = new AssignmentParser();
+    ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
 
 
+    // Assignment/Uses
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
     std::unordered_set<std::string> getVariablesHashset();
     std::unordered_set<std::string> getConstantsHashset();
+
+    // Procedures
+    std::unordered_set<std::string> getProcedureStatementNumberHashmap();
+
     void tokenise(std::string simpleProgram);
 };
 
