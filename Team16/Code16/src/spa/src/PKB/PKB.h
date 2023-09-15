@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <memory>
 #include "Stores/VariableStore.h"
 #include "Stores/AssignStore.h"
 #include "Stores/UsesStore.h"
@@ -17,10 +18,10 @@ typedef std::string constant;
 
 class PKB {
  private:
-    AssignStore* assignStore;
-    VariableStore* variableStore;
-    UsesStore* usesStore;
-    ConstantStore* constantStore;
+     std::unique_ptr<AssignStore> assignStore;
+     std::unique_ptr<VariableStore> variableStore;
+     std::unique_ptr<UsesStore> usesStore;
+     std::unique_ptr<ConstantStore> constantStore;
 
  public:
     PKB();
