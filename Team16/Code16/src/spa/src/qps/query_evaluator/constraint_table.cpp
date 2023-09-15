@@ -11,6 +11,7 @@ std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, int
   }
   return result;
 }
+
 std::vector<std::string> RepeatVector(const std::vector<std::string>& vec, int n) {
   std::vector<std::string> result;
   for (int i = 0; i < n; ++i) {
@@ -22,10 +23,10 @@ std::vector<std::string> RepeatVector(const std::vector<std::string>& vec, int n
 }
 
 template<typename T>
-std::vector<T> ExtractFromIndices(const std::vector<T>& vec, const std::vector<int>& indices) {
+std::vector<T> SelectByIndex(const std::vector<T>& vec, const std::vector<std::size_t>& indices) {
   std::vector<T> result;
 
-  for (int index : indices) {
+  for (size_t index : indices) {
     if (index >= 0 && index < vec.size()) {
       result.push_back(vec[index]);
     }
@@ -34,36 +35,70 @@ std::vector<T> ExtractFromIndices(const std::vector<T>& vec, const std::vector<i
   return result;
 }
 
-template<typename T>
-std::vector<int> FindIndices(const std::vector<T>& vector1, const std::unordered_set<T>& filter_set) {
-  std::vector<int> indices;
-
-  for (int i = 0; i < vector1.size(); ++i) {
-    if (filter_set.find(vector1[i]) != filter_set.end()) {
-      indices.push_back(i);
-    }
-  }
-
-  return indices;
+Table ConstraintTable::GetTableForTesting() {
+  return table;
 }
 
-ConstraintTable::ConstraintTable(const Table& initTable) : table(initTable) {}
+void ConstraintTable::Solve(const UnaryConstraint& constraint) {
+  ColName col_name = constraint.col_name;
+  if (table.find(col_name) == table.end()) {
+    // Add new ColName to the table
+    return AddNewUnaryConstraint(constraint);
+  }
+  return AddExistingUnaryConstraint(constraint);
+}
+
+void ConstraintTable::Solve(const BinaryConstraint& constraint) {
+  ColName col_name1 = constraint.pair_col_names.first;
+  ColName col_name2 = constraint.pair_col_names.second;
+
+  if (table.find(col_name1) == table.end() && table.find(col_name2) == table.end()) {
+    // Add new ColName to the table
+    return AddNewBinaryConstraint(constraint);
+  }
+
+  if (table.find(col_name1) != table.end() && table.find(col_name2) != table.end()) {
+    // Add existing ColName pair to the table
+    return AddExistingBinaryConstraint(constraint);
+  }
+
+  return AddHalfExistingBinaryConstraint(constraint);
+}
 
 void ConstraintTable::Solve(Constraint& constraint) {
+  std::visit([this](const auto& obj) {
+    Solve(obj)
+  }, constraint);
 }
 
-std::vector<std::string> Select(const Header& header, const std::unordered_set<Constraint>& constraints) {
-  if (constraints.empty()) {
+std::unordered_set<std::string> ConstraintTable::Select(const ColName& col_name) {
+  // TODO(phuccuongngo99): The default behaviour is return empty when col_name
+  // is not found. Think clearly about this in the future
+  if (table.find(col_name) == table.end()) {
     return {};
   }
-  return {};
+
+  // TODO(phuccuongngo99): Do deduplication here for mutliple select in the future
+  return {table[col_name].begin(), table[col_name].end()};
 }
 
-// TODO(phuccuongngo99): Better documentation here
-// Add new reader to the table
-void ConstraintTable::AddNewUnaryConstraint(const Header& new_header, const Col& new_values) {
+std::unordered_set<ColName> ConstraintTable::AvailableColName() {
+  std::unordered_set<ColName> result;
+  for (const auto& [col_name, _] : table) {
+    result.insert(col_name);
+  }
+  return result;
+}
+
+void ConstraintTable::AddNewUnaryConstraint(const UnaryConstraint& constraint) {
+  assert(table.find(constraint.col_name) == table.end() && "Supposedly new ColName found in the table!");
+
+  ColName new_header = constraint.col_name;
+  std::vector<Cell> new_values = {constraint.values.begin(), constraint.values.end()};
+
+  // If table is empty, just add the new header and values
   if (table.empty()) {
-    table[new_header] = new_values;
+    table[new_header] = std::move(new_values);
     return;
   }
 
@@ -72,21 +107,31 @@ void ConstraintTable::AddNewUnaryConstraint(const Header& new_header, const Col&
 
   // Call RepeatElements for each existing Headers
   for (auto& [header, values] : table) {
-    values = RepeatElements(values, new_values_size);
+    values = std::move(RepeatElements(values, new_values_size));
   }
 
   // Call RepeatVector for the new header
-  table[new_header] = RepeatVector(new_values, table_size);
+  table[new_header] = std::move(RepeatVector(new_values, table_size));
 }
 
-// TODO(phuccuongngo99): Consider a different type here maybe
-void ConstraintTable::AddNewBinaryConstraint(const Header& new_header1, const Col& new_values1,
-                                             const Header& new_header2, const Col& new_values2) {
-  assert(new_values1.size() == new_values2.size() && "New values of binary constraint do not have the same size!");
+void ConstraintTable::AddNewBinaryConstraint(const BinaryConstraint& constraint) {
+  assert(table.find(constraint.pair_col_names.first) == table.end()
+             || table.find(constraint.pair_col_names.second) == table.end()
+                 && "Supposedly new pair of ColNames found in the table!");
+
+  ColName col_name1 = constraint.pair_col_names.first;
+  ColName col_name2 = constraint.pair_col_names.second;
+  std::vector<Cell> new_values1;
+  std::vector<Cell> new_values2;
+
+  for (const auto& [value1, value2] : constraint.pair_values) {
+    new_values1.push_back(value1);
+    new_values2.push_back(value2);
+  }
 
   if (table.empty()) {
-    table[new_header1] = new_values1;
-    table[new_header2] = new_values2;
+    table[col_name1] = std::move(new_values1);
+    table[col_name2] = std::move(new_values2);
     return;
   }
 
@@ -95,80 +140,114 @@ void ConstraintTable::AddNewBinaryConstraint(const Header& new_header1, const Co
 
   // Call RepeatElements for each existing Headers
   for (auto& [header, values] : table) {
-    values = RepeatElements(values, new_values_size);
+    values = std::move(RepeatElements(values, new_values_size));
   }
 
   // Call RepeatVector for the new header
-  table[new_header1] = RepeatVector(new_values1, table_size);
-  table[new_header2] = RepeatVector(new_values2, table_size);
+  table[col_name1] = std::move(RepeatVector(new_values1, table_size));
+  table[col_name2] = std::move(RepeatVector(new_values2, table_size));
 }
 
-// TODO(phuccuongngo99): This should take in unordered set instead that maybe better
-void ConstraintTable::AddExistingUnaryConstraint(const Header& existing_header, const Col& new_values) {
-  assert(table.find(existing_header) != table.end() && "Existing header not found in the table!");
+void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing_constraint) {
+  assert(table.find(existing_constraint.col_name) != table.end() && "Existing ColName not found in the table!");
 
-  std::unordered_set<Cell> filter_set(new_values.begin(), new_values.end());
-  std::vector<int> indices = FindIndices<Cell>(table[existing_header], filter_set);
+  ColName existing_header = existing_constraint.col_name;
+  std::unordered_set<Cell> filter_values = existing_constraint.values;
 
-  // Call ExtractFromIndices for each existing Headers
-  for (auto& [header, values] : table) {
-    values = ExtractFromIndices(values, indices);
-  }
-}
+  std::vector<std::size_t> filter_indices;
+  std::vector<Cell>& existing_values = table[existing_header];
 
-// TODO(phuccuongngo99): Take an unordered set of pair here is better
-void ConstraintTable::AddExistingBinaryConstraint(const Header& existing_header1, const Col& new_values1,
-                                                  const Header& existing_header2, const Col& new_values2) {
-  assert(table.find(existing_header1) != table.end() && "Existing header not found in the table!");
-  assert(table.find(existing_header2) != table.end() && "Existing header not found in the table!");
-  assert(new_values1.size() == new_values2.size() && "New values of binary constraint do not have the same size!");
-  std::vector<int> indices;
-
-  Col& existing_values1 = table[existing_header1];
-  Col& existing_values2 = table[existing_header2];
-  for (int i = 0; i < existing_values1.size(); ++i) {
-    for (int j = 0; j < new_values1.size(); ++j) {
-      if (existing_values1[i] == new_values1[j] && existing_values2[i] == new_values2[j]) {
-        indices.push_back(i);
-      }
+  for (std::size_t i = 0; i < existing_values.size(); ++i) {
+    if (filter_values.find(existing_values[i]) != filter_values.end()) {
+      // If it exists in filter set
+      filter_indices.push_back(i);
     }
   }
 
-  // Call ExtractFromIndices for each existing Headers
+  // Call SelectByIndex for each existing Headers
   for (auto& [header, values] : table) {
-    values = ExtractFromIndices(values, indices);
+    values = std::move(SelectByIndex(values, filter_indices));
   }
 }
 
-// TODO(phuccuongngo99): Please add assert that new header doesn't exist in table too
-void ConstraintTable::AddHalfExistingBinaryConstraint(const Header& existing_header, const Col& new_existing_values,
-                                                      const Header& new_header, const Col& new_values) {
-  assert(table.find(existing_header) != table.end() && "Existing header not found in the table!");
-  assert(
-      new_existing_values.size() == new_values.size()
-          && "New values of binary constraint do not have the same size!");
+void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existing_constraint) {
+  ColName existing_header1 = existing_constraint.pair_col_names.first;
+  ColName existing_header2 = existing_constraint.pair_col_names.second;
+
+  assert(table.find(existing_header1) != table.end() && "Existing ColName not found in the table!");
+  assert(table.find(existing_header2) != table.end() && "Existing ColName not found in the table!");
+
+  std::vector<std::size_t> indices;
+
+  std::vector<Cell>& existing_values1 = table[existing_header1];
+  std::vector<Cell>& existing_values2 = table[existing_header2];
+
+  for (int i = 0; i < existing_values1.size(); ++i) {
+    std::pair<Cell, Cell> existing_pair{existing_values1[i], existing_values2[i]};
+
+    if (existing_constraint.pair_values.find(existing_pair) != existing_constraint.pair_values.end()) {
+      indices.push_back(i);
+    }
+  }
+
+  // Call SelectByIndex for each existing Headers
+  for (auto& [header, values] : table) {
+    values = std::move(SelectByIndex(values, indices));
+  }
+}
+
+void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint) {
+  ColName existing_colname;
+  ColName new_colname;
+  std::unordered_map<Cell, std::unordered_set<Cell>> new_values;
+
+  if (table.find(constraint.pair_col_names.first) != table.end()
+      && table.find(constraint.pair_col_names.second) == table.end()
+      ) {
+    existing_colname = constraint.pair_col_names.first;
+    new_colname = constraint.pair_col_names.second;
+
+    for (const auto& [value1, value2] : constraint.pair_values) {
+      new_values[value1].insert(value2);
+    }
+
+  } else if (table.find(constraint.pair_col_names.first) == table.end()
+      && table.find(constraint.pair_col_names.second) != table.end()) {
+    existing_colname = constraint.pair_col_names.second;
+    new_colname = constraint.pair_col_names.first;
+
+    for (const auto& [value1, value2] : constraint.pair_values) {
+      new_values[value2].insert(value1);
+    }
+  } else {
+    assert(false && "Both ColNames are either both existent or non-existent in the table");
+  }
 
   Table result;
-  // Prepare result table structure
-  for (const auto& [header, _] : table) {
-    result[header] = {};
-  }
-  result[new_header] = {};
 
-  // Commonly used variables
-  Col& existing_col = table[existing_header];
+  // Prepare result table structure
+  for (const auto& [colname, _] : table) {
+    result[colname] = {};
+  }
+  result[new_colname] = {};
+
+  std::vector<Cell>& existing_col = table[existing_colname];
 
   // Main logic
   for (int i = 0; i < existing_col.size(); ++i) {
-    for (int j = 0; j < new_existing_values.size(); ++j) {
-      if (existing_col[i] == new_existing_values[j]) {
-        for (const auto& [current_header, values] : table) {
-          result[current_header].push_back(values[i]);
+    Cell existing_value = existing_col[i];
+
+    if (new_values.find(existing_value) != new_values.end()) {
+      std::unordered_set<Cell> new_col_values = new_values[existing_value];
+
+      for (const auto& new_col_value : new_col_values) {
+        for (const auto& [current_colname, values] : table) {
+          result[current_colname].push_back(values[i]);
         }
-        result[new_header].push_back(new_values[j]);
+        result[new_colname].push_back(new_col_value);
       }
     }
   }
 
-  table = result;
+  table = std::move(result);
 }

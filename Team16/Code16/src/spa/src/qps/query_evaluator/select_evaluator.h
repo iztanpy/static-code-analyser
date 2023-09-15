@@ -17,5 +17,5 @@ class SelectEvaluator {
 
  public:
   SelectEvaluator(ReadFacade& pkb_reader, SelectClause& select_clause);
-  Constraint evaluate();
+  UnaryConstraint Evaluate();
 };

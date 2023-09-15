@@ -11,15 +11,24 @@ std::vector<std::string> QueryEvaluator::Evaluate(const ParsedQuery& query) {
   // Pass this list of Constraints to Constraint Solver
   // Then call Constraint_Solver.solve to get back list of result
 
+  ConstraintSolver constraint_solver;
+
   // Simple hacky implementation for now, the final flow should be as above
   SelectClause select_clause = query.select;
   SelectEvaluator select_evaluator(pkb, select_clause);
-  Constraint constraint = select_evaluator.evaluate();
 
-  std::vector<std::string> results;
-  for (const std::pair<std::string, std::string>& pair : constraint.synonym_values) {
-    results.push_back(pair.first);
+  // When there's only select clause
+  if (query.suchthat_clauses.empty()) {
+    UnaryConstraint constraint = select_evaluator.Evaluate();
+
+    return {constraint.values.begin(), constraint.values.end()};
   }
 
-  return results;
+//  for (const SuchThatClause& suchthat_clause : query.suchthat_clauses) {
+//    SuchThatEvaluator suchthat_evaluator(pkb, suchthat_clause);
+//    Constraint constraint = suchthat_evaluator.evaluate();
+//    constraint_solver.Solve(constraint);
+//  }
+
+  return {};
 }

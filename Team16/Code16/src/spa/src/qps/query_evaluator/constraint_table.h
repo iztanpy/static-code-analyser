@@ -1,6 +1,6 @@
 #pragma once
 
-// TODO(phuccuongngo99): Sort this as well
+// TODO(phuccuongngo99): Sort this as well and remove unnecessary ones
 #include <string>
 #include <variant>
 #include <vector>
@@ -9,42 +9,44 @@
 #include <cassert>
 #include <utility>
 
-// TODO(phuccuongngo99): Learn how to define these type properly
-using Header = std::string;
-using Cell = std::string;
-using Col = std::vector<Cell>;
-using Table = std::unordered_map<Header, Col>;
-
-// TODO(phuccuongngo99): Maybe better name here?
-using Constraint = struct {
-  std::pair<Header, Header> headers;
-  std::unordered_set<std::pair<Cell, Cell>> valid_pairs;
-};
+#include "qps/query_evaluator/constraint.h"
+#include "qps/query_evaluator/constraint_table.h"
 
 class ConstraintTable {
-  // TODO(phuccuongngo99): Make this private later, consider making other things private
-  // too
  public:
-  Table table;
-
-  // TODO(phuccuongngo99): This is just for testing purposes
-  explicit ConstraintTable(const Table& table);
+  ConstraintTable() = default;
 
   void Solve(Constraint& constraint);
 
-  std::vector<std::string> Select(Header& header);
+  // TODO(phuccuongngo99): As of now, header field must exist within
+  std::unordered_set<std::string> Select(const ColName& col_name);
 
-  // TODO(phuccuongngo99): Better documentation here
-  // Add new header to the table
-  void AddNewUnaryConstraint(const Header& new_header, const Col& new_values);
+  std::unordered_set<ColName> AvailableColName();
 
-  void AddNewBinaryConstraint(const Header& new_header1, const Col& new_values1,
-                              const Header& new_header2, const Col& new_values2);
+  Table GetTableForTesting();
 
-  void AddExistingUnaryConstraint(const Header& existing_header, const Col& new_values);
+  // For testing only
+  static ConstraintTable ForTestingOnly(const Table& mock_table) {
+    return ConstraintTable(mock_table);
+  }
 
-  void AddExistingBinaryConstraint(const Header& existing_header1, const Col& new_values1,
-                                   const Header& existing_header2, const Col& new_values2);
-  void AddHalfExistingBinaryConstraint(const Header& existing_header, const Col& new_existing_values,
-                                       const Header& new_header, const Col& new_values);
+ private:
+  Table table;
+
+  // Mock table for unit test
+  explicit ConstraintTable(const Table& mock_table) : table(mock_table) {}
+
+  void Solve(const UnaryConstraint& constraint);
+  void Solve(const BinaryConstraint& constraint);
+
+  void AddNewUnaryConstraint(const UnaryConstraint& new_constraint);
+
+  void AddNewBinaryConstraint(const BinaryConstraint& new_constraint);
+
+  void AddExistingUnaryConstraint(const UnaryConstraint& existing_constraint);
+
+  void AddExistingBinaryConstraint(const BinaryConstraint& existing_constraint);
+
+  // When adding a binary constraint with 1 new column name and 1 existing column name
+  void AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint);
 };

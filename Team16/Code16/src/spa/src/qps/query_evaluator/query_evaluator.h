@@ -6,6 +6,8 @@
 
 #include "qps/parsed_query.h"
 #include "qps/query_evaluator/select_evaluator.h"
+#include "qps/query_evaluator/suchthat_evaluator.h"
+#include "qps/query_evaluator/constraint_solver.h"
 #include "PKB/API/ReadFacade.h"
 
 // Entry point for Query Evaluator
