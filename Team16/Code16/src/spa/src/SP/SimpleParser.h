@@ -66,9 +66,9 @@ class AssignmentParser : public Parser {
  * assignment statements. It also contains methods for accessing information related to the parsed assignments.
  */
 class ProcedureParser : public Parser {
-private:
+ private:
     std::shared_ptr<TNode> rootTNode;
-public:
+ public:
     explicit ProcedureParser(std::shared_ptr<TNode> rootTNode);
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* procedureVisitor = new ASTVisitor();
@@ -86,7 +86,7 @@ class SimpleParser : public Parser {
  private:
      WriteFacade* writeFacade;
     int lineNumber = 1;
-public:
+ public:
     explicit SimpleParser(WriteFacade* writeFacade);  // Corrected constructor declaration
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> rootTNode = nullptr;

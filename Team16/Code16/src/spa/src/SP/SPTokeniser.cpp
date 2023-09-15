@@ -87,7 +87,7 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
             size_t word_char_index = i;
             char curr_char = line[word_char_index];
             while (delimiters.find(curr_char) == delimiters.end()) {
-                curr_word.push_back(curr_char); // change to line.substr(start, i - start)
+                curr_word.push_back(curr_char);  // change to line.substr(start, i - start)
                 curr_char = line[++word_char_index];
             }
             // add current word if not empty, accounts for double whitespaces and onwards
@@ -113,7 +113,7 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
             }
             // only add non-whitespaces tokens, accounts for double whitespaces and onwards
             i = word_char_index + 1;
-        };
+        }
     }
 
     return result;

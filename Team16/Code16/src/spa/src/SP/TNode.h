@@ -13,7 +13,7 @@ enum class TokenType;
 
 class TNode {
  public:
-  TNode(int statementNumber);
+  explicit TNode(int statementNumber);
   virtual ~TNode() = default;
   int statementNumber = 0;
   TokenType type = TokenType::kUnknownTokenType;
@@ -40,7 +40,7 @@ class TNode {
 };
 
 class ProcedureTNode : public TNode {
-public:
+ public:
     explicit ProcedureTNode(const std::string& procedureName) : TNode(0) {
         type = TokenType::kEntityProcedure;
         content = procedureName;

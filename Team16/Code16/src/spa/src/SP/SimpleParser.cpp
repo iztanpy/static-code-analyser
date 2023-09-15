@@ -5,7 +5,6 @@
 ProcedureParser::ProcedureParser(std::shared_ptr<TNode> rootTNode) : rootTNode(rootTNode) { }
 
 int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
-
     // validate procedure declaration: procedure (already validated), name, open brace
     // validations will be refactored into a (syntactic/semantic)evaluator in the future
     // validate size of procedure declaration
@@ -74,7 +73,8 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
             subtreeRoot->addChild(currentNode);
             // create operator rhs node
             Token subtreeRHSToken = tokens[curr_index + 2];
-            if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
+            if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger
+                && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
                 return -1;
             }
             std::shared_ptr<TNode> rhsSubtree = TNodeFactory::createNode(subtreeRHSToken, lineNumber);
@@ -84,14 +84,17 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
 
             // loop for subsequent operators
             int temp_index = curr_index + 3;
-            while (temp_index < tokens.size() && (tokens[temp_index].tokenType == TokenType::kOperatorPlus || tokens[temp_index].tokenType == TokenType::kOperatorMinus)) {
+            while (temp_index < tokens.size()
+                && (tokens[temp_index].tokenType == TokenType::kOperatorPlus
+                || tokens[temp_index].tokenType == TokenType::kOperatorMinus)) {
                 // create operator node
                 subtreeRoot = TNodeFactory::createNode(tokens[temp_index], lineNumber);
                 // Add operator lhs node to operator node
                 subtreeRoot->addChild(currentNode);
                 // create operator rhs node
                 subtreeRHSToken = tokens[temp_index + 1];
-                if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
+                if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger
+                    && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
                     return -1;
                 }
                 rhsSubtree = TNodeFactory::createNode(subtreeRHSToken, lineNumber);
@@ -115,11 +118,9 @@ SimpleParser::SimpleParser(WriteFacade* writeFacadePtr) : writeFacade(writeFacad
 int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
-
         if (curr_token.tokenType == TokenType::kLiteralName) {
             Token next_token = tokens.at(curr_index + 1);
             if (next_token.tokenType == TokenType::kEntityAssign) {
-
                 assignmentParser->lineNumber = lineNumber;
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
@@ -177,19 +178,19 @@ std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
 
 std::unordered_map<int, std::unordered_set<std::string>> AssignmentParser::getUsesStatementNumberHashmap() {
     return visitor->getUsesStatementNumberHashmap();
-};
+}
 
 std::unordered_map<int, std::string> AssignmentParser::getUsesStatementNumberVarHashmap() {
     return visitor->getUsesStatementNumberVarHashmap();
-};
+}
 
 std::unordered_set<int> AssignmentParser::getAssignmentStatementsHashset() {
     return visitor->getAssignmentStatementsHashset();
-};
+}
 
 std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getProcedureStatementNumberHashmap() {
     return procedureVisitor->getProcedureStatementNumberHashmap();
-};
+}
 
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
