@@ -12,6 +12,7 @@
 #include "PKB/PKB.h"
 #include "PKB/API/WriteFacade.h"
 #include "SPTokeniser.h"
+#include "utils/Error.h"
 
 class DesignExtractor;  // Forward declaration
 

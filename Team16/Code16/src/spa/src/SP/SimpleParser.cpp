@@ -194,5 +194,6 @@ std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getPro
 
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
+
     parse(tokens, 0);
 }

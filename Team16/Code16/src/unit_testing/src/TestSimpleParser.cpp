@@ -1,24 +1,33 @@
-#include "SP/SimpleParser.h"
-#include "SP/DesignExtractor.h"
-#include "SP/SPTokeniser.h"
-
 #include "catch.hpp"
+#include "SP/SPTokeniser.h"
+#include "SP/Token.h"
+#include "SP/SimpleParser.h"
+#include "PKB/API/WriteFacade.h"
+#include "PKB/API/ReadFacade.h"
+#include "qps/qps.h"
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <memory>
 
-using namespace std;
 
+// Define your TokenType and Token objects here (if not already defined)
 TokenType variableType = TokenType::kLiteralName;
 TokenType constantType = TokenType::kLiteralInteger;
 TokenType endType = TokenType::kSepSemicolon;
 TokenType plusType = TokenType::kOperatorPlus;
 TokenType equalType = TokenType::kEntityAssign;
-Token tokenX = Token(variableType,"x", 0);
-Token tokenY = Token(variableType,"y", 0);
-Token tokenW = Token(variableType,"w", 0);
+Token tokenX = Token(variableType, "x", 0);
+Token tokenY = Token(variableType, "y", 0);
+Token tokenW = Token(variableType, "w", 0);
 Token tokenEqual = Token(equalType, 0);
-Token tokenX2 = Token(variableType,"x", 0);
+Token tokenX2 = Token(variableType, "x", 0);
 Token tokenPlus = Token(plusType);
-Token token1 = Token(constantType,"1", 0);
+Token token1 = Token(constantType, "1", 0);
 Token tokenEnd = Token(endType);
+
 
 TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -47,10 +56,10 @@ TEST_CASE("Test DesignExtractor1") { // x = x + 1
     auto* visitor = new ASTVisitor();
     de.extractDesign(nodeEqual, visitor);
 
-    unordered_set<string> varSet = unordered_set<string>({"x"});
-    unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({"x"});
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({{"x", varSet}});
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({{"x", constSet}});
 
     REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
     REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
@@ -82,10 +91,10 @@ TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
     auto* visitor = new ASTVisitor();
     de.extractDesign(nodeEqual, visitor);
 
-    unordered_set<string> varSet = unordered_set<string>({"x", "y", "w"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
-    unordered_set<string> constSet = unordered_set<string>({});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({});
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({"x", "y", "w"});
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({{"x", varSet}});
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({});
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({});
 
     REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
     REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
@@ -117,10 +126,11 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
     auto* visitor = new ASTVisitor();
     de.extractDesign(nodeEqual, visitor);
 
-    unordered_set<string> varSet = unordered_set<string>({"x", "w"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
-    unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "w" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
+
 
     REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
     REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
@@ -133,7 +143,7 @@ TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
-    vector<Token> tokenVector;
+    std::vector<Token> tokenVector;
     tokenVector.push_back(tokenX);
     tokenVector.push_back(tokenEqual);
     tokenVector.push_back(tokenX);
@@ -142,10 +152,12 @@ TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
     tokenVector.push_back(tokenEnd);
     parser.parse(tokenVector, 0);
 
-    unordered_set<string> varSet = unordered_set<string>({"x"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>({{"x", varSet}});
-    unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>({{"x", constSet}});
+
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
+
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
     REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);
@@ -159,16 +171,14 @@ TEST_CASE(("Test SP single procedure")) {
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
-    string simpleProgram = "procedure p {x = x + 1;}";
+    std::string simpleProgram = "procedure p {x = x + 1;}";
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
     parser.parse(tokens_simple, 0);
 
-    unordered_set<string> varSet = unordered_set<string>({"x"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", varSet}});
-    unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", constSet}});
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
     REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);
@@ -182,16 +192,17 @@ TEST_CASE(("Test SP multi procedure with keyword names")) {
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
-    string simpleProgram = "procedure p {x = x + 1;} procedure procedure {y = y + x; w = w + 1;}";
+    std::string simpleProgram = "procedure p {x = x + 1;} procedure procedure {y = y + x; w = w + 1;}";
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
     parser.parse(tokens_simple, 0);
 
-    unordered_set<string> varSet = unordered_set<string>({"x", "y", "w"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", {"x"}}, {"y", {"x", "y"}}, {"w", {"w"}}});
-    unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>(
-            {{"x", constSet}, {"w", constSet}});
+
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "y", "w" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
+        { {"x", {"x"}}, {"y", {"x", "y"}}, {"w", {"w"}} });
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
+        { {"x", constSet}, {"w", constSet} });
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
     REQUIRE(parser.assignmentParser->getAssignConstHashmap() == constUseMap);
@@ -205,17 +216,20 @@ TEST_CASE(("Test SP storing of statement numbers for Uses")) {
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
-    string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
     parser.parse(tokens_simple, 0);
-//
-    unordered_set<string> varSet = unordered_set<string>({"x", "y"});
-    unordered_map<string, unordered_set<string>> varUseMap = unordered_map<string, unordered_set<string>>(
+
+
+
+
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({"x", "y"});
+    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
             {{"x", {"x"}}, {"y", {"x", "y"}}});
-    unordered_set<string> constSet = unordered_set<string>({"1"});
-    unordered_map<string, unordered_set<string>> constUseMap = unordered_map<string, unordered_set<string>>(
+    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({"1"});
+    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
             {{"x", constSet}, {"y", constSet}});
-    unordered_map<int, string> usesStatementNumberVarHashmap = unordered_map<int, string>(
+    std::unordered_map<int, std::string> usesStatementNumberVarHashmap = std::unordered_map<int, std::string>(
             {{1, "x"}, {2, "y"}, {3, "y"}});
 
     REQUIRE(parser.assignmentParser->getAssignVarHashmap() == varUseMap);
@@ -232,11 +246,11 @@ TEST_CASE(("Test SP storing of assignment statements")) {
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
-    string simpleProgram = "procedure p {x = x + 1; read r; while(i = 0) { read f;} } procedure wee { y = y + x + 1;}";
+    std::string simpleProgram = "procedure p {x = x + 1; read r; while(i = 0) { read f;} } procedure wee { y = y + x + 1;}";
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
     parser.parse(tokens_simple, 0);
 
-    unordered_set<int> assignmentStatementsHashset = unordered_set<int>({1, 5});
+    std::unordered_set<int> assignmentStatementsHashset = std::unordered_set<int>({1, 5});
 
     REQUIRE(parser.assignmentParser->getAssignmentStatementsHashset() == assignmentStatementsHashset);
 
@@ -249,12 +263,12 @@ TEST_CASE(("Test SP assignment pattern")) {
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
-    string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
     parser.parse(tokens_simple, 0);
-    unordered_map<int, unordered_set<string>> usesStatementNumberHashmap = unordered_map<int, unordered_set<string>>(
+    std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap = std::unordered_map<int, std::unordered_set<std::string>>(
             {{1, {"x", "1", "x + 1"}}, {2, {"x", "y", "1", "y + x + 1", "y + x"}}, {3, {"y", "x", "1", "y + x + 1", "y + x"}}});
-    unordered_map<int, unordered_set<string>> res = parser.assignmentParser->getUsesStatementNumberHashmap();
+    std::unordered_map<int, std::unordered_set<std::string>> res = parser.assignmentParser->getUsesStatementNumberHashmap();
     REQUIRE(res == usesStatementNumberHashmap);
 
 }
