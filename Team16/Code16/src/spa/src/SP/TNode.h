@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include "Token.h"
+#include "utils/Error.h"
 
 class ASTVisitor;
 enum class TokenType;
@@ -46,6 +47,15 @@ class ProcedureTNode : public TNode {
         content = procedureName;
     }
     void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+class ReadTNode : public TNode {
+ public: 
+     explicit ReadTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
+        type = TokenType::kEntityRead;
+        content = c; 
+     }
+ void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
 class AssignTNode : public TNode {
@@ -98,28 +108,28 @@ class MinusTNode : public TNode {
 
 class TNodeFactory {
  public:
-  static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
-      switch (token.tokenType) {
-          case TokenType::kEntityProcedure:
-              return std::make_shared<ProcedureTNode>(token.value);
-          case TokenType::kEntityAssign:
-              return std::make_shared<AssignTNode>(statementNumber);
-          case TokenType::kLiteralName: {
-              std::string c = token.value;
-              return std::make_shared<VariableTNode>(statementNumber, c);
-          }
-          case TokenType::kLiteralInteger: {
-              std::string c = token.value;
-              return std::make_shared<ConstantTNode>(statementNumber, c);
-          }
-          case TokenType::kOperatorPlus:
-              return std::make_shared<PlusTNode>(statementNumber);
-          case TokenType::kOperatorMinus:
-              return std::make_shared<MinusTNode>(statementNumber);
-          default:
-              throw std::invalid_argument("Error: unknown token type");
-      }
-  }
+     static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
+         const std::string& value = token.value;  // Common value assignment
+         switch (token.tokenType) {
+         case TokenType::kEntityProcedure:
+             return std::make_shared<ProcedureTNode>(value);
+         case TokenType::kEntityRead:
+             std::cout << "Make NODE" << std::endl; 
+             return std::make_shared<ReadTNode>(statementNumber, value);
+         case TokenType::kEntityAssign:
+             return std::make_shared<AssignTNode>(statementNumber);
+         case TokenType::kLiteralName:
+             return std::make_shared<VariableTNode>(statementNumber, value);
+         case TokenType::kLiteralInteger:
+             return std::make_shared<ConstantTNode>(statementNumber, value);
+         case TokenType::kOperatorPlus:
+             return std::make_shared<PlusTNode>(statementNumber);
+         case TokenType::kOperatorMinus:
+             return std::make_shared<MinusTNode>(statementNumber);
+         default:
+             throw InvalidTokenTypeError("Error: unknown token type");
+         }
+     }
 };
 
 #endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_

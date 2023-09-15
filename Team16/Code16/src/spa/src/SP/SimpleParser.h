@@ -76,6 +76,22 @@ class ProcedureParser : public Parser {
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap();
 };
 
+
+
+/**
+ * @class ReadeParser
+ * @brief A concrete subclass of Parser specialized for parsing read statements.
+ *
+ */
+class ReadParser : public Parser {
+ public:
+    ReadParser() = default; 
+    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    ASTVisitor* visitor = new ASTVisitor();
+    int lineNumber = 0;
+    /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
+};
+
 /**
  * @class SimpleParser
  * @brief A concrete subclass of Parser for a simplified parsing task.
@@ -94,6 +110,7 @@ class SimpleParser : public Parser {
     SPtokeniser tokeniser;
     AssignmentParser* assignmentParser = new AssignmentParser();
     ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
+    ReadParser* readParser = new ReadParser();
     void tokenise(std::string simpleProgram);
 };
 

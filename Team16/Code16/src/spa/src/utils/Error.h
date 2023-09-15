@@ -60,3 +60,19 @@ class InvalidStatementError : public Error {
      */
     void log() override;
 };
+
+
+class InvalidTokenTypeError : public Error {
+public:
+    /**
+    * @brief Constructs an InvalidStatementError object with an optional error message.
+    * @param msg The error message (default is "Invalid statement").
+    */
+    explicit InvalidTokenTypeError(const std::string& msg = "Invalid Token Type") : Error(msg) {}
+    /**
+     * @brief Logs the error message specific to invalid statements.
+     * Overrides the base class log() function.
+     */
+    void log() override;
+};
+
