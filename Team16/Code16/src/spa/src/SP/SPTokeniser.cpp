@@ -156,20 +156,20 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
 
         if (matchedType == TokenType::kUnknownTokenType) { throw std::runtime_error("Invalid Token Type"); }
 
-        if (matchedType == TokenType::kSepOpenBrace or matchedType == TokenType::kSepOpenParen) {
+        if (matchedType == TokenType::kSepOpenBrace || matchedType == TokenType::kSepOpenParen) {
             braceStack.push(matchedValue[0]);
         }
 
         if (matchedType == TokenType::kWhiteSpace) {
             linePositionWithWhiteSpace++;
-        } else if (matchedType == TokenType::kSepCloseBrace or matchedType == TokenType::kSepCloseParen) {
+        } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
             if (braceStack.empty()) {
                 throw std::runtime_error("Syntactic error: Unmatched closing brace");
             } else {
                 char top = braceStack.top();
-                if (matchedValue[0] == '}' and top == '{') {
+                if (matchedValue[0] == '}' && top == '{') {
                     braceStack.pop();
-                } else if (matchedValue[0] == ')' and top == '(') {
+                } else if (matchedValue[0] == ')' && top == '(') {
                     braceStack.pop();
                     // insert ')' as a token
                     Token token{matchedType, matchedValue, lineNumber, linePosition};
@@ -196,7 +196,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             linePositionWithWhiteSpace += 1;
         }
 
-        if (matchedType == TokenType::kSepSemicolon or matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
+        if (matchedType == TokenType::kSepSemicolon || matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
     }
     return tokens;
 }
