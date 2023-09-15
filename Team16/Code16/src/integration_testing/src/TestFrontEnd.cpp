@@ -123,7 +123,8 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
     SimpleParser parser(&writeFacade);
     QPS qps(readFacade);
 
-    string simpleProgram = "x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd; \t  y = y + 4;";
+    string simpleProgram = "procedure c {x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd;} procedure procedure "
+                           "{ \t  y = y + 4;}";
     string query_1 = "variable Vj5u, v39, constant OvO; Select Vj5u";
     string query_2 = "constant c10ueYwh, variable Ur; Select c10ueYwh";
 
@@ -132,3 +133,21 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
                 == std::unordered_set<std::string>({"x", "y", "z", "I", "u100", "U48ka", "OoOhd"}));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"3", "4", "100"}));
 }
+
+
+TEST_CASE("Selecting Assign statements") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    QPS qps(readFacade);
+
+    string simpleProgram = "procedure c {x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd;} procedure procedure "
+                           "{ \t  read r; y = y + 4;}";
+    string query_1 = "assign a, Select a";
+
+    parser.tokenise(simpleProgram);
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"1", "3"}));
+}
+

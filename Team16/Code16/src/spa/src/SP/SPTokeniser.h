@@ -9,10 +9,11 @@
 #include <regex>
 #include <set>
 #include <utility>
+#include <stack>
+#include <unordered_set>
 
 class SPtokeniser {
- private:
-    std::vector<std::string> splitLines(const std::string& input);
  public:
+    std::vector<std::string> splitLines(const std::string& input);
     std::vector<struct Token> tokenise(const std::string& input);
 };
