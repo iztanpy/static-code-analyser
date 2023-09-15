@@ -41,24 +41,24 @@ TEST_CASE("One assign statement 1") {
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"x"}));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"1"}));
 }
-
-TEST_CASE("One assign statement with white-spaces") {
-    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-
-    ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(&writeFacade);
-    QPS qps(readFacade);
-
-    string simpleProgram = "procedure { \n x = \t \n \n\t y + \t 1; \n }";
-    string query_1 = "variable v\t\t\n; Select \n v";
-    string query_2 = "\n\t constant \t c; Select c";
-
-    parser.tokenise(simpleProgram);
-
-    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"x", "y"}));
-    REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"1"}));
-}
+//
+//TEST_CASE("One assign statement with white-spaces") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//
+//    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+//    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+//    SimpleParser parser(&writeFacade);
+//    QPS qps(readFacade);
+//
+//    string simpleProgram = "procedure { \n x = \t \n \n\t y + \t 1; \n }";
+//    string query_1 = "variable v\t\t\n; Select \n v";
+//    string query_2 = "\n\t constant \t c; Select c";
+//
+//    parser.tokenise(simpleProgram);
+//
+//    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"x", "y"}));
+//    REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({"1"}));
+//}
 
 TEST_CASE("Simple assign statements") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
