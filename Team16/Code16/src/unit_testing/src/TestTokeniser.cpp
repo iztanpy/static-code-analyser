@@ -15,6 +15,7 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[0].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[1].tokenType == TokenType::kEntityAssign);
     REQUIRE(tokens_simple[2].tokenType == TokenType::kLiteralInteger);
+    REQUIRE(tokens_simple[3].tokenType == TokenType::kSepSemicolon);
 
     REQUIRE(tokens_simple[4].tokenType == TokenType::kEntityWhile);
     REQUIRE(tokens_simple[5].tokenType == TokenType::kSepOpenParen);
@@ -30,12 +31,15 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[15].tokenType == TokenType::kLiteralInteger);
     REQUIRE(tokens_simple[16].tokenType == TokenType::kSepCloseParen);
     REQUIRE(tokens_simple[17].tokenType == TokenType::kSepCloseParen);
-    REQUIRE(tokens_simple[18].tokenType == TokenType::kEntityCall);
-    REQUIRE(tokens_simple[19].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[18].tokenType == TokenType::kSepOpenBrace);
+    REQUIRE(tokens_simple[19].tokenType == TokenType::kEntityCall);
+    REQUIRE(tokens_simple[20].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
 
     REQUIRE(tokens_simple[0].lineNumber == 1);
     REQUIRE(tokens_simple[1].lineNumber == 1);
     REQUIRE(tokens_simple[2].lineNumber == 1);
+    REQUIRE(tokens_simple[3].lineNumber == 1);
 
     REQUIRE(tokens_simple[4].lineNumber == 2);
     REQUIRE(tokens_simple[5].lineNumber == 2);
@@ -51,10 +55,11 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[15].lineNumber == 2);
     REQUIRE(tokens_simple[16].lineNumber == 2);
     REQUIRE(tokens_simple[17].lineNumber == 2);
+    REQUIRE(tokens_simple[18].lineNumber == 2);
 
-
-    REQUIRE(tokens_simple[18].lineNumber == 3);
     REQUIRE(tokens_simple[19].lineNumber == 3);
+    REQUIRE(tokens_simple[20].lineNumber == 3);
+    REQUIRE(tokens_simple[21].lineNumber == 3);
 
 }
 
@@ -86,14 +91,13 @@ TEST_CASE("Test Line Numbers") {
 TEST_CASE("Test Delimiters") {
     SPtokeniser tokeniser;
     std::vector<struct Token> tokens = tokeniser.tokenise("cenX;");
-    for (auto token : tokens) {
-        std::cout << token.value << std::endl;
-    }
-    std::cout << "result token size: " << tokens.size() << std::endl;
 
-    REQUIRE(1==1);
-//    REQUIRE(tokens[0].tokenType == TokenType::kLiteralName);
-//    REQUIRE(tokens[0].value == "cenX");
+    REQUIRE(tokens[0].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens[1].tokenType == TokenType::kSepSemicolon);
+    REQUIRE(tokens[0].value == "cenX");
+    REQUIRE(tokens[1].value == ";");
+    REQUIRE(tokens[0].lineNumber == 1);
+    REQUIRE(tokens[1].lineNumber == 1);
 }
 
 
@@ -153,5 +157,103 @@ TEST_CASE("Test Regex") {
     REQUIRE(end(tokens_operators) - begin(tokens_operators) == 14);
 
 }
+
+// uncomment to check termination
+TEST_CASE(("Test syntax error")) {
+    SPtokeniser tokeniser;
+
+    string missingBraces = "procedure p  x = 1; y = 1 + 2 + 3; } procedure x { read r;} ";
+    string extraBraces = "procedure p  x = 1; y = 1 + 2 + 3; } }}}procedure x { read r;}  }}}{ ";
+    string missingParan = "procedure p  if(x = 1{ y = 1 + 2 + 3;} } procedure x { read r;} ";
+    string extraParan = "procedure p  if(x = 1)))))){ y = 1 + 2 + 3;} } procedure x { read r;} ";
+
+//    std::vector<struct Token> tokens_simple1 = tokeniser.tokenise(missingBraces);
+//    std::vector<struct Token> tokens_simple2 = tokeniser.tokenise(extraBraces);
+//    std::vector<struct Token> tokens_simple3 = tokeniser.tokenise(missingParan);
+//    std::vector<struct Token> tokens_simple4 = tokeniser.tokenise(extraParan);
+//    std::vector<struct Token> tokens_simple = tokeniser.tokenise(missingBraces);
+}
+
+TEST_CASE(("Test procedure")) {
+    SPtokeniser tokeniser;
+
+    string simpleProgram = "procedure p { x = 1; y = 1 + 2 + 3; } procedure x { read r;} ";
+    std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
+
+    // check type
+    REQUIRE(tokens_simple[0].tokenType == TokenType::kEntityProcedure);
+    REQUIRE(tokens_simple[1].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[2].tokenType == TokenType::kSepOpenBrace);
+
+    REQUIRE(tokens_simple[3].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[4].tokenType == TokenType::kEntityAssign);
+    REQUIRE(tokens_simple[5].tokenType == TokenType::kLiteralInteger);
+    REQUIRE(tokens_simple[6].tokenType == TokenType::kSepSemicolon);
+
+    REQUIRE(tokens_simple[7].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[8].tokenType == TokenType::kEntityAssign);
+    REQUIRE(tokens_simple[9].tokenType == TokenType::kLiteralInteger);
+    REQUIRE(tokens_simple[10].tokenType == TokenType::kOperatorPlus);
+    REQUIRE(tokens_simple[11].tokenType == TokenType::kLiteralInteger);
+    REQUIRE(tokens_simple[12].tokenType == TokenType::kOperatorPlus);
+    REQUIRE(tokens_simple[13].tokenType == TokenType::kLiteralInteger);
+    REQUIRE(tokens_simple[14].tokenType == TokenType::kSepSemicolon);
+
+    REQUIRE(tokens_simple[15].tokenType == TokenType::kEntityProcedure);
+    REQUIRE(tokens_simple[16].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[17].tokenType == TokenType::kSepOpenBrace);
+
+    REQUIRE(tokens_simple[18].tokenType == TokenType::kEntityRead);
+    REQUIRE(tokens_simple[19].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[20].tokenType == TokenType::kSepSemicolon);
+
+
+    REQUIRE(tokens_simple[0].lineNumber == 1);
+    REQUIRE(tokens_simple[1].lineNumber == 1);
+    REQUIRE(tokens_simple[2].lineNumber == 1);
+
+    REQUIRE(tokens_simple[3].lineNumber == 2);
+    REQUIRE(tokens_simple[5].lineNumber == 2);
+    REQUIRE(tokens_simple[6].lineNumber == 2);
+
+    REQUIRE(tokens_simple[7].lineNumber == 3);
+    REQUIRE(tokens_simple[8].lineNumber == 3);
+    REQUIRE(tokens_simple[9].lineNumber == 3);
+    REQUIRE(tokens_simple[10].lineNumber == 3);
+    REQUIRE(tokens_simple[11].lineNumber == 3);
+    REQUIRE(tokens_simple[12].lineNumber == 3);
+    REQUIRE(tokens_simple[13].lineNumber == 3);
+    REQUIRE(tokens_simple[14].lineNumber == 3);
+
+    REQUIRE(tokens_simple[15].lineNumber == 4);
+    REQUIRE(tokens_simple[16].lineNumber == 4);
+    REQUIRE(tokens_simple[17].lineNumber == 4);
+
+    REQUIRE(tokens_simple[18].lineNumber == 5);
+    REQUIRE(tokens_simple[19].lineNumber == 5);
+    REQUIRE(tokens_simple[20].lineNumber == 5);
+
+    REQUIRE(tokens_simple.size() == 21);
+
+}
+
+TEST_CASE("Test split lines") {
+    SPtokeniser tokeniser;
+
+    string simpleProgram1 = "procedure p { x = 1; y = 1 + 2 + 3; } procedure x { read r;} ";
+    string simpleProgram2 = "procedure p     { x   = 1 ; y =   1 + 2 + 3;    }    procedure x { read r    ;}    ";
+    string simpleProgram3 = "procedure p{x=1;y=1+2+3;}procedure x{read r;}";
+
+    std::vector<std::string> split_words1 = tokeniser.splitLines(simpleProgram1);
+    std::vector<std::string> split_words2 = tokeniser.splitLines(simpleProgram2);
+    std::vector<std::string> split_words3 = tokeniser.splitLines(simpleProgram3);
+
+    std::vector<std::string> ans = {"procedure", "p", "{", "x", "=", "1",";", "y", "=", "1", "+", "2", "+", "3",";", "}", "procedure", "x", "{", "read", "r",";","}"};
+
+    REQUIRE(split_words1 == ans);
+    REQUIRE(split_words2 == ans);
+    REQUIRE(split_words3 == ans);
+}
+
 
 
