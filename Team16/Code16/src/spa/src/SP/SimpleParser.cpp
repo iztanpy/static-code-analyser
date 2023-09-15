@@ -90,7 +90,6 @@ int ReadParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // Update the current index and create the AST node
     curr_index  = curr_index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(read, lineNumber);
-    std::cout << "HERE" << std::endl;
     return curr_index;
 }
 
@@ -175,37 +174,29 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
 
                 if (next_index == -1) {
                     throw std::runtime_error("Error: syntactic error found while building ast.");
-                }
-                else {
+                } else {
                     lineNumber++;
                     curr_index = next_index;
                 }
             }
-        }
-        else if (curr_token.tokenType == TokenType::kEntityProcedure) {
+        } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
             int next_index = procedureParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
                 throw std::runtime_error("Error: syntactic error found while building procedure ast node.");
-            }
-            else {
+            } else {
                 curr_index = next_index;
             }
-        }
-        else if (curr_token.tokenType == TokenType::kEntityRead) {
-            std::cout << "Enters Read Loop" << std::endl;
+        } else if (curr_token.tokenType == TokenType::kEntityRead) {
             int next_index = readParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
                 throw std::runtime_error("Error: syntactic error found while building procedure ast node.");
-            }
-            else {
-                std::cout << curr_index << std::endl;
+            } else {
                 lineNumber++;
                 curr_index = next_index;
             }
-        }
-        else {
+        } else {
             // currently unsupported, skip line for now
             int temp = curr_index;
 
@@ -216,9 +207,6 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
 
             lineNumber++;
             curr_index = temp + 1;
-
-            // You can uncomment the following line if you want to throw an error for unsupported tokens.
-            // throw std::runtime_error("Invalid token. Sorry, the parser can only handle assignment statements currently.");
         }
     }
 
@@ -230,8 +218,6 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     writeFacade->storeUsesConst(assignmentParser->getAssignConstHashmap());
     writeFacade->storeLineUses(assignmentParser->getUsesStatementNumberHashmap());
 
-    // Corrected the cout statement here
-    std::cout << "OUT" << curr_index << std::endl;
     return curr_index;
 }
 
@@ -270,6 +256,5 @@ std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getPro
 
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
-
     parse(tokens, 0);
 }

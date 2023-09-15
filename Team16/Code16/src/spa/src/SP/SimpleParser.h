@@ -85,7 +85,7 @@ class ProcedureParser : public Parser {
  */
 class ReadParser : public Parser {
  public:
-    ReadParser() = default; 
+    ReadParser() = default;
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* visitor = new ASTVisitor();
     int lineNumber = 0;

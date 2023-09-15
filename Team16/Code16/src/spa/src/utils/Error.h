@@ -63,7 +63,7 @@ class InvalidStatementError : public Error {
 
 
 class InvalidTokenTypeError : public Error {
-public:
+ public:
     /**
     * @brief Constructs an InvalidStatementError object with an optional error message.
     * @param msg The error message (default is "Invalid statement").
