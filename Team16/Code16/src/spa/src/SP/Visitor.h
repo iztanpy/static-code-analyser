@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 class TNode;
+class ProcedureTNode;
 class AssignTNode;
 class VariableTNode;
 class ConstantTNode;
@@ -15,6 +16,7 @@ class MinusTNode;
 
 class Visitor {
  public:
+    virtual void visit(const ProcedureTNode* node, std::string& key) = 0;
     virtual void visit(const AssignTNode* node, std::string& key) = 0;
     virtual void visit(const VariableTNode* node, std::string& key) = 0;
     virtual void visit(const ConstantTNode* node, std::string& key) = 0;
@@ -23,12 +25,19 @@ class Visitor {
 
     std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
     std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
+    std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
+    std::unordered_map<int, std::string> usesStatementNumberVarHashmap;
+    std::unordered_set<int> assignmentStatementsHashset;
+    std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
     std::unordered_set<std::string> variablesHashset;
     std::unordered_set<std::string> constantsHashset;
     std::string currKey;
 
+    std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap() const {
+        return procedureStatementNumberHashmap;
+    }
+
     std::unordered_set<std::string> getVariablesHashset() const {
-        std::cout << "Visitor getVariablesHashset called size " << variablesHashset.size() << std::endl;
         return variablesHashset;
     }
     std::unordered_set<std::string> getConstantsHashset() const {
@@ -40,12 +49,22 @@ class Visitor {
     std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap() const {
         return assignConstHashmap;
     }
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
+        return usesStatementNumberHashmap;
+    }
+    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap() const {
+        return usesStatementNumberVarHashmap;
+    }
+    std::unordered_set<int> getAssignmentStatementsHashset() const {
+        return assignmentStatementsHashset;
+    }
 };
 
 class ASTVisitor : public Visitor {
  public:
     ASTVisitor() = default;
 
+    void visit(const ProcedureTNode* node, std::string& key) override;
     void visit(const AssignTNode* node, std::string& key) override;
     void visit(const VariableTNode* node, std::string& key) override;
     void visit(const ConstantTNode* node, std::string& key) override;
