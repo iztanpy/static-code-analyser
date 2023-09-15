@@ -55,7 +55,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/qps.h
         src/qps/query_evaluator/constraint_table.cpp
         src/qps/query_evaluator/constraint_table.h
-)
+        src/utils/Error.cpp
+        src/utils/Error.h)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
