@@ -67,7 +67,7 @@ void ConstraintTable::Solve(const BinaryConstraint& constraint) {
 
 void ConstraintTable::Solve(Constraint& constraint) {
   std::visit([this](const auto& obj) {
-    Solve(obj)
+    Solve(obj);
   }, constraint);
 }
 

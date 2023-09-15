@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <variant>
 
 #include "utils/hash_utils.h"
 
