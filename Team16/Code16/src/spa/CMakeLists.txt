@@ -53,7 +53,8 @@ add_library(spa ${srcs} ${headers}
         src/PKB/PKB.cpp
         src/qps/qps.cpp
         src/qps/qps.h
-)
+        src/utils/Error.cpp
+        src/utils/Error.h)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

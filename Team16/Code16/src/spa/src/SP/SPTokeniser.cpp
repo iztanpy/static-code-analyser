@@ -54,7 +54,8 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
  * @brief Splits the input source program into separate lines and extracts tokens.
  *
  * This function takes an input string representing a source program and splits it into lines.
- * It then extracts tokens based on delimiters (';', '{', '}') and adds them to the result vector.
+ * It then extracts tokens based on delimiters (';', '{', '}', '(', ')', ' ', '+', '-', '=', '*', '/', '%', '<', '>',
+ * '&', '|', '!', '==', '!=', '<=', '>=', '||', '&&') and adds them to the result vector.
  *
  * @param input The input source program as a single string.
  * @return A vector of strings containing the extracted tokens from the source program.
@@ -69,33 +70,49 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
     // Initialize a string to store each line
     std::string line;
 
+    std::unordered_set<char> delimiters = {';', '{', '}', '+', '-', '=', '(', ')', '*', '/', '%', '<', '>', '&', '|',
+                                           '!', ' '};
 
     // Iterate through each character in the line
     while (std::getline(iss, line)) {
         std::string currentToken;
         size_t start = 0;
 
-        for (size_t i = 0; i < line.length(); ++i) {
-            if (line[i] == ';' || line[i] == '{' || line[i] == '}') {
-                // Add the token before the delimiter or bracket
-                if (i > start) {
-                    currentToken = line.substr(start, i - start);
-                    result.push_back(currentToken);
-                }
-
-                if (line[i] == ';') {
-                    currentToken = ";";
-                    result.push_back(currentToken);
-                }
-
-                start = i + 1;
+        // filter out whitespaces
+        size_t i = 0;
+        while (i < line.length()) {
+            // remove all white spaces
+            std::string curr_word;
+            // Iterate through each character in the line, filter out whitespaces
+            size_t word_char_index = i;
+            char curr_char = line[word_char_index];
+            while (delimiters.find(curr_char) == delimiters.end()) {
+                curr_word.push_back(curr_char);  // change to line.substr(start, i - start)
+                curr_char = line[++word_char_index];
             }
-        }
-
-        // Add the remaining portion of the line as a token
-        if (start < line.length()) {
-            currentToken = line.substr(start);
-            result.push_back(currentToken);
+            // add current word if not empty, accounts for double whitespaces and onwards
+            if (!curr_word.empty()) result.push_back(curr_word);
+            // include delimiters (excluding whitespaces) as tokens
+            auto delimiterItr = delimiters.find(curr_char);
+            if (delimiterItr != delimiters.end() &&  *delimiterItr != ' ') {
+                curr_word = curr_char;
+                // check if next char is a two-char operator
+                if (word_char_index + 1 < line.length()) {
+                    char next_char = line[word_char_index + 1];
+                    if ((curr_word == "=" && next_char == '=')
+                        || (curr_word == "!" && next_char == '=')
+                        || (curr_word == "<" && next_char == '=')
+                        || (curr_word == ">" && next_char == '=')
+                        || (curr_word == "&" && next_char == '&')
+                        || (curr_word == "|" && next_char == '|')) {
+                        curr_word.push_back(next_char);
+                        word_char_index++;
+                    }
+                }
+                result.push_back(curr_word);
+            }
+            // only add non-whitespaces tokens, accounts for double whitespaces and onwards
+            i = word_char_index + 1;
         }
     }
 
@@ -117,6 +134,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     std::vector<Token> tokens;
     std::vector<std::string> lines = splitLines(input);
     int lineNumber = 1;
+    std::stack<char> braceStack;
 
     for (const std::string& line : lines) {
         int linePositionWithWhiteSpace = 0;
@@ -124,42 +142,61 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
 
         TokenType matchedType = TokenType::kUnknownTokenType;
         std::string matchedValue;
-        while (linePositionWithWhiteSpace < line.length()) {
-            for (const auto& regex_rule : regex_rules) {
-                std::regex regex_pattern = regex_rule.second;
-                std::smatch match;
+        for (const auto& regex_rule : regex_rules) {
+            std::regex regex_pattern = regex_rule.second;
+            std::smatch match;
 
-                // Iterate through defined regular expressions to match token types
-                if (std::regex_search(line.begin() + linePositionWithWhiteSpace, line.end(), match, regex_pattern)) {
-                    matchedType = regex_rule.first;
-                    matchedValue = match[0];
-                    break;
-                }
-            }
-
-            if (matchedType == TokenType::kUnknownTokenType) { throw std::runtime_error("Invalid Token Type"); }
-
-            if (matchedType == TokenType::kWhiteSpace) {
-                linePositionWithWhiteSpace++;
-            } else if (matchedType == TokenType::kLiteralName) {
-                if (std::isdigit(matchedValue[0])) {
-                    throw std::runtime_error("Invalid Token: Name cannot start with a digit");
-                } else {
-                    Token token{matchedType, matchedValue, lineNumber, linePosition};
-                    std::cout << matchedValue << std::endl;
-                    tokens.push_back(token);
-                    linePositionWithWhiteSpace += matchedValue.length();
-                    linePosition += matchedValue.length();
-                }
-            } else {
-                Token token{matchedType, matchedValue, lineNumber, linePosition};
-                std::cout << matchedValue << std::endl;
-                tokens.push_back(token);
-                linePosition += matchedValue.length();
-                linePositionWithWhiteSpace += matchedValue.length();
+            // Iterate through defined regular expressions to match token types
+            if (std::regex_search(line.begin(), line.end(), match, regex_pattern)) {
+                matchedType = regex_rule.first;
+                matchedValue = match[0];
+                break;
             }
         }
-        if (matchedType != TokenType::kSepSemicolon) { lineNumber++; }
+
+        if (matchedType == TokenType::kUnknownTokenType) { throw std::runtime_error("Invalid Token Type"); }
+
+        if (matchedType == TokenType::kSepOpenBrace || matchedType == TokenType::kSepOpenParen) {
+            braceStack.push(matchedValue[0]);
+        }
+
+        if (matchedType == TokenType::kWhiteSpace) {
+            linePositionWithWhiteSpace++;
+        } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
+            if (braceStack.empty()) {
+                throw std::runtime_error("Syntactic error: Unmatched closing brace");
+            } else {
+                char top = braceStack.top();
+                if (matchedValue[0] == '}' && top == '{') {
+                    braceStack.pop();
+                } else if (matchedValue[0] == ')' && top == '(') {
+                    braceStack.pop();
+                    // insert ')' as a token
+                    Token token{matchedType, matchedValue, lineNumber, linePosition};
+                    tokens.push_back(token);
+                    linePosition += 1;
+                    linePositionWithWhiteSpace += 1;
+                } else {
+                    throw std::runtime_error("Syntactic error: Unmatched closing parenthesis");
+                }
+            }
+        } else if (matchedType == TokenType::kLiteralName) {
+            if (std::isdigit(matchedValue[0])) {
+                throw std::runtime_error("Invalid Token: Name cannot start with a digit");
+            } else {
+                Token token{matchedType, matchedValue, lineNumber, linePosition};
+                tokens.push_back(token);
+                linePositionWithWhiteSpace += matchedValue.length();
+                linePosition += matchedValue.length();
+            }
+        } else {
+            Token token{matchedType, matchedValue, lineNumber, linePosition};
+            tokens.push_back(token);
+            linePosition += 1;
+            linePositionWithWhiteSpace += 1;
+        }
+
+        if (matchedType == TokenType::kSepSemicolon || matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
     }
     return tokens;
 }
