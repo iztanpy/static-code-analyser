@@ -210,8 +210,9 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         }
     }
 
-    // Store data using the writeFacade
-    writeFacade->storeAssignments(assignmentParser->getAssignmentStatementsHashset());
+    writeFacade->storeAssignments(
+        assignmentParser->getUsesStatementNumberHashmap(),
+        assignmentParser->getUsesStatementNumberVarHashmap());
     writeFacade->storeVariables(assignmentParser->getVariablesHashset());
     writeFacade->storeConstants(assignmentParser->getConstantsHashset());
     writeFacade->storeUsesVar(assignmentParser->getAssignVarHashmap());
