@@ -1,5 +1,6 @@
 #include <string>
 #include <memory>
+#include <utility>
 #include "qps/query_parser/query_parser.h"
 #include "qps/query_parser/clause_builder/clause_director.h"
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
@@ -102,8 +103,9 @@ std::vector<QueryToken> QueryParser::ExtractSuchThatTokens(const std::vector<Que
   return suchThatTokens;
 }
 
-std::vector<std::unique_ptr<SuchThatClause>> QueryParser::ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens,
-                                                                                 const std::vector<Declaration> & declarations) {
+std::vector<std::unique_ptr<SuchThatClause>>
+QueryParser::ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens,
+                                    const std::vector<Declaration> & declarations) {
   std::vector<std::unique_ptr<SuchThatClause>> suchThatClauses;
   // invoke builder design pattern
   for (size_t i = 0; i < suchThatTokens.size(); i += 3) {
