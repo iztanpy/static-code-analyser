@@ -1,5 +1,3 @@
-#pragma once
-
 #include <memory>
 #include <vector>
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
@@ -12,7 +10,7 @@ void SuchThatClauseBuilder::setRelRef(RelRefType relRef) {
   rel_ref = relRef;
 }
 
-void SuchThatClauseBuilder::setLhs(const QueryToken & param, const std::vector<Declaration> & declarations) {
+void SuchThatClauseBuilder::setLhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
   RefParam refParam;
   /*
    * Check if the rel ref is Follows, FollowsT, Parent or ParentT
@@ -30,7 +28,7 @@ void SuchThatClauseBuilder::setLhs(const QueryToken & param, const std::vector<D
   }
 }
 
-void SuchThatClauseBuilder::setRhs(const QueryToken & param, const std::vector<Declaration> & declarations) {
+void SuchThatClauseBuilder::setRhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
   RefParam refParam;
   /*
    * Check if the rel ref is Follows, FollowsT, Parent or ParentT
@@ -48,12 +46,12 @@ void SuchThatClauseBuilder::setRhs(const QueryToken & param, const std::vector<D
   }
 }
 
-RefParam SuchThatClauseBuilder::getStmtRef(const QueryToken & param, const std::vector<Declaration> & declarations) {
+RefParam SuchThatClauseBuilder::getStmtRef(const QueryToken& param, const std::vector<Declaration>& declarations) {
   StmtRef refParam;
   int intValue;
   switch (param.type) {
     case PQLTokenType::SYNONYM:  // could be declaration, string or int
-      for (const Declaration & declaration : declarations) {
+      for (const Declaration& declaration : declarations) {
         if (declaration.synonym == param.text) {
           refParam = declaration;
         }
@@ -72,11 +70,11 @@ RefParam SuchThatClauseBuilder::getStmtRef(const QueryToken & param, const std::
   return refParam;
 }
 
-RefParam SuchThatClauseBuilder::getEntRef(const QueryToken & param, const std::vector<Declaration> & declarations) {
+RefParam SuchThatClauseBuilder::getEntRef(const QueryToken& param, const std::vector<Declaration>& declarations) {
   EntRef refParam;
   switch (param.type) {
     case PQLTokenType::SYNONYM:  // could be declaration, string or int
-      for (const Declaration & declaration : declarations) {
+      for (const Declaration& declaration : declarations) {
         if (declaration.synonym == param.text) {
           refParam = declaration;
         }
@@ -94,14 +92,14 @@ RefParam SuchThatClauseBuilder::getEntRef(const QueryToken & param, const std::v
   return refParam;
 }
 
-RefParam SuchThatClauseBuilder::getBothStmtAndEntRef(const QueryToken & param,
-                                                     const std::vector<Declaration> & declarations) {
+RefParam SuchThatClauseBuilder::getBothStmtAndEntRef(const QueryToken& param,
+                                                     const std::vector<Declaration>& declarations) {
   StmtRef stmtRef;
   EntRef entRef;
   int intValue;
   switch (param.type) {
     case PQLTokenType::SYNONYM:  // technically we do not need to care if its stmt or ent
-      for (const Declaration & declaration : declarations) {
+      for (const Declaration& declaration : declarations) {
         if (declaration.synonym == param.text) {
           stmtRef = declaration;
         }

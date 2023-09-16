@@ -296,7 +296,7 @@ TEST_CASE("Tokenizer cannot tokenize simple select + such that clause with inval
   QpsSyntaxError syntaxError = QpsSyntaxError("Syntax error");
   try {
     std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
-  } catch (const Error & e) {
+  } catch (const QpsError& e) {
     REQUIRE(e.what() == syntaxError.what());
   }
 }

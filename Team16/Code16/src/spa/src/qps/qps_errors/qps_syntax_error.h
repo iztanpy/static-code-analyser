@@ -6,9 +6,9 @@
 #include <stdexcept>
 #include "qps/qps_errors/qps_error.h"
 
-class QpsSyntaxError : public Error {
+class QpsSyntaxError : public QpsError {
  public:
-  explicit QpsSyntaxError(const std::string & message) : Error(message) {}
+  explicit QpsSyntaxError(const std::string& message) : QpsError(message) {}
 
-  const char *what() const noexcept override;
+  const char* what() const noexcept override;
 };

@@ -7,6 +7,7 @@
 #include "qps/clauses/clause.h"
 #include "qps/rel_ref.h"
 #include "qps/query_evaluator/constraint.h"
+#include "qps/qps_errors/qps_semantic_error.h"
 
 enum class Wildcard {
   Value
@@ -23,20 +24,21 @@ using RefParam = std::variant<StmtRef, EntRef>;
  */
 class SuchThatClause : public Clause {
  public:
-  // TODO(cuong): virtual Constraint Evaluate() = 0;
-  ~SuchThatClause() override = default;
   RelRefType rel_ref;  // an identifier to make things easier
   RefParam lhs;
   RefParam rhs;
 
-  static bool are_stmt_ref_equal(const RefParam & param_1, const RefParam & param_2);
-  static bool are_ent_ref_equal(const RefParam & param_1, const RefParam & param_2);
-  static bool are_stmt_ref(const RefParam & param_1, const RefParam & param_2);
-  static bool are_ent_ref(const RefParam & param_1, const RefParam & param_2);
-  static bool are_stmt_decl(const StmtRef & param_1, const StmtRef & param_2);
-  static bool are_ent_decl(const EntRef & param_1, const EntRef & param_2);
-  static bool are_stmt_wildcard(const StmtRef & param_1, const StmtRef & param_2);
-  static bool are_ent_wildcard(const EntRef & param_1, const EntRef & param_2);
+  static bool are_stmt_ref_equal(const RefParam& param_1, const RefParam& param_2);
+  static bool are_ent_ref_equal(const RefParam& param_1, const RefParam& param_2);
+  static bool are_stmt_ref(const RefParam& param_1, const RefParam& param_2);
+  static bool are_ent_ref(const RefParam& param_1, const RefParam& param_2);
+  static bool are_stmt_decl(const StmtRef& param_1, const StmtRef& param_2);
+  static bool are_ent_decl(const EntRef& param_1, const EntRef& param_2);
+  static bool are_stmt_wildcard(const StmtRef& param_1, const StmtRef& param_2);
+  static bool are_ent_wildcard(const EntRef& param_1, const EntRef& param_2);
+
+  virtual Constraint Evaluate() = 0;
+  ~SuchThatClause() override = default;
 };
 
 class UsesP : public SuchThatClause {
@@ -44,6 +46,8 @@ class UsesP : public SuchThatClause {
   UsesP(EntRef lhs, EntRef rhs);
   EntRef lhs;
   EntRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class UsesS : public SuchThatClause {
@@ -51,6 +55,8 @@ class UsesS : public SuchThatClause {
   UsesS(StmtRef lhs, EntRef rhs);
   StmtRef lhs;
   EntRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class ModifiesP : public SuchThatClause {
@@ -58,6 +64,8 @@ class ModifiesP : public SuchThatClause {
   ModifiesP(EntRef lhs, EntRef rhs);
   EntRef lhs;
   EntRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class ModifiesS : public SuchThatClause {
@@ -65,6 +73,8 @@ class ModifiesS : public SuchThatClause {
   ModifiesS(StmtRef lhs, EntRef rhs);
   StmtRef lhs;
   EntRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class Follows : public SuchThatClause {
@@ -72,6 +82,8 @@ class Follows : public SuchThatClause {
   Follows(StmtRef lhs, StmtRef rhs);
   StmtRef lhs;
   StmtRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class FollowsT : public SuchThatClause {
@@ -79,6 +91,8 @@ class FollowsT : public SuchThatClause {
   FollowsT(StmtRef lhs, StmtRef rhs);
   StmtRef lhs;
   StmtRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class Parent : public SuchThatClause {
@@ -86,6 +100,8 @@ class Parent : public SuchThatClause {
   Parent(StmtRef lhs, StmtRef rhs);
   StmtRef lhs;
   StmtRef rhs;
+
+  Constraint Evaluate() override;
 };
 
 class ParentS : public SuchThatClause {
@@ -93,4 +109,6 @@ class ParentS : public SuchThatClause {
   ParentS(StmtRef lhs, StmtRef rhs);
   StmtRef lhs;
   StmtRef rhs;
+
+  Constraint Evaluate() override;
 };
