@@ -78,6 +78,9 @@ TEST_CASE("ConstraintTable::AddNewUnaryConstraint", "[ConstraintTable]") {
     std::vector<std::vector<Cell>> rows = {{"4"}, {"5"}, {"6"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
     REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+
+    Constraint c = UnaryConstraint{"d", {}};
+    ct.Solve(c);
   }
 
   SECTION("Adding a new unary constraint to existing table") {

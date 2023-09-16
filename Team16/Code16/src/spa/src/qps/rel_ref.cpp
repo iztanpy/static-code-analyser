@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 #include <string>
 #include <map>
@@ -20,7 +18,7 @@ std::string RelRef::toString(RelRefType relRef) {
   return refRef_to_string.at(relRef);
 }
 
-RelRefType RelRef::fromString(const std::string & relRef_str) {
+RelRefType RelRef::fromString(const std::string& relRef_str) {
   static const std::map<std::string, RelRefType> string_to_relRef = {
       {"Follows", RelRefType::FOLLOWS},
       {"Follows*", RelRefType::FOLLOWST},
