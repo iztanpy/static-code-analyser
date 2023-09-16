@@ -22,8 +22,8 @@ ParsedQuery QueryParser::ParseTokenizedQuery(const std::vector<QueryToken> & tok
 
   std::vector<QueryToken> suchThatTokens = ExtractSuchThatTokens(tokens);
   if (!suchThatTokens.empty()) {
-    std::vector<SuchThatClause> suchThatClauses = ExtractSuchThatClauses(tokens, declarations);
-    parsedQuery.suchthat_clauses = suchThatClauses;
+    std::vector<std::unique_ptr<SuchThatClause>> suchThatClauses = ExtractSuchThatClauses(tokens, declarations);
+    parsedQuery.such_that_clauses = std::move(suchThatClauses);
   }
   /* TODO: extract pattern clauses */
   return parsedQuery;
@@ -90,6 +90,8 @@ std::vector<QueryToken> QueryParser::ExtractSuchThatTokens(const std::vector<Que
       case PQLTokenType::RELREF:
       case PQLTokenType::INTEGER:
       case PQLTokenType::SYNONYM:
+      case PQLTokenType::IDENT:
+      case PQLTokenType::WILDCARD:
         if (inSuchThatClause) {
           suchThatTokens.push_back(token);
         }
@@ -100,16 +102,16 @@ std::vector<QueryToken> QueryParser::ExtractSuchThatTokens(const std::vector<Que
   return suchThatTokens;
 }
 
-std::vector<SuchThatClause> QueryParser::ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens,
-                                                                const std::vector<Declaration> & declarations) {
-  std::vector<SuchThatClause> suchThatClauses;
+std::vector<std::unique_ptr<SuchThatClause>> QueryParser::ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens,
+                                                                                 const std::vector<Declaration> & declarations) {
+  std::vector<std::unique_ptr<SuchThatClause>> suchThatClauses;
   // invoke builder design pattern
   for (size_t i = 0; i < suchThatTokens.size(); i += 3) {
     // Such that tokens should be parsed in 3s
     std::vector<QueryToken> singleClause = {suchThatTokens[i], suchThatTokens[i + 1], suchThatTokens[i + 2]};
     SuchThatClauseBuilder builder;
     std::unique_ptr<SuchThatClause> clause = ClauseDirector::makeSuchThatClause(builder, singleClause, declarations);
-    suchThatClauses.push_back(*clause);
+    suchThatClauses.push_back(std::move(clause));
   }
   return suchThatClauses;
 }
