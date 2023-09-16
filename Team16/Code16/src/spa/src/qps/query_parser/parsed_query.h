@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "qps/clauses/select_clause.h"
 #include "qps/clauses/suchthat_clause.h"
