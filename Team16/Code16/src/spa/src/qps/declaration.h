@@ -7,4 +7,5 @@
 struct Declaration {
   std::string synonym;
   DesignEntity design_entity;
+  bool equals(Declaration & other);
 };
