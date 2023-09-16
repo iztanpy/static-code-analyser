@@ -1,65 +1,60 @@
-#include "PKB/PKB.h"
+#include<stdio.h>
+#include <iostream>
+#include <string>
+#include <unordered_set>
 
-PKB::PKB(std::unordered_set<int> assignments,
-         std::unordered_set<std::string> variables,
-         std::unordered_set<std::string> constants,
-         std::unordered_map<std::string, std::unordered_set<std::string>> UsesConst,
-         std::unordered_map<std::string, std::unordered_set<std::string>> UsesVar,
-         std::unordered_map<int, std::unordered_set<std::string>> LineUses) {
-  setPKB(assignments, variables, constants, UsesConst, UsesVar, LineUses);
-}
+#include "PKB.h"
+
 
 PKB::PKB() {
+    assignStore = new AssignStore();
+    variableStore = new VariableStore();
+    usesStore = new UsesStore();
+    constantStore = new ConstantStore();
 }
 
-void PKB::setPKB(std::unordered_set<int> assignments,
-                 std::unordered_set<std::string> variables,
-                 std::unordered_set<std::string> constants,
-                 std::unordered_map<std::string, std::unordered_set<std::string>> UsesConst,
-                 std::unordered_map<std::string, std::unordered_set<std::string>> UsesVar,
-                 std::unordered_map<int, std::unordered_set<std::string>> LineUses) {
-  this->assignments = assignments;
-  this->variables = variables;
-  this->constants = constants;
-  this->UsesConst = UsesConst;
-  this->UsesVar = UsesVar;
-  this->LineUses = LineUses;
+void PKB::setAssignments(std::unordered_map<statementNumber,
+    std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap) {
+    assignStore->addNumLHSMap(numLHSMap);
+    assignStore->addNumRHSMap(numRHSMap);
 }
 
-void PKB::setAssignments(std::unordered_set<int> assignments) {
-  this->assignments = assignments;
-}
-void PKB::setVariables(std::unordered_set<std::string> variables) {
-  this->variables = variables;
-}
-void PKB::setConstants(std::unordered_set<std::string> constants) {
-  this->constants = constants;
+std::unordered_set<statementNumber> PKB::getAllAssigns() {
+    return assignStore->getAllAssigns();
 }
 
-void PKB::setUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> UsesConst) {
-  this->UsesConst = UsesConst;
+std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, possibleCombinations RHS) {
+    return assignStore->getAssigns(LHS, RHS);
 }
 
-void PKB::setUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> UsesVar) {
-  this->UsesVar = UsesVar;
+void PKB::addVariables(std::unordered_set<variable> variables) {
+    variableStore->addVariables(variables);
 }
 
-void PKB::setLineUses(std::unordered_map<int, std::unordered_set<std::string>> LineUses) {
-  this->LineUses = LineUses;
+std::unordered_set<variable> PKB::getVariables() {
+    return variableStore->getVariables();
 }
 
-std::unordered_set<int> PKB::getAssignments() {
-  return this->assignments;
+void PKB::addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
+    usesStore->addLineUsesVar(varUsesMap);
 }
 
-std::unordered_set<std::string> PKB::getVariables() {
-  return this->variables;
+void PKB::addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constUsesMap) {
+    usesStore->addLineUsesConst(constUsesMap);
 }
 
-std::unordered_set<std::string> PKB::getConstants() {
-  return this->constants;
+std::unordered_set<variable> PKB::getVariablesUsedBy(statementNumber line) {
+    return usesStore->getVariablesUsedBy(line);
 }
 
-std::unordered_set<std::string> PKB::getVariablesUsedBy(int lineNumber) {
-  return this->LineUses[lineNumber];
+std::unordered_set<constant> PKB::getConstantsUsedBy(statementNumber line) {
+    return usesStore->getConstantsUsedBy(line);
+}
+
+void PKB::addConstants(std::unordered_set<constant> constants) {
+    constantStore->addConstants(constants);
+}
+
+std::unordered_set<constant> PKB::getConstants() {
+    return constantStore->getConstants();
 }

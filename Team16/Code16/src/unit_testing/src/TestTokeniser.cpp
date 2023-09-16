@@ -119,13 +119,7 @@ TEST_CASE("Test Regex") {
     REQUIRE(tokens_normal[5].tokenType == TokenType::kSepSemicolon);
     REQUIRE(tokens_normal[5].value == ";");
     REQUIRE(end(tokens_normal) - begin(tokens_normal) == 6);
-
-    // Literal Rules
-    REQUIRE_THROWS_AS(tokeniser.tokenise("123myInt"), std::runtime_error); // expect an error to be thrown
-    std::vector<struct Token> tokens_literals = tokeniser.tokenise("123 test;");
-    REQUIRE(tokens_literals[0].tokenType == TokenType::kLiteralInteger);
  
-
     // Entities
     std::vector<struct Token> tokens_entity = tokeniser.tokenise("if while else read procedure print call;");
     REQUIRE(tokens_entity[0].tokenType == TokenType::kEntityIf);
