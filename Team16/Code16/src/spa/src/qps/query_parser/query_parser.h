@@ -13,7 +13,7 @@ class QueryParser {
   static std::vector<SelectClause>
   ExtractSelectClauses(const std::vector<QueryToken> & selectTokens, const std::vector<Declaration> & declarations);
   static std::vector<QueryToken> ExtractSelectTokens(const std::vector<QueryToken> & tokens);
-  static std::vector<SuchThatClause>
+  static std::vector<std::unique_ptr<SuchThatClause>>
   ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens, const std::vector<Declaration> & declarations);
   static std::vector<QueryToken> ExtractSuchThatTokens(const std::vector<QueryToken> & tokens);
 };

@@ -123,26 +123,53 @@ RefParam SuchThatClauseBuilder::getBothStmtAndEntRef(const QueryToken & param,
 std::unique_ptr<SuchThatClause> SuchThatClauseBuilder::getClause() const {
   switch (rel_ref) {
     case RelRefType::USESS:
-      return std::make_unique<UsesS>(std::get<StmtRef>(lhs),
-                                     std::get<EntRef>(rhs));
-    case RelRefType::USESP:return std::make_unique<UsesP>(std::get<EntRef>(lhs), std::get<EntRef>(rhs));
+    case RelRefType::USESP:
+      // at this point we are not able to distinguish between UsesS and UsesP from the rel ref
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<EntRef>(rhs)) {
+        return std::make_unique<UsesS>(std::get<StmtRef>(lhs),
+                                       std::get<EntRef>(rhs));
+      } else if (std::holds_alternative<EntRef>(lhs) && std::holds_alternative<EntRef>(rhs)) {
+        return std::make_unique<UsesP>(std::get<EntRef>(lhs), std::get<EntRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
     case RelRefType::FOLLOWS:
-      return std::make_unique<Follows>(std::get<StmtRef>(lhs),
-                                       std::get<StmtRef>(rhs));
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(rhs)) {
+        return std::make_unique<Follows>(std::get<StmtRef>(lhs),
+                                         std::get<StmtRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
     case RelRefType::FOLLOWST:
-      return std::make_unique<FollowsT>(std::get<StmtRef>(lhs),
-                                        std::get<StmtRef>(rhs));
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
+        return std::make_unique<FollowsT>(std::get<StmtRef>(lhs),
+                                          std::get<StmtRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
     case RelRefType::PARENT:
-      return std::make_unique<Parent>(std::get<StmtRef>(lhs),
-                                      std::get<StmtRef>(rhs));
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
+        return std::make_unique<Parent>(std::get<StmtRef>(lhs),
+                                        std::get<StmtRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
     case RelRefType::PARENTT:
-      return std::make_unique<ParentS>(std::get<StmtRef>(lhs),
-                                       std::get<StmtRef>(rhs));
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
+        return std::make_unique<ParentS>(std::get<StmtRef>(lhs),
+                                         std::get<StmtRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
     case RelRefType::MODIFIESS:
-      return std::make_unique<ModifiesS>(std::get<StmtRef>(lhs),
-                                         std::get<EntRef>(rhs));
     case RelRefType::MODIFIESP:
-      return std::make_unique<ModifiesP>(std::get<EntRef>(lhs),
-                                         std::get<EntRef>(rhs));
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<EntRef>(rhs)) {
+        return std::make_unique<ModifiesS>(std::get<StmtRef>(lhs),
+                                           std::get<EntRef>(rhs));
+      } else if (std::holds_alternative<EntRef>(lhs) && std::holds_alternative<EntRef>(rhs)) {
+        return std::make_unique<ModifiesP>(std::get<EntRef>(lhs), std::get<EntRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
   }
 }
