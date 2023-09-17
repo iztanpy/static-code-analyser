@@ -24,12 +24,12 @@ TEST_CASE("Test Uses Store Add") {
     REQUIRE(usesStore.getVariablesUsedBy(3) == std::unordered_set<variable> {"y"});
 }
 
-//TEST_CASE("Test Uses store getStatementsUsing") {
-//    auto usesStore = UsesStore();
-//    usesStore.addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>>
-//    {{1, {"x"}}, {2, {"x","y"}}, {3, {"y"}}});
-//    std::unordered_set<statementNumber> statements = usesStore.getStatementsUsing("x");
-//    REQUIRE(statements ==  std::unordered_set<statementNumber> {1,2});
-//    statements = usesStore.getStatementsUsing("y");
-//    REQUIRE(statements ==  std::unordered_set<statementNumber> {2,3});
-//}
+TEST_CASE("Test Uses store getStatementsUsing") {
+    auto usesStore = UsesStore();
+    usesStore.addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>>
+    {{1, {"x"}}, {2, {"x","y"}}, {3, {"y"}}});
+    std::unordered_set<statementNumber> statements = usesStore.getStatementsUsing("x");
+    REQUIRE(statements ==  std::unordered_set<statementNumber> {1,2});
+    statements = usesStore.getStatementsUsing("y");
+    REQUIRE(statements ==  std::unordered_set<statementNumber> {2,3});
+}
