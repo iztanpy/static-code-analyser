@@ -114,7 +114,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     return curr_index;
 }
 
-SimpleParser::SimpleParser(WriteFacade* writeFacadePtr) : writeFacade(writeFacadePtr) { }
+SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPtr) : writeFacade(writeFacadePtr), visitor(astVisitorPtr) {}
 int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
@@ -152,50 +152,16 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         }
     }
     writeFacade->storeAssignments(
-        assignmentParser->getUsesStatementNumberHashmap(),
-        assignmentParser->getUsesStatementNumberVarHashmap());
-    writeFacade->storeVariables(assignmentParser->getVariablesHashset());
-    writeFacade->storeConstants(assignmentParser->getConstantsHashset());
-    writeFacade->storeUsesVar(assignmentParser->getAssignVarHashmap());
-    writeFacade->storeUsesConst(assignmentParser->getAssignConstHashmap());
-    writeFacade->storeLineUses(assignmentParser->getUsesStatementNumberHashmap());
+        visitor->getUsesStatementNumberHashmap(),
+        visitor->getUsesStatementNumberVarHashmap());
+    writeFacade->storeVariables(visitor->getVariablesHashset());
+    writeFacade->storeConstants(visitor->getConstantsHashset());
+    writeFacade->storeUsesVar(visitor->getAssignVarHashmap());
+    writeFacade->storeUsesConst(visitor->getAssignConstHashmap());
+    writeFacade->storeLineUses(visitor->getUsesStatementNumberHashmap());
     return curr_index;
-}
-
-std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignVarHashmap() {
-    return visitor->getAssignVarHashmap();
-}
-
-std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignConstHashmap() {
-    return visitor->getAssignConstHashmap();
-}
-
-std::unordered_set<std::string> AssignmentParser::getVariablesHashset() {
-    return visitor->getVariablesHashset();
-}
-
-std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
-    return visitor->getConstantsHashset();
-}
-
-std::unordered_map<int, std::unordered_set<std::string>> AssignmentParser::getUsesStatementNumberHashmap() {
-    return visitor->getUsesStatementNumberHashmap();
-}
-
-std::unordered_map<int, std::string> AssignmentParser::getUsesStatementNumberVarHashmap() {
-    return visitor->getUsesStatementNumberVarHashmap();
-}
-
-std::unordered_set<int> AssignmentParser::getAssignmentStatementsHashset() {
-    return visitor->getAssignmentStatementsHashset();
 }
 
 std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getProcedureStatementNumberHashmap() {
     return procedureVisitor->getProcedureStatementNumberHashmap();
-}
-
-void SimpleParser::tokenise(std::string code) {
-    std::vector<struct Token> tokens = tokeniser.tokenise(code);
-
-    parse(tokens, 0);
 }

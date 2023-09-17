@@ -14,8 +14,6 @@
 #include "SPTokeniser.h"
 #include "utils/Error.h"
 
-class DesignExtractor;  // Forward declaration
-
 /**
  * @class Parser
  * @brief Abstract base class for parsing operations on a sequence of tokens.
@@ -31,7 +29,7 @@ class Parser {
     Parser() = default;
     virtual ~Parser() = default;
     virtual int parse(const std::vector<Token>& tokens, int curr_index) = 0;
-    DesignExtractor* designExtractor = new DesignExtractor();  // Initialize to nullptr in the constructor
+    DesignExtractor* designExtractor = new DesignExtractor();
 };
 
 /**
@@ -43,19 +41,10 @@ class Parser {
  */
 class AssignmentParser : public Parser {
  public:
-    AssignmentParser() = default;
+    AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {};
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor = new ASTVisitor();  // Initialize to nullptr in the constructor
+    ASTVisitor* visitor;  // Initialize to nullptr in the constructor
     int lineNumber = 0;
-
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
-    std::unordered_set<std::string> getVariablesHashset();
-    std::unordered_set<std::string> getConstantsHashset();
-
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
-    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap();
-    std::unordered_set<int> getAssignmentStatementsHashset();
 };
 
 
@@ -85,16 +74,13 @@ class ProcedureParser : public Parser {
  */
 class SimpleParser : public Parser {
  private:
-     WriteFacade* writeFacade;
+    WriteFacade* writeFacade;
+    ASTVisitor* visitor;
     int lineNumber = 1;
  public:
-    explicit SimpleParser(WriteFacade* writeFacade);  // Corrected constructor declaration
+    explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
-    SPtokeniser tokeniser;
-    AssignmentParser* assignmentParser = new AssignmentParser();
+    AssignmentParser* assignmentParser = new AssignmentParser(visitor);
     ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
-    void tokenise(std::string simpleProgram);
 };
-
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
