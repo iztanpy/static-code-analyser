@@ -65,10 +65,25 @@ class InvalidStatementError : public Error {
 class InvalidTokenTypeError : public Error {
  public:
     /**
-    * @brief Constructs an InvalidStatementError object with an optional error message.
-    * @param msg The error message (default is "Invalid statement").
+    * @brief Constructs an InvalidSTokenTypetError object with an optional error message.
+    * @param msg The error message (default is "Invalid TokenType").
     */
     explicit InvalidTokenTypeError(const std::string& msg = "Invalid Token Type") : Error(msg) {}
+    /**
+     * @brief Logs the error message specific to invalid statements.
+     * Overrides the base class log() function.
+     */
+    void log() override;
+};
+
+
+class InvalidSyntaxError : public Error {
+ public:
+    /**
+    * @brief Constructs an InvalidSyntaxError object with an optional error message.
+    * @param msg The error message (default is "Invalid SIMPLE Syntax.").
+    */
+    explicit InvalidSyntaxError(const std::string& msg = "Invalid SIMPLE Syntax. Unable to build AST.") : Error(msg) {}
     /**
      * @brief Logs the error message specific to invalid statements.
      * Overrides the base class log() function.

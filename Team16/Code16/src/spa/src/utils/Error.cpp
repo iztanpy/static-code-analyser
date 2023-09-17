@@ -7,3 +7,7 @@ void InvalidStatementError::log() {
 void InvalidTokenTypeError::log() {
   std::cerr << "Error: " << message << std::endl;
 }
+
+void InvalidSyntaxError::log() {
+  std::cerr << "Error: " << message << std::endl;
+}

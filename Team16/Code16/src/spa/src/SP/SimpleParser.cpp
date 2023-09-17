@@ -173,7 +173,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
-                    throw std::runtime_error("Error: syntactic error found while building ast.");
+                    throw InvalidSyntaxError();
                 } else {
                     lineNumber++;
                     curr_index = next_index;
@@ -183,7 +183,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             int next_index = procedureParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
-                throw std::runtime_error("Error: syntactic error found while building procedure ast node.");
+                throw InvalidSyntaxError();
             } else {
                 curr_index = next_index;
             }
@@ -191,7 +191,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             int next_index = readParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
-                throw std::runtime_error("Error: syntactic error found while building procedure ast node.");
+                throw InvalidSyntaxError();
             } else {
                 lineNumber++;
                 curr_index = next_index;
@@ -257,5 +257,8 @@ std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getPro
 
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
-    parse(tokens, 0);
+    try { parse(tokens, 0); }
+    catch (InvalidSyntaxError e) {
+        e.log();
+    }
 }
