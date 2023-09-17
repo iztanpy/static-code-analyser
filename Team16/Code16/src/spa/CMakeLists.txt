@@ -89,6 +89,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/rel_ref.h
         src/qps/query_parser/clause_builder/suchthat_clause_builder.cpp
         src/qps/query_parser/clause_builder/suchthat_clause_builder.h
+        src/PKB/Stores/ParentStore.cpp
+        src/PKB/Stores/ParentStore.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
