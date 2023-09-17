@@ -13,11 +13,11 @@ UsesStore::UsesStore() {
 
 void UsesStore::addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
     this->UsesVariableMap = varUsesMap;
-    for (auto const& x : varUsesMap) {
-        for (auto const& y : x.second) {
-            this->UsesVariableMapReverse[y].insert(x.first);
-        }
-    }
+//    for (auto const& x : varUsesMap) {
+//        for (auto const& y : x.second) {
+//            this->UsesVariableMapReverse[y].insert(x.first);
+//        }
+//    }
 }
 
 void UsesStore::addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constantUsesMap) {
