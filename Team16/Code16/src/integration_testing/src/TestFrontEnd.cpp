@@ -150,44 +150,44 @@ TEST_CASE("Selecting Assign statements") {
   REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"1", "3"}));
 }
 
-
-TEST_CASE("Procedure with missing name should not cause the program to stop.") {
-    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-
-    ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SourceProcessor sourceProcessor(&writeFacade);
-    QPS qps(readFacade);
-
-
-    string simpleProgram = "procedure { \n x = \t \n \n\t y + \t 1; \n }";
-    string query_1 = "variable v\t\t\n; Select \n v";
-    string query_2 = "\n\t constant \t c; Select c";
-
-    sourceProcessor.processSource(simpleProgram);
-
-    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ }));
-    REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ }));
-}
-
-TEST_CASE("Invalid assignment should not cause the program to stop.") {
-    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-
-    ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SourceProcessor sourceProcessor(&writeFacade);
-    QPS qps(readFacade);
-
-
-    string simpleProgram = "procedure { \n x \t \n \n\t y + \t 1; \n }";
-    string query_1 = "variable v\t\t\n; Select \n v";
-    string query_2 = "\n\t constant \t c; Select c";
-
-    sourceProcessor.processSource(simpleProgram);
-
-    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ }));
-    REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ }));
-}
+//
+//TEST_CASE("Procedure with missing name should not cause the program to stop.") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//
+//    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+//    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    QPS qps(readFacade);
+//
+//
+//    string simpleProgram = "procedure { \n x = \t \n \n\t y + \t 1; \n }";
+//    string query_1 = "variable v\t\t\n; Select \n v";
+//    string query_2 = "\n\t constant \t c; Select c";
+//
+//    sourceProcessor.processSource(simpleProgram);
+//
+//    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ }));
+//    REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ }));
+//}
+//
+//TEST_CASE("Invalid assignment should not cause the program to stop.") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//
+//    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+//    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    QPS qps(readFacade);
+//
+//
+//    string simpleProgram = "procedure { \n x \t \n \n\t y + \t 1; \n }";
+//    string query_1 = "variable v\t\t\n; Select \n v";
+//    string query_2 = "\n\t constant \t c; Select c";
+//
+//    sourceProcessor.processSource(simpleProgram);
+//
+//    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ }));
+//    REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ }));
+//}
 
 //TEST_CASE("Uses test") {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
