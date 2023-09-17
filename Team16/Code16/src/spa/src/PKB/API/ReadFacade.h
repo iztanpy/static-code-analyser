@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
-#include "pkb/PKB.h"
+#include "PKB/PKB.h"
 
 class ReadFacade {
  private:

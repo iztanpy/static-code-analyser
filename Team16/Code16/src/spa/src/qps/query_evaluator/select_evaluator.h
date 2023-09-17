@@ -12,10 +12,10 @@
 // Evaluates the Select clause of a query
 class SelectEvaluator {
  private:
-  ReadFacade & pkb_reader;
+  ReadFacade& pkb_reader;
   SelectClause select_clause;
 
  public:
-  SelectEvaluator(ReadFacade & pkb_reader, SelectClause & select_clause);
-  Constraint evaluate();
+  SelectEvaluator(ReadFacade& pkb_reader, SelectClause& select_clause);
+  UnaryConstraint Evaluate();
 };

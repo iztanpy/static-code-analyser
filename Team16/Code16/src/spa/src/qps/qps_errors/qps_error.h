@@ -6,9 +6,10 @@
 #include <stdexcept>
 
 // Base Error class
-class Error : public std::runtime_error {
+// TODO(phuccuongngo99): Consider sharing error with SP side
+class QpsError : public std::runtime_error {
  public:
-  explicit Error(const std::string & message) : std::runtime_error(message) {}
+  explicit QpsError(const std::string& message) : std::runtime_error(message) {}
 
-  const char *what() const noexcept override = 0;
+  const char* what() const noexcept override = 0;
 };

@@ -3,7 +3,7 @@
 SelectEvaluator::SelectEvaluator(ReadFacade& pkb_reader, SelectClause& select_clause)
     : pkb_reader(pkb_reader), select_clause(select_clause) {}
 
-Constraint SelectEvaluator::evaluate() {
+UnaryConstraint SelectEvaluator::Evaluate() {
   auto values = [&]() -> std::unordered_set<std::string> {
     switch (select_clause.design_entity) {
       case DesignEntity::ASSIGN: {
@@ -25,12 +25,8 @@ Constraint SelectEvaluator::evaluate() {
     }
   }();
 
-  std::unordered_set<std::pair<std::string, std::string>, PairHash> results;
-  for (const std::string& value : values) {
-    results.insert(std::make_pair(value, value));
-  }
-  return {
-      std::make_pair(select_clause.synonym, select_clause.synonym),
-      results
+  return UnaryConstraint{
+      select_clause.synonym,
+      values
   };
 }
