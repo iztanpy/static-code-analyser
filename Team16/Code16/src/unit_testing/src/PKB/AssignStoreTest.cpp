@@ -8,3 +8,4 @@ TEST_CASE("Test Assign store add") {
     assignStore.addNumLHSMap({{1, "x"}, {2, "y"}, {3, "x"}});
     REQUIRE(assignStore.getAllAssigns().size() == 3);
 }
+
