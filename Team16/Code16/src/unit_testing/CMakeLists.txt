@@ -12,6 +12,7 @@ add_executable(unit_testing ${srcs}
         src/PKB/ParentsStoreTest.cpp
         src/PKB/ModifiesStoreTest.cpp
         src/PKB/UsesStoreTest.cpp
+        src/PKB/AssignStoreTest.cpp
 )
 
 target_link_libraries(unit_testing spa)

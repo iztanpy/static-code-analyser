@@ -18,7 +18,7 @@ typedef std::string variable;
 TEST_CASE("Test Uses Store Add") {
     auto usesStore = UsesStore();
     usesStore.addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>>
-    {{1, {"x"}}, {2, {"x,y"}}, {3, {"y"}}});
+    {{1, {"x"}}, {2, {"x","y"}}, {3, {"y"}}});
     REQUIRE(usesStore.getVariablesUsedBy(1) == std::unordered_set<variable> {"x"});
     REQUIRE(usesStore.getVariablesUsedBy(2) == std::unordered_set<variable> {"x", "y"});
     REQUIRE(usesStore.getVariablesUsedBy(3) == std::unordered_set<variable> {"y"});
