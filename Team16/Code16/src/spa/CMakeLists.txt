@@ -80,6 +80,15 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/FollowsStore.h
         src/utils/Error.cpp
         src/utils/Error.h
+        src/qps/qps_errors/qps_error.h
+        src/qps/qps_errors/qps_semantic_error.cpp
+        src/qps/qps_errors/qps_semantic_error.h
+        src/qps/qps_errors/qps_syntax_error.cpp
+        src/qps/qps_errors/qps_syntax_error.h
+        src/qps/rel_ref.cpp
+        src/qps/rel_ref.h
+        src/qps/query_parser/clause_builder/suchthat_clause_builder.cpp
+        src/qps/query_parser/clause_builder/suchthat_clause_builder.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
