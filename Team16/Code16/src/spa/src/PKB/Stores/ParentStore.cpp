@@ -33,7 +33,8 @@ std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(state
     for (auto const& x : this->ParentMap[statement]) {
         childrens.insert(x);
         if (this->ParentMap.find(x) != this->ParentMap.end()) {
-            childrens.insert(getChildrens(x).begin(), getChildrens(x).end());
+            std::unordered_set<statementNumber> set = getChildrens(x);
+            childrens.insert(set.begin(), set.end());
         }
     }
     return childrens;

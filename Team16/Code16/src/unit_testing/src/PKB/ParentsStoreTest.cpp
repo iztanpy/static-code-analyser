@@ -16,17 +16,18 @@ TEST_CASE("Test Parent Store Add") {
 }
 
 
-//TEST_CASE("Test getChildrens") {
-//    auto parentStore = ParentStore();
-//    parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
-//    std::unordered_set<statementNumber> childrens = parentStore.getChildrens(1);
-//    REQUIRE(childrens ==  std::unordered_set<statementNumber> {2,3,4,5,6,7});
-//    childrens = parentStore.getChildrens(2);
-//    REQUIRE(childrens ==  std::unordered_set<statementNumber> {4,5});
-//    childrens = parentStore.getChildrens(3);
-//    REQUIRE(childrens ==  std::unordered_set<statementNumber> {6,7});
-//
-//}
+TEST_CASE("Test getChildrens") {
+    auto parentStore = ParentStore();
+    parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
+    std::unordered_set<statementNumber> childrens = parentStore.getChildrens(1);
+    REQUIRE(childrens ==  std::unordered_set<statementNumber> {2,3,4,5,6,7});
+    childrens = parentStore.getChildrens(2);
+    REQUIRE(childrens ==  std::unordered_set<statementNumber> {4,5});
+    childrens = parentStore.getChildrens(3);
+    REQUIRE(childrens ==  std::unordered_set<statementNumber> {6,7});
+
+}
+
 TEST_CASE("Test getParents") {
     auto parentStore = ParentStore();
     parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
