@@ -7,10 +7,6 @@
 #include <memory>
 
 // Headers from "SP" subdirectory
-#include "SP/TNode.h"
-#include "SP/sp_tokeniser/Token.h"
-#include "SP/DesignExtractor.h"
-#include "SP/sp_tokeniser/SPTokeniser.h"
 #include "SP/sp_parser/AssignmentParser.h"
 #include "SP/sp_parser/ReadParser.h"
 #include "SP/sp_parser/ProcedureParser.h"
