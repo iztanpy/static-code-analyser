@@ -49,6 +49,22 @@ add_library(spa ${srcs} ${headers}
         src/PKB/PKB.cpp
         src/qps/qps.cpp
         src/qps/qps.h
+        src/PKB/Stores/VariableStore.cpp
+        src/PKB/Stores/VariableStore.h
+        src/PKB/Stores/ConstantStore.cpp
+        src/PKB/Stores/ConstantStore.h
+        src/PKB/Stores/UsesStore.cpp
+        src/PKB/Stores/UsesStore.h
+        src/PKB/Stores/AssignStore.cpp
+        src/PKB/Stores/AssignStore.h
+        src/PKB/Stores/StatementStore.cpp
+        src/PKB/Stores/StatementStore.h
+        src/PKB/Stores/AssignStore.cpp
+        src/utils/statementTypes.h
+        src/PKB/Stores/ModifiesStore.cpp
+        src/PKB/Stores/ModifiesStore.h
+        src/PKB/Stores/FollowsStore.cpp
+        src/PKB/Stores/FollowsStore.h
         src/utils/Error.cpp
         src/utils/Error.h
         src/qps/qps_errors/qps_error.h
