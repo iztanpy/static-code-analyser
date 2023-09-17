@@ -1,5 +1,4 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_SIMPLEPARSER_H_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -41,7 +40,7 @@ class Parser {
  */
 class AssignmentParser : public Parser {
  public:
-    AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {};
+    explicit AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* visitor;  // Initialize to nullptr in the constructor
     int lineNumber = 0;

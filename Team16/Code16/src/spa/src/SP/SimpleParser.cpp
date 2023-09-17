@@ -114,7 +114,8 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     return curr_index;
 }
 
-SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPtr) : writeFacade(writeFacadePtr), visitor(astVisitorPtr) {}
+SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPtr) : writeFacade(writeFacadePtr),
+    visitor(astVisitorPtr) {}
 int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];

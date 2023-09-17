@@ -15,7 +15,7 @@
 #include "utils/Error.h"
 
 class SourceProcessor {
-private:
+ private:
     std::unique_ptr<PKB> pkb_ptr;
     SPtokeniser tokeniser;
     SimpleParser simpleParser;
