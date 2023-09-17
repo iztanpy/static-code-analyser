@@ -151,13 +151,23 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
 //                "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
-    writeFacade->storeAssignments(assignmentParser->getAssignmentStatementsHashset());
-    writeFacade->storeVariables(assignmentParser->getVariablesHashset());
-    writeFacade->storeConstants(assignmentParser->getConstantsHashset());
-    writeFacade->storeUsesVar(assignmentParser->getAssignVarHashmap());
-    writeFacade->storeUsesConst(assignmentParser->getAssignConstHashmap());
-    writeFacade->storeLineUses(assignmentParser->getUsesStatementNumberHashmap());
+//    // <line, RHS patterns>, <line, LHS var>
+//    writeFacade->storeAssignments(assignmentParser->getUsesStatementNumberHashmap(), assignmentParser->getUsesStatementNumberVarHashmap());
+//    // <all var in LHS and RHS>
+//    writeFacade->storeVariables(assignmentParser->getVariablesHashset());
+//    // <all const in RHS>
+//    writeFacade->storeConstants(assignmentParser->getConstantsHashset());
+//    // <all var in RHS>
+//    writeFacade->storeUses(assignmentParser->getLineUsesVar());
     return curr_index;
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> AssignmentParser::getLineUsesVar() {
+    return visitor->getLineUsesVar();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> AssignmentParser::getLineUsesConst() {
+    return visitor->getLineUsesConst();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignVarHashmap() {

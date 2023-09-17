@@ -257,18 +257,52 @@ TEST_CASE(("Test SP storing of assignment statements")) {
 }
 
 
-TEST_CASE(("Test SP assignment pattern")) {
+TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade);
     SPtokeniser tokeniser;
 
-    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    std::string simpleProgram = "procedure p {a = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
     parser.parse(tokens_simple, 0);
     std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap = std::unordered_map<int, std::unordered_set<std::string>>(
             {{1, {"x", "1", "x + 1"}}, {2, {"x", "y", "1", "y + x + 1", "y + x"}}, {3, {"y", "x", "1", "y + x + 1", "y + x"}}});
+    std::unordered_map<int, std::string> usesStatementNumberVarHashmap = std::unordered_map<int, std::string>(
+            {{1, "a"}, {2, "y"}, {3, "y"}});
     std::unordered_map<int, std::unordered_set<std::string>> res = parser.assignmentParser->getUsesStatementNumberHashmap();
+    std::unordered_map<int, std::string> res2 = parser.assignmentParser->getUsesStatementNumberVarHashmap();
     REQUIRE(res == usesStatementNumberHashmap);
+    REQUIRE(res2 == usesStatementNumberVarHashmap);
 
 }
+
+
+TEST_CASE(("Test SP to PKB LineUsesVar")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    SPtokeniser tokeniser;
+
+    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { w = x + 1;}";
+    parser.parse(tokeniser.tokenise(simpleProgram), 0);
+    std::unordered_map<int, std::unordered_set<std::string>> lineUsesVar = std::unordered_map<int, std::unordered_set<std::string>>(
+            {{1, {"x"}}, {2, {"x", "y"}}, {3, {"x"}}});
+    std::unordered_map<int, std::unordered_set<std::string>> res = parser.assignmentParser->getLineUsesVar();
+    REQUIRE(res == lineUsesVar);
+}
+
+TEST_CASE(("Test SP to PKB LineUsesConst")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade);
+    SPtokeniser tokeniser;
+
+    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 2;}";
+    parser.parse(tokeniser.tokenise(simpleProgram), 0);
+    std::unordered_map<int, std::unordered_set<std::string>> lineUsesConst = std::unordered_map<int, std::unordered_set<std::string>>(
+            {{1, {"1"}}, {2, {"1"}}, {3, {"2"}}});
+    std::unordered_map<int, std::unordered_set<std::string>> res = parser.assignmentParser->getLineUsesConst();
+    REQUIRE(res == lineUsesConst);
+}
+

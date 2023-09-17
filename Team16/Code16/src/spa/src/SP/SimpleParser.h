@@ -56,6 +56,8 @@ class AssignmentParser : public Parser {
     std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
     std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap();
     std::unordered_set<int> getAssignmentStatementsHashset();
+    std::unordered_map<int, std::unordered_set<std::string>> getLineUsesVar();
+    std::unordered_map<int, std::unordered_set<std::string>> getLineUsesConst();
 };
 
 
