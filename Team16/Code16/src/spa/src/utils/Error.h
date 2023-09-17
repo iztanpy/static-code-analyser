@@ -29,7 +29,7 @@ class Error : public std::exception {
     /**
      * @brief Logs the error message to the standard error stream (std::cerr).
      */
-    virtual void log() {
+    virtual void log() const {
        std::cerr << "Error: " << message << std::endl;
     }
 
@@ -58,7 +58,7 @@ class InvalidStatementError : public Error {
      * @brief Logs the error message specific to invalid statements.
      * Overrides the base class log() function.
      */
-    void log() override;
+    void log() const override;
 };
 
 
@@ -73,7 +73,7 @@ class InvalidTokenTypeError : public Error {
      * @brief Logs the error message specific to invalid statements.
      * Overrides the base class log() function.
      */
-    void log() override;
+    void log() const override;
 };
 
 
@@ -88,6 +88,6 @@ class InvalidSyntaxError : public Error {
      * @brief Logs the error message specific to invalid statements.
      * Overrides the base class log() function.
      */
-    void log() override;
+    void log() const override;
 };
 

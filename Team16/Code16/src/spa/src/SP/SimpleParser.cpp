@@ -258,7 +258,7 @@ std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getPro
 void SimpleParser::tokenise(std::string code) {
     std::vector<struct Token> tokens = tokeniser.tokenise(code);
     try { parse(tokens, 0); }
-    catch (InvalidSyntaxError e) {
+    catch (const InvalidSyntaxError& e) {
         e.log();
     }
 }
