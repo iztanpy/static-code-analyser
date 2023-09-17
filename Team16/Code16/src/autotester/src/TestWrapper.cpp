@@ -32,8 +32,8 @@ void TestWrapper::parse(std::string filename) {
     input += line;
   }
   WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
-  SimpleParser parser(&writeFacade);
-  parser.tokenise(input);
+  SourceProcessor sourceProcessor(&writeFacade);
+  sourceProcessor.processSource(input);
 }
 
 // method to evaluating a query
