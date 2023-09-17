@@ -1,6 +1,3 @@
-//
-// Created by Isaac Tan on 14/9/23.
-//
 #include <stdio.h>
 #include <unordered_set>
 #include "catch.hpp"

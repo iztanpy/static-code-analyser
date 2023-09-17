@@ -1,11 +1,3 @@
-//
-// Created by Isaac Tan on 17/9/23.
-//
-
-//
-// Created by Isaac Tan on 17/9/23.
-//
-
 #include <unordered_set>
 #include <unordered_map>
 #include "catch.hpp"

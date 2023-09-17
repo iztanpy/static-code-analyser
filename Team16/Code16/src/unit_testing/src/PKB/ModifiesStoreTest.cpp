@@ -1,7 +1,3 @@
-//
-// Created by Isaac Tan on 17/9/23.
-//
-
 #include <unordered_set>
 #include "catch.hpp"
 #include "PKB/Stores/ModifiesStore.h"
