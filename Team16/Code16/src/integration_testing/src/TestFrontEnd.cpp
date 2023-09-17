@@ -156,7 +156,7 @@ TEST_CASE("Procedure with missing name should not cause the program to stop.") {
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(&writeFacade);
+    SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
 
@@ -164,7 +164,7 @@ TEST_CASE("Procedure with missing name should not cause the program to stop.") {
     string query_1 = "variable v\t\t\n; Select \n v";
     string query_2 = "\n\t constant \t c; Select c";
 
-    parser.tokenise(simpleProgram);
+    sourceProcessor.processSource(simpleProgram);
 
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ }));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ }));
@@ -175,7 +175,7 @@ TEST_CASE("Invalid assignment should not cause the program to stop.") {
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(&writeFacade);
+    SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
 
@@ -183,7 +183,7 @@ TEST_CASE("Invalid assignment should not cause the program to stop.") {
     string query_1 = "variable v\t\t\n; Select \n v";
     string query_2 = "\n\t constant \t c; Select c";
 
-    parser.tokenise(simpleProgram);
+    sourceProcessor.processSource(simpleProgram);
 
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ }));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ }));
@@ -194,13 +194,13 @@ TEST_CASE("Invalid assignment should not cause the program to stop.") {
 //
 //  ReadFacade readFacade = ReadFacade(*pkb_ptr);
 //  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-//  SimpleParser parser(&writeFacade);
+//  SourceProcessor sourceProcessor(&writeFacade);
 //  QPS qps(readFacade);
 //
 //  string simpleProgram = "procedure c {x = z - 3 + I; x = x + 1; y = y + 4;}";
 //  string query_1 = "variable v; assign a; Select v such that Uses(1, v)";
 //
-//  parser.tokenise(simpleProgram);
+//  sourceProcessor.processSource(simpleProgram);
 //  REQUIRE(readFacade.getAllVariables() == std::unordered_set<std::string>{"x", "z", "I", "y"});
 //  REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"1", "3"}));
 //}
