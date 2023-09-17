@@ -173,25 +173,25 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of UsesS('stmtR
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
 }
 
-//TEST_CASE("Clause Director can create such that clause with UsesS('stmtRef', 'entRef') relation") {
-//  SuchThatClauseBuilder builder;
-//  std::vector<QueryToken> tokens = {
-//      {"Uses", PQLTokenType::RELREF},
-//      {"7", PQLTokenType::INTEGER},
-//      {"v", PQLTokenType::SYNONYM},
-//  };
-//
-//  std::vector<Declaration> declarations = {
-//      {"v", DesignEntity::VARIABLE}
-//  };
-//
-//  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-//  auto *clause = dynamic_cast<UsesS *>(such_that_clause.get());
-//  RefParam expectedRhs = EntRef(declarations[0]);
-//  RefParam expectedLhs = StmtRef(7);
-//  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
-//  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
-//}
+TEST_CASE("Clause Director can create such that clause with UsesS('stmtRef', 'entRef') relation") {
+  SuchThatClauseBuilder builder;
+  std::vector<QueryToken> tokens = {
+      {"Uses", PQLTokenType::RELREF},
+      {"7", PQLTokenType::INTEGER},
+      {"v", PQLTokenType::SYNONYM},
+  };
+
+  std::vector<Declaration> declarations = {
+      {"v", DesignEntity::VARIABLE}
+  };
+
+  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  auto *clause = dynamic_cast<UsesS *>(such_that_clause.get());
+  RefParam expectedRhs = EntRef(declarations[0]);
+  RefParam expectedLhs = StmtRef(7);
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
+}
 
 TEST_CASE("Such that Clause Builder successfully sets attributes of UsesP('entRef', 'entRef') relation") {
   SuchThatClauseBuilder builder;
@@ -216,25 +216,25 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of UsesP('entRe
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
 }
 
-//TEST_CASE("Clause Director can create such that clause with UsesP('entRef', 'entRef') relation") {
-//  SuchThatClauseBuilder builder;
-//  std::vector<QueryToken> tokens = {
-//      {"Uses", PQLTokenType::RELREF},
-//      {"main", PQLTokenType::IDENT},
-//      {"v", PQLTokenType::SYNONYM},
-//  };
-//
-//  std::vector<Declaration> declarations = {
-//      {"v", DesignEntity::VARIABLE}
-//  };
-//
-//  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-//  auto *clause = dynamic_cast<UsesP *>(such_that_clause.get());
-//  RefParam expectedRhs = EntRef(declarations[0]);
-//  RefParam expectedLhs = EntRef("main");
-//  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expectedLhs));
-//  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
-//}
+TEST_CASE("Clause Director can create such that clause with UsesP('entRef', 'entRef') relation") {
+  SuchThatClauseBuilder builder;
+  std::vector<QueryToken> tokens = {
+      {"Uses", PQLTokenType::RELREF},
+      {"main", PQLTokenType::IDENT},
+      {"v", PQLTokenType::SYNONYM},
+  };
+
+  std::vector<Declaration> declarations = {
+      {"v", DesignEntity::VARIABLE}
+  };
+
+  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  auto *clause = dynamic_cast<UsesP *>(such_that_clause.get());
+  RefParam expectedRhs = EntRef(declarations[0]);
+  RefParam expectedLhs = EntRef("main");
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expectedLhs));
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
+}
 
 TEST_CASE("Such that Clause Builder successfully sets attributes of ModifiesS('stmtRef', 'entRef') relation") {
   SuchThatClauseBuilder builder;

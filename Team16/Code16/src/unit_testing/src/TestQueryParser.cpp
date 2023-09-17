@@ -119,43 +119,43 @@ TEST_CASE("Query Parser can extract multiple such that tokens") {
   REQUIRE(suchThatTokens[5].type == PQLTokenType::SYNONYM);
 }
 
-//TEST_CASE("Query Parser can extract such that clauses with UsesS('stmtRef', 'entRef') relation") {
-//  std::string sample_query = "variable v;\n"
-//                             "Select v such that Uses (14, v)";
-//  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
-//  std::vector<Declaration> declarations = QueryParser::ExtractDeclarations(tokens);
-//  std::vector<QueryToken> such_that_tokens = QueryParser::ExtractSuchThatTokens(tokens);
-//  std::vector<std::unique_ptr<SuchThatClause>>
-//      such_that_clauses = QueryParser::ExtractSuchThatClauses(such_that_tokens, declarations);
-//
-//  REQUIRE(such_that_clauses.size() == 1);
-//
-//  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
-//  auto *clause = dynamic_cast<UsesS *>(such_that_clause.get());
-//  RefParam expectedRhs = EntRef(declarations[0]);
-//  RefParam expectedLhs = StmtRef(14);
-//  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
-//  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
-//}
+TEST_CASE("Query Parser can extract such that clauses with UsesS('stmtRef', 'entRef') relation") {
+  std::string sample_query = "variable v;\n"
+                             "Select v such that Uses (14, v)";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
+  std::vector<Declaration> declarations = QueryParser::ExtractDeclarations(tokens);
+  std::vector<QueryToken> such_that_tokens = QueryParser::ExtractSuchThatTokens(tokens);
+  std::vector<std::unique_ptr<SuchThatClause>>
+      such_that_clauses = QueryParser::ExtractSuchThatClauses(such_that_tokens, declarations);
 
-//TEST_CASE("Query Parser can extract such that clauses with UsesP('entRef', 'entRef') relation") {
-//  std::string sample_query = "variable v;\n"
-//                             "Select v such that Uses (\"main\", v)";
-//  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
-//  std::vector<Declaration> declarations = QueryParser::ExtractDeclarations(tokens);
-//  std::vector<QueryToken> such_that_tokens = QueryParser::ExtractSuchThatTokens(tokens);
-//  std::vector<std::unique_ptr<SuchThatClause>>
-//      such_that_clauses = QueryParser::ExtractSuchThatClauses(such_that_tokens, declarations);
-//
-//  REQUIRE(such_that_clauses.size() == 1);
-//
-//  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
-//  auto *clause = dynamic_cast<UsesP *>(such_that_clause.get());
-//  RefParam expectedRhs = EntRef(declarations[0]);
-//  RefParam expectedLhs = EntRef("main");
-//  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expectedLhs));
-//  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
-//}
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
+  auto *clause = dynamic_cast<UsesS *>(such_that_clause.get());
+  RefParam expectedRhs = EntRef(declarations[0]);
+  RefParam expectedLhs = StmtRef(14);
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
+}
+
+TEST_CASE("Query Parser can extract such that clauses with UsesP('entRef', 'entRef') relation") {
+  std::string sample_query = "variable v;\n"
+                             "Select v such that Uses (\"main\", v)";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
+  std::vector<Declaration> declarations = QueryParser::ExtractDeclarations(tokens);
+  std::vector<QueryToken> such_that_tokens = QueryParser::ExtractSuchThatTokens(tokens);
+  std::vector<std::unique_ptr<SuchThatClause>>
+      such_that_clauses = QueryParser::ExtractSuchThatClauses(such_that_tokens, declarations);
+
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
+  auto *clause = dynamic_cast<UsesP *>(such_that_clause.get());
+  RefParam expectedRhs = EntRef(declarations[0]);
+  RefParam expectedLhs = EntRef("main");
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expectedLhs));
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expectedRhs));
+}
 
 TEST_CASE(
     "Query Parser can extract multiple such that clauses with UsesS('stmtRef', 'stmtRef') UsesP('entRef', 'entRef') relation") {
