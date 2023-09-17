@@ -156,9 +156,6 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         assignmentParser->getUsesStatementNumberVarHashmap());
     writeFacade->storeVariables(assignmentParser->getVariablesHashset());
     writeFacade->storeConstants(assignmentParser->getConstantsHashset());
-    writeFacade->storeUsesVar(assignmentParser->getAssignVarHashmap());
-    writeFacade->storeUsesConst(assignmentParser->getAssignConstHashmap());
-    writeFacade->storeLineUses(assignmentParser->getUsesStatementNumberHashmap());
     return curr_index;
 }
 

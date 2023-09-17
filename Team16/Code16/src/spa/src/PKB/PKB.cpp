@@ -36,21 +36,14 @@ std::unordered_set<variable> PKB::getVariables() {
     return variableStore->getVariables();
 }
 
-void PKB::addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
-    usesStore->addLineUsesVar(varUsesMap);
-}
-
-void PKB::addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constUsesMap) {
-    usesStore->addLineUsesConst(constUsesMap);
+void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
+    usesStore->storeUses(varUsesMap);
 }
 
 std::unordered_set<variable> PKB::getVariablesUsedBy(statementNumber line) {
     return usesStore->getVariablesUsedBy(line);
 }
 
-std::unordered_set<constant> PKB::getConstantsUsedBy(statementNumber line) {
-    return usesStore->getConstantsUsedBy(line);
-}
 
 void PKB::addConstants(std::unordered_set<constant> constants) {
     constantStore->addConstants(constants);

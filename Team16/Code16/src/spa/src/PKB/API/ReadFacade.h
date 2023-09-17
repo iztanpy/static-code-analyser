@@ -20,6 +20,4 @@ class ReadFacade {
   std::unordered_set<constant> getAllConstants();
 
   std::unordered_set<variable> getVariablesUsedBy(statementNumber line);
-
-  std::unordered_set<constant> getConstantsUsedBy(statementNumber line);
 };

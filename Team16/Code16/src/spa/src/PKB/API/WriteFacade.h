@@ -22,14 +22,7 @@ class WriteFacade {
 
      void storeVariables(std::unordered_set<variable> variables);
 
-     void addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
-
-     void addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constUsesMap);
+     void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
 
      void storeConstants(std::unordered_set<constant> constants);
-
-    void storeUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
-    void storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
-
-    void storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants);
 };

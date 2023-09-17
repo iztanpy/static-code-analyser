@@ -37,13 +37,9 @@ class PKB {
 
     std::unordered_set<variable> getVariables();
 
-    void addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
-
-    void addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constUsesMap);
+    void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
 
     std::unordered_set<variable> getVariablesUsedBy(statementNumber line);
-
-    std::unordered_set<constant> getConstantsUsedBy(statementNumber line);
 
     void addConstants(std::unordered_set<constant> constants);
 

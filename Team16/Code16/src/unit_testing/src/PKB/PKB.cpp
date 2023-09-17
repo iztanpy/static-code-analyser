@@ -47,7 +47,7 @@ TEST_CASE(" 1") {
 		REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
 	}
 
-	writeFacade.addLineUsesVar({{1, {"x", "y"}}, {2, {"y", "z"}} });
+	writeFacade.storeUses({{1, {"x", "y"}}, {2, {"y", "z"}} });
 
 	for (std::string value : readFacade.getVariablesUsedBy(1)) {
 		REQUIRE((value == "x" || value == "y"));
@@ -56,21 +56,10 @@ TEST_CASE(" 1") {
 	for (std::string value : readFacade.getVariablesUsedBy(2)) {
 		REQUIRE((value == "y" || value == "z"));
 	}
-
-	writeFacade.addLineUsesConst({ {1, {"a", "b"}}, {2, {"b", "c"}} });
-
-	for (std::string value : readFacade.getConstantsUsedBy(1)) {
-		REQUIRE((value == "a" || value == "b"));
-	}
-
-	for (std::string value : readFacade.getConstantsUsedBy(2)) {
-		REQUIRE((value == "b" || value == "c"));
-	}
-
-	writeFacade.storeConstants({ "a", "b", "c" });
+	writeFacade.storeConstants({ "1", "2", "3" });
 
 	for (std::string value : readFacade.getAllConstants()) {
-		REQUIRE((value == "a" || value == "b" || value == "c"));
+		REQUIRE((value == "1" || value == "2" || value == "3"));
 	}
 }
 
@@ -120,7 +109,7 @@ TEST_CASE("test Facades for AssignStore") {
         REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
     }
 
-    writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
+    writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
     for (std::string value : readFacade.getVariablesUsedBy(1)) {
         REQUIRE((value == "x" || value == "y"));
@@ -148,7 +137,7 @@ TEST_CASE("Test Facades for Uses Store") {
     WriteFacade writeFacade = WriteFacade(pkb);
     ReadFacade readFacade = ReadFacade(pkb);
 
-    writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
+    writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
     for (std::string value : readFacade.getVariablesUsedBy(1)) {
         REQUIRE((value == "x" || value == "y"));
