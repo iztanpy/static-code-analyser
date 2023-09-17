@@ -2,15 +2,16 @@
 #include <iostream>
 #include <string>
 #include <unordered_set>
+#include <memory>
 
 #include "PKB.h"
 
 
 PKB::PKB() {
-    assignStore = new AssignStore();
-    variableStore = new VariableStore();
-    usesStore = new UsesStore();
-    constantStore = new ConstantStore();
+    assignStore = std::make_unique<AssignStore>();
+    variableStore = std::make_unique<VariableStore>();
+    usesStore = std::make_unique<UsesStore>();
+    constantStore = std::make_unique<ConstantStore>();
 }
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
