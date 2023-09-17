@@ -48,6 +48,52 @@ int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
     return curr_index;
 }
 
+int ReadParser::parse(const std::vector<Token>& tokens, int curr_index) {
+    // Check if there are enough tokens for a valid read statement
+    if (curr_index + 3 > tokens.size()) {
+        return -1;
+    }
+
+    // Validate procedure name
+    Token readNameToken = tokens[curr_index + 1];
+    Token semicolonToken = tokens[curr_index + 2];
+
+    // Define the set of valid keyword token types
+    std::unordered_set<TokenType> validKeywords = {
+        TokenType::kEntityAssign, TokenType::kEntityProcedure,
+        TokenType::kEntityRead, TokenType::kEntityPrint,
+        TokenType::kEntityWhile, TokenType::kEntityIf,
+        TokenType::kEntityElse, TokenType::kEntityCall,
+        TokenType::kEntityStmt, TokenType::kEntityConstant,
+        TokenType::kEntityVariable
+    };
+
+    // Check if the procedure name token is a keyword and convert it to a literal if necessary
+    if (validKeywords.find(readNameToken.tokenType) != validKeywords.end()) {
+        readNameToken.tokenType = TokenType::kLiteralName;
+    }
+
+    // Check if the procedure name is a literal
+    if (readNameToken.tokenType != TokenType::kLiteralName) {
+        return -1;
+    }
+
+    // Check if the read statement is terminated correctly
+    if (semicolonToken.tokenType != TokenType::kSepSemicolon) {
+        return -1;
+    }
+
+    // Update the value of the 'read' token to match the procedure name
+    Token read = tokens[curr_index];
+    read.value = readNameToken.value;
+
+    // Update the current index and create the AST node
+    curr_index  = curr_index + 3;
+    std::shared_ptr<TNode> root = TNodeFactory::createNode(read, lineNumber);
+    return curr_index;
+}
+
+
 int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[curr_index], lineNumber);
     std::shared_ptr<TNode> root = TNodeFactory::createNode(tokens[curr_index + 1], lineNumber);
@@ -119,14 +165,16 @@ SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPt
 int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
+
         if (curr_token.tokenType == TokenType::kLiteralName) {
             Token next_token = tokens.at(curr_index + 1);
+
             if (next_token.tokenType == TokenType::kEntityAssign) {
                 assignmentParser->lineNumber = lineNumber;
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
-                    throw std::runtime_error("Error: syntactic error found while building ast.");
+                    throw InvalidSyntaxError();
                 } else {
                     lineNumber++;
                     curr_index = next_index;
@@ -134,24 +182,36 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             }
         } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
             int next_index = procedureParser->parse(tokens, curr_index);
+
             if (next_index == -1) {
-                throw std::runtime_error("Error: syntactic error found while building procedure ast node.");
+                throw InvalidSyntaxError();
             } else {
+                curr_index = next_index;
+            }
+        } else if (curr_token.tokenType == TokenType::kEntityRead) {
+            readParser->lineNumber = lineNumber;
+            int next_index = readParser->parse(tokens, curr_index);
+
+            if (next_index == -1) {
+                throw InvalidSyntaxError();
+            } else {
+                lineNumber++;
                 curr_index = next_index;
             }
         } else {
             // currently unsupported, skip line for now
             int temp = curr_index;
-            while (tokens[temp].tokenType != TokenType::kSepSemicolon
-                && tokens[temp].tokenType != TokenType::kSepOpenBrace) {
-                    temp++;
+
+            while (tokens[temp].tokenType != TokenType::kSepSemicolon &&
+                tokens[temp].tokenType != TokenType::kSepOpenBrace) {
+                temp++;
             }
+
             lineNumber++;
             curr_index = temp + 1;
-//            throw std::runtime_error(
-//                "Invalid token. Sorry the parser can only handle assignment statements currently.");
         }
     }
+
     writeFacade->storeAssignments(
         visitor->getUsesStatementNumberHashmap(),
         visitor->getUsesStatementNumberVarHashmap());

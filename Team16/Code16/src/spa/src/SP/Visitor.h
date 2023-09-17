@@ -22,6 +22,7 @@ class Visitor {
     virtual void visit(const ConstantTNode* node, std::string& key) = 0;
     virtual void visit(const PlusTNode* node, std::string& key) = 0;
     virtual void visit(const MinusTNode* node, std::string& key) = 0;
+    virtual void visit(const ReadTNode* node, std::string& key) = 0;
 
     std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
     std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
@@ -70,6 +71,7 @@ class ASTVisitor : public Visitor {
     void visit(const ConstantTNode* node, std::string& key) override;
     void visit(const PlusTNode* node, std::string& key) override;
     void visit(const MinusTNode* node, std::string& key) override;
+    void visit(const ReadTNode* node, std::string& key) override;
 };
 
 #endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_"

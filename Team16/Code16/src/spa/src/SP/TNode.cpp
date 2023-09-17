@@ -26,3 +26,9 @@ void PlusTNode::accept(ASTVisitor *visitor, std::string& key) const {
 void MinusTNode::accept(ASTVisitor *visitor, std::string& key) const {
     visitor->visit(this, key);
 }
+
+void ReadTNode::accept(ASTVisitor* visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
+

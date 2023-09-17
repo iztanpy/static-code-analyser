@@ -15,6 +15,7 @@ TokenType constantType = TokenType::kLiteralInteger;
 TokenType endType = TokenType::kSepSemicolon;
 TokenType plusType = TokenType::kOperatorPlus;
 TokenType equalType = TokenType::kEntityAssign;
+TokenType readType = TokenType::kEntityRead; 
 Token tokenX = Token(variableType, "x", 0);
 Token tokenY = Token(variableType, "y", 0);
 Token tokenW = Token(variableType, "w", 0);
@@ -23,6 +24,7 @@ Token tokenX2 = Token(variableType, "x", 0);
 Token tokenPlus = Token(plusType);
 Token token1 = Token(constantType, "1", 0);
 Token tokenEnd = Token(endType);
+Token tokenRead = Token(readType);
 
 
 TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
@@ -153,6 +155,7 @@ TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
     REQUIRE(visitor->getConstantsHashset() == constSet);
 }
 
+
 TEST_CASE(("Test SP single procedure")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
@@ -227,16 +230,15 @@ TEST_CASE(("Test SP storing of assignment statements")) {
 }
 
 
-TEST_CASE(("Test SP assignment pattern")) {
+TEST_CASE(("Test SP read")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; read k;} procedure wee { y = y + x + 1;}";
     sourceProcessor.processSource(simpleProgram);
 
     std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap = std::unordered_map<int, std::unordered_set<std::string>>(
-            {{1, {"x", "1", "x + 1"}}, {2, {"x", "y", "1", "y + x + 1", "y + x"}}, {3, {"y", "x", "1", "y + x + 1", "y + x"}}});
+            {{1, {"x", "1", "x + 1"}}, {2, {"x", "y", "1", "y + x + 1", "y + x"}}, {4, {"y", "x", "1", "y + x + 1", "y + x"}}});
     std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getUsesStatementNumberHashmap();
     REQUIRE(res == usesStatementNumberHashmap);
-
 }

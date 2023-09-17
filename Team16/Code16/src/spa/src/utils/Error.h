@@ -29,7 +29,7 @@ class Error : public std::exception {
     /**
      * @brief Logs the error message to the standard error stream (std::cerr).
      */
-    virtual void log() {
+    virtual void log() const {
        std::cerr << "Error: " << message << std::endl;
     }
 
@@ -58,5 +58,36 @@ class InvalidStatementError : public Error {
      * @brief Logs the error message specific to invalid statements.
      * Overrides the base class log() function.
      */
-    void log() override;
+    void log() const override;
 };
+
+
+class InvalidTokenTypeError : public Error {
+ public:
+    /**
+    * @brief Constructs an InvalidSTokenTypetError object with an optional error message.
+    * @param msg The error message (default is "Invalid TokenType").
+    */
+    explicit InvalidTokenTypeError(const std::string& msg = "Invalid Token Type") : Error(msg) {}
+    /**
+     * @brief Logs the error message specific to invalid statements.
+     * Overrides the base class log() function.
+     */
+    void log() const override;
+};
+
+
+class InvalidSyntaxError : public Error {
+ public:
+    /**
+    * @brief Constructs an InvalidSyntaxError object with an optional error message.
+    * @param msg The error message (default is "Invalid SIMPLE Syntax.").
+    */
+    explicit InvalidSyntaxError(const std::string& msg = "Invalid SIMPLE Syntax. Unable to build AST.") : Error(msg) {}
+    /**
+     * @brief Logs the error message specific to invalid statements.
+     * Overrides the base class log() function.
+     */
+    void log() const override;
+};
+
