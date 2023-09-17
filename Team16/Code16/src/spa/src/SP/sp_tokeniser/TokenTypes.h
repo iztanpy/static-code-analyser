@@ -1,5 +1,4 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_
+#pragma once
 
 /**
  * @brief Enumeration representing different token types used in the Simple Programming Language (SPL).
@@ -55,5 +54,3 @@ enum class TokenType {
   // Others
   kWhiteSpace,
 };
-
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TOKENTYPES_H_

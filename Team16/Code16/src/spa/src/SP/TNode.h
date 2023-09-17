@@ -6,7 +6,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
-#include "Token.h"
+#include "sp_tokeniser/Token.h"
 #include "utils/Error.h"
 
 class ASTVisitor;

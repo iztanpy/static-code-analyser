@@ -1,9 +1,7 @@
 /* Created by Tiffany, Shaine */
 // ai-gen start (gpt3, 2)
 
-
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TOKEN_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_TOKEN_H_
+#pragma once
 
 #include <string>
 #include <utility>
@@ -88,4 +86,3 @@ struct SPToken {
       linePosition(linePos) {}
 };
 
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TOKEN_H_

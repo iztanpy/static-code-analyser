@@ -6,10 +6,10 @@
 #include <fstream>
 #include <memory>
 
-#include "SP/SPTokeniser.h"
+#include "SP/sp_tokeniser/SPTokeniser.h"
 #include "PKB/API/ReadFacade.h"
 #include "PKB/API/WriteFacade.h"
-#include "SP/SimpleParser.h"
+#include "SP/sp_parser/SimpleParser.h"
 #include "PKB/PKB.h"
 #include "qps/qps.h"
 #include "AbstractWrapper.h"
