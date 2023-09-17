@@ -66,31 +66,3 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     return curr_index;
 }
 
-
-std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignVarHashmap() {
-    return visitor->getAssignVarHashmap();
-}
-
-std::unordered_map<std::string, std::unordered_set<std::string>> AssignmentParser::getAssignConstHashmap() {
-    return visitor->getAssignConstHashmap();
-}
-
-std::unordered_set<std::string> AssignmentParser::getVariablesHashset() {
-    return visitor->getVariablesHashset();
-}
-
-std::unordered_set<std::string> AssignmentParser::getConstantsHashset() {
-    return visitor->getConstantsHashset();
-}
-
-std::unordered_map<int, std::unordered_set<std::string>> AssignmentParser::getUsesStatementNumberHashmap() {
-    return visitor->getUsesStatementNumberHashmap();
-}
-
-std::unordered_map<int, std::string> AssignmentParser::getUsesStatementNumberVarHashmap() {
-    return visitor->getUsesStatementNumberVarHashmap();
-}
-
-std::unordered_set<int> AssignmentParser::getAssignmentStatementsHashset() {
-    return visitor->getAssignmentStatementsHashset();
-}

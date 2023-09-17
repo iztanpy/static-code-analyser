@@ -25,24 +25,24 @@
 class DesignExtractor;  // Forward declaration
 class AssignmentParser;
 
-/**
- * @class SimpleParser
- * @brief A concrete subclass of Parser for a simplified parsing task.
- *
- * The `SimpleParser` class inherits from the `Parser` class and provides an implementation for a simplified
- * parsing task. It includes an instance of `AssignmentParser` for parsing assignment statements.
- */
+ /**
+  * @class SimpleParser
+  * @brief A concrete subclass of Parser for a simplified parsing task.
+  *
+  * The `SimpleParser` class inherits from the `Parser` class and provides an implementation for a simplified
+  * parsing task. It includes an instance of `AssignmentParser` for parsing assignment statements.
+  */
 class SimpleParser : public Parser {
  private:
-     WriteFacade* writeFacade;
+    WriteFacade* writeFacade;
+    ASTVisitor* visitor;
     int lineNumber = 1;
  public:
-    explicit SimpleParser(WriteFacade* writeFacade);  // Corrected constructor declaration
+    explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
-    SPtokeniser tokeniser;
-    AssignmentParser* assignmentParser = new AssignmentParser();
+    AssignmentParser* assignmentParser = new AssignmentParser(visitor);
     ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
-    ReadParser* readParser = new ReadParser();
-    void tokenise(std::string simpleProgram);
+    ReadParser* readParser = new ReadParser(visitor);
 };
+

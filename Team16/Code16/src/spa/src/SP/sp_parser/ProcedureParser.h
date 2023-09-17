@@ -32,3 +32,4 @@ class ProcedureParser : public Parser {
     ASTVisitor* procedureVisitor = new ASTVisitor();
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap();
 };
+

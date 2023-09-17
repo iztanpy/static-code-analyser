@@ -26,17 +26,9 @@
  */
 class AssignmentParser : public Parser {
  public:
-    AssignmentParser() = default;
+    explicit AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor = new ASTVisitor();
+    ASTVisitor* visitor;  // Initialize to nullptr in the constructor
     int lineNumber = 0;
-
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
-    std::unordered_set<std::string> getVariablesHashset();
-    std::unordered_set<std::string> getConstantsHashset();
-
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
-    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap();
-    std::unordered_set<int> getAssignmentStatementsHashset();
 };
+

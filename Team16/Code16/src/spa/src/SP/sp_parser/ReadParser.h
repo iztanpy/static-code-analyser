@@ -21,11 +21,11 @@ class SimpleParser;
  * @brief A concrete subclass of Parser specialized for parsing read statements.
  *
  */
-class ReadParser : public Parser{
+class ReadParser : public Parser {
  public:
-    ReadParser() = default;
+    explicit ReadParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor = new ASTVisitor();
+    ASTVisitor* visitor;
     int lineNumber = 0;
     /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
 };

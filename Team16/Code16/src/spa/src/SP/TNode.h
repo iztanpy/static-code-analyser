@@ -1,5 +1,4 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_
+#pragma once
 
 #include <utility>
 #include <vector>
@@ -134,6 +133,3 @@ class TNodeFactory {
         }
     }
 };
-
-
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_

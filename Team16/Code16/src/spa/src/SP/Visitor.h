@@ -1,10 +1,11 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
+#pragma once
 
-#include "TNode.h"
 #include <unordered_set>
 #include <string>
 #include <unordered_map>
+
+#include "SP/TNode.h"
+
 
 class TNode;
 class ProcedureTNode;
@@ -74,4 +75,3 @@ class ASTVisitor : public Visitor {
     void visit(const ReadTNode* node, std::string& key) override;
 };
 
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_"
