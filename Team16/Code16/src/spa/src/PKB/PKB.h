@@ -10,11 +10,14 @@
 #include "Stores/AssignStore.h"
 #include "Stores/UsesStore.h"
 #include "Stores/ConstantStore.h"
+#include "Stores/StatementStore.h"
+#include "Helper/StmtEntity.h"
 
 typedef std::string variable;
 typedef int statementNumber;
 typedef std::string possibleCombinations;
 typedef std::string constant;
+typedef std::string statementType;
 
 class PKB {
  private:
@@ -22,9 +25,13 @@ class PKB {
      std::unique_ptr<VariableStore> variableStore;
      std::unique_ptr<UsesStore> usesStore;
      std::unique_ptr<ConstantStore> constantStore;
+     std::unique_ptr<StatementStore> statementStore;
 
  public:
     PKB();
+
+    //AssignStore methods
+
     void setAssignments(std::unordered_map<statementNumber,
             std::unordered_set<possibleCombinations>> numRHSMap,
             std::unordered_map<statementNumber, variable> numLHSMap);
@@ -33,17 +40,29 @@ class PKB {
 
     std::unordered_set<statementNumber> getAssigns(variable LHS, possibleCombinations RHS);
 
+    //VariableStore methods
+
     void addVariables(std::unordered_set<variable> variables);
 
     std::unordered_set<variable> getVariables();
+
+    //UsesStore methods
 
     void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
 
     std::unordered_set<variable> getVariablesUsedBy(statementNumber line);
 
+    //ConstantStore methods
+
     void addConstants(std::unordered_set<constant> constants);
 
     std::unordered_set<constant> getConstants();
+
+    //StatementStore methods
+
+    void addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap);
+
+    std::unordered_set<statementNumber> getStatements(StmtEntity type);
 
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;

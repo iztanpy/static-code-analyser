@@ -12,7 +12,10 @@ PKB::PKB() {
     variableStore = std::make_unique<VariableStore>();
     usesStore = std::make_unique<UsesStore>();
     constantStore = std::make_unique<ConstantStore>();
+    statementStore = std::make_unique<StatementStore>();
 }
+
+//AssignStore methods
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
     std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap) {
@@ -28,6 +31,9 @@ std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, possibleCombin
     return assignStore->getAssigns(LHS, RHS);
 }
 
+
+//VariableStore methods
+
 void PKB::addVariables(std::unordered_set<variable> variables) {
     variableStore->addVariables(variables);
 }
@@ -35,6 +41,9 @@ void PKB::addVariables(std::unordered_set<variable> variables) {
 std::unordered_set<variable> PKB::getVariables() {
     return variableStore->getVariables();
 }
+
+
+//UsesStore methods
 
 void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
     usesStore->storeUses(varUsesMap);
@@ -44,6 +53,7 @@ std::unordered_set<variable> PKB::getVariablesUsedBy(statementNumber line) {
     return usesStore->getVariablesUsedBy(line);
 }
 
+//ConstantStore methods
 
 void PKB::addConstants(std::unordered_set<constant> constants) {
     constantStore->addConstants(constants);
@@ -51,4 +61,14 @@ void PKB::addConstants(std::unordered_set<constant> constants) {
 
 std::unordered_set<constant> PKB::getConstants() {
     return constantStore->getConstants();
+}
+
+//StatementStore methods
+
+void PKB::addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap) {
+	statementStore->addStatement(typeMap);
+}
+
+std::unordered_set<statementNumber> PKB::getStatements(StmtEntity type) {
+	return statementStore->getStatements(type);
 }

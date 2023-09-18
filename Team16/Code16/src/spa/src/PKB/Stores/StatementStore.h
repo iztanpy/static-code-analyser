@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include "../Helper/StmtEntity.h"
 
 
 class StatementStore {
@@ -11,14 +12,14 @@ class StatementStore {
     typedef int statementNumber;
     typedef std::string statementType;
 
-    std::unordered_map<statementNumber, statementType> numTypeMap;
+    std::unordered_map<statementNumber, StmtEntity> numTypeMap;
 
 
  public:
     StatementStore();
 
-    void addStatement(std::unordered_map<statementNumber, statementType> typeMap);
+    void addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap);
 
-    std::unordered_set<statementNumber> getStatements(statementType type);
+    std::unordered_set<statementNumber> getStatements(StmtEntity type);
 };
 
