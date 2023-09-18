@@ -11,6 +11,7 @@
 #include "Stores/UsesStore.h"
 #include "Stores/ConstantStore.h"
 #include "Stores/StatementStore.h"
+#include "Stores/ParentStore.h"
 #include "Helper/StmtEntity.h"
 
 typedef std::string variable;
@@ -26,6 +27,8 @@ class PKB {
      std::unique_ptr<UsesStore> usesStore;
      std::unique_ptr<ConstantStore> constantStore;
      std::unique_ptr<StatementStore> statementStore;
+     std::unique_ptr<ParentStore> parentStore;
+
 
  public:
     PKB();
@@ -60,9 +63,27 @@ class PKB {
 
     //StatementStore methods
 
-    void addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap);
+    void addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap);
 
     std::unordered_set<statementNumber> getStatements(StmtEntity type);
+
+    //ParentStore methods
+
+    void storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map);
+
+    std::unordered_set<statementNumber> getChildren(statementNumber statement);
+
+    statementNumber getParent(statementNumber statement);
+
+    bool isParent(statementNumber parent, statementNumber child);
+
+    std::unordered_set<statementNumber> getChildrens(statementNumber statement);
+
+    std::unordered_set<statementNumber> getParents(statementNumber statement);
+
+    bool isParentStar(statementNumber parent, statementNumber child);
+
+
 
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;

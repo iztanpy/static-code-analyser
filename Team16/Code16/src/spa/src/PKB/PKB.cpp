@@ -13,6 +13,7 @@ PKB::PKB() {
     usesStore = std::make_unique<UsesStore>();
     constantStore = std::make_unique<ConstantStore>();
     statementStore = std::make_unique<StatementStore>();
+    parentStore = std::make_unique<ParentStore>();
 }
 
 //AssignStore methods
@@ -65,10 +66,38 @@ std::unordered_set<constant> PKB::getConstants() {
 
 //StatementStore methods
 
-void PKB::addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap) {
-	statementStore->addStatement(typeMap);
+void PKB::addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
+	statementStore->addStatements(typeMap);
 }
 
 std::unordered_set<statementNumber> PKB::getStatements(StmtEntity type) {
 	return statementStore->getStatements(type);
+}
+
+void PKB::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
+    parentStore->storeParent(map);
+}
+
+std::unordered_set<statementNumber> PKB::getChildren(statementNumber statement) {
+    return parentStore->getChildren(statement);
+}
+
+statementNumber PKB::getParent(statementNumber statement) {
+    return parentStore->getParent(statement);
+}
+
+bool PKB::isParent(statementNumber parent, statementNumber child) {
+    return parentStore->isParent(parent, child);
+}
+
+std::unordered_set<statementNumber> PKB::getChildrens(statementNumber statement) {
+    return parentStore->getChildrens(statement);
+}
+
+std::unordered_set<statementNumber> PKB::getParents(statementNumber statement) {
+    return parentStore->getParents(statement);
+}
+
+bool PKB::isParentStar(statementNumber parent, statementNumber child) {
+	return parentStore->isParentStar(parent, child);
 }

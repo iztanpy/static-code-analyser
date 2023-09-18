@@ -18,7 +18,7 @@ class StatementStore {
  public:
     StatementStore();
 
-    void addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap);
+    void addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap);
 
     std::unordered_set<statementNumber> getStatements(StmtEntity type);
 };

@@ -28,6 +28,10 @@ ParentStore::statementNumber ParentStore::getParent(statementNumber statement) {
     return parent;
 }
 
+bool ParentStore::isParent(statementNumber parent, statementNumber child){
+    return this->ParentMap[parent].find(child) != this->ParentMap[parent].end();
+}
+
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(statementNumber statement) {
     std::unordered_set<statementNumber> childrens;
     for (auto const& x : this->ParentMap[statement]) {
@@ -47,5 +51,10 @@ std::unordered_set<ParentStore::statementNumber> ParentStore::getParents(stateme
         statement = ParentMapReverse[statement];
     }
     return parents;
+}
+
+bool ParentStore::isParentStar(statementNumber parent, statementNumber child) {
+    std::unordered_set<statementNumber> childrens = getChildrens(parent);
+	return childrens.find(child) != childrens.end();
 }
 

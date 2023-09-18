@@ -13,6 +13,34 @@ TEST_CASE("Test Parent Store Add") {
     REQUIRE(parentStore.getParent(5) == 2);
     REQUIRE(parentStore.getParent(6) == 3);
     REQUIRE(parentStore.getParent(7) == 3);
+
+    REQUIRE(parentStore.isParent(1, 2));
+    REQUIRE(parentStore.isParent(1, 3));
+    REQUIRE(parentStore.isParent(2, 4));
+    REQUIRE(parentStore.isParent(2, 5));
+    REQUIRE(parentStore.isParent(3, 6));
+    REQUIRE(parentStore.isParent(3, 7));
+    REQUIRE(!parentStore.isParent(1, 4));
+    REQUIRE(!parentStore.isParent(1, 5));
+    REQUIRE(!parentStore.isParent(1, 6));
+    REQUIRE(!parentStore.isParent(1, 7));
+    REQUIRE(!parentStore.isParent(2, 6));
+
+    REQUIRE(parentStore.isParentStar(1, 2));
+    REQUIRE(parentStore.isParentStar(1, 3));
+    REQUIRE(parentStore.isParentStar(1, 4));
+    REQUIRE(parentStore.isParentStar(1, 5));
+    REQUIRE(parentStore.isParentStar(1, 6));
+    REQUIRE(parentStore.isParentStar(1, 7));
+    REQUIRE(parentStore.isParentStar(2, 4));
+    REQUIRE(parentStore.isParentStar(2, 5));
+    REQUIRE(parentStore.isParentStar(3, 6));
+    REQUIRE(parentStore.isParentStar(3, 7));
+    REQUIRE(!parentStore.isParentStar(1, 1));
+    REQUIRE(!parentStore.isParentStar(2, 2));
+    REQUIRE(!parentStore.isParentStar(3, 1));
+    REQUIRE(!parentStore.isParentStar(3, 2));
+
 }
 
 

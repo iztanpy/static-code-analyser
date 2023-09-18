@@ -20,7 +20,11 @@ class ParentStore {
 
     statementNumber getParent(statementNumber statement);
 
+    bool isParent(statementNumber parent, statementNumber child);
+
     std::unordered_set<statementNumber> getChildrens(statementNumber statement);
 
     std::unordered_set<statementNumber> getParents(statementNumber statement);
+
+    bool isParentStar(statementNumber parent, statementNumber child);
 };

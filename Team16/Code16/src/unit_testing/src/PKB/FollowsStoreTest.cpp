@@ -35,7 +35,6 @@ TEST_CASE("Test Boolean Follows") {
     REQUIRE(!followsStore.isFollows(4, 2));
     REQUIRE(!followsStore.isFollows(3, 1));
     REQUIRE(!followsStore.isFollows(2, 1));
-
 }
 
 

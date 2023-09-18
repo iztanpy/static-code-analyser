@@ -9,7 +9,7 @@ StatementStore::StatementStore() {
     this->numTypeMap = std::unordered_map<statementNumber, StmtEntity>();
 }
 
-void StatementStore::addStatement(std::unordered_map<statementNumber, StmtEntity> typeMap) {
+void StatementStore::addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
     this->numTypeMap = typeMap;
 }
 
