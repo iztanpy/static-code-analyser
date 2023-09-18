@@ -1,4 +1,4 @@
-#include "SP/Token.h"
+#include "SP/sp_tokeniser/Token.h"
 #include "SP/TNode.h"
 
 #include "catch.hpp"

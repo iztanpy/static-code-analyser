@@ -1,35 +1,31 @@
 file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers}
-        src/qps/parsed_query.h
+        src/qps/query_parser/parsed_query.h
         src/qps/declaration.cpp
         src/qps/declaration.h
         src/qps/design_entity.cpp
         src/qps/design_entity.h
-        src/qps/clause_director.cpp
-        src/qps/clause_director.h
-        src/qps/select_clause.h
-        src/qps/clause_builder.h
-        src/qps/select_clause_builder.cpp
-        src/qps/select_clause_builder.h
-        src/qps/query_tokenizer.cpp
-        src/qps/query_tokenizer.h
-        src/qps/query_parser.cpp
-        src/qps/query_parser.h
-        src/qps/clause.h
-        src/qps/select_clause.cpp
+        src/qps/query_parser/clause_builder/clause_director.cpp
+        src/qps/query_parser/clause_builder/clause_director.h
+        src/qps/clauses/select_clause.h
+        src/qps/query_parser/clause_builder/clause_builder.h
+        src/qps/query_parser/clause_builder/select_clause_builder.cpp
+        src/qps/query_parser/clause_builder/select_clause_builder.h
+        src/qps/query_parser/query_tokenizer/query_tokenizer.cpp
+        src/qps/query_parser/query_tokenizer/query_tokenizer.h
+        src/qps/query_parser/query_parser.cpp
+        src/qps/query_parser/query_parser.h
+        src/qps/clauses/clause.h
+        src/qps/clauses/select_clause.cpp
         src/qps/query_evaluator/constraint_solver.cpp
         src/qps/query_evaluator/constraint_solver.h
         src/qps/query_evaluator/constraint.h
         src/qps/query_evaluator/select_evaluator.cpp
         src/qps/query_evaluator/select_evaluator.h
-        src/qps/query_evaluator/suchthat_evaluator.cpp
-        src/qps/query_evaluator/suchthat_evaluator.h
         src/PKB/PKB.h
-        src/qps/query_evaluator/usesS_evaluator.cpp
-        src/qps/query_evaluator/usesS_evaluator.h
-        src/qps/suchthat_clause.cpp
-        src/qps/suchthat_clause.h
+        src/qps/clauses/suchthat_clause.cpp
+        src/qps/clauses/suchthat_clause.h
         src/qps/query_evaluator/query_evaluator.cpp
         src/qps/query_evaluator/query_evaluator.h
         src/utils/hash_utils.h
@@ -39,22 +35,70 @@ add_library(spa ${srcs} ${headers}
         src/PKB/API/WriteFacade.h
         src/PKB/API/ReadFacade.h
         src/PKB/API/ReadFacade.cpp
-        src/SP/SimpleParser.cpp
-        src/SP/SimpleParser.h
-        src/SP/SPTokeniser.cpp
-        src/SP/SPTokeniser.h
-        src/SP/TokenTypes.h
+        
+        src/SP/sp_parser/SimpleParser.h
+        src/SP/sp_parser/SimpleParser.cpp
+        src/SP/sp_tokeniser/SPTokeniser.cpp
+        src/SP/sp_tokeniser/SPTokeniser.h
+        src/SP/sp_tokeniser/TokenTypes.h
         src/SP/Visitor.cpp
         src/SP/Visitor.h
         src/SP/DesignExtractor.h
         src/SP/DesignExtractor.cpp
         src/SP/TNode.cpp
-        src/SP/Token.h
+        src/SP/sp_tokeniser/Token.h
         src/PKB/PKB.cpp
         src/qps/qps.cpp
         src/qps/qps.h
+        src/qps/query_evaluator/constraint_table.cpp
+        src/qps/query_evaluator/constraint_table.h
         src/utils/Error.cpp
-        src/utils/Error.h)
+        src/utils/Error.h
+        src/qps/qps_errors/qps_error.h
+        src/qps/qps_errors/qps_semantic_error.cpp
+        src/qps/qps_errors/qps_semantic_error.h
+        src/qps/qps_errors/qps_syntax_error.cpp
+        src/qps/qps_errors/qps_syntax_error.h
+        src/qps/rel_ref.cpp
+        src/qps/rel_ref.h
+        src/qps/query_parser/clause_builder/suchthat_clause_builder.cpp
+        src/qps/query_parser/clause_builder/suchthat_clause_builder.h
+        src/PKB/Stores/VariableStore.cpp
+        src/PKB/Stores/VariableStore.h
+        src/PKB/Stores/ConstantStore.cpp
+        src/PKB/Stores/ConstantStore.h
+        src/PKB/Stores/UsesStore.cpp
+        src/PKB/Stores/UsesStore.h
+        src/PKB/Stores/AssignStore.cpp
+        src/PKB/Stores/AssignStore.h
+        src/PKB/Stores/StatementStore.cpp
+        src/PKB/Stores/StatementStore.h
+        src/PKB/Stores/AssignStore.cpp
+        src/utils/statementTypes.h
+        src/PKB/Stores/ModifiesStore.cpp
+        src/PKB/Stores/ModifiesStore.h
+        src/PKB/Stores/FollowsStore.cpp
+        src/PKB/Stores/FollowsStore.h
+        src/utils/Error.cpp
+        src/utils/Error.h
+        src/qps/qps_errors/qps_error.h
+        src/qps/qps_errors/qps_semantic_error.cpp
+        src/qps/qps_errors/qps_semantic_error.h
+        src/qps/qps_errors/qps_syntax_error.cpp
+        src/qps/qps_errors/qps_syntax_error.h
+        src/qps/rel_ref.cpp
+        src/qps/rel_ref.h
+        src/qps/query_parser/clause_builder/suchthat_clause_builder.cpp
+        src/qps/query_parser/clause_builder/suchthat_clause_builder.h
+        src/SP/sp_parser/AssignmentParser.cpp
+        src/SP/sp_parser/AssignmentParser.h 
+        src/SP/sp_parser/ReadParser.cpp
+        src/SP/sp_parser/ReadParser.h
+        src/SP/sp_parser/ProcedureParser.cpp 
+        src/SP/sp_parser/ProcedureParser.h
+        src/SP/sp_parser/Parser.h
+        src/SP/SourceProcessor.h
+        src/SP/SourceProcessor.cpp)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

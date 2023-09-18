@@ -11,15 +11,41 @@ std::vector<std::string> QueryEvaluator::Evaluate(const ParsedQuery& query) {
   // Pass this list of Constraints to Constraint Solver
   // Then call Constraint_Solver.solve to get back list of result
 
+  ConstraintTable constraint_table;
+
   // Simple hacky implementation for now, the final flow should be as above
   SelectClause select_clause = query.select;
   SelectEvaluator select_evaluator(pkb, select_clause);
-  Constraint constraint = select_evaluator.evaluate();
 
-  std::vector<std::string> results;
-  for (const std::pair<std::string, std::string>& pair : constraint.synonym_values) {
-    results.push_back(pair.first);
+  // When there's only select clause
+  if (query.such_that_clauses.empty()) {
+    UnaryConstraint constraint = select_evaluator.Evaluate();
+
+    return {constraint.values.begin(), constraint.values.end()};
   }
 
-  return results;
+  for (const auto& clausePtr : query.such_that_clauses) {
+    try {
+      Constraint constraint = clausePtr->Evaluate(pkb);
+      constraint_table.Solve(constraint);
+    } catch (const QpsSemanticError& e) {
+      throw e;
+    }
+  }
+
+  Table table = constraint_table.GetTableForTesting();
+  if (table.empty() || table.begin()->first.empty()) {
+    return {};
+  }
+
+  // If it reaches here, that means there's something inside
+  std::unordered_set<ColName> col_names = constraint_table.AvailableColName();
+
+  if (col_names.find(select_clause.synonym) != col_names.end()) {
+    std::unordered_set<std::string> results = constraint_table.Select(select_clause.synonym);
+    return {results.begin(), results.end()};
+  } else {
+    UnaryConstraint constraint = select_evaluator.Evaluate();
+    return {constraint.values.begin(), constraint.values.end()};
+  }
 }

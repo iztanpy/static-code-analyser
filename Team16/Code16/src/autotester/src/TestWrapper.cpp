@@ -18,32 +18,31 @@ TestWrapper::TestWrapper() {
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-//    std::ifstream file(filename);
-//    std::string file_contents;
-//
-//    if (!file.is_open()) {
-//        std::cerr << "Error: Unable to open file " << filename << std::endl;
-//    }
-//
-//    std::string input;
-//    std::string line;
-//    while (std::getline(file, line)) {
-//        /*    std::cout << "TEST" << std::endl;*/
-//        input += line;
-//    }
-//    WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
-//    SimpleParser parser(&writeFacade);
-//    parser.tokenise(input);
+    std::ifstream file(filename);
+    std::string file_contents;
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file " << filename << std::endl;
+    }
+
+    std::string input;
+    std::string line;
+    while (std::getline(file, line)) {
+        /*    std::cout << "TEST" << std::endl;*/
+        input += line;
+    }
+    WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    sourceProcessor.processSource(input);
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-//    ReadFacade readFacade = ReadFacade(*this->pkb_ptr);
-//    QPS qps(readFacade);
-//
-//    std::unordered_set<std::string> raw_results = qps.Evaluate(query);
-//    for (const std::string& result : raw_results) {
-//        std::cout << result << std::endl;
-//        results.push_back(result);
-//    }
+    ReadFacade readFacade = ReadFacade(*this->pkb_ptr);
+    QPS qps(readFacade);
+
+    std::unordered_set<std::string> raw_results = qps.Evaluate(query);
+    for (const std::string& result : raw_results) {
+        results.push_back(result);
+    }
 }
