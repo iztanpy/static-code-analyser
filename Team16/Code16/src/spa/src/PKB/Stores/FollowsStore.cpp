@@ -43,6 +43,17 @@ std::unordered_set<FollowsStore::statementNumber> FollowsStore::getFollowers(sta
     return followers;
 }
 
+bool FollowsStore::isFollows(statementNumber statement1, statementNumber statement2) {
+    //iterative approach
+    while (this->FollowsMap.find(statement1) != this->FollowsMap.end()) {
+        if (this->FollowsMap[statement1] == statement2) {
+			return true;
+		}
+		statement1 = FollowsMap[statement1];
+	}
+    return false;
+}
+
 std::unordered_set<FollowsStore::statementNumber> FollowsStore::getLeaders(statementNumber statement) {
     std::unordered_set<statementNumber> leaders;
     while (this->FollowsMapReverse.find(statement) != this->FollowsMapReverse.end()) {

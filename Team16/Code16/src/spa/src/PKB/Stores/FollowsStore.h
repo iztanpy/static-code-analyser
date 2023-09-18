@@ -23,5 +23,7 @@ class FollowsStore {
 
     std::unordered_set<statementNumber> getFollowers(statementNumber statement);
 
+    bool FollowsStore::isFollows(statementNumber statement1, statementNumber statement2);
+
     std::unordered_set<statementNumber> getLeaders(statementNumber statement);
 };

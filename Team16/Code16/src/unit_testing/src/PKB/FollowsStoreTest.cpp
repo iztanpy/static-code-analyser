@@ -23,7 +23,21 @@ TEST_CASE("Test Boolean Follows") {
     REQUIRE(!followsStore.isFollow(1, 3));
     REQUIRE(!followsStore.isFollow(2, 4));
     REQUIRE(!followsStore.isFollow(1, 4));
+
+    REQUIRE(followsStore.isFollows(1, 3));
+    REQUIRE(followsStore.isFollows(2, 4));
+    REQUIRE(followsStore.isFollows(1, 4));
+    REQUIRE(followsStore.isFollows(1, 2));
+    REQUIRE(followsStore.isFollows(2, 3));
+    REQUIRE(followsStore.isFollows(3, 4));
+    REQUIRE(!followsStore.isFollows(1, 5));
+    REQUIRE(!followsStore.isFollows(4, 3));
+    REQUIRE(!followsStore.isFollows(4, 2));
+    REQUIRE(!followsStore.isFollows(3, 1));
+    REQUIRE(!followsStore.isFollows(2, 1));
+
 }
+
 
 TEST_CASE("Test Follows Store Reverse") {
     auto followsStore = FollowsStore();
