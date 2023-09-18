@@ -36,65 +36,6 @@ TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     REQUIRE(parser.parse(my_tokens, 0) == 6);
 }
 
-TEST_CASE("Test DesignExtractor1") { // x = x + 1
-    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
-    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
-    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX2.lineNumber, tokenX.value);
-    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
-    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.lineNumber, token1.value);
-    nodeEqual->addChild(nodeX);
-    nodePlus->addChild(nodeX2);
-    nodePlus->addChild(node1);
-    nodeEqual->addChild(nodePlus);
-
-    DesignExtractor de = *new DesignExtractor();
-    auto* visitor = new ASTVisitor();
-    de.extractDesign(nodeEqual, visitor);
-
-    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
-    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
-    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
-
-    REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
-    REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
-    REQUIRE(visitor->getVariablesHashset() == varSet);
-    REQUIRE(visitor->getConstantsHashset() == constSet);
-}
-
-
-TEST_CASE("Test DesignExtractor only using only variables") { // x = x + y + w
-    std::shared_ptr<TNode> nodey = std::make_shared<VariableTNode>(tokenY.lineNumber, tokenY.value);
-    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
-    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
-    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
-    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
-    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
-    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
-
-    nodeEqual->addChild(nodeX);
-    nodePlus->addChild(nodeX2);
-    nodePlus2->addChild(nodey);
-    nodePlus2->addChild(nodew);
-    nodePlus->addChild(nodePlus2);
-    nodeEqual->addChild(nodePlus);
-
-    DesignExtractor de = *new DesignExtractor();
-    auto* visitor = new ASTVisitor();
-    de.extractDesign(nodeEqual, visitor);
-
-    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "y", "w" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
-    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({});
-    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({});
-
-    REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
-    REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
-    REQUIRE(visitor->getVariablesHashset() == varSet);
-    REQUIRE(visitor->getConstantsHashset() == constSet);
-}
-
-
 TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenEqual.lineNumber);
     std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
@@ -106,25 +47,20 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
 
     nodeEqual->addChild(nodeX);
     nodePlus->addChild(nodeX2);
-    nodePlus2->addChild(node1);
+    nodePlus->addChild(node1);
+    nodePlus2->addChild(nodePlus);
     nodePlus2->addChild(nodew);
-    nodePlus->addChild(nodePlus2);
-    nodeEqual->addChild(nodePlus);
+    nodeEqual->addChild(nodePlus2);
 
     DesignExtractor de = *new DesignExtractor();
     auto* visitor = new ASTVisitor();
     de.extractDesign(nodeEqual, visitor);
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "w" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
 
-
-    REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
-    REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
-    REQUIRE(visitor->getVariablesHashset() == varSet);
-    REQUIRE(visitor->getConstantsHashset() == constSet);
+    REQUIRE(visitor->getVariables() == varSet);
+    REQUIRE(visitor->getConstants() == constSet);
 }
 
 
@@ -142,17 +78,18 @@ TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
     tokenVector.push_back(tokenEnd);
     parser.parse(tokenVector, 0);
 
-
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}} });
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}} });
     std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
 
-
-    REQUIRE(visitor->getAssignVarHashmap() == varUseMap);
-    REQUIRE(visitor->getAssignConstHashmap() == constUseMap);
-    REQUIRE(visitor->getVariablesHashset() == varSet);
-    REQUIRE(visitor->getConstantsHashset() == constSet);
+    REQUIRE(visitor->getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(visitor->getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(visitor->getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(visitor->getVariables() == varSet);
+    REQUIRE(visitor->getConstants() == constSet);
 }
 
 
@@ -164,14 +101,17 @@ TEST_CASE(("Test SP single procedure")) {
     sourceProcessor.processSource(simpleProgram);
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", varSet} });
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}} });
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}} });
     std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
 
-    REQUIRE(sourceProcessor.getAssignVarHashmap() == varUseMap);
-    REQUIRE(sourceProcessor.getAssignConstHashmap() == constUseMap);
-    REQUIRE(sourceProcessor.getVariablesHashset() == varSet);
-    REQUIRE(sourceProcessor.getConstantsHashset() == constSet);
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getConstants() == constSet);
 }
 
 TEST_CASE(("Test SP multi procedure with keyword names")) {
@@ -183,16 +123,18 @@ TEST_CASE(("Test SP multi procedure with keyword names")) {
 
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "y", "w" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
-        { {"x", {"x"}}, {"y", {"x", "y"}}, {"w", {"w"}} });
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
-        { {"x", constSet}, {"w", constSet} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}}, {2, {"y", "x", "y + x"}}, {3, {"w", "1", "w + 1"}}});
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"}, {2, "y"}, {3, "w"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}}, {2, {"x", "y"}}, {3, {"w"}}});
 
-    REQUIRE(sourceProcessor.getAssignVarHashmap() == varUseMap);
-    REQUIRE(sourceProcessor.getAssignConstHashmap() == constUseMap);
-    REQUIRE(sourceProcessor.getVariablesHashset() == varSet);
-    REQUIRE(sourceProcessor.getConstantsHashset() == constSet);
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getConstants() == constSet);
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getConstants() == constSet);
 }
 
 TEST_CASE(("Test SP storing of statement numbers for Uses")) {
@@ -203,19 +145,23 @@ TEST_CASE(("Test SP storing of statement numbers for Uses")) {
     sourceProcessor.processSource(simpleProgram);
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "y" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> varUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
-        { {"x", {"x"}}, {"y", {"x", "y"}} });
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
-    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
-        { {"x", constSet}, {"y", constSet} });
-    std::unordered_map<int, std::string> usesStatementNumberVarHashmap = std::unordered_map<int, std::string>(
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
         { {1, "x"}, {2, "y"}, {3, "y"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
+        std::unordered_set<std::string>>({
+                                          {1, {"x + 1", "1", "x"}},
+                                          {2, {"y + x + 1", "y + x", "x", "y", "1"}},
+                                          {3, {"y + x + 1", "y + x", "x", "y", "1"}},
+        });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
+      std::unordered_set<std::string>>({{1, {"x"}}, {2, {"x", "y"}}, {3, {"x", "y"}}});
 
-    REQUIRE(sourceProcessor.getAssignVarHashmap() == varUseMap);
-    REQUIRE(sourceProcessor.getAssignConstHashmap() == constUseMap);
-    REQUIRE(sourceProcessor.getVariablesHashset() == varSet);
-    REQUIRE(sourceProcessor.getConstantsHashset() == constSet);
-    REQUIRE(sourceProcessor.getUsesStatementNumberVarHashmap() == usesStatementNumberVarHashmap);
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getConstants() == constSet);
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 
@@ -223,22 +169,69 @@ TEST_CASE(("Test SP storing of assignment statements")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram = "procedure p {x = x + 1; read r; while(i = 0) { read f;} } procedure wee { y = y + x + 1;}";
+    std::string simpleProgram =
+        "procedure p {x = x + 1; read r; while(i = 0) { read f;} } procedure wee { y = y + x + 1;}";
     sourceProcessor.processSource(simpleProgram);
-    std::unordered_set<int> assignmentStatementsHashset = std::unordered_set<int>({ 1, 5 });
-    REQUIRE(sourceProcessor.getAssignmentStatementsHashset() == assignmentStatementsHashset);
+
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+        { {1, "x"}, {5, "y"}});
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
+        std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}},
+                                          {5, {"y", "x", "y + x", "y + x + 1", "1"}}});
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
+        std::unordered_set<std::string>>({{1, {"x"}}, {5, {"x", "y"}}});
+
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 
-TEST_CASE(("Test SP read")) {
+TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; read k;} procedure wee { y = y + x + 1;}";
     sourceProcessor.processSource(simpleProgram);
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap =
+        std::unordered_map<int, std::unordered_set<std::string>>(
+        { {1, {"x", "1", "x + 1"}},
+          {2, {"x", "y", "1", "y + x + 1", "y + x"}},
+          {4, {"y", "x", "1", "y + x + 1", "y + x"}} });
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getUsesLineRHSPatternMap();
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+}
 
-    std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap = std::unordered_map<int, std::unordered_set<std::string>>(
-        { {1, {"x", "1", "x + 1"}}, {2, {"x", "y", "1", "y + x + 1", "y + x"}}, {4, {"y", "x", "1", "y + x + 1", "y + x"}} });
-    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getUsesStatementNumberHashmap();
-    REQUIRE(res == usesStatementNumberHashmap);
+TEST_CASE(("Test SP read")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram = "procedure p {a = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
+    sourceProcessor.processSource(simpleProgram);
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap =
+        std::unordered_map<int, std::unordered_set<std::string>>(
+            {{1, {"x", "1", "x + 1"}},
+             {2, {"x", "y", "1", "y + x + 1", "y + x"}},
+             {3, {"y", "x", "1", "y + x + 1", "y + x"}}});
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+            {{1, "a"}, {2, "y"}, {3, "y"}});
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getUsesLineRHSPatternMap();
+    std::unordered_map<int, std::string> res2 = sourceProcessor.getUsesLineLHSMap();
+    REQUIRE(res == usesLineRHSPatternMap);
+    REQUIRE(res2 == usesLineLHSMap);
+}
+
+
+TEST_CASE(("Test SP to PKB LineUsesVar")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+
+    std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { w = x + 1;}";
+    sourceProcessor.processSource(simpleProgram);
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
+        std::unordered_map<int, std::unordered_set<std::string>>(
+            {{1, {"x"}}, {2, {"x", "y"}}, {3, {"x"}}});
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getUsesLineRHSVarMap();
+    REQUIRE(res == usesLineRHSVarMap);
 }
