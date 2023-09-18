@@ -22,5 +22,4 @@ class UsesStore {
     std::unordered_set<variable> getVariablesUsedBy(statementNumber lineNumber);
 
     std::unordered_set<statementNumber> getStatementsUsing(variable variableName);
-
 };

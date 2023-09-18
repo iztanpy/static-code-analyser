@@ -28,7 +28,7 @@ ParentStore::statementNumber ParentStore::getParent(statementNumber statement) {
     return parent;
 }
 
-bool ParentStore::isParent(statementNumber parent, statementNumber child){
+bool ParentStore::isParent(statementNumber parent, statementNumber child) {
     return this->ParentMap[parent].find(child) != this->ParentMap[parent].end();
 }
 
@@ -55,6 +55,6 @@ std::unordered_set<ParentStore::statementNumber> ParentStore::getParents(stateme
 
 bool ParentStore::isParentStar(statementNumber parent, statementNumber child) {
     std::unordered_set<statementNumber> childrens = getChildrens(parent);
-	return childrens.find(child) != childrens.end();
+    return childrens.find(child) != childrens.end();
 }
 

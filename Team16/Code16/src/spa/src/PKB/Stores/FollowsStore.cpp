@@ -23,10 +23,10 @@ FollowsStore::statementNumber FollowsStore::getFollower(statementNumber statemen
 bool FollowsStore::isFollow(statementNumber statement1, statementNumber statement2) {
     if (this->FollowsMap.find(statement1) != this->FollowsMap.end()) {
         if (this->FollowsMap[statement1] == statement2) {
-			return true;
-		}
-	}
-	return false;
+            return true;
+        }
+    }
+    return false;
 }
 
 FollowsStore::statementNumber FollowsStore::getLeader(statementNumber statement) {
@@ -44,13 +44,12 @@ std::unordered_set<FollowsStore::statementNumber> FollowsStore::getFollowers(sta
 }
 
 bool FollowsStore::isFollows(statementNumber statement1, statementNumber statement2) {
-    //iterative approach
     while (this->FollowsMap.find(statement1) != this->FollowsMap.end()) {
         if (this->FollowsMap[statement1] == statement2) {
-			return true;
-		}
-		statement1 = FollowsMap[statement1];
-	}
+            return true;
+        }
+        statement1 = FollowsMap[statement1];
+    }
     return false;
 }
 

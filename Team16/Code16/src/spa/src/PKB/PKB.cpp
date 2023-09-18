@@ -16,7 +16,7 @@ PKB::PKB() {
     parentStore = std::make_unique<ParentStore>();
 }
 
-//AssignStore methods
+// AssignStore methods
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
     std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap) {
@@ -33,7 +33,7 @@ std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, possibleCombin
 }
 
 
-//VariableStore methods
+// VariableStore methods
 
 void PKB::addVariables(std::unordered_set<variable> variables) {
     variableStore->addVariables(variables);
@@ -44,7 +44,7 @@ std::unordered_set<variable> PKB::getVariables() {
 }
 
 
-//UsesStore methods
+// UsesStore methods
 
 void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
     usesStore->storeUses(varUsesMap);
@@ -54,7 +54,7 @@ std::unordered_set<variable> PKB::getVariablesUsedBy(statementNumber line) {
     return usesStore->getVariablesUsedBy(line);
 }
 
-//ConstantStore methods
+// ConstantStore methods
 
 void PKB::addConstants(std::unordered_set<constant> constants) {
     constantStore->addConstants(constants);
@@ -64,14 +64,14 @@ std::unordered_set<constant> PKB::getConstants() {
     return constantStore->getConstants();
 }
 
-//StatementStore methods
+// StatementStore methods
 
 void PKB::addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
-	statementStore->addStatements(typeMap);
+    statementStore->addStatements(typeMap);
 }
 
 std::unordered_set<statementNumber> PKB::getStatements(StmtEntity type) {
-	return statementStore->getStatements(type);
+    return statementStore->getStatements(type);
 }
 
 void PKB::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
@@ -99,5 +99,5 @@ std::unordered_set<statementNumber> PKB::getParents(statementNumber statement) {
 }
 
 bool PKB::isParentStar(statementNumber parent, statementNumber child) {
-	return parentStore->isParentStar(parent, child);
+    return parentStore->isParentStar(parent, child);
 }
