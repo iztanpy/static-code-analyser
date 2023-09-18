@@ -17,7 +17,7 @@ class FollowsStore {
 
     statementNumber getFollower(statementNumber statement);
 
-    bool FollowsStore::isFollows(statementNumber statement1, statementNumber statement2);
+    bool FollowsStore::isFollow(statementNumber statement1, statementNumber statement2);
 
     statementNumber getLeader(statementNumber statement);
 
