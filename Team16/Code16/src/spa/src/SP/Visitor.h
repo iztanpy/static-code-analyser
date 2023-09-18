@@ -14,6 +14,8 @@ class VariableTNode;
 class ConstantTNode;
 class PlusTNode;
 class MinusTNode;
+class WhileTNode; 
+class ReadTNode; 
 
 class Visitor {
  public:
@@ -24,6 +26,7 @@ class Visitor {
     virtual void visit(const PlusTNode* node, std::string& key) = 0;
     virtual void visit(const MinusTNode* node, std::string& key) = 0;
     virtual void visit(const ReadTNode* node, std::string& key) = 0;
+    virtual void visit(const WhileTNode* node, std::string& key) = 0;
 
     std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
     std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
@@ -73,5 +76,6 @@ class ASTVisitor : public Visitor {
     void visit(const PlusTNode* node, std::string& key) override;
     void visit(const MinusTNode* node, std::string& key) override;
     void visit(const ReadTNode* node, std::string& key) override;
+    void visit(const WhileTNode* node, std::string& key) override;
 };
 

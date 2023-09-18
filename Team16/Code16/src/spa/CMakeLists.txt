@@ -98,7 +98,7 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ProcedureParser.h
         src/SP/sp_parser/Parser.h
         src/SP/SourceProcessor.h
-        src/SP/SourceProcessor.cpp)
+        src/SP/SourceProcessor.cpp "src/SP/sp_parser/WhileParser.cpp" "src/SP/sp_parser/WhileParser.h" "src/SP/sp_parser/ConditionParser.h" "src/SP/sp_parser/ConditionParser.cpp"     "src/SP/sp_parser/ParserFactory.h" "src/SP/sp_parser/ParserFactory.cpp")
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

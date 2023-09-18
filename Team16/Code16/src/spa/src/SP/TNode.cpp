@@ -31,4 +31,8 @@ void ReadTNode::accept(ASTVisitor* visitor, std::string& key) const {
     visitor->visit(this, key);
 }
 
+void WhileTNode::accept(ASTVisitor* visitor, std::string& key) const {
+    visitor->visit(this, key); 
+}
+
 

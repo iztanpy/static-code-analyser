@@ -57,6 +57,15 @@ class ReadTNode : public TNode {
      void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
+//class WhileTNode : public TNode {
+//public:
+//    explicit WhileTNode(int statementNumberStart, int statementNumberEnd, const std::string& c) : TNode(statementNumber) {
+//        type = TokenType::kEntityRead;
+//        content = c;
+//    }
+//    void accept(ASTVisitor* visitor, std::string& key) const override;
+//};
+
 class AssignTNode : public TNode {
  public:
   explicit AssignTNode(int statementNumber) : TNode(statementNumber) {
@@ -105,31 +114,45 @@ class MinusTNode : public TNode {
   }
 };
 
+class WhileTNode : public TNode {
+ public:
+   explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
+        type = TokenType::kEntityWhile;
+   }
+   void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
 class TNodeFactory {
  public:
-    static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
-        switch (token.tokenType) {
-        case TokenType::kEntityProcedure: {
-            return std::make_shared<ProcedureTNode>(token.value);
-        }
-        case TokenType::kEntityRead: {
-            return std::make_shared<ReadTNode>(statementNumber, token.value);
-        }
-        case TokenType::kEntityAssign: {
-            return std::make_shared<AssignTNode>(statementNumber);
-        }
-        case TokenType::kLiteralName: {
-            return std::make_shared<VariableTNode>(statementNumber, token.value);
-        }
-        case TokenType::kLiteralInteger: {
-            return std::make_shared<ConstantTNode>(statementNumber, token.value);
-        }
-        case TokenType::kOperatorPlus:
-            return std::make_shared<PlusTNode>(statementNumber);
-        case TokenType::kOperatorMinus:
-            return std::make_shared<MinusTNode>(statementNumber);
-        default:
-            throw std::invalid_argument("Error: unknown token type");
-        }
-    }
+     static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
+         switch (token.tokenType) {
+         case TokenType::kEntityProcedure: {
+             return std::make_shared<ProcedureTNode>(token.value);
+         }
+         case TokenType::kEntityWhile: {
+             return std::make_shared<WhileTNode>(statementNumber); // probably needs more information than this
+         }
+         case TokenType::kEntityRead: {
+             return std::make_shared<ReadTNode>(statementNumber, token.value);
+         }
+         case TokenType::kEntityAssign: {
+             return std::make_shared<AssignTNode>(statementNumber);
+         }
+         case TokenType::kLiteralName: {
+             return std::make_shared<VariableTNode>(statementNumber, token.value);
+         }
+         case TokenType::kLiteralInteger: {
+             return std::make_shared<ConstantTNode>(statementNumber, token.value);
+         }
+         case TokenType::kOperatorPlus: {
+             return std::make_shared<PlusTNode>(statementNumber);
+         }
+         case TokenType::kOperatorMinus: {
+             return std::make_shared<MinusTNode>(statementNumber);
+
+         default:
+             throw std::invalid_argument("Error: unknown token type");
+         }
+         }
+   }
 };
