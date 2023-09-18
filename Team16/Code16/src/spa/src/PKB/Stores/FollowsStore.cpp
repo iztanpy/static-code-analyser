@@ -20,6 +20,15 @@ FollowsStore::statementNumber FollowsStore::getFollower(statementNumber statemen
     return follower;
 }
 
+bool FollowsStore::isFollows(statementNumber statement1, statementNumber statement2) {
+    if (this->FollowsMap.find(statement1) != this->FollowsMap.end()) {
+        if (this->FollowsMap[statement1] == statement2) {
+			return true;
+		}
+	}
+	return false;
+}
+
 FollowsStore::statementNumber FollowsStore::getLeader(statementNumber statement) {
     statementNumber leader = this->FollowsMapReverse[statement];
     return leader;
