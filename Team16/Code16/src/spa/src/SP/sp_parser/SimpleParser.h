@@ -11,6 +11,7 @@
 #include "SP/sp_parser/ReadParser.h"
 #include "SP/sp_parser/ProcedureParser.h"
 #include "SP/sp_parser/Parser.h"
+#include "SP/sp_parser/WhileParser.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -20,6 +21,7 @@
 
 class DesignExtractor;  // Forward declaration
 class AssignmentParser;
+class WhileParser;
 
  /**
   * @class SimpleParser
@@ -40,5 +42,6 @@ class SimpleParser : public Parser {
     AssignmentParser* assignmentParser = new AssignmentParser(visitor);
     ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
     ReadParser* readParser = new ReadParser(visitor);
+    WhileParser* whileParser = new WhileParser(visitor);
 };
 

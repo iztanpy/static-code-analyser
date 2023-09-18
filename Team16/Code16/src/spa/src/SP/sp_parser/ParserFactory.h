@@ -7,12 +7,14 @@
 #include <unordered_set>
 #include <memory>
 
+#pragma once
+#include <utility>
+
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/sp_tokeniser/TokenTypes.h"
 #include "SP/DesignExtractor.h"
-#include "SP/sp_parser/Parser.h"
 #include "SP/sp_parser/SimpleParser.h"
 #include "SP/sp_parser/AssignmentParser.h"
 #include "SP/sp_parser/ReadParser.h"
@@ -23,15 +25,15 @@
 #include "utils/Error.h"
 
 class ParserFactory {
-private:
+ private:
     ASTVisitor* visitor;
     int lineNumber = 1;
-    AssignmentParser* assignmentParser; // Move these declarations inside the constructor
+    AssignmentParser* assignmentParser;  // Move these declarations inside the constructor
     ReadParser* readParser;
 
-public:
+ public:
     // Constructor for the factory class
-    ParserFactory() : assignmentParser(nullptr), readParser(nullptr) {} // potential error here 
+    ParserFactory() : assignmentParser(nullptr), readParser(nullptr) {}  // potential error here
 
     /**
      * Parses a list of tokens and returns a vector of integers and strings.

@@ -32,7 +32,7 @@ void ReadTNode::accept(ASTVisitor* visitor, std::string& key) const {
 }
 
 void WhileTNode::accept(ASTVisitor* visitor, std::string& key) const {
-    visitor->visit(this, key); 
+    visitor->visit(this, key);
 }
 
 

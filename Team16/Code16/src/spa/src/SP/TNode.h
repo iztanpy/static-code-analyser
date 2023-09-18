@@ -57,15 +57,6 @@ class ReadTNode : public TNode {
      void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
-//class WhileTNode : public TNode {
-//public:
-//    explicit WhileTNode(int statementNumberStart, int statementNumberEnd, const std::string& c) : TNode(statementNumber) {
-//        type = TokenType::kEntityRead;
-//        content = c;
-//    }
-//    void accept(ASTVisitor* visitor, std::string& key) const override;
-//};
-
 class AssignTNode : public TNode {
  public:
   explicit AssignTNode(int statementNumber) : TNode(statementNumber) {
@@ -116,10 +107,10 @@ class MinusTNode : public TNode {
 
 class WhileTNode : public TNode {
  public:
-   explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
-        type = TokenType::kEntityWhile;
-   }
-   void accept(ASTVisitor* visitor, std::string& key) const override;
+  explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kEntityWhile;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
 class TNodeFactory {
@@ -130,7 +121,7 @@ class TNodeFactory {
              return std::make_shared<ProcedureTNode>(token.value);
          }
          case TokenType::kEntityWhile: {
-             return std::make_shared<WhileTNode>(statementNumber); // probably needs more information than this
+             return std::make_shared<WhileTNode>(statementNumber);  // probably needs more information than this
          }
          case TokenType::kEntityRead: {
              return std::make_shared<ReadTNode>(statementNumber, token.value);
@@ -154,5 +145,5 @@ class TNodeFactory {
              throw std::invalid_argument("Error: unknown token type");
          }
          }
-   }
+     }
 };

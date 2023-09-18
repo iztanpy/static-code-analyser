@@ -14,8 +14,8 @@ class VariableTNode;
 class ConstantTNode;
 class PlusTNode;
 class MinusTNode;
-class WhileTNode; 
-class ReadTNode; 
+class WhileTNode;
+class ReadTNode;
 
 class Visitor {
  public:

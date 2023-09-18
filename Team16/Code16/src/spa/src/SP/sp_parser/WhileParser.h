@@ -11,27 +11,34 @@
 #include "SP/sp_tokeniser/TokenTypes.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
-#include "SP/sp_parser/SimpleParser.h"
-#include "SP/sp_parser/ParserFactory.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
-class SimpleParser;
 /**
- * @class ReadeParser
- * @brief A concrete subclass of Parser specialized for parsing read statements.
+ * @class WhileParser
+ * @brief A concrete subclass of Parser specialized for parsing while statements.
  *
  */
 class WhileParser : public Parser {
  public:
     explicit WhileParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int& curr_index);
+    std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int curr_index);
+    int evaluateCondition(const std::vector<Token>& tokens, int curr_index);
+    int parseRelationalExpression(const std::vector<Token>& tokens, int curr_index);
+    int parseFactor(const std::vector<Token>& tokens, int curr_index);
+    int parseTerm(const std::vector<Token>& tokens, int curr_index);
+    int parseRelFactor(const std::vector<Token>& tokens, int curr_index);
+    int parseLogicalExpression(const std::vector<Token>& tokens, int curr_index);
+    int parseConditionExpression(const std::vector<Token>& tokens, int curr_index);
+    int parseNotExpression(const std::vector<Token>& tokens, int curr_index);
+    bool isRelationalOperator(const Token& token);
+    bool isLogicalOperator(const Token& token);
+
     ASTVisitor* visitor;
     int lineNumber = 0;
-    ParserFactory factory;
     /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
 };
 

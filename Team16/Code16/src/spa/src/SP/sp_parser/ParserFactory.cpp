@@ -1,13 +1,5 @@
 #include "ParserFactory.h"
 
-// Implementation of the default constructor
-ParserFactory::ParserFactory() {
-    // Initialize member variables if needed
-    visitor = nullptr;  // Initialize visitor here or in the constructor body.
-    assignmentParser = new AssignmentParser(visitor);
-    readParser = new ReadParser(visitor);
-}
-
 std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
@@ -20,8 +12,7 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
 
                 if (next_index == -1) {
                     throw InvalidSyntaxError();
-                }
-                else {
+                } else {
                     lineNumber++;
                     curr_index = next_index;
                     return std::make_pair(curr_index, "Read");
@@ -36,10 +27,10 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
             } else {
                 lineNumber++;
                 curr_index = next_index;
-                return std::make_pair(curr_index, "Read"); 
+                return std::make_pair(curr_index, "Read");
             }
         } else {
-            throw InvalidSyntaxError(); 
+            throw InvalidSyntaxError();
         }
     }
 }
