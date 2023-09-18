@@ -7,30 +7,22 @@ void SourceProcessor::processSource(const std::string& simpleProgram) {
     simpleParser.parse(tokens, 0);
 }
 
-std::unordered_map<std::string, std::unordered_set<std::string>> SourceProcessor::getAssignVarHashmap() {
-  return visitor.getAssignVarHashmap();
+std::unordered_set<std::string> SourceProcessor::getVariables() {
+  return visitor.getVariables();
 }
 
-std::unordered_map<std::string, std::unordered_set<std::string>> SourceProcessor::getAssignConstHashmap() {
-  return visitor.getAssignConstHashmap();
+std::unordered_set<std::string> SourceProcessor::getConstants() {
+  return visitor.getConstants();
 }
 
-std::unordered_set<std::string> SourceProcessor::getVariablesHashset() {
-  return visitor.getVariablesHashset();
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesLineRHSPatternMap() {
+  return visitor.getUsesLineRHSPatternMap();
 }
 
-std::unordered_set<std::string> SourceProcessor::getConstantsHashset() {
-  return visitor.getConstantsHashset();
+std::unordered_map<int, std::string> SourceProcessor::getUsesLineLHSMap() {
+  return visitor.getUsesLineLHSMap();
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesStatementNumberHashmap() {
-  return visitor.getUsesStatementNumberHashmap();
-}
-
-std::unordered_map<int, std::string> SourceProcessor::getUsesStatementNumberVarHashmap() {
-  return visitor.getUsesStatementNumberVarHashmap();
-}
-
-std::unordered_set<int> SourceProcessor::getAssignmentStatementsHashset() {
-  return visitor.getAssignmentStatementsHashset();
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesLineRHSVarMap() {
+  return visitor.getUsesLineRHSVarMap();
 }

@@ -32,8 +32,8 @@ TEST_CASE("One assign statement 1") {
 
     REQUIRE(sourceProcessor.getAssignVarHashmap() == varUseMap);
     REQUIRE(sourceProcessor.getAssignConstHashmap() == constUseMap);
-    REQUIRE(sourceProcessor.getVariablesHashset() == varSet);
-    REQUIRE(sourceProcessor.getConstantsHashset() == constSet);
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getConstants() == constSet);
 
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "x" }));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ "1" }));
