@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include "../Helper/StmtEntity.h"
+#include "../Helper/Wildcard.h"
 #include "./StatementStore.h"
 
 
@@ -23,11 +24,11 @@ class FollowsStore {
 
     bool isFollow(statementNumber statement1, statementNumber statement2);
 
-    bool isFollow(statementNumber statement1, variable wildcard);
+    bool isFollow(statementNumber statement1, Wildcard wildcard);
 
-    bool isFollow(variable wildcard, statementNumber statement1);
+    bool isFollow(Wildcard wildcard, statementNumber statement1);
 
-    bool isFollow(variable wildcard, variable wildcard2);
+    bool isFollow(Wildcard wildcard, Wildcard wildcard2);
 
     statementNumber getLeader(statementNumber statement);
 

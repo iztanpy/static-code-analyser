@@ -31,32 +31,26 @@ bool FollowsStore::isFollow(statementNumber statement1, statementNumber statemen
 }
 
 // true if statement1 has any follower
-bool FollowsStore::isFollow(statementNumber statement1, variable wildcard) {
-    if (wildcard == "_") {
-        if (this->getFollowers(statement1).size() > 0) {
-            return true;
-        }
+bool FollowsStore::isFollow(statementNumber statement1, Wildcard wildcard) {
+    if (this->getFollowers(statement1).size() > 0) {
+        return true;
     }
     return false;
 }
 
 
 // true if statement1 follows any statement
-bool FollowsStore::isFollow(variable wildcard, statementNumber statement1) {
-    if (wildcard == "_") {
-        if (this->getLeader(statement1)) {
-            return true;
-        }
+bool FollowsStore::isFollow(Wildcard wildcard, statementNumber statement1) {
+    if (this->getLeader(statement1)) {
+        return true;
     }
     return false;
 }
 
 
-bool FollowsStore::isFollow(variable wildcard, variable wildcard2) {
-    if (wildcard == "_" && wildcard2 == "_") {
-        if (this->FollowsMap.size() > 0) {
-            return true;
-        }
+bool FollowsStore::isFollow(Wildcard wildcard, Wildcard wildcard2) {
+    if (this->FollowsMap.size() > 0) {
+        return true;
     }
     return false;
 }
