@@ -17,13 +17,13 @@
 
 class SimpleParser;
 /**
- * @class ReadParser
- * @brief A concrete subclass of Parser specialized for parsing read statements.
+ * @class PrintParser
+ * @brief A concrete subclass of Parser specialized for parsing print statements.
  *
  */
-class ReadParser : public Parser {
- public:
-    explicit ReadParser(ASTVisitor* visitor) : visitor(visitor) {}
+class PrintParser : public Parser {
+public:
+    explicit PrintParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* visitor;
     int lineNumber = 0;

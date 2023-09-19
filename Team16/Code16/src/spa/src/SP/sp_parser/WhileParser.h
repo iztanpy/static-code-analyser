@@ -11,7 +11,6 @@
 #include "SP/sp_tokeniser/TokenTypes.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
-#include "SP/sp_parser/WhileParser.h"
 #include "SP/sp_parser/ConditionParser.h"
 
 // Headers from other directories
@@ -28,7 +27,6 @@ class WhileParser : public Parser {
     explicit WhileParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int curr_index);
- 
     ASTVisitor* visitor;
     ConditionParser* conditionParser = new ConditionParser(visitor);
     int lineNumber = 0;

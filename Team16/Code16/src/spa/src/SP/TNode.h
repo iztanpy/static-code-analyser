@@ -113,6 +113,24 @@ class WhileTNode : public TNode {
   void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
+class PrintTNode : public TNode {
+ public:
+    explicit PrintTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
+        type = TokenType::kEntityPrint;
+        content = c;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+class IfTNode : public TNode {
+ public:
+    explicit IfTNode(int statementNumber) : TNode(statementNumber) {
+        type = TokenType::kEntityIf;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+
 class TNodeFactory {
  public:
      static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
@@ -122,6 +140,12 @@ class TNodeFactory {
          }
          case TokenType::kEntityWhile: {
              return std::make_shared<WhileTNode>(statementNumber);  // probably needs more information than this
+         }
+         case TokenType::kEntityPrint: {
+             return std::make_shared<PrintTNode>(statementNumber, token.value);
+         }
+         case TokenType::kEntityIf: {
+             return std::make_shared<IfTNode>(statementNumber);
          }
          case TokenType::kEntityRead: {
              return std::make_shared<ReadTNode>(statementNumber, token.value);
@@ -140,7 +164,6 @@ class TNodeFactory {
          }
          case TokenType::kOperatorMinus: {
              return std::make_shared<MinusTNode>(statementNumber);
-
          default:
              throw std::invalid_argument("Error: unknown token type");
          }

@@ -56,3 +56,20 @@ void ASTVisitor::visit(const WhileTNode* node, std::string& key) {
     //    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
     //    set.insert(node->getContent());
 }
+
+void ASTVisitor::visit(const PrintTNode* node, std::string& key) {
+    node->leftChild->accept(this, key);
+    node->rightChild->accept(this, key);
+    //    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
+    //    set.insert(node->getContent());
+}
+
+void ASTVisitor::visit(const IfTNode* node, std::string& key) {
+    node->leftChild->accept(this, key);
+    node->rightChild->accept(this, key);
+    //    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
+    //    set.insert(node->getContent());
+}
+
+
+

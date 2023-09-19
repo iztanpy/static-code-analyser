@@ -12,6 +12,8 @@
 #include "SP/sp_parser/ProcedureParser.h"
 #include "SP/sp_parser/Parser.h"
 #include "SP/sp_parser/WhileParser.h"
+#include "SP/sp_parser/IfParser.h"
+#include "SP/sp_parser/PrintParser.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -43,5 +45,7 @@ class SimpleParser : public Parser {
     ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
     ReadParser* readParser = new ReadParser(visitor);
     WhileParser* whileParser = new WhileParser(visitor);
+    PrintParser* printParser = new PrintParser(visitor);
+    IfParser* ifParser = new IfParser(visitor);
 };
 

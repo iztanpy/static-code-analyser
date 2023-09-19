@@ -27,6 +27,8 @@ class Visitor {
     virtual void visit(const MinusTNode* node, std::string& key) = 0;
     virtual void visit(const ReadTNode* node, std::string& key) = 0;
     virtual void visit(const WhileTNode* node, std::string& key) = 0;
+    virtual void visit(const PrintTNode* node, std::string& key) = 0;
+    virtual void visit(const IfTNode* node, std::string& key) = 0;
 
     // Procedure
     std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
@@ -70,5 +72,7 @@ class ASTVisitor : public Visitor {
     void visit(const MinusTNode* node, std::string& key) override;
     void visit(const ReadTNode* node, std::string& key) override;
     void visit(const WhileTNode* node, std::string& key) override;
+    void visit(const PrintTNode* node, std::string& key) override;
+    void visit(const IfTNode* node, std::string& key) override;
 };
 

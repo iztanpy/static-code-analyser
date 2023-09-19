@@ -35,4 +35,12 @@ void WhileTNode::accept(ASTVisitor* visitor, std::string& key) const {
     visitor->visit(this, key);
 }
 
+void PrintTNode::accept(ASTVisitor* visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
+void IfTNode::accept(ASTVisitor* visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
 

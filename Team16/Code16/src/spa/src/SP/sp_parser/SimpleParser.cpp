@@ -41,9 +41,27 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 lineNumber++;
                 curr_index = next_index;
             }
+        } else if (curr_token.tokenType == TokenType::kEntityPrint) {
+            printParser->lineNumber = lineNumber;
+            int next_index = printParser->parse(tokens, curr_index);
+            if (next_index == -1) {
+                throw InvalidSyntaxError();
+            } else {
+                lineNumber++;
+                curr_index = next_index;
+            }
         } else if (curr_token.tokenType == TokenType::kEntityWhile) {
             std::cout << "Test" << std::endl;  // validate if the loop is entered
             int next_index = whileParser->parse(tokens, curr_index);
+
+            if (next_index == -1) {
+                throw InvalidSyntaxError();
+            } else {
+                lineNumber++;
+                curr_index = next_index;
+            }
+        } else if (curr_token.tokenType == TokenType::kEntityIf) {  // might need special handling
+            int next_index = ifParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
                 throw InvalidSyntaxError();

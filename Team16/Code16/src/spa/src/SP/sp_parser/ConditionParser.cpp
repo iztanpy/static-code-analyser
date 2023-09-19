@@ -4,7 +4,7 @@
 * ConditionParser returns -1 if the conditional parsing is not ok and returns 0 if the parsing is ok
 */
 int ConditionParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    // just need to verify if the condition is valid or not 
+    // just need to verify if the condition is valid or not
     return evaluateCondition(tokens, 0) == -1 ? -1 : 0;
 }
 
@@ -21,8 +21,7 @@ std::vector<Token> ConditionParser::getConditionTokens(const std::vector<Token>&
         while (closeParenIndex < tokens.size() && openParenCount > 0) {
             if (tokens[closeParenIndex].tokenType == TokenType::kSepOpenParen) {
                 openParenCount++;
-            }
-            else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
+            } else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
                 openParenCount--;
             }
             conditionTokens.push_back(tokens[closeParenIndex]);  // Add tokens within the condition
@@ -34,8 +33,7 @@ std::vector<Token> ConditionParser::getConditionTokens(const std::vector<Token>&
             throw InvalidSyntaxError();
         }
         curr_index = closeParenIndex;  // Modify curr_index to the new position
-    }
-    else {
+    } else {
         // Implies that there is a missing open parenthesis somewhere
         throw InvalidSyntaxError();
     }
@@ -67,21 +65,17 @@ int ConditionParser::parseLogicalExpression(const std::vector<Token>& tokens, in
                     bool rightOperand = false;
                     if (token.tokenType == TokenType::kOperatorLogicalAnd) {
                         rightOperand = true;
-                    }
-                    else if (token.tokenType == TokenType::kOperatorLogicalOr) {
+                    } else if (token.tokenType == TokenType::kOperatorLogicalOr) {
                         rightOperand = true;
                     }
                     valid = valid && rightOperand;
-                }
-                else {
+                } else {
                     return -1;
                 }
-            }
-            else {
+            } else {
                 return -1;
             }
-        }
-        else {
+        } else {
             break;  // No more logical operators
         }
     }
@@ -104,8 +98,7 @@ int ConditionParser::parseRelationalExpression(const std::vector<Token>& tokens,
         if (updatedCurrIndex < tokens.size()) {
             updatedCurrIndex = parseRelFactor(tokens, updatedCurrIndex);
             valid = valid && (updatedCurrIndex != -1);
-        }
-        else {
+        } else {
             return -1;  // Invalid expression, operator at the end
         }
     }
@@ -133,8 +126,7 @@ int ConditionParser::parseTerm(const std::vector<Token>& tokens, int curr_index)
         updatedCurrIndex++;
         if (updatedCurrIndex < tokens.size()) {
             updatedCurrIndex = parseFactor(tokens, updatedCurrIndex);
-        }
-        else {
+        } else {
             return -1;
         }
     }
@@ -154,20 +146,17 @@ int ConditionParser::parseFactor(const std::vector<Token>& tokens, int curr_inde
         token.tokenType == TokenType::kLiteralName) {
         curr_index++;
         return curr_index;  // Return the updated curr_index
-    }
-    else if (token.tokenType == TokenType::kSepOpenParen) {
+    } else if (token.tokenType == TokenType::kSepOpenParen) {
         // Parse a sub-expression within parentheses
         curr_index++;
         int updatedCurrIndex = parseConditionExpression(tokens, curr_index);
 
         if (updatedCurrIndex < tokens.size() && tokens[updatedCurrIndex].tokenType == TokenType::kSepCloseParen) {
             return updatedCurrIndex + 1;  // Return the updated curr_index after consuming ')'
-        }
-        else {
+        } else {
             return -1;
         }
-    }
-    else {
+    } else {
         return -1;  // Invalid token
     }
 }
@@ -178,12 +167,10 @@ int ConditionParser::parseNotExpression(const std::vector<Token>& tokens, int cu
         int operandIndex = parseRelationalExpression(tokens, curr_index);  // Evaluate the operand
         if (operandIndex != -1) {
             return operandIndex;
-        }
-        else {
+        } else {
             return -1;
         }
-    }
-    else {
+    } else {
         return parseRelationalExpression(tokens, curr_index);  // No logical NOT, evaluate the operand directly
     }
 }

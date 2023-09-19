@@ -1,16 +1,10 @@
-// ai-gen start (gpt3, 2)
-#include "WhileParser.h"
+#include "IfParser.h"
 
-int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    std::vector<Token> conditionTokens = WhileParser::getConditionTokens(tokens, curr_index);
-    int validCondition = conditionParser->parse(conditionTokens, 0);
-    if (validCondition == -1) {
-        throw InvalidSyntaxError();
-    }
-    return curr_index + conditionTokens.size() + 1;  // Continue evaluation
+int IfParser::parse(const std::vector<Token>& tokens, int curr_index) {
+    return curr_index;
 }
 
-std::vector<Token> WhileParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {
+std::vector<Token> IfParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {
     // Initialize condition tokens
     std::vector<Token> conditionTokens;
 
@@ -22,7 +16,8 @@ std::vector<Token> WhileParser::getConditionTokens(const std::vector<Token>& tok
         while (closeParenIndex < tokens.size() && openParenCount > 0) {
             if (tokens[closeParenIndex].tokenType == TokenType::kSepOpenParen) {
                 openParenCount++;
-            } else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
+            }
+            else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
                 openParenCount--;
             }
             conditionTokens.push_back(tokens[closeParenIndex]);  // Add tokens within the condition
@@ -34,7 +29,8 @@ std::vector<Token> WhileParser::getConditionTokens(const std::vector<Token>& tok
             throw InvalidSyntaxError();
         }
         curr_index = closeParenIndex;  // Modify curr_index to the new position
-    } else {
+    }
+    else {
         // Implies that there is a missing open parenthesis somewhere
         throw InvalidSyntaxError();
     }
