@@ -12,7 +12,7 @@ class FollowsStore {
     typedef int statementNumber;
     typedef std::string variable;
     typedef std::string stmtentity;
-    std::unordered_map<statementNumber, statementNumber> FollowsMap;
+    std::unordered_map<statementNumber, statementNumber> FollowMap;
     std::unordered_map<statementNumber, statementNumber> FollowMapReverse;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMapReverse;
