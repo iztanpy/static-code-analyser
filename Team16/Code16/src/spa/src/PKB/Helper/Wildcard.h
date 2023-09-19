@@ -2,5 +2,5 @@
 #include <stdio.h>
 
 enum class Wildcard {
-    kWildcard
+    Value,
 };
