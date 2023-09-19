@@ -169,6 +169,8 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 char top = braceStack.top();
                 if (matchedValue[0] == '}' && top == '{') {
                     braceStack.pop();
+                    Token token{ matchedType, matchedValue, lineNumber, linePosition };
+                    tokens.push_back(token);
                 } else if (matchedValue[0] == ')' && top == '(') {
                     braceStack.pop();
                     // insert ')' as a token

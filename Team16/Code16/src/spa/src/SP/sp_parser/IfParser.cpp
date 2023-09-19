@@ -1,7 +1,12 @@
 #include "IfParser.h"
 
 int IfParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    return curr_index;
+    std::vector<Token> conditionTokens = IfParser::getConditionTokens(tokens, curr_index);
+    int validCondition = conditionParser->parse(conditionTokens, 0);
+    if (validCondition == -1) {
+        throw InvalidSyntaxError();
+    }
+    return curr_index + conditionTokens.size() + 1;  // Continue evaluation
 }
 
 std::vector<Token> IfParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {
