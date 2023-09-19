@@ -12,6 +12,7 @@
 #include "Stores/ConstantStore.h"
 #include "Stores/StatementStore.h"
 #include "Stores/ParentStore.h"
+#include "Stores/FollowsStore.h"
 #include "Helper/StmtEntity.h"
 
 typedef std::string variable;
@@ -28,6 +29,7 @@ class PKB {
      std::unique_ptr<ConstantStore> constantStore;
      std::unique_ptr<StatementStore> statementStore;
      std::unique_ptr<ParentStore> parentStore;
+    std::unique_ptr<FollowsStore> followsStore;
 
 
  public:
@@ -82,6 +84,12 @@ class PKB {
     std::unordered_set<statementNumber> getParents(statementNumber statement);
 
     bool isParentStar(statementNumber parent, statementNumber child);
+
+    // FollowStore Method
+    void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
+
+    std::unordered_set<statementNumber> Follow(variable wildcard, StmtEntity);
+
 
 
 

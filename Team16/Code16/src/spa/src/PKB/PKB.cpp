@@ -14,6 +14,7 @@ PKB::PKB() {
     constantStore = std::make_unique<ConstantStore>();
     statementStore = std::make_unique<StatementStore>();
     parentStore = std::make_unique<ParentStore>();
+    followsStore = std::make_unique<FollowsStore>();
 }
 
 // AssignStore methods
@@ -100,4 +101,20 @@ std::unordered_set<statementNumber> PKB::getParents(statementNumber statement) {
 
 bool PKB::isParentStar(statementNumber parent, statementNumber child) {
     return parentStore->isParentStar(parent, child);
+}
+
+
+// FollowStore Method
+
+void PKB::storeFollows(std::unordered_map<statementNumber, statementNumber> map) {
+    followsStore->storeFollows(map);
+}
+
+std::unordered_set<statementNumber> PKB::Follow(variable wildcard, StmtEntity type) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x: relevantStmts) {
+        result.insert(this->followsStore->getLeader(x));
+    }
+    return result;
 }

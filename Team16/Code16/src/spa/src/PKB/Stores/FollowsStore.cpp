@@ -4,6 +4,7 @@
 
 #include "FollowsStore.h"
 
+
 FollowsStore::FollowsStore() {
     std::unordered_map<statementNumber, statementNumber> FollowsMap;
     std::unordered_map<statementNumber, statementNumber> FollowsMapReverse;
@@ -23,6 +24,37 @@ FollowsStore::statementNumber FollowsStore::getFollower(statementNumber statemen
 bool FollowsStore::isFollow(statementNumber statement1, statementNumber statement2) {
     if (this->FollowsMap.find(statement1) != this->FollowsMap.end()) {
         if (this->FollowsMap[statement1] == statement2) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// true if statement1 has any follower
+bool FollowsStore::isFollow(statementNumber statement1, variable wildcard) {
+    if (wildcard == "_") {
+        if (this->getFollowers(statement1).size() > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// true if statement1 follows any statement
+bool FollowsStore::isFollow(variable wildcard, statementNumber statement1) {
+    if (wildcard == "_") {
+        if (this->getLeader(statement1)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+bool FollowsStore::isFollow(variable wildcard, variable wildcard2) {
+    if (wildcard == "_" && wildcard2 == "_") {
+        if (this->FollowsMap.size() > 0) {
             return true;
         }
     }
@@ -52,6 +84,7 @@ bool FollowsStore::isFollows(statementNumber statement1, statementNumber stateme
     }
     return false;
 }
+
 
 std::unordered_set<FollowsStore::statementNumber> FollowsStore::getLeaders(statementNumber statement) {
     std::unordered_set<statementNumber> leaders;
