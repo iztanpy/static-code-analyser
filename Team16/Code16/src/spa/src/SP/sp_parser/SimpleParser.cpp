@@ -65,13 +65,13 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         }
     }
 
-    writeFacade->storeAssignments(
-        visitor->getUsesStatementNumberHashmap(),
-        visitor->getUsesStatementNumberVarHashmap());
-    writeFacade->storeVariables(visitor->getVariablesHashset());
-    writeFacade->storeConstants(visitor->getConstantsHashset());
-    writeFacade->storeUsesVar(visitor->getAssignVarHashmap());
-    writeFacade->storeUsesConst(visitor->getAssignConstHashmap());
-    writeFacade->storeLineUses(visitor->getUsesStatementNumberHashmap());
+    // <line, RHS patterns>, <line, LHS var>
+    writeFacade->storeAssignments(visitor->getUsesLineRHSPatternMap(), visitor->getUsesLineLHSMap());
+    // <all var in LHS and RHS>
+    writeFacade->storeVariables(visitor->getVariables());
+    // <all const in RHS>
+    writeFacade->storeConstants(visitor->getConstants());
+    // <all var in RHS>
+//    writeFacade->storeUses(visitor->getUsesLineRHSVarMap());
     return curr_index;
 }

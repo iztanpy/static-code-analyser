@@ -29,11 +29,15 @@ TEST_CASE("One assign statement 1") {
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
     std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
         { {"x", constSet} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}} });
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}} });
 
-    REQUIRE(sourceProcessor.getAssignVarHashmap() == varUseMap);
-    REQUIRE(sourceProcessor.getAssignConstHashmap() == constUseMap);
-    REQUIRE(sourceProcessor.getVariablesHashset() == varSet);
-    REQUIRE(sourceProcessor.getConstantsHashset() == constSet);
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getConstants()  == constSet);
 
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "x" }));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ "1" }));

@@ -23,14 +23,11 @@ class SourceProcessor {
  public:
     explicit SourceProcessor(WriteFacade* writeFacade);
     void processSource(const std::string& simpleProgram);
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap();
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap();
-    std::unordered_set<std::string> getVariablesHashset();
-    std::unordered_set<std::string> getConstantsHashset();
-
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
-    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap();
-    std::unordered_set<int> getAssignmentStatementsHashset();
+    std::unordered_set<std::string> getVariables();
+    std::unordered_set<std::string> getConstants();
+    std::unordered_map<int, std::string> getUsesLineLHSMap();
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap();
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap();
 };
 
 
