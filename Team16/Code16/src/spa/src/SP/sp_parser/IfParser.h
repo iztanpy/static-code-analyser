@@ -25,12 +25,12 @@
  */
 class IfParser : public Parser {
  public:
-   explicit IfParser(ASTVisitor* visitor) : visitor(visitor) {}
-   int parse(const std::vector<Token>& tokens, int curr_index) override;
-   std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int curr_index);
+  explicit IfParser(ASTVisitor* visitor) : visitor(visitor) {}
+  int parse(const std::vector<Token>& tokens, int curr_index) override;
+  std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int curr_index);
 
-   ASTVisitor* visitor;
-   ConditionParser* conditionParser = new ConditionParser(visitor);
+  ASTVisitor* visitor;
+  ConditionParser* conditionParser = new ConditionParser(visitor);
   int lineNumber = 0;
   /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
 };

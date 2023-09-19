@@ -17,7 +17,7 @@
 #include "utils/Error.h"
 
 class ConditionParser : public Parser {
-public:
+ public:
     explicit ConditionParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int curr_index);
@@ -35,5 +35,4 @@ public:
     ASTVisitor* visitor;
     int lineNumber = 0;
     /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
-
 };

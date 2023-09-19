@@ -16,8 +16,7 @@ std::vector<Token> IfParser::getConditionTokens(const std::vector<Token>& tokens
         while (closeParenIndex < tokens.size() && openParenCount > 0) {
             if (tokens[closeParenIndex].tokenType == TokenType::kSepOpenParen) {
                 openParenCount++;
-            }
-            else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
+            } else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
                 openParenCount--;
             }
             conditionTokens.push_back(tokens[closeParenIndex]);  // Add tokens within the condition
@@ -29,8 +28,7 @@ std::vector<Token> IfParser::getConditionTokens(const std::vector<Token>& tokens
             throw InvalidSyntaxError();
         }
         curr_index = closeParenIndex;  // Modify curr_index to the new position
-    }
-    else {
+    } else {
         // Implies that there is a missing open parenthesis somewhere
         throw InvalidSyntaxError();
     }

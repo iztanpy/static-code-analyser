@@ -22,11 +22,11 @@ class SimpleParser;
  *
  */
 class PrintParser : public Parser {
-public:
-    explicit PrintParser(ASTVisitor* visitor) : visitor(visitor) {}
-    int parse(const std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor;
-    int lineNumber = 0;
-    /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
+ public:
+  explicit PrintParser(ASTVisitor* visitor) : visitor(visitor) {}
+  int parse(const std::vector<Token>& tokens, int curr_index) override;
+  ASTVisitor* visitor;
+  int lineNumber = 0;
+  /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
 };
 
