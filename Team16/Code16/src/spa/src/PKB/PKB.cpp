@@ -75,6 +75,8 @@ std::unordered_set<statementNumber> PKB::getStatements(StmtEntity type) {
     return statementStore->getStatements(type);
 }
 
+
+// ParentStore methods
 void PKB::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
     parentStore->storeParent(map);
 }
@@ -160,5 +162,72 @@ bool PKB::isFollow(Wildcard wildcard, statementNumber statement1) {
 
 bool PKB::isFollow(Wildcard wildcard, Wildcard wildcard2) {
     return this->followsStore->isFollow(wildcard, wildcard2);
+}
+
+// Follows Star Methods
+
+bool PKB::isFollowStar(statementNumber statement1, statementNumber statement2) {
+    return this->followsStore->isFollowStar(statement1, statement2);
+}
+
+bool PKB::isFollowStar(statementNumber statement1, Wildcard wildcard) {
+    return this->followsStore->isFollowStar(statement1, wildcard);
+}
+
+bool PKB::isFollowStar(Wildcard wildcard, statementNumber statement1) {
+    return this->followsStore->isFollowStar(wildcard, statement1);
+}
+
+bool PKB::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
+    return this->followsStore->isFollowStar(wildcard, wildcard2);
+}
+
+
+// returns all statements that are of a specified StmtEntity type and follows* any statement
+std::unordered_set<statementNumber> PKB::followStar(Wildcard wildcard, StmtEntity type) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x: relevantStmts) {
+        if (this->followsStore->getLeaders(x).size() > 0) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return all statements that are of a specified StmtEntity type and follows* a specified statement
+std::unordered_set<statementNumber> PKB::followStar(statementNumber num, StmtEntity type) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x: relevantStmts) {
+        if (this->followsStore->getLeaders(x).count(num)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return all statements that are of a specified StmtEntity type and is followed* by a specified statement
+std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, statementNumber num) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x: relevantStmts) {
+        if (this->followsStore->getFollowers(x).count(num)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return all statements that are of a specified StmtEntity type and is followed* by any statement
+std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, Wildcard wildcard) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x: relevantStmts) {
+        if (this->followsStore->getFollowers(x).size() > 0) {
+            result.insert(x);
+        }
+    }
+    return result;
 }
 
