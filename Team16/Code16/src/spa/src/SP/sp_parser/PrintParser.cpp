@@ -19,12 +19,12 @@ int PrintParser::parse(const std::vector<Token>& tokens, int curr_index) {
         TokenType::kEntityVariable
     };
 
-    // Check if the procedure name token is a keyword and convert it to a literal if necessary
+    // Check if the print name token is a keyword and convert it to a literal if necessary
     if (validKeywords.find(printNameToken.tokenType) != validKeywords.end()) {
         printNameToken.tokenType = TokenType::kLiteralName;
     }
 
-    // Check if the procedure name is a literal
+    // Check if the print name is a literal
     if (printNameToken.tokenType != TokenType::kLiteralName) {
         return -1;
     }
@@ -34,7 +34,7 @@ int PrintParser::parse(const std::vector<Token>& tokens, int curr_index) {
         return -1;
     }
 
-    // Update the value of the 'print' token to match the procedure name
+    // Update the value of the 'print' token to match the print name
     Token print = tokens[curr_index];
     print.value = printNameToken.value;
 

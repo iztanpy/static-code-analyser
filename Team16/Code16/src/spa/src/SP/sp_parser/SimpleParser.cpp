@@ -63,6 +63,14 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 lineNumber++;
                 curr_index = next_index;
             }
+        } else if (curr_token.tokenType == TokenType::kEntityCall) {
+            int next_index = callParser->parse(tokens, curr_index);
+            if (next_index == -1) {
+                throw InvalidSyntaxError();
+            } else {
+                lineNumber++;
+                curr_index = next_index;
+            }
         } else if (curr_token.tokenType == TokenType::kEntityIf) {  // might need special handling
             controlStructureStack.push_back("if");
             parentStatementStack.push_back(lineNumber);

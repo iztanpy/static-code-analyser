@@ -130,6 +130,18 @@ class IfTNode : public TNode {
     void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
+class CallTNode : public TNode {
+ public:
+    explicit CallTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
+        type = TokenType::kEntityCall;
+        content = c;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+
+
+
 
 class TNodeFactory {
  public:
@@ -142,6 +154,9 @@ class TNodeFactory {
              return std::make_shared<WhileTNode>(statementNumber);  // probably needs more information than this
          }
          case TokenType::kEntityPrint: {
+             return std::make_shared<PrintTNode>(statementNumber, token.value);
+         }
+         case TokenType::kEntityCall: {
              return std::make_shared<PrintTNode>(statementNumber, token.value);
          }
          case TokenType::kEntityIf: {

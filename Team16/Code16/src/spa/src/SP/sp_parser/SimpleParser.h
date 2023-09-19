@@ -14,6 +14,7 @@
 #include "SP/sp_parser/WhileParser.h"
 #include "SP/sp_parser/IfParser.h"
 #include "SP/sp_parser/PrintParser.h"
+#include "SP/sp_parser/CallParser.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -48,5 +49,6 @@ class SimpleParser : public Parser {
     WhileParser* whileParser = new WhileParser(visitor);
     PrintParser* printParser = new PrintParser(visitor);
     IfParser* ifParser = new IfParser(visitor);
+    CallParser* callParser = new CallParser(visitor);
 };
 

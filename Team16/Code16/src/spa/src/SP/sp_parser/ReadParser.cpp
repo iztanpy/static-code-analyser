@@ -6,7 +6,7 @@ int ReadParser::parse(const std::vector<Token>& tokens, int curr_index) {
         return -1;
     }
 
-    // Validate procedure name
+    // Validate read name
     Token readNameToken = tokens[curr_index + 1];
     Token semicolonToken = tokens[curr_index + 2];
 
@@ -20,12 +20,12 @@ int ReadParser::parse(const std::vector<Token>& tokens, int curr_index) {
         TokenType::kEntityVariable
     };
 
-    // Check if the procedure name token is a keyword and convert it to a literal if necessary
+    // Check if the read name token is a keyword and convert it to a literal if necessary
     if (validKeywords.find(readNameToken.tokenType) != validKeywords.end()) {
         readNameToken.tokenType = TokenType::kLiteralName;
     }
 
-    // Check if the procedure name is a literal
+    // Check if the read name is a literal
     if (readNameToken.tokenType != TokenType::kLiteralName) {
         return -1;
     }
@@ -35,7 +35,7 @@ int ReadParser::parse(const std::vector<Token>& tokens, int curr_index) {
         return -1;
     }
 
-    // Update the value of the 'read' token to match the procedure name
+    // Update the value of the 'read' token to match the read name
     Token read = tokens[curr_index];
     read.value = readNameToken.value;
 
