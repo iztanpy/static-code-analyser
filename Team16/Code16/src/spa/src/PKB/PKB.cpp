@@ -110,7 +110,7 @@ void PKB::storeFollows(std::unordered_map<statementNumber, statementNumber> map)
     followsStore->storeFollows(map);
 }
 
-std::unordered_set<statementNumber> PKB::Follow(variable wildcard, StmtEntity type) {
+std::unordered_set<statementNumber> PKB::follows(Wildcard wildcard, StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x: relevantStmts) {
@@ -118,3 +118,47 @@ std::unordered_set<statementNumber> PKB::Follow(variable wildcard, StmtEntity ty
     }
     return result;
 }
+
+statementNumber PKB::follows(statementNumber num, StmtEntity type) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    statementNumber numResult = this->followsStore->getFollower(num);
+    if (relevantStmts.count(numResult)) {
+        return numResult;
+    }
+    return 0;
+}
+
+statementNumber PKB::follows(StmtEntity type, statementNumber num) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    statementNumber numResult = this->followsStore->getLeader(num);
+    if (relevantStmts.count(numResult)) {
+        return numResult;
+    }
+    return 0;
+}
+
+std::unordered_set<statementNumber> PKB::follows(StmtEntity type, Wildcard wildcard) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x: relevantStmts) {
+        result.insert(this->followsStore->getFollower(x));
+    }
+    return result;
+}
+
+bool PKB::isFollow(statementNumber statement1, statementNumber statement2) {
+    return this->followsStore->isFollow(statement1, statement2);
+}
+
+bool PKB::isFollow(statementNumber statement1, Wildcard wildcard) {
+    return this->followsStore->isFollow(statement1, wildcard);
+}
+
+bool PKB::isFollow(Wildcard wildcard, statementNumber statement1) {
+    return this->followsStore->isFollow(wildcard, statement1);
+}
+
+bool PKB::isFollow(Wildcard wildcard, Wildcard wildcard2) {
+    return this->followsStore->isFollow(wildcard, wildcard2);
+}
+

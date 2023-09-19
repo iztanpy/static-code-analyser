@@ -14,6 +14,7 @@
 #include "Stores/ParentStore.h"
 #include "Stores/FollowsStore.h"
 #include "Helper/StmtEntity.h"
+#include "Helper/Wildcard.h"
 
 typedef std::string variable;
 typedef int statementNumber;
@@ -88,7 +89,22 @@ class PKB {
     // FollowStore Method
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 
-    std::unordered_set<statementNumber> Follow(variable wildcard, StmtEntity);
+    std::unordered_set<statementNumber> follows(Wildcard wildcard, StmtEntity entity);
+
+    statementNumber follows(statementNumber num, StmtEntity entity);
+
+    statementNumber follows(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> follows(StmtEntity entity, Wildcard wildcard);
+
+    bool isFollow(statementNumber statement1, statementNumber statement2);
+
+    bool isFollow(statementNumber statement1, Wildcard wildcard);
+
+    bool isFollow(Wildcard wildcard, statementNumber statement1);
+
+    bool isFollow(Wildcard wildcard, Wildcard wildcard2);
+
 
 
 
