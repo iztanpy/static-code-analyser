@@ -19,12 +19,14 @@ class WildCardPattern : public PatternClause {
 };
 
 class ExactPattern : public PatternClause {
+ public:
   ExactPattern(EntRef lhs, std::string rhs);
   EntRef lhs;
   std::string rhs;
 };
 
 class PartialPattern : public PatternClause {
+ public:
   PartialPattern(EntRef lhs, std::string rhs);
   EntRef lhs;
   std::string rhs;

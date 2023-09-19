@@ -41,4 +41,7 @@ std::unique_ptr<PatternClause> ClauseDirector::makePatternClause(PatternClauseBu
     }
   }
   builder.setSynAssignment(syn_assignment);
+  builder.setLhs(tokens[1], declarations);
+  builder.setRhs(tokens[2], declarations);
+  return builder.getClause();
 }
