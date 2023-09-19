@@ -2,6 +2,7 @@
 #include <unordered_set>
 #include "catch.hpp"
 #include "PKB/Stores/FollowsStore.h"
+#include "PKB/Helper/Wildcard.h"
 
 typedef int statementNumber;
 
@@ -23,18 +24,32 @@ TEST_CASE("Test Boolean Follows") {
     REQUIRE(!followsStore.isFollow(1, 3));
     REQUIRE(!followsStore.isFollow(2, 4));
     REQUIRE(!followsStore.isFollow(1, 4));
+    
+    Wildcard wildcard = Wildcard();
 
-    REQUIRE(followsStore.isFollows(1, 3));
-    REQUIRE(followsStore.isFollows(2, 4));
-    REQUIRE(followsStore.isFollows(1, 4));
-    REQUIRE(followsStore.isFollows(1, 2));
-    REQUIRE(followsStore.isFollows(2, 3));
-    REQUIRE(followsStore.isFollows(3, 4));
-    REQUIRE(!followsStore.isFollows(1, 5));
-    REQUIRE(!followsStore.isFollows(4, 3));
-    REQUIRE(!followsStore.isFollows(4, 2));
-    REQUIRE(!followsStore.isFollows(3, 1));
-    REQUIRE(!followsStore.isFollows(2, 1));
+    REQUIRE(!followsStore.isFollow(wildcard, 1));
+
+    REQUIRE(followsStore.isFollowStar(1, 2));
+    REQUIRE(followsStore.isFollowStar(2, 4));
+    REQUIRE(followsStore.isFollowStar(1, 4));
+    REQUIRE(followsStore.isFollowStar(1, 2));
+    REQUIRE(followsStore.isFollowStar(2, 3));
+    REQUIRE(followsStore.isFollowStar(3, 4));
+    REQUIRE(!followsStore.isFollowStar(1, 5));
+    REQUIRE(!followsStore.isFollowStar(4, 3));
+    REQUIRE(!followsStore.isFollowStar(4, 2));
+    REQUIRE(!followsStore.isFollowStar(3, 1));
+    REQUIRE(!followsStore.isFollowStar(2, 1));
+
+    REQUIRE(!followsStore.isFollowStar(wildcard, 1));
+    REQUIRE(followsStore.isFollowStar(wildcard, 2));
+    REQUIRE(followsStore.isFollowStar(wildcard, 3));
+    REQUIRE(followsStore.isFollowStar(wildcard, 4));
+    
+    REQUIRE(followsStore.isFollowStar(1, wildcard));
+    REQUIRE(followsStore.isFollowStar(2, wildcard));
+    REQUIRE(followsStore.isFollowStar(3, wildcard));
+    REQUIRE(!followsStore.isFollowStar(4, wildcard));
 }
 
 
