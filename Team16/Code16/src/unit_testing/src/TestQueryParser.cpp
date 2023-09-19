@@ -184,6 +184,48 @@ TEST_CASE(
   REQUIRE(SuchThatClause::are_ent_ref_equal(second_clause->rhs, second_expectedRhs));
 }
 
+TEST_CASE("Query Parser can extract pattern token in the form of 'a (entref, exprSpec)'") {
+  std::string sample_query = "variable v; assign a; Select v pattern a (v, _\"x+y\"_)";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
+
+  std::vector<QueryToken> patternTokens = QueryParser::ExtractPatternTokens(tokens);
+  REQUIRE(patternTokens.size() == 3);
+  REQUIRE(patternTokens[0].text == "a");
+  REQUIRE(patternTokens[0].type == PQLTokenType::SYNONYM);
+  REQUIRE(patternTokens[1].text == "v");
+  REQUIRE(patternTokens[1].type == PQLTokenType::SYNONYM);
+  REQUIRE(patternTokens[2].text == "x+y");
+  REQUIRE(patternTokens[2].type == PQLTokenType::PARTIALEXPR);
+}
+
+TEST_CASE("Query Parser can extract pattern token in the form of 'a (entref, expr)'") {
+  std::string sample_query = "variable v; assign a; Select v pattern a (v, \"x+y\")";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
+
+  std::vector<QueryToken> patternTokens = QueryParser::ExtractPatternTokens(tokens);
+  REQUIRE(patternTokens.size() == 3);
+  REQUIRE(patternTokens[0].text == "a");
+  REQUIRE(patternTokens[0].type == PQLTokenType::SYNONYM);
+  REQUIRE(patternTokens[1].text == "v");
+  REQUIRE(patternTokens[1].type == PQLTokenType::SYNONYM);
+  REQUIRE(patternTokens[2].text == "x+y");
+  REQUIRE(patternTokens[2].type == PQLTokenType::IDENT);
+}
+
+TEST_CASE("Query Parser can extract pattern token in the form of 'a (_, exprSpec)'") {
+  std::string sample_query = "variable v; assign a; Select v pattern a (_, _\"x+y\"_)";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(sample_query);
+
+  std::vector<QueryToken> patternTokens = QueryParser::ExtractPatternTokens(tokens);
+  REQUIRE(patternTokens.size() == 3);
+  REQUIRE(patternTokens[0].text == "a");
+  REQUIRE(patternTokens[0].type == PQLTokenType::SYNONYM);
+  REQUIRE(patternTokens[1].text == "_");
+  REQUIRE(patternTokens[1].type == PQLTokenType::WILDCARD);
+  REQUIRE(patternTokens[2].text == "x+y");
+  REQUIRE(patternTokens[2].type == PQLTokenType::PARTIALEXPR);
+}
+
 TEST_CASE("Query Parser can return a parsed query") {
   std::vector<QueryToken> tokens = {
       {"variable", PQLTokenType::DECLARATION},
