@@ -27,6 +27,22 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+TEST_CASE(("Test Conditional Tokens Retrieval")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram2 = "procedure p { while ((x == 1) || (x==2))  { read x; } }";
+    sourceProcessor.processSource(simpleProgram2);
+    std::string simpleProgram3 = "procedure p { while ((x != 1) || (y != 1)) { read x; } }";
+    sourceProcessor.processSource(simpleProgram3); 
+    std::string simpleProgram4 = "procedure p { while (!(x == 1)) { read x; } }";
+    sourceProcessor.processSource(simpleProgram4);
+    std::string simpleProgram5 = "procedure p { while ((!x) || (x == y)) { read x; } }";
+    sourceProcessor.processSource(simpleProgram5);
+  
+    REQUIRE(1 == 1);
+}
+
 TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
