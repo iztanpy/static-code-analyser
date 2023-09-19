@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "pattern_clause_builder.h"
+#include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 #include "qps/qps_errors/qps_syntax_error.h"
 
 void PatternClauseBuilder::setSynAssignment(Declaration declaration) {
@@ -32,7 +32,7 @@ void PatternClauseBuilder::setRhs(const QueryToken & param, const std::vector<De
   switch (param.type) {
     // these 2 are cases for expression and partial expressions
     case PQLTokenType::IDENT:
-    case PQLTokenType::PARTIALEXPR:rhs = param.text; // e.g. "x + y" or _"x + y"
+    case PQLTokenType::PARTIALEXPR:rhs = param.text;  // e.g. "x + y" or _"x + y"
       break;
     case PQLTokenType::WILDCARD:rhs = Wildcard::Value;
       break;

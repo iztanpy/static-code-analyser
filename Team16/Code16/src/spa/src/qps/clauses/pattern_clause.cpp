@@ -1,9 +1,9 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include "qps/clauses/pattern_clause.h"
 
-#include <utility>
 WildCardPattern::WildCardPattern(EntRef lhs, Wildcard rhs) {
   this->lhs = std::move(lhs);
   this->rhs = rhs;
