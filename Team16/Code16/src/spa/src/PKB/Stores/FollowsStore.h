@@ -17,13 +17,13 @@ class FollowsStore {
 
     statementNumber getFollower(statementNumber statement);
 
-    bool FollowsStore::isFollow(statementNumber statement1, statementNumber statement2);
+    bool isFollow(statementNumber statement1, statementNumber statement2);
 
     statementNumber getLeader(statementNumber statement);
 
     std::unordered_set<statementNumber> getFollowers(statementNumber statement);
 
-    bool FollowsStore::isFollows(statementNumber statement1, statementNumber statement2);
+    bool isFollows(statementNumber statement1, statementNumber statement2);
 
     std::unordered_set<statementNumber> getLeaders(statementNumber statement);
 };
