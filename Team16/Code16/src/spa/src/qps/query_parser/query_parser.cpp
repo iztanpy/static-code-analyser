@@ -144,8 +144,9 @@ std::vector<QueryToken> QueryParser::ExtractPatternTokens(const std::vector<Quer
 
   return patternTokens;
 }
-std::vector<std::unique_ptr<PatternClause>> QueryParser::ExtractPatternClauses(const std::vector<QueryToken> & patternTokens,
-                                                                               const std::vector<Declaration> & declarations) {
+std::vector<std::unique_ptr<PatternClause>>
+QueryParser::ExtractPatternClauses(const std::vector<QueryToken> & patternTokens,
+                                   const std::vector<Declaration> & declarations) {
   std::vector<std::unique_ptr<PatternClause>> patternClauses;
   // invoke builder design pattern
   for (size_t i = 0; i < patternTokens.size(); i += 3) {

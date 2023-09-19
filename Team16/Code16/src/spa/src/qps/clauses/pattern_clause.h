@@ -1,7 +1,8 @@
 #pragma once
 
-#include "clause.h"
-#include "suchthat_clause.h"
+#include <string>
+#include "qps/clauses/clause.h"
+#include "qps/clauses/suchthat_clause.h"
 
 using ExprSpec = std::variant<std::string, Wildcard>;
 class PatternClause : public Clause {

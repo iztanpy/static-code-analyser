@@ -4,7 +4,7 @@
 #include "qps/clauses/select_clause.h"
 #include "qps/query_parser/clause_builder/select_clause_builder.h"
 #include "qps/declaration.h"
-#include "pattern_clause_builder.h"
+#include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 
 SelectClause ClauseDirector::makeSelectClause(
     SelectClauseBuilder builder, const QueryToken & token, const std::vector<Declaration> & declarations

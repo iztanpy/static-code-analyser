@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+#include <memory>
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/declaration.h"
 #include "qps/clauses/suchthat_clause.h"

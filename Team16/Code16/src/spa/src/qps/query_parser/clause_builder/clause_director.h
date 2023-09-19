@@ -9,7 +9,7 @@
 #include "qps/declaration.h"
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
 #include "qps/clauses/pattern_clause.h"
-#include "pattern_clause_builder.h"
+#include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 
 class ClauseDirector {
  public:

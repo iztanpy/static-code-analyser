@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+#include <string>
 #include "pattern_clause_builder.h"
 #include "qps/qps_errors/qps_syntax_error.h"
 

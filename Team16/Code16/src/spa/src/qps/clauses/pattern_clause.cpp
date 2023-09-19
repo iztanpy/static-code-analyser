@@ -1,6 +1,7 @@
 #pragma once
 
-#include "pattern_clause.h"
+#include <string>
+#include "qps/clauses/pattern_clause.h"
 
 #include <utility>
 WildCardPattern::WildCardPattern(EntRef lhs, Wildcard rhs) {
