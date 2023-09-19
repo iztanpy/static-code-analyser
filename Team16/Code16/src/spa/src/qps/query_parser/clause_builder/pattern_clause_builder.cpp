@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <vector>
 #include <memory>
 #include <string>
@@ -7,7 +8,7 @@
 #include "qps/qps_errors/qps_syntax_error.h"
 
 void PatternClauseBuilder::setSynAssignment(Declaration declaration) {
-  declaration = declaration;
+  syn_assignment = std::move(declaration);
 }
 
 void PatternClauseBuilder::setLhs(const QueryToken & param, const std::vector<Declaration> & declarations) {
@@ -41,11 +42,11 @@ void PatternClauseBuilder::setRhs(const QueryToken & param, const std::vector<De
 }
 std::unique_ptr<PatternClause> PatternClauseBuilder::getClause() const {
   if (std::holds_alternative<Wildcard>(rhs) && rhs_type == PQLTokenType::WILDCARD) {
-    return std::make_unique<WildCardPattern>(lhs, std::get<Wildcard>(rhs));
+    return std::make_unique<WildCardPattern>(syn_assignment, lhs, std::get<Wildcard>(rhs));
   } else if (std::holds_alternative<std::string>(rhs) && rhs_type == PQLTokenType::IDENT) {
-    return std::make_unique<ExactPattern>(lhs, std::get<std::string>(rhs));
+    return std::make_unique<ExactPattern>(syn_assignment, lhs, std::get<std::string>(rhs));
   } else if (std::holds_alternative<std::string>(rhs) && rhs_type == PQLTokenType::PARTIALEXPR) {
-    return std::make_unique<PartialPattern>(lhs, std::get<std::string>(rhs));
+    return std::make_unique<PartialPattern>(syn_assignment, lhs, std::get<std::string>(rhs));
   } else {
     throw QpsSyntaxError("Syntax error");
   }

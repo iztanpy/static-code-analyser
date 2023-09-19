@@ -15,7 +15,7 @@ class PatternClauseBuilder : public ClauseBuilder {
   ExprSpec rhs;
   PQLTokenType rhs_type;  // indicator to know what whether rhs is expr or sub expr
 
-  static void setSynAssignment(Declaration declaration);
+  void setSynAssignment(Declaration declaration);
   void setLhs(const QueryToken & param, const std::vector<Declaration> & declarations);
   void setRhs(const QueryToken & param, const std::vector<Declaration> & declarations);
   std::unique_ptr<PatternClause> getClause() const;

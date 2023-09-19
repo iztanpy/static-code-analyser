@@ -10,25 +10,30 @@ class PatternClause : public Clause {
   Declaration syn_assignment;
   EntRef lhs;
   ExprSpec rhs;
+
+  static bool are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2);
 };
 
 class WildCardPattern : public PatternClause {
  public:
-  WildCardPattern(EntRef lhs, Wildcard rhs);
+  WildCardPattern(Declaration syn_assignment, EntRef lhs, Wildcard rhs);
+  Declaration syn_assignment;
   EntRef lhs;
   Wildcard rhs;
 };
 
 class ExactPattern : public PatternClause {
  public:
-  ExactPattern(EntRef lhs, std::string rhs);
+  ExactPattern(Declaration syn_assignment, EntRef lhs, std::string rhs);
+  Declaration syn_assignment;
   EntRef lhs;
   std::string rhs;
 };
 
 class PartialPattern : public PatternClause {
  public:
-  PartialPattern(EntRef lhs, std::string rhs);
+  PartialPattern(Declaration syn_assignment, EntRef lhs, std::string rhs);
+  Declaration syn_assignment;
   EntRef lhs;
   std::string rhs;
 };
