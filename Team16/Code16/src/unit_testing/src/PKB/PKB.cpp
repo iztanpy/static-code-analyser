@@ -299,6 +299,56 @@ TEST_CASE("Test Uses stores") {
     
 }
 
+TEST_CASE("Test modifies stores") {
+    PKB pkb = PKB();
+
+    pkb.storeModifies({ {1, "x"}, {2, "y"}, {3, "x"} });
+
+    REQUIRE(pkb.isModifies(1, "x"));
+    REQUIRE(pkb.isModifies(2, "y"));
+    REQUIRE(pkb.isModifies(3, "x"));
+    REQUIRE(!pkb.isModifies(1, "y"));
+    REQUIRE(!pkb.isModifies(2, "x"));
+
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(pkb.isModifies(1, wildcard));
+    REQUIRE(pkb.isModifies(2, wildcard));
+    REQUIRE(pkb.isModifies(3, wildcard));
+    REQUIRE(!pkb.isModifies(4, wildcard));
+
+    REQUIRE(pkb.modifies(1) == "x");
+    REQUIRE(pkb.modifies(2) == "y");
+    REQUIRE(pkb.modifies(3) == "x");
+
+    // store StmtEntity
+    pkb.addStatements({ { 1, StmtEntity::kAssign }, { 2, StmtEntity::kAssign }, { 3, StmtEntity::kRead } });
+
+    REQUIRE(pkb.modifies(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>{1});
+    REQUIRE(pkb.modifies(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>{2});
+    REQUIRE(pkb.modifies(StmtEntity::kRead, "x") == std::unordered_set<statementNumber>{3});
+    REQUIRE(pkb.modifies(StmtEntity::kRead, "y") == std::unordered_set<statementNumber>{});
+
+    REQUIRE(pkb.modifies(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.modifies(StmtEntity::kRead, wildcard) == std::unordered_set<statementNumber>{3});
+    REQUIRE(pkb.modifies(StmtEntity::kIf, wildcard) == std::unordered_set<statementNumber>{});
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.modifies(StmtEntity::kAssign);
+
+    for (auto value : result) {
+		REQUIRE((value.first == 1 || value.first == 2));
+		REQUIRE((value.second == "x" || value.second == "y"));
+	}
+
+    result = pkb.modifies(StmtEntity::kRead);
+
+    for (auto value : result) {
+		REQUIRE((value.first == 3));
+		REQUIRE((value.second == "x"));
+	}
+
+}
+
 
 //TEST_CASE("Test PKB") {
 //    std::unordered_set<int> assignments = {1, 2, 3};

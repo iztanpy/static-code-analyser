@@ -71,6 +71,22 @@ class PKB {
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
+    // ModifiesStore methods
+
+    void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
+
+    bool isModifies(statementNumber lineNumber, variable variableName);
+
+    bool isModifies(statementNumber lineNumber, Wildcard wildcard);
+
+    variable modifies(statementNumber line);
+
+    std::unordered_set<statementNumber> modifies(StmtEntity type, variable variableName);
+
+    std::unordered_set<statementNumber> modifies(StmtEntity type, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
+    
     // ConstantStore methods
 
     void addConstants(std::unordered_set<constant> constants);
