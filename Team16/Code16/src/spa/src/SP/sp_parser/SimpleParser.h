@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include <stack>
 
 // Headers from "SP" subdirectory
 #include "SP/sp_parser/AssignmentParser.h"

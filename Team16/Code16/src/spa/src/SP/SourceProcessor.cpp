@@ -35,3 +35,7 @@ std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getMod
   return visitor.getModifiesStatementNumberMap();
 }
 
+std::unordered_map<int, std::unordered_set<int>> SourceProcessor::getParentStatementNumberMap() {
+    return visitor.getParentStatementNumberMap();
+}
+

@@ -7,7 +7,7 @@ int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
     if (validCondition == -1) {
         throw InvalidSyntaxError();
     }
-    return curr_index + conditionTokens.size() + 1;  // Continue evaluation
+    return curr_index + conditionTokens.size() + 2;  // Continue evaluation + Skip Open Brace
 }
 
 std::vector<Token> WhileParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {

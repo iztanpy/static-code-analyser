@@ -7,7 +7,6 @@
 
 #include "SP/TNode.h"
 
-
 class TNode;
 class ProcedureTNode;
 class AssignTNode;
@@ -40,16 +39,22 @@ class Visitor {
     // Uses
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap;
     std::unordered_map<int, std::string> usesLineLHSMap;
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
     std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
+    // Modifies
     std::unordered_map<int, std::unordered_set<std::string>> modifiesStatementNumberHashmap;
+
+    // Parent
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
+
     std::unordered_set<std::string> variables;
     std::unordered_set<std::string> constants;
-    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
+
     std::set<std::string> procedureLabels;
     std::string currKey;
 
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap() const {
-      return procedureStatementNumberHashmap;
+        return procedureStatementNumberHashmap;
     }
     std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
         return usesStatementNumberHashmap;
@@ -59,6 +64,12 @@ class Visitor {
     }
     std::unordered_map<int, std::unordered_set<std::string>> getModifiesStatementNumberMap() const {
         return modifiesStatementNumberHashmap;
+    }
+    std::unordered_map<int, std::unordered_set<int>> getParentStatementNumberMap() const {
+        return parentStatementNumberHashmap;
+    }
+    void setParentStatementNumberMap(int parent, int child) {
+        parentStatementNumberHashmap[parent].insert(child);
     }
     std::unordered_map<int, std::string> getUsesLineLHSMap() const {
         return usesLineLHSMap;
@@ -90,4 +101,3 @@ class ASTVisitor : public Visitor {
     void visit(const IfTNode* node, std::string& key) override;
     void visit(const CallTNode* node, std::string& key) override;
 };
-

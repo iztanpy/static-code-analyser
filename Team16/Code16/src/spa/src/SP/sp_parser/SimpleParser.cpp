@@ -6,10 +6,18 @@ SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPt
 visitor(astVisitorPtr), currWhileDepth(0) {}
 
 int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    std::vector<std::string> controlStructureStack;  // Track the current control structures (if, else, while)
-    std::vector<int> parentStatementStack;  // Track the parent statement lines
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
+    std::stack<std::string> controlStructureStack;  // Track the current control structures (if, else, while)
+    std::stack<int> parentStatementStack;  // Track the parent statement lines
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
+        bool isWhileParent = !controlStructureStack.empty() && controlStructureStack.top() == "while";
+        int parentStatementNumber = !parentStatementStack.empty() ? parentStatementStack.top() : -1;
+        if (isWhileParent && parentStatementNumber != -1 && curr_token.tokenType != TokenType::kSepCloseBrace) {
+            std::cout << "Parent:" + parentStatementNumber << std::endl;
+            std::cout << "Child:" + lineNumber << std::endl;
+            visitor->setParentStatementNumberMap(parentStatementNumber, lineNumber);
+        }
 
         if (curr_token.tokenType == TokenType::kLiteralName) {
             Token next_token = tokens.at(curr_index + 1);
@@ -52,8 +60,8 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityWhile) {
-            controlStructureStack.push_back("while");
-            parentStatementStack.push_back(lineNumber);
+            controlStructureStack.push("while");
+            parentStatementStack.push(lineNumber);
             int next_index = whileParser->parse(tokens, curr_index);
             currWhileDepth++;
 
@@ -72,8 +80,8 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityIf) {   // might need special handling
-            controlStructureStack.push_back("if");
-            parentStatementStack.push_back(lineNumber);
+            controlStructureStack.push("if");
+            parentStatementStack.push(lineNumber);
             int next_index = ifParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
@@ -83,19 +91,19 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
-            if (!controlStructureStack.empty() && controlStructureStack.back() == "if") {
+            if (!controlStructureStack.empty() && controlStructureStack.top() == "if") {
                 // This 'else' belongs to the most recent 'if'
-                controlStructureStack.pop_back();  // Pop the 'if'
-                parentStatementStack.pop_back();  // Pop the parent statement
+                controlStructureStack.pop();  // Pop the 'if'
+                parentStatementStack.pop();  // Pop the parent statement
                 curr_index += 2;  // skip over the next open brace
             } else {
                 // Error: Unexpected 'else' without matching 'if'
                 throw InvalidSyntaxError();
             }
         } else if (curr_token.tokenType == TokenType::kSepCloseBrace) {
-            if (!controlStructureStack.empty() && controlStructureStack.back() == "while" && currWhileDepth >= 1) {
-                controlStructureStack.pop_back();  // Pop the 'while'
-                parentStatementStack.pop_back();  // Pop the parent statement
+            if (!controlStructureStack.empty() && controlStructureStack.top() == "while" && currWhileDepth >= 1) {
+                controlStructureStack.pop();  // Pop the 'while'
+                parentStatementStack.pop();  // Pop the parent statement
                 currWhileDepth--;  // Decrease the depth
             } else {  // other cases which have brackets
                 if (!controlStructureStack.empty() && currWhileDepth > 0) {

@@ -27,6 +27,38 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+TEST_CASE(("Test Single While Loop Retrieval")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram2 = "procedure p {  while (number > 0)  { digit = number + 10; sum = sum + digit; } }";
+    sourceProcessor.processSource(simpleProgram2);
+
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
+        {1, {2, 3}}
+    };
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    REQUIRE(parentStatementNumberHashmap == res);
+}
+
+
+TEST_CASE(("Test 2 Nested While Loops Retrieval")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram2 = "procedure p {  while (number > 0)  { while (test > 2) { test = 0; a= x+y; } } }";
+    sourceProcessor.processSource(simpleProgram2);
+
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
+        {1, {2}},
+        {2, {3,4}}
+    };
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    REQUIRE(parentStatementNumberHashmap == res);
+}
+
+
+
 TEST_CASE(("Test Conditional Tokens Retrieval")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
