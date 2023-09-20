@@ -28,6 +28,8 @@ class SourceProcessor {
     std::unordered_map<int, std::string> getUsesLineLHSMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
+    std::unordered_map<int, std::unordered_set<std::string>> getModifiesStatementNumberHashmap();
 };
 
 

@@ -23,8 +23,29 @@ TEST_CASE("One print statement 1") {
     sourceProcessor.processSource(simpleProgram);
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
-    std::unordered_map<int, std::string> usesLineVariable = std::unordered_map<int, std::string>({ {1, "k"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineVariable = std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
     REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getUsesStatementNumberHashmap() == usesLineVariable);
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "k" }));
+}
+
+TEST_CASE("One read statement 1") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+
+    // Initialize SP and SP tokenizer
+    std::string simpleProgram = "read k;";
+    std::string query_1 = "variable v; Select v";
+    sourceProcessor.processSource(simpleProgram);
+
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
+    std::unordered_map<int, std::unordered_set<std::string>> modifiesLineVariable = std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getModifiesStatementNumberHashmap() == modifiesLineVariable);
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "k" }));
 }
 

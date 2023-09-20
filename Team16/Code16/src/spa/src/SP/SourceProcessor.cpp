@@ -26,3 +26,12 @@ std::unordered_map<int, std::string> SourceProcessor::getUsesLineLHSMap() {
 std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesLineRHSVarMap() {
   return visitor.getUsesLineRHSVarMap();
 }
+
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesStatementNumberHashmap() {
+  return visitor.getUsesStatementNumberHashmap();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getModifiesStatementNumberHashmap() {
+  return visitor.getModifiesStatementNumberMap();
+}
+

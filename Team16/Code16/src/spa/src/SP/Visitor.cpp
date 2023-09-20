@@ -44,10 +44,9 @@ void ASTVisitor::visit(const MinusTNode* node, std::string& key) {
 }
 
 void ASTVisitor::visit(const ReadTNode* node, std::string& key) {
-    node->leftChild->accept(this, key);
-    node->rightChild->accept(this, key);
-//    std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
-//    set.insert(node->getContent());
+    std::unordered_set<std::string>& set = modifiesStatementNumberHashmap[node->statementNumber];
+    set.insert(node->getContent());
+    variables.insert(node->getContent());
 }
 
 void ASTVisitor::visit(const WhileTNode* node, std::string& key) {
