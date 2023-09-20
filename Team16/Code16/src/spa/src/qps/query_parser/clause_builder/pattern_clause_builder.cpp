@@ -17,6 +17,7 @@ void PatternClauseBuilder::setLhs(const QueryToken & param, const std::vector<De
       for (const Declaration & declaration : declarations) {
         if (declaration.synonym == param.text) {
           lhs = declaration;
+          break;
         }
       }
       break;
