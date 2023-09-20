@@ -8,7 +8,6 @@
 #include "PKB/API/ReadFacade.h"
 #include "qps/qps.h"
 
-
 TEST_CASE("One print statement 1") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 

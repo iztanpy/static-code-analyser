@@ -27,6 +27,73 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+
+TEST_CASE("Test if else nested loop retrieval") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = "procedure p { if (number > 0) then { if (x == 1) then { x = x + 1; } } else { x = x + 1; } }";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap2 = {
+        {1, {2, 4}},
+        {2, {3}}
+    };
+    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getParentStatementNumberMap();
+    REQUIRE(parentStatementNumberHashmap2 == res2);
+}
+
+TEST_CASE("Test if else loop retrieval") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram2 = "procedure p { if (number > 0) then { x = x + y; } else { x = 3; } }";
+    sourceProcessor.processSource(simpleProgram2);
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
+        {1, {2, 3}}
+    };
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    REQUIRE(parentStatementNumberHashmap == res);
+}
+
+
+TEST_CASE(("Test if else while nested retrieval")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram2 = "procedure p {  while (number > 0) { if (x == 1) then { while ( x== 1) { x = x+1; }} else { x = x +2; } }";
+    sourceProcessor.processSource(simpleProgram2);
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
+        {1, {2}}, 
+        {2, {3,5}}, 
+        {3, {4}}
+    };
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    REQUIRE(parentStatementNumberHashmap == res);
+}
+
+
+TEST_CASE(("Test SP storing of assignment statements")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram =
+        "procedure p {x = x + 1; read r; while (i == 0) { read f;} } procedure wee { y = y + x + 1;}";
+    sourceProcessor.processSource(simpleProgram);
+
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+        { {1, "x"}, {5, "y"} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
+        std::unordered_set<std::string>>({ {1, {"x", "1", "x + 1"}},
+                                          {5, {"y", "x", "y + x", "y + x + 1", "1"}} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
+        std::unordered_set<std::string>>({ {1, {"x"}}, {5, {"x", "y"}} });
+
+    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+}
+
+
 TEST_CASE(("Test Single While Loop Retrieval")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
@@ -56,7 +123,6 @@ TEST_CASE(("Test 2 Nested While Loops Retrieval")) {
     std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap == res);
 }
-
 
 
 TEST_CASE(("Test Conditional Tokens Retrieval")) {
@@ -233,26 +299,6 @@ TEST_CASE(("Test SP storing of statement numbers for Uses")) {
 }
 
 
-//TEST_CASE(("Test SP storing of assignment statements")) {
-//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    auto writeFacade = WriteFacade(*pkb_ptr);
-//    SourceProcessor sourceProcessor(&writeFacade);
-//    std::string simpleProgram =
-//        "procedure p {x = x + 1; read r; while(i = 0) { read f;} } procedure wee { y = y + x + 1;}";
-//    sourceProcessor.processSource(simpleProgram);
-//
-//    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
-//        { {1, "x"}, {5, "y"}});
-//    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
-//        std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}},
-//                                          {5, {"y", "x", "y + x", "y + x + 1", "1"}}});
-//    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
-//        std::unordered_set<std::string>>({{1, {"x"}}, {5, {"x", "y"}}});
-//
-//    REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
-//    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-//    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
-//}
 
 
 TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
