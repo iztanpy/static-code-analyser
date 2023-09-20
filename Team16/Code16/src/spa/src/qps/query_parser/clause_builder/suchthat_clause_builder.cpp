@@ -1,8 +1,4 @@
-#include <memory>
-#include <vector>
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
-#include "qps/query_parser/query_tokenizer/query_tokenizer.h"
-#include "qps/qps_errors/qps_syntax_error.h"
 
 SuchThatClauseBuilder::SuchThatClauseBuilder() = default;
 

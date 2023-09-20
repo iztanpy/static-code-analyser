@@ -1,6 +1,7 @@
 #include <catch.hpp>
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/query_parser/query_parser.h"
+#include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 
 TEST_CASE("Query Parser can extract declarations from tokens") {
   std::vector<QueryToken> tokens = {
@@ -132,14 +133,14 @@ TEST_CASE(
   REQUIRE(such_that_clauses.size() == 2);
 
   std::unique_ptr<SuchThatClause> first_such_that_clause = std::move(such_that_clauses[0]);
-  auto *first_clause = dynamic_cast<UsesS *>(first_such_that_clause.get());
+  auto* first_clause = dynamic_cast<UsesS*>(first_such_that_clause.get());
   RefParam first_expectedRhs = EntRef(declarations[0]);
   RefParam first_expectedLhs = StmtRef(14);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(first_clause->lhs, first_expectedLhs));
   REQUIRE(SuchThatClause::are_ent_ref_equal(first_clause->rhs, first_expectedRhs));
 
   std::unique_ptr<SuchThatClause> second_such_that_clause = std::move(such_that_clauses[1]);
-  auto *second_clause = dynamic_cast<UsesP *>(second_such_that_clause.get());
+  auto* second_clause = dynamic_cast<UsesP*>(second_such_that_clause.get());
   RefParam second_expectedRhs = EntRef(declarations[0]);
   RefParam second_expectedLhs = EntRef("main");
   REQUIRE(SuchThatClause::are_ent_ref_equal(second_clause->lhs, second_expectedLhs));
@@ -199,7 +200,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
   REQUIRE(pattern_clauses.size() == 1);
 
   std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto *clause = dynamic_cast<ExactPattern *>(pattern_clause.get());
+  auto* clause = dynamic_cast<ExactPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = ExprSpec("x+y");
@@ -219,7 +220,7 @@ TEST_CASE("Query parser can extract multiple pattern clauses 'a (entRef, expr)'"
   REQUIRE(pattern_clauses.size() == 2);
 
   std::unique_ptr<PatternClause> first_pattern_clause = std::move(pattern_clauses[0]);
-  auto *first_clause = dynamic_cast<ExactPattern *>(first_pattern_clause.get());
+  auto* first_clause = dynamic_cast<ExactPattern*>(first_pattern_clause.get());
 
   EntRef first_expected_lhs = EntRef(declarations[0]);
   ExprSpec first_expected_rhs = ExprSpec("x+y");
@@ -228,7 +229,7 @@ TEST_CASE("Query parser can extract multiple pattern clauses 'a (entRef, expr)'"
   REQUIRE(PatternClause::are_expr_spec_equal(first_clause->rhs, first_expected_rhs));
 
   std::unique_ptr<PatternClause> second_pattern_clause = std::move(pattern_clauses[1]);
-  auto *second_clause = dynamic_cast<WildCardPattern *>(second_pattern_clause.get());
+  auto* second_clause = dynamic_cast<WildCardPattern*>(second_pattern_clause.get());
 
   EntRef second_expected_lhs = EntRef(declarations[1]);
   ExprSpec second_expected_rhs = Wildcard::Value;

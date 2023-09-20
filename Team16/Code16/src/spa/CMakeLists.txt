@@ -24,8 +24,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/select_evaluator.cpp
         src/qps/query_evaluator/select_evaluator.h
         src/PKB/PKB.h
-        src/qps/clauses/suchthat_clause.cpp
-        src/qps/clauses/suchthat_clause.h
+        src/qps/clauses/suchthat_clauses/suchthat_clause.cpp
+        src/qps/clauses/suchthat_clauses/suchthat_clause.h
         src/qps/query_evaluator/query_evaluator.cpp
         src/qps/query_evaluator/query_evaluator.h
         src/utils/hash_utils.h
@@ -102,6 +102,24 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
         src/qps/query_parser/clause_builder/pattern_clause_builder.h
+        src/qps/clauses/suchthat_clauses/uses_p.cpp
+        src/qps/clauses/suchthat_clauses/uses_p.h
+        src/qps/clauses/clauses_types.h
+        src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
+        src/qps/clauses/suchthat_clauses/uses_s.cpp
+        src/qps/clauses/suchthat_clauses/uses_s.h
+        src/qps/clauses/suchthat_clauses/modifies_p.cpp
+        src/qps/clauses/suchthat_clauses/modifies_p.h
+        src/qps/clauses/suchthat_clauses/modifies_s.cpp
+        src/qps/clauses/suchthat_clauses/modifies_s.h
+        src/qps/clauses/suchthat_clauses/parent.cpp
+        src/qps/clauses/suchthat_clauses/parent.h
+        src/qps/clauses/suchthat_clauses/parent_s.cpp
+        src/qps/clauses/suchthat_clauses/parent_s.h
+        src/qps/clauses/suchthat_clauses/follows.cpp
+        src/qps/clauses/suchthat_clauses/follows.h
+        src/qps/clauses/suchthat_clauses/follows_t.cpp
+        src/qps/clauses/suchthat_clauses/follows_t.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

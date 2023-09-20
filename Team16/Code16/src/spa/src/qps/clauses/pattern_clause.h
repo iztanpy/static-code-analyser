@@ -2,7 +2,7 @@
 
 #include <string>
 #include "qps/clauses/clause.h"
-#include "qps/clauses/suchthat_clause.h"
+#include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
 using ExprSpec = std::variant<std::string, Wildcard>;
 class PatternClause : public Clause {
