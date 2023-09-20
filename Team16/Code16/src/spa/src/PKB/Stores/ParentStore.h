@@ -43,5 +43,4 @@ class ParentStore {
     std::unordered_set<statementNumber> getChildrens(statementNumber statement);
 
     std::unordered_set<statementNumber> getParents(statementNumber statement);
-
 };

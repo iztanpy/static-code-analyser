@@ -94,15 +94,15 @@ bool PKB::isParent(statementNumber parent, statementNumber child) {
 }
 
 bool PKB::isParent(statementNumber parent, Wildcard wildcard) {
-	return parentStore->isParent(parent, wildcard);
+    return parentStore->isParent(parent, wildcard);
 }
 
 bool PKB::isParent(Wildcard wildcard, statementNumber child) {
-	return parentStore->isParent(wildcard, child);
+    return parentStore->isParent(wildcard, child);
 }
 
 bool PKB::isParent(Wildcard wildcard, Wildcard wildcard2) {
-	return parentStore->isParent(wildcard, wildcard2);
+    return parentStore->isParent(wildcard, wildcard2);
 }
 
 std::unordered_set<statementNumber> PKB::parentStar(statementNumber statement, Wildcard wildcard) {
@@ -118,15 +118,15 @@ bool PKB::isParentStar(statementNumber parent, statementNumber child) {
 }
 
 bool PKB::isParentStar(statementNumber parent, Wildcard wildcard) {
-	return parentStore->isParentStar(parent, wildcard);
+    return parentStore->isParentStar(parent, wildcard);
 }
 
 bool PKB::isParentStar(Wildcard wildcard, statementNumber child) {
-	return parentStore->isParentStar(wildcard, child);
+    return parentStore->isParentStar(wildcard, child);
 }
 
 bool PKB::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
-	return parentStore->isParentStar(wildcard, wildcard2);
+    return parentStore->isParentStar(wildcard, wildcard2);
 }
 
 
@@ -139,7 +139,7 @@ void PKB::storeFollows(std::unordered_map<statementNumber, statementNumber> map)
 std::unordered_set<statementNumber> PKB::follows(Wildcard wildcard, StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const &x: relevantStmts) {
+    for (auto const &x : relevantStmts) {
         result.insert(this->followsStore->getLeader(x));
     }
     return result;
@@ -166,7 +166,7 @@ statementNumber PKB::follows(StmtEntity type, statementNumber num) {
 std::unordered_set<statementNumber> PKB::follows(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const &x: relevantStmts) {
+    for (auto const &x : relevantStmts) {
         result.insert(this->followsStore->getFollower(x));
     }
     return result;
@@ -211,7 +211,7 @@ bool PKB::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
 std::unordered_set<statementNumber> PKB::followStar(Wildcard wildcard, StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const &x: relevantStmts) {
+    for (auto const &x : relevantStmts) {
         if (this->followsStore->getLeaders(x).size() > 0) {
             result.insert(x);
         }
@@ -223,7 +223,7 @@ std::unordered_set<statementNumber> PKB::followStar(Wildcard wildcard, StmtEntit
 std::unordered_set<statementNumber> PKB::followStar(statementNumber num, StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const &x: relevantStmts) {
+    for (auto const &x : relevantStmts) {
         if (this->followsStore->getLeaders(x).count(num)) {
             result.insert(x);
         }
@@ -235,7 +235,7 @@ std::unordered_set<statementNumber> PKB::followStar(statementNumber num, StmtEnt
 std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, statementNumber num) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const &x: relevantStmts) {
+    for (auto const &x : relevantStmts) {
         if (this->followsStore->getFollowers(x).count(num)) {
             result.insert(x);
         }
@@ -247,7 +247,7 @@ std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, statementNu
 std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const &x: relevantStmts) {
+    for (auto const &x : relevantStmts) {
         if (this->followsStore->getFollowers(x).size() > 0) {
             result.insert(x);
         }

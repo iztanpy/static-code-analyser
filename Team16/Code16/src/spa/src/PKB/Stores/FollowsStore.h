@@ -16,12 +16,13 @@ class FollowsStore {
     std::unordered_map<statementNumber, statementNumber> FollowMapReverse;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMapReverse;
+
  public:
     FollowsStore();
 
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 
-    //Follow methods
+    // Follow methods
 
     statementNumber getFollower(statementNumber statement);
 
@@ -40,15 +41,12 @@ class FollowsStore {
     bool isFollowStar(statementNumber statement1, statementNumber statement2);
 
     bool isFollowStar(statementNumber statement1, Wildcard wildcard);
-    
+
     bool isFollowStar(Wildcard wildcard, statementNumber statement1);
-    
+
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
     std::unordered_set<statementNumber> getFollowers(statementNumber statement);
-
-    // to be removed
-    //bool isFollows(statementNumber statement1, statementNumber statement2);
 
     std::unordered_set<statementNumber> getLeaders(statementNumber statement);
 };

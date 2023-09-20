@@ -16,24 +16,24 @@ void FollowsStore::storeFollows(std::unordered_map<statementNumber, statementNum
     }
 
     for (auto const& x : map) {
-		std::unordered_set<statementNumber> followers;
-		statementNumber statement = x.first;
-		while (this->FollowMap.find(statement) != this->FollowMap.end()) {
-			followers.insert(this->FollowMap[statement]);
-			statement = FollowMap[statement];
-		}
-        if (followers.size() > 0) {
-			this->FollowStarMap[x.first] = followers;
+        std::unordered_set<statementNumber> followers;
+        statementNumber statement = x.first;
+        while (this->FollowMap.find(statement) != this->FollowMap.end()) {
+            followers.insert(this->FollowMap[statement]);
+            statement = FollowMap[statement];
         }
-	}
+        if (followers.size() > 0) {
+            this->FollowStarMap[x.first] = followers;
+        }
+    }
 
     for (auto const& x : map) {
         std::unordered_set<statementNumber> leaders;
         statementNumber statement = x.second;
         while (this->FollowMapReverse.find(statement) != this->FollowMapReverse.end()) {
-			leaders.insert(this->FollowMapReverse[statement]);
-			statement = FollowMapReverse[statement];
-		}
+            leaders.insert(this->FollowMapReverse[statement]);
+            statement = FollowMapReverse[statement];
+        }
         if (leaders.size() > 0) {
             this->FollowStarMapReverse[x.second] = leaders;
         }
@@ -87,31 +87,31 @@ FollowsStore::statementNumber FollowsStore::getLeader(statementNumber statement)
 bool FollowsStore::isFollowStar(statementNumber statement1, statementNumber statement2) {
     for (auto const& x : this->FollowStarMap[statement1]) {
         if (x == statement2) {
-			return true;
-		}
-	}
+            return true;
+        }
+    }
     return false;
 }
 
 bool FollowsStore::isFollowStar(statementNumber statement1, Wildcard wildcard) {
     if (this->FollowStarMap[statement1].size() > 0) {
-		return true;
-	}
+        return true;
+    }
     return false;
 }
 
 bool FollowsStore::isFollowStar(Wildcard wildcard, statementNumber statement1) {
     if (this->FollowStarMapReverse[statement1].size() > 0) {
-		return true;
-	}
+        return true;
+    }
     return false;
 }
 
 bool FollowsStore::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
-	if (this->FollowStarMap.size() > 0) {
-		return true;
-	}
-	return false;
+    if (this->FollowStarMap.size() > 0) {
+        return true;
+    }
+    return false;
 }
 
 

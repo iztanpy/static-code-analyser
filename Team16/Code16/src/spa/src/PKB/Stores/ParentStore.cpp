@@ -54,7 +54,7 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
             }
         }
     }
-    //ai-gen end
+    // ai-gen end
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildren(statementNumber statement) {
@@ -72,7 +72,7 @@ bool ParentStore::isParent(statementNumber parent, statementNumber child) {
 }
 
 bool ParentStore::isParent(statementNumber parent, Wildcard wildcard) {
-	return this->ParentMap[parent].size() > 0;
+    return this->ParentMap[parent].size() > 0;
 }
 
 bool ParentStore::isParent(Wildcard wildcard, statementNumber child) {
@@ -81,19 +81,19 @@ bool ParentStore::isParent(Wildcard wildcard, statementNumber child) {
 
 
 bool ParentStore::isParent(Wildcard wildcard, Wildcard wildcard2) {
-	return this->ParentMap.size() > 0;
+    return this->ParentMap.size() > 0;
 }
 
 bool ParentStore::isParentStar(statementNumber parent, Wildcard wildcard) {
-	return this->ParentStarMap[parent].size() > 0;
+    return this->ParentStarMap[parent].size() > 0;
 }
 
 bool ParentStore::isParentStar(Wildcard wildcard, statementNumber child) {
-	return this->ParentStarMapReverse[child].size() > 0;
+    return this->ParentStarMapReverse[child].size() > 0;
 }
 
 bool ParentStore::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
-	return this->ParentStarMap.size() > 0;
+    return this->ParentStarMap.size() > 0;
 }
 
 bool ParentStore::isParentStar(statementNumber parent, statementNumber child) {
@@ -102,7 +102,6 @@ bool ParentStore::isParentStar(statementNumber parent, statementNumber child) {
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(statementNumber statement) {
-    //print all items in ParentStarMap
     return this->ParentStarMap[statement];
 }
 
