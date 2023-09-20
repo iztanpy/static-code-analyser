@@ -6,7 +6,7 @@
 Item | Version
 -|-
 OS | Windows
-Toolchain | Windows Visual Studio (CMake Project)
+Toolchain | Windows Visual Studio 2019 Community (CMake Project)
 C++ Standard | C++17
 
 ### Additional Build Instructions
