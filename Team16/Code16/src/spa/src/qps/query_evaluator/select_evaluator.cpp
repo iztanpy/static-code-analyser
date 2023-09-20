@@ -1,6 +1,6 @@
 #include "qps/query_evaluator/select_evaluator.h"
 
-SelectEvaluator::SelectEvaluator(ReadFacade& pkb_reader, SelectClause& select_clause)
+SelectEvaluator::SelectEvaluator(ReadFacade& pkb_reader, const SelectClause select_clause)
     : pkb_reader(pkb_reader), select_clause(select_clause) {}
 
 UnaryConstraint SelectEvaluator::Evaluate() {

@@ -7,7 +7,7 @@ std::unordered_set<std::string> QPS::Evaluate(std::string query) {
 
   ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(query_tokens);
 
-  std::vector<std::string> raw_results = this->query_evaluator.Evaluate(parsed_query);
+  std::unordered_set<std::string> raw_results = this->query_evaluator.Evaluate(parsed_query);
 
   std::unordered_set<std::string> results;
   for (const std::string& result : raw_results) {
