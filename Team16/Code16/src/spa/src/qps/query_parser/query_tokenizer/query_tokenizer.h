@@ -13,7 +13,8 @@ enum class PQLTokenType {
   WILDCARD,
   RELREF,
   INTEGER,
-  IDENT
+  IDENT,
+  PARTIALEXPR
 };
 
 struct QueryToken {
@@ -25,4 +26,5 @@ class QueryTokenizer {
  public:
   static std::vector<QueryToken> tokenize(const std::string & query);
   static bool isEnclosedInDoubleQuotes(const std::string & token);
+  static bool isEnclosedInWildcards(const std::string & token);
 };
