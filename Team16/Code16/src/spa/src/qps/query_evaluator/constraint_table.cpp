@@ -75,7 +75,9 @@ void ConstraintTable::Solve(const BinaryConstraint& constraint) {
 }
 
 void ConstraintTable::Solve(const bool constraint) {
-  has_false_constraint = !constraint;
+  if (!has_false_constraint) {
+    has_false_constraint = !constraint;
+  }
 }
 
 void ConstraintTable::Solve(Constraint& constraint) {
