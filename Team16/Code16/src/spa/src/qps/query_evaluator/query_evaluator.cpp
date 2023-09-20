@@ -20,7 +20,7 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(const ParsedQuery& quer
     try {
       Constraint constraint = clausePtr->Evaluate(pkb);
       constraint_table.Solve(constraint);
-      if (constraint_table.IsEmpty()) {
+      if (constraint_table.HasNoValidValues()) {
         return {};
       }
     } catch (const QpsSemanticError& e) {
@@ -34,7 +34,7 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(const ParsedQuery& quer
     try {
       Constraint constraint = clausePtr->Evaluate(pkb);
       constraint_table.Solve(constraint);
-      if (constraint_table.IsEmpty()) {
+      if (constraint_table.HasNoValidValues()) {
         return {};
       }
     } catch (const QpsSemanticError& e) {
