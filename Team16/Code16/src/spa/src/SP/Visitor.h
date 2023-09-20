@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <string>
 #include <unordered_map>
+#include <set>
 
 #include "SP/TNode.h"
 
@@ -39,13 +40,18 @@ class Visitor {
     // Uses
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap;
     std::unordered_map<int, std::string> usesLineLHSMap;
+    std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
     std::unordered_set<std::string> variables;
     std::unordered_set<std::string> constants;
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
+    std::set<std::string> procedureLabels;
     std::string currKey;
 
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap() const {
       return procedureStatementNumberHashmap;
+    }
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
+        return usesStatementNumberHashmap;
     }
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap() const {
         return usesLineRHSPatternMap;

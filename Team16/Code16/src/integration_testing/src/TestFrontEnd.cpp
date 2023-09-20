@@ -8,6 +8,26 @@
 #include "PKB/API/ReadFacade.h"
 #include "qps/qps.h"
 
+
+TEST_CASE("One print statement 1") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+
+    // Initialize SP and SP tokenizer
+    std::string simpleProgram = "print k;";
+    std::string query_1 = "variable v; Select v";
+    sourceProcessor.processSource(simpleProgram);
+
+    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
+    std::unordered_map<int, std::string> usesLineVariable = std::unordered_map<int, std::string>({ {1, "k"} });
+    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "k" }));
+}
+
 TEST_CASE("One assign statement 1") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
@@ -42,6 +62,8 @@ TEST_CASE("One assign statement 1") {
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "x" }));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ "1" }));
 }
+
+
 
 TEST_CASE("One assign statement with white-spaces") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -158,6 +180,8 @@ TEST_CASE("Selecting Assign statements") {
   sourceProcessor.processSource(simpleProgram);
   REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"1", "3"}));
 }
+
+
 
 //
 //TEST_CASE("Procedure with missing name should not cause the program to stop.") {

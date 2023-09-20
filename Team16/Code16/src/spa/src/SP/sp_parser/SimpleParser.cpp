@@ -71,7 +71,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 lineNumber++;
                 curr_index = next_index;
             }
-        } else if (curr_token.tokenType == TokenType::kEntityIf) {  // might need special handling
+        } else if (curr_token.tokenType == TokenType::kEntityIf) {   // might need special handling
             controlStructureStack.push_back("if");
             parentStatementStack.push_back(lineNumber);
             int next_index = ifParser->parse(tokens, curr_index);
@@ -87,7 +87,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 // This 'else' belongs to the most recent 'if'
                 controlStructureStack.pop_back();  // Pop the 'if'
                 parentStatementStack.pop_back();  // Pop the parent statement
-                curr_index += 1;
+                curr_index += 2;  // skip over the next open brace
             } else {
                 // Error: Unexpected 'else' without matching 'if'
                 throw InvalidSyntaxError();
@@ -124,6 +124,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // <all const in RHS>
     writeFacade->storeConstants(visitor->getConstants());
     // <all var in RHS>
-    //    writeFacade->storeUses(visitor->getUsesLineRHSVarMap());
+    //    writeFacade->storeUses(visitor->getUsesLineRHSVarMap
+    writeFacade->storeLineUses(visitor->getUsesStatementNumberHashmap());
     return curr_index;
 }
