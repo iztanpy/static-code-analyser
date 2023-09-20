@@ -90,6 +90,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 throw InvalidSyntaxError();
             } else {
                 lineNumber++;
+                nestingLevel++;
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
@@ -104,9 +105,11 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 controlStructureStack.pop();  // Pop the 'while'
                 parentStatementStack.pop();  // Pop the parent statement
                 currWhileDepth--;  // Decrease the depth
+                nestingLevel--;
             } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
                 if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].tokenType != TokenType::kEntityElse) {
                     currIfDepth--;  // Decrease the depth
+                    nestingLevel--;
                     controlStructureStack.pop();  // Pop the 'if'
                     parentStatementStack.pop();  // Pop the parent
                 }
