@@ -41,6 +41,40 @@ TEST_CASE("Test Parent Store Add") {
     REQUIRE(!parentStore.isParentStar(3, 1));
     REQUIRE(!parentStore.isParentStar(3, 2));
 
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(!parentStore.isParent(wildcard, 1));
+    REQUIRE(parentStore.isParent(wildcard, 2));
+    REQUIRE(parentStore.isParent(wildcard, 3));
+    REQUIRE(parentStore.isParent(wildcard, 4));
+    REQUIRE(parentStore.isParent(wildcard, 5));
+    REQUIRE(parentStore.isParent(wildcard, 6));
+    REQUIRE(parentStore.isParent(wildcard, 7));
+
+    REQUIRE(parentStore.isParent(1, wildcard));
+    REQUIRE(parentStore.isParent(2, wildcard));
+    REQUIRE(parentStore.isParent(3, wildcard));
+    REQUIRE(!parentStore.isParent(4, wildcard));
+    REQUIRE(!parentStore.isParent(5, wildcard));
+    REQUIRE(!parentStore.isParent(6, wildcard));
+    REQUIRE(!parentStore.isParent(7, wildcard));
+
+    REQUIRE(!parentStore.isParentStar(wildcard, 1));
+    REQUIRE(parentStore.isParentStar(wildcard, 2));
+    REQUIRE(parentStore.isParentStar(wildcard, 3));
+    REQUIRE(parentStore.isParentStar(wildcard, 4));
+    REQUIRE(parentStore.isParentStar(wildcard, 5));
+    REQUIRE(parentStore.isParentStar(wildcard, 6));
+    REQUIRE(parentStore.isParentStar(wildcard, 7));
+
+    REQUIRE(parentStore.isParentStar(1, wildcard));
+    REQUIRE(parentStore.isParentStar(2, wildcard));
+    REQUIRE(parentStore.isParentStar(3, wildcard));
+    REQUIRE(!parentStore.isParentStar(4, wildcard));
+    REQUIRE(!parentStore.isParentStar(5, wildcard));
+    REQUIRE(!parentStore.isParentStar(6, wildcard));
+    REQUIRE(!parentStore.isParentStar(7, wildcard));
+
 }
 
 
