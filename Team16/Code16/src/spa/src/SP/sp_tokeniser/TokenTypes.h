@@ -7,6 +7,7 @@ enum class TokenType {
   // Keywords
   kEntityIf,
   kEntityElse,
+  kEntityThen,
   kEntityWhile,
   kEntityRead,
   kEntityProcedure,

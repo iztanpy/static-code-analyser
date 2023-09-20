@@ -6,7 +6,15 @@ int IfParser::parse(const std::vector<Token>& tokens, int curr_index) {
     if (validCondition == -1) {
         throw InvalidSyntaxError();
     }
-    return curr_index + conditionTokens.size() + 1;  // Continue evaluation
+
+    // verify then keyword
+    if (!(curr_index + conditionTokens.size() + 1 < tokens.size())) {
+        throw InvalidSyntaxError();
+    }
+    Token thenToken = tokens[curr_index + conditionTokens.size() + 1];
+    if (thenToken.tokenType != TokenType::kEntityThen) throw InvalidSyntaxError();
+
+    return curr_index + conditionTokens.size() + 3;  // Continue evaluation and skip pass closing brace
 }
 
 std::vector<Token> IfParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {

@@ -3,7 +3,7 @@
 #include "SimpleParser.h"
 
 SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPtr) : writeFacade(writeFacadePtr),
-visitor(astVisitorPtr), currWhileDepth(0) {}
+visitor(astVisitorPtr), currWhileDepth(0), currIfDepth(0) {}
 
 int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
@@ -12,10 +12,11 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
         bool isWhileParent = !controlStructureStack.empty() && controlStructureStack.top() == "while";
+        bool isIfParent = !controlStructureStack.empty() && (
+            controlStructureStack.top() == "if" || controlStructureStack.top() == "else");
         int parentStatementNumber = !parentStatementStack.empty() ? parentStatementStack.top() : -1;
-        if (isWhileParent && parentStatementNumber != -1 && curr_token.tokenType != TokenType::kSepCloseBrace) {
-            std::cout << "Parent:" + parentStatementNumber << std::endl;
-            std::cout << "Child:" + lineNumber << std::endl;
+        if ((isWhileParent || isIfParent) && parentStatementNumber != -1
+            && curr_token.tokenType != TokenType::kSepCloseBrace) {
             visitor->setParentStatementNumberMap(parentStatementNumber, lineNumber);
         }
 
@@ -79,10 +80,11 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 lineNumber++;
                 curr_index = next_index;
             }
-        } else if (curr_token.tokenType == TokenType::kEntityIf) {   // might need special handling
+        } else if (curr_token.tokenType == TokenType::kEntityIf) {
             controlStructureStack.push("if");
             parentStatementStack.push(lineNumber);
             int next_index = ifParser->parse(tokens, curr_index);
+            currIfDepth++;
 
             if (next_index == -1) {
                 throw InvalidSyntaxError();
@@ -92,9 +94,6 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
             if (!controlStructureStack.empty() && controlStructureStack.top() == "if") {
-                // This 'else' belongs to the most recent 'if'
-                controlStructureStack.pop();  // Pop the 'if'
-                parentStatementStack.pop();  // Pop the parent statement
                 curr_index += 2;  // skip over the next open brace
             } else {
                 // Error: Unexpected 'else' without matching 'if'
@@ -105,9 +104,16 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 controlStructureStack.pop();  // Pop the 'while'
                 parentStatementStack.pop();  // Pop the parent statement
                 currWhileDepth--;  // Decrease the depth
+            } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
+                if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].tokenType != TokenType::kEntityElse) {
+                    currIfDepth--;  // Decrease the depth
+                    controlStructureStack.pop();  // Pop the 'if'
+                    parentStatementStack.pop();  // Pop the parent
+                }
             } else {  // other cases which have brackets
                 if (!controlStructureStack.empty() && currWhileDepth > 0) {
                     currWhileDepth--;  // Decrease the depth
+                    currIfDepth--;  // Decrease the depth
                 }
             }
             curr_index += 1;

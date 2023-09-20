@@ -40,6 +40,7 @@ class SimpleParser : public Parser {
     ASTVisitor* visitor;
     int lineNumber = 1;
     int currWhileDepth;
+    int currIfDepth;
  public:
     explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
     int parse(const std::vector<Token>& tokens, int curr_index) override;
