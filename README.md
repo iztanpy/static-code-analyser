@@ -5,8 +5,8 @@
 
 Item | Version
 -|-
-OS |
-Toolchain |
+OS | Windows
+Toolchain | Windows Visual Studio (CMake Project)
 C++ Standard | C++17
 
 ### Additional Build Instructions
