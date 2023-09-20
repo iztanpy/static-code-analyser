@@ -21,7 +21,7 @@ std::vector<std::string> QueryEvaluator::Evaluate(const ParsedQuery& query) {
                                              select_constraint.values.end()};
 
   // When there's only select clause
-  if (query.such_that_clauses.empty() && queryempty()) {
+  if (query.such_that_clauses.empty() && empty()) {
     UnaryConstraint constraint = select_evaluator.Evaluate();
 
     return {constraint.values.begin(), constraint.values.end()};

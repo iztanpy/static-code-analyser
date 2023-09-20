@@ -35,7 +35,6 @@ add_library(spa ${srcs} ${headers}
         src/PKB/API/WriteFacade.h
         src/PKB/API/ReadFacade.h
         src/PKB/API/ReadFacade.cpp
-
         src/SP/sp_parser/SimpleParser.h
         src/SP/sp_parser/SimpleParser.cpp
         src/SP/sp_tokeniser/SPTokeniser.cpp
@@ -99,8 +98,13 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/Parser.h
         src/SP/SourceProcessor.h
         src/SP/SourceProcessor.cpp
+        src/qps/clauses/pattern_clause.cpp
+        src/qps/clauses/pattern_clause.h
+        src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
+        src/qps/query_parser/clause_builder/pattern_clause_builder.h
         src/qps/query_evaluator/result_formatter.cpp
-        src/qps/query_evaluator/result_formatter.h)
+        src/qps/query_evaluator/result_formatter.h
+)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
