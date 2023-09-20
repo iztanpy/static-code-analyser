@@ -39,6 +39,10 @@ Table ConstraintTable::GetTableForTesting() {
   return table;
 }
 
+bool ConstraintTable::IsEmpty() {
+  return (table.empty() || table.begin()->second.empty());
+}
+
 void ConstraintTable::Solve(const UnaryConstraint& constraint) {
   ColName col_name = constraint.col_name;
   if (table.find(col_name) == table.end()) {

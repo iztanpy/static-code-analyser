@@ -9,5 +9,4 @@
 struct ParsedQuery {
   SelectClause select;
   std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses;
-  /* TODO: pattern clauses */
 };

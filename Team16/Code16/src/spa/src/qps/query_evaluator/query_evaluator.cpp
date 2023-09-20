@@ -13,12 +13,15 @@ std::vector<std::string> QueryEvaluator::Evaluate(const ParsedQuery& query) {
 
   ConstraintTable constraint_table;
 
-  // Simple hacky implementation for now, the final flow should be as above
+  // Get the list of result from this select first
   SelectClause select_clause = query.select;
   SelectEvaluator select_evaluator(pkb, select_clause);
+  UnaryConstraint select_constraint = select_evaluator.Evaluate();
+  std::vector<std::string> select_results = {select_constraint.values.begin(),
+                                             select_constraint.values.end()};
 
   // When there's only select clause
-  if (query.such_that_clauses.empty()) {
+  if (query.such_that_clauses.empty() && queryempty()) {
     UnaryConstraint constraint = select_evaluator.Evaluate();
 
     return {constraint.values.begin(), constraint.values.end()};

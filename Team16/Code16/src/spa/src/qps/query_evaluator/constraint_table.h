@@ -1,6 +1,5 @@
 #pragma once
 
-// TODO(phuccuongngo99): Sort this as well and remove unnecessary ones
 #include <string>
 #include <variant>
 #include <vector>
@@ -18,7 +17,9 @@ class ConstraintTable {
 
   void Solve(Constraint& constraint);
 
-  // TODO(phuccuongngo99): As of now, header field must exist within
+  bool IsEmpty();
+
+  // Header field is the first column of the table, else assert will fail
   std::unordered_set<std::string> Select(const ColName& col_name);
 
   std::unordered_set<ColName> AvailableColName();
