@@ -33,5 +33,4 @@ struct UnaryConstraint {
   std::unordered_set<Cell> values;
 };
 
-// TODO(phuccuongngo99): Constraint should also return a bool
-using Constraint = std::variant<BinaryConstraint, UnaryConstraint>;
+using Constraint = std::variant<BinaryConstraint, UnaryConstraint, bool>;

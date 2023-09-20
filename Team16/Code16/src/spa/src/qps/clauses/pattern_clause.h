@@ -12,6 +12,11 @@ class PatternClause : public Clause {
   ExprSpec rhs;
 
   static bool are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2);
+
+  // TODO(phuccuongngo99): Can we put this virtual method within
+  // Clause class instead?
+  virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
+  ~PatternClause() override = default;
 };
 
 class WildCardPattern : public PatternClause {
@@ -20,6 +25,8 @@ class WildCardPattern : public PatternClause {
   Declaration syn_assignment;
   EntRef lhs;
   Wildcard rhs;
+
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
 };
 
 class ExactPattern : public PatternClause {
@@ -28,6 +35,8 @@ class ExactPattern : public PatternClause {
   Declaration syn_assignment;
   EntRef lhs;
   std::string rhs;
+
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
 };
 
 class PartialPattern : public PatternClause {
@@ -36,4 +45,6 @@ class PartialPattern : public PatternClause {
   Declaration syn_assignment;
   EntRef lhs;
   std::string rhs;
+
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
 };

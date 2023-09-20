@@ -13,9 +13,9 @@
 class SelectEvaluator {
  private:
   ReadFacade& pkb_reader;
-  SelectClause select_clause;
+  const SelectClause select_clause;
 
  public:
-  SelectEvaluator(ReadFacade& pkb_reader, SelectClause& select_clause);
+  SelectEvaluator(ReadFacade& pkb_reader, const SelectClause select_clause);
   UnaryConstraint Evaluate();
 };
