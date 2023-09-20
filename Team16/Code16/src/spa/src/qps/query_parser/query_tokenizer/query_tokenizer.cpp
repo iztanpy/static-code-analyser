@@ -46,11 +46,20 @@ std::vector<QueryToken> QueryTokenizer::tokenize(const std::string & query) {
           break;
         }
       }
+
+      // Check if the token contain "_"expr"_" => must be a partial expression
+      bool isPartialExpr = isEnclosedInWildcards(token);
       // Check if the token contains ""
       bool containsDoubleQuotes = isEnclosedInDoubleQuotes(token);
 
       if (isNumeric) {
         type = PQLTokenType::INTEGER;
+      } else if (isPartialExpr) {
+        type = PQLTokenType::PARTIALEXPR;
+        token.erase(0, 1);  // Remove the first _
+        token.erase(token.size() - 1);  // Remove the last _
+        token.erase(0, 1);  // Remove the first double quote
+        token.erase(token.size() - 1);  // Remove the last double quote
       } else if (containsDoubleQuotes) {
         type = PQLTokenType::IDENT;
         token.erase(0, 1);  // Remove the first double quote
@@ -84,5 +93,9 @@ std::vector<QueryToken> QueryTokenizer::tokenize(const std::string & query) {
 
 bool QueryTokenizer::isEnclosedInDoubleQuotes(const std::string & token) {
   return (token.size() >= 2 && token.front() == '\"' && token.back() == '\"');
+}
+
+bool QueryTokenizer::isEnclosedInWildcards(const std::string & token) {
+  return (token.size() >= 2 && token.front() == '_' && token.back() == '_');
 }
 // ai-gen end

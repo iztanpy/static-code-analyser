@@ -296,22 +296,85 @@ TEST_CASE("Tokenizer cannot tokenize simple select + such that clause with inval
   QpsSyntaxError syntaxError = QpsSyntaxError("Syntax error");
   try {
     std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
-  } catch (const QpsError& e) {
+  } catch (const QpsError & e) {
     REQUIRE(e.what() == syntaxError.what());
   }
 }
 
-TEST_CASE("Tokenizer can tokenize simple select + pattern clause with variable") {
-  std::string query = "variable v; Select v pattern";
+TEST_CASE("Tokenizer can tokenize simple select + pattern clause syn_assign (entref, exprSpec)") {
+  std::string query = "variable v; assign a; Select v pattern a (v, _\"x+y\"_)";
   std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
+  REQUIRE(tokens.size() == 10);
   REQUIRE(tokens[0].type == PQLTokenType::DECLARATION);
   REQUIRE(tokens[0].text == "variable");
   REQUIRE(tokens[1].type == PQLTokenType::SYNONYM);
   REQUIRE(tokens[1].text == "v");
-  REQUIRE(tokens[2].type == PQLTokenType::SELECT);
-  REQUIRE(tokens[2].text == "Select");
+  REQUIRE(tokens[2].type == PQLTokenType::DECLARATION);
+  REQUIRE(tokens[2].text == "assign");
   REQUIRE(tokens[3].type == PQLTokenType::SYNONYM);
-  REQUIRE(tokens[3].text == "v");
-  REQUIRE(tokens[4].type == PQLTokenType::PATTERN);
-  REQUIRE(tokens[4].text == "pattern");
+  REQUIRE(tokens[3].text == "a");
+  REQUIRE(tokens[4].type == PQLTokenType::SELECT);
+  REQUIRE(tokens[4].text == "Select");
+  REQUIRE(tokens[5].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[5].text == "v");
+  REQUIRE(tokens[6].type == PQLTokenType::PATTERN);
+  REQUIRE(tokens[6].text == "pattern");
+  REQUIRE(tokens[7].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[7].text == "a");
+  REQUIRE(tokens[8].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[8].text == "v");
+  REQUIRE(tokens[9].type == PQLTokenType::PARTIALEXPR);
+  REQUIRE(tokens[9].text == "x+y");
+}
+
+TEST_CASE("Tokenizer can tokenize simple select + pattern clause (entref, expr)") {
+  std::string query = "variable v; assign a; Select v pattern a (v, \"x+y\")";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
+  REQUIRE(tokens.size() == 10);
+  REQUIRE(tokens[0].type == PQLTokenType::DECLARATION);
+  REQUIRE(tokens[0].text == "variable");
+  REQUIRE(tokens[1].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[1].text == "v");
+  REQUIRE(tokens[2].type == PQLTokenType::DECLARATION);
+  REQUIRE(tokens[2].text == "assign");
+  REQUIRE(tokens[3].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[3].text == "a");
+  REQUIRE(tokens[4].type == PQLTokenType::SELECT);
+  REQUIRE(tokens[4].text == "Select");
+  REQUIRE(tokens[5].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[5].text == "v");
+  REQUIRE(tokens[6].type == PQLTokenType::PATTERN);
+  REQUIRE(tokens[6].text == "pattern");
+  REQUIRE(tokens[7].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[7].text == "a");
+  REQUIRE(tokens[8].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[8].text == "v");
+  REQUIRE(tokens[9].type == PQLTokenType::IDENT);
+  REQUIRE(tokens[9].text == "x+y");
+}
+
+TEST_CASE("Tokenizer can tokenize simple select + pattern clause (_, _expr_)") {
+  std::string query = "variable v; assign a; Select v pattern a (_, _\"x+y\"_)";
+  std::vector<QueryToken> tokens = QueryTokenizer::tokenize(query);
+  REQUIRE(tokens.size() == 10);
+  REQUIRE(tokens[0].type == PQLTokenType::DECLARATION);
+  REQUIRE(tokens[0].text == "variable");
+  REQUIRE(tokens[1].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[1].text == "v");
+  REQUIRE(tokens[2].type == PQLTokenType::DECLARATION);
+  REQUIRE(tokens[2].text == "assign");
+  REQUIRE(tokens[3].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[3].text == "a");
+  REQUIRE(tokens[4].type == PQLTokenType::SELECT);
+  REQUIRE(tokens[4].text == "Select");
+  REQUIRE(tokens[5].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[5].text == "v");
+  REQUIRE(tokens[6].type == PQLTokenType::PATTERN);
+  REQUIRE(tokens[6].text == "pattern");
+  REQUIRE(tokens[7].type == PQLTokenType::SYNONYM);
+  REQUIRE(tokens[7].text == "a");
+  REQUIRE(tokens[8].type == PQLTokenType::WILDCARD);
+  REQUIRE(tokens[8].text == "_");
+  REQUIRE(tokens[9].type == PQLTokenType::PARTIALEXPR);
+  REQUIRE(tokens[9].text == "x+y");
 }

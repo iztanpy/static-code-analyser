@@ -1,6 +1,5 @@
 #pragma once
 
-// TODO(phuccuongngo99): Sort this as well and remove unnecessary ones
 #include <string>
 #include <variant>
 #include <vector>
@@ -14,11 +13,13 @@
 
 class ConstraintTable {
  public:
-  ConstraintTable() = default;
+  ConstraintTable();
 
   void Solve(Constraint& constraint);
 
-  // TODO(phuccuongngo99): As of now, header field must exist within
+  bool HasNoValidValues();
+
+  // Header field is the first column of the table, else assert will fail
   std::unordered_set<std::string> Select(const ColName& col_name);
 
   std::unordered_set<ColName> AvailableColName();
@@ -33,11 +34,16 @@ class ConstraintTable {
  private:
   Table table;
 
+  // Check if ConstraintTable has been given a Constraint that evaluates
+  // to false before. This is useful for HasNoValidValues() function
+  bool has_false_constraint;
+
   // Mock table for unit test
   explicit ConstraintTable(const Table& mock_table) : table(mock_table) {}
 
   void Solve(const UnaryConstraint& constraint);
   void Solve(const BinaryConstraint& constraint);
+  void Solve(const bool constraint);
 
   void AddNewUnaryConstraint(const UnaryConstraint& new_constraint);
 

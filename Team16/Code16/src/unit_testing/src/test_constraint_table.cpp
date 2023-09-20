@@ -65,6 +65,37 @@ void REQUIRE_TABLE_CONTENT(Table& table,
   }
 }
 
+TEST_CASE("ConstraintTable::HasNoValidValues", "[ConstraintTable]") {
+  ConstraintTable ct;
+
+  REQUIRE(ct.HasNoValidValues());
+
+  Constraint constraint1 = UnaryConstraint{"a", {"1", "2", "3"}};
+  ct.Solve(constraint1);
+  REQUIRE(!ct.HasNoValidValues());
+
+  Constraint constraint2 = true;
+  ct.Solve(constraint2);
+  REQUIRE(!ct.HasNoValidValues());
+
+  Constraint constraint3 = UnaryConstraint{"a", {"1", "2", "3"}};
+  ct.Solve(constraint3);
+  REQUIRE(!ct.HasNoValidValues());
+
+  Constraint constraint4 = false;
+  ct.Solve(constraint4);
+  REQUIRE(ct.HasNoValidValues());
+
+  // Once it has been set to HasNoValidValues, it will not toggle back
+  Constraint constraint5 = true;
+  ct.Solve(constraint5);
+  REQUIRE(ct.HasNoValidValues());
+
+  Constraint constraint6 = UnaryConstraint{"b", {"34", "42", "38"}};
+  ct.Solve(constraint6);
+  REQUIRE(ct.HasNoValidValues());
+}
+
 TEST_CASE("ConstraintTable::AddNewUnaryConstraint", "[ConstraintTable]") {
 
   SECTION("Adding a new unary constraint to new table") {
