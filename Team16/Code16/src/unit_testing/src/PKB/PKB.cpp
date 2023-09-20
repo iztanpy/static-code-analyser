@@ -1,6 +1,7 @@
+#pragma once
+#include "catch.hpp"
 #include <stdio.h>
 #include <unordered_set>
-#include "catch.hpp"
 
 #include "PKB/PKB.h"
 #include "PKB/API/ReadFacade.h"
@@ -49,11 +50,11 @@ TEST_CASE(" 1") {
 
 	writeFacade.storeUses({{1, {"x", "y"}}, {2, {"y", "z"}} });
 
-	for (std::string value : readFacade.getVariablesUsedBy(1)) {
+	for (std::string value : readFacade.uses(1)) {
 		REQUIRE((value == "x" || value == "y"));
 	}
 
-	for (std::string value : readFacade.getVariablesUsedBy(2)) {
+	for (std::string value : readFacade.uses(2)) {
 		REQUIRE((value == "y" || value == "z"));
 	}
 	writeFacade.storeConstants({ "1", "2", "3" });
@@ -109,11 +110,11 @@ TEST_CASE("test Facades for AssignStore") {
 
     writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
-    for (std::string value : readFacade.getVariablesUsedBy(1)) {
+    for (std::string value : readFacade.uses(1)) {
         REQUIRE((value == "x" || value == "y"));
     }
 
-    for (std::string value : readFacade.getVariablesUsedBy(2)) {
+    for (std::string value : readFacade.uses(2)) {
         REQUIRE((value == "y" || value == "z"));
     }
 }
@@ -137,11 +138,11 @@ TEST_CASE("Test Facades for Uses Store") {
 
     writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
-    for (std::string value : readFacade.getVariablesUsedBy(1)) {
+    for (std::string value : readFacade.uses(1)) {
         REQUIRE((value == "x" || value == "y"));
     }
 
-    for (std::string value : readFacade.getVariablesUsedBy(2)) {
+    for (std::string value : readFacade.uses(2)) {
         REQUIRE((value == "y" || value == "z"));
     }
 }
@@ -244,6 +245,60 @@ TEST_CASE("Test Parent Stores") {
     REQUIRE(pkb.isParentStar(wildcard, 7));
 }
 
+TEST_CASE("Test Uses stores") {
+    PKB pkb = PKB();
+
+    pkb.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}}, {3, {"z"}} });
+
+    REQUIRE(pkb.isUses(1, "x"));
+    REQUIRE(pkb.isUses(1, "y"));
+    REQUIRE(pkb.isUses(2, "y"));
+    REQUIRE(pkb.isUses(2, "z"));
+    REQUIRE(!pkb.isUses(1, "z"));
+    REQUIRE(!pkb.isUses(2, "x"));
+
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(pkb.isUses(1, wildcard));
+    REQUIRE(pkb.isUses(2, wildcard));
+    REQUIRE(pkb.isUses(3, wildcard));
+    REQUIRE(!pkb.isUses(4, wildcard));
+
+    // store StmtEntity
+    pkb.addStatements({ { 1, StmtEntity::kAssign }, { 2, StmtEntity::kAssign }, { 3, StmtEntity::kRead } });
+    
+    variable x = "x";
+    REQUIRE(pkb.uses(1) == std::unordered_set<variable>{"x", "y"});
+    REQUIRE(pkb.uses(2) == std::unordered_set<variable>{"y", "z"});
+
+    StmtEntity assign = StmtEntity::kAssign;
+    REQUIRE(pkb.uses(assign, wildcard) == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.uses(assign, x) == std::unordered_set<statementNumber>{1});
+    REQUIRE(pkb.uses(assign, "y") == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.uses(assign, "z") == std::unordered_set<statementNumber>{2});
+
+    StmtEntity read = StmtEntity::kRead;
+    REQUIRE(pkb.uses(read, wildcard) == std::unordered_set<statementNumber>{3});
+    REQUIRE(pkb.uses(read, x) == std::unordered_set<statementNumber>{});
+    REQUIRE(pkb.uses(read, "y") == std::unordered_set<statementNumber>{});
+    REQUIRE(pkb.uses(read, "z") == std::unordered_set<statementNumber>{3});
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.uses(assign);
+
+    for (auto value : result) {
+		REQUIRE((value.first == 1 || value.first == 2));
+		REQUIRE((value.second == "x" || value.second == "y" || value.second == "z"));
+	}
+
+    result = pkb.uses(read);
+
+    for (auto value : result) {
+        REQUIRE((value.first == 3));
+        REQUIRE((value.second == "z"));
+    }
+    
+}
+
 
 //TEST_CASE("Test PKB") {
 //    std::unordered_set<int> assignments = {1, 2, 3};
@@ -320,5 +375,5 @@ TEST_CASE("Test Parent Stores") {
 //        REQUIRE(constants.find(value) != constants.end());
 //    }
 //
-//    REQUIRE(readFacade.getVariablesUsedBy(1) == std::unordered_set<std::string>{"a", "b"});
+//    REQUIRE(readFacade.Uses(1) == std::unordered_set<std::string>{"a", "b"});
 //}
