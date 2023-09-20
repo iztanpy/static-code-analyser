@@ -44,7 +44,7 @@ void ASTVisitor::visit(const MinusTNode* node, std::string& key) {
 }
 
 void ASTVisitor::visit(const ReadTNode* node, std::string& key) {
-    std::unordered_set<std::string>& set = modifiesStatementNumberHashmap[node->statementNumber];
+    std::unordered_set<std::string>& set = modifiesMap[node->statementNumber];
     set.insert(node->getContent());
     variables.insert(node->getContent());
 }
