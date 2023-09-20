@@ -97,12 +97,14 @@ bool FollowsStore::isFollowStar(statementNumber statement1, Wildcard wildcard) {
     if (this->FollowStarMap[statement1].size() > 0) {
 		return true;
 	}
+    return false;
 }
 
 bool FollowsStore::isFollowStar(Wildcard wildcard, statementNumber statement1) {
     if (this->FollowStarMapReverse[statement1].size() > 0) {
 		return true;
 	}
+    return false;
 }
 
 bool FollowsStore::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {

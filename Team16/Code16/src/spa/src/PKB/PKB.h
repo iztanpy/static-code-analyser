@@ -105,6 +105,24 @@ class PKB {
 
     bool isFollow(Wildcard wildcard, Wildcard wildcard2);
 
+    std::unordered_set<statementNumber> followStar(Wildcard wildcard, StmtEntity entity);
+
+    std::unordered_set<statementNumber> followStar(statementNumber num, StmtEntity entity);
+
+    std::unordered_set<statementNumber> followStar(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> followStar(StmtEntity entity, Wildcard wildcard);
+
+    bool isFollowStar(statementNumber statement1, statementNumber statement2);
+
+    bool isFollowStar(statementNumber statement1, Wildcard wildcard);
+
+    bool isFollowStar(Wildcard wildcard, statementNumber statement1);
+
+    bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
+
+
+
 
 
 
