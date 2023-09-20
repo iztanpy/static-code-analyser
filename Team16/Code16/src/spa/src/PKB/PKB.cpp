@@ -9,6 +9,7 @@ PKB::PKB() {
     statementStore = std::make_unique<StatementStore>();
     parentStore = std::make_unique<ParentStore>();
     followsStore = std::make_unique<FollowsStore>();
+    modifiesStore = std::make_unique<ModifiesStore>();
 }
 
 // AssignStore methods

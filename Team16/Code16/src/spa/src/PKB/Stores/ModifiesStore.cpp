@@ -17,12 +17,30 @@ void ModifiesStore::storeModifies(std::unordered_map<statementNumber, variable> 
     }
 }
 
-std::unordered_set<statementNumber> ModifiesStore::getStatementThatModifies(ModifiesStore::variable variable) {
+bool ModifiesStore::isModifies(statementNumber statement, variable variable) {
+    if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
+        if (ModifiesVariableMap[statement] == variable) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ModifiesStore::isModifies(statementNumber statement) {
+    if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
+        if (ModifiesVariableMap[statement].size() > 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+std::unordered_set<statementNumber> ModifiesStore::modifies(ModifiesStore::variable variable) {
     std::unordered_set<statementNumber> statements = ModifiesVariableMapReverse[variable];
     return statements;
 }
 
-variable ModifiesStore::getVariableModifiedBy(ModifiesStore::statementNumber statement) {
+variable ModifiesStore::modifies(ModifiesStore::statementNumber statement) {
     variable variable = ModifiesVariableMap[statement];
     return variable;
 }

@@ -14,6 +14,12 @@ class ModifiesStore {
     ModifiesStore();
 
     void storeModifies(std::unordered_map<statementNumber, variable> relations);
-    std::unordered_set<statementNumber> getStatementThatModifies(variable variable);
-    variable getVariableModifiedBy(statementNumber statement);
+
+    bool isModifies(statementNumber statement, variable variable);
+
+    bool isModifies(statementNumber statement);
+
+    variable modifies(statementNumber statement);
+    
+    std::unordered_set<statementNumber> modifies(variable variable);
 };

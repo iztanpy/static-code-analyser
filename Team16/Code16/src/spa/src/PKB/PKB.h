@@ -13,6 +13,7 @@
 #include "Stores/StatementStore.h"
 #include "Stores/ParentStore.h"
 #include "Stores/FollowsStore.h"
+#include "Stores/ModifiesStore.h"
 #include "Helper/StmtEntity.h"
 #include "Helper/Wildcard.h"
 #include "utils/hash_utils.h"
@@ -31,7 +32,8 @@ class PKB {
      std::unique_ptr<ConstantStore> constantStore;
      std::unique_ptr<StatementStore> statementStore;
      std::unique_ptr<ParentStore> parentStore;
-    std::unique_ptr<FollowsStore> followsStore;
+     std::unique_ptr<FollowsStore> followsStore;
+     std::unique_ptr<ModifiesStore> modifiesStore;
 
 
  public:
