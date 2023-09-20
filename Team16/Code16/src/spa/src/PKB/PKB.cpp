@@ -81,11 +81,11 @@ void PKB::storeParent(std::unordered_map<statementNumber, std::unordered_set<sta
     parentStore->storeParent(map);
 }
 
-std::unordered_set<statementNumber> PKB::getChildren(statementNumber statement) {
+std::unordered_set<statementNumber> PKB::parent(statementNumber statement, Wildcard wildcard) {
     return parentStore->getChildren(statement);
 }
 
-statementNumber PKB::getParent(statementNumber statement) {
+statementNumber PKB::parent(Wildcard wildcard, statementNumber statement) {
     return parentStore->getParent(statement);
 }
 
@@ -93,16 +93,40 @@ bool PKB::isParent(statementNumber parent, statementNumber child) {
     return parentStore->isParent(parent, child);
 }
 
-std::unordered_set<statementNumber> PKB::getChildrens(statementNumber statement) {
+bool PKB::isParent(statementNumber parent, Wildcard wildcard) {
+	return parentStore->isParent(parent, wildcard);
+}
+
+bool PKB::isParent(Wildcard wildcard, statementNumber child) {
+	return parentStore->isParent(wildcard, child);
+}
+
+bool PKB::isParent(Wildcard wildcard, Wildcard wildcard2) {
+	return parentStore->isParent(wildcard, wildcard2);
+}
+
+std::unordered_set<statementNumber> PKB::parentStar(statementNumber statement, Wildcard wildcard) {
     return parentStore->getChildrens(statement);
 }
 
-std::unordered_set<statementNumber> PKB::getParents(statementNumber statement) {
+std::unordered_set<statementNumber> PKB::parentStar(Wildcard wildcard, statementNumber statement) {
     return parentStore->getParents(statement);
 }
 
 bool PKB::isParentStar(statementNumber parent, statementNumber child) {
     return parentStore->isParentStar(parent, child);
+}
+
+bool PKB::isParentStar(statementNumber parent, Wildcard wildcard) {
+	return parentStore->isParentStar(parent, wildcard);
+}
+
+bool PKB::isParentStar(Wildcard wildcard, statementNumber child) {
+	return parentStore->isParentStar(wildcard, child);
+}
+
+bool PKB::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
+	return parentStore->isParentStar(wildcard, wildcard2);
 }
 
 

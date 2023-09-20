@@ -74,17 +74,29 @@ class PKB {
 
     void storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map);
 
-    std::unordered_set<statementNumber> getChildren(statementNumber statement);
+    std::unordered_set<statementNumber> parent(statementNumber statement, Wildcard wildcard);
 
-    statementNumber getParent(statementNumber statement);
+    statementNumber parent(Wildcard wildcard, statementNumber statement);
 
     bool isParent(statementNumber parent, statementNumber child);
 
-    std::unordered_set<statementNumber> getChildrens(statementNumber statement);
+    bool isParent(statementNumber parent, Wildcard wildcard);
 
-    std::unordered_set<statementNumber> getParents(statementNumber statement);
+    bool isParent(Wildcard wildcard, statementNumber child);
+
+    bool isParent(Wildcard wildcard, Wildcard wildcard2);
+
+    std::unordered_set<statementNumber> parentStar(statementNumber statement, Wildcard wildcard);
+
+    std::unordered_set<statementNumber> parentStar(Wildcard wildcard, statementNumber statement);
 
     bool isParentStar(statementNumber parent, statementNumber child);
+
+    bool isParentStar(statementNumber parent, Wildcard wildcard);
+
+    bool isParentStar(Wildcard wildcard, statementNumber child);
+
+    bool isParentStar(Wildcard wildcard, Wildcard wildcard2);
 
     // FollowStore Method
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);

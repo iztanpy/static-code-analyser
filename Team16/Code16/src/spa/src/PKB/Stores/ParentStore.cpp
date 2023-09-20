@@ -20,25 +20,41 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
         }
     }
 
-    for (auto const& x : map) {
-		std::unordered_set<statementNumber> childrens;
-        for (auto const& y : x.second) {
-			childrens.insert(y);
-            if (this->ParentMap.find(y) != this->ParentMap.end()) {
-				std::unordered_set<statementNumber> set = getChildrens(y);
-				childrens.insert(set.begin(), set.end());
-			}
-		}
-        if (childrens.size() > 0) {
-			this->ParentStarMap[x.first] = childrens;
-		}
-	}
+    // ai-gen start (gpt3, 1)
+    for (const auto& [node, children] : ParentMap) {
+        std::unordered_set<int> visited;
+        std::unordered_set<int> stack;
+        visited.insert(node);
+        stack.insert(children.begin(), children.end());
 
-    for (auto const& x : this->ParentStarMap) {
-        for (auto const& y : x.second) {
-			this->ParentStarMapReverse[y].insert(x.first);
-		}
-	}
+        while (!stack.empty()) {
+            int current = *stack.begin();
+            stack.erase(stack.begin());
+
+            if (visited.find(current) == visited.end()) {
+                ParentStarMap[node].insert(current);
+                visited.insert(current);
+                for (int child : ParentMap[current]) {
+                    if (visited.find(child) == visited.end()) {
+                        stack.insert(child);
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto& [child, parent] : ParentMapReverse) {
+        // Add the immediate parent as an ancestor
+        ParentStarMapReverse[child].insert(parent);
+
+        // Add the ancestors of the parent
+        if (ParentStarMapReverse.find(parent) != ParentStarMapReverse.end()) {
+            for (int ancestor : ParentStarMapReverse[parent]) {
+                ParentStarMapReverse[child].insert(ancestor);
+            }
+        }
+    }
+    //ai-gen end
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildren(statementNumber statement) {
@@ -86,23 +102,11 @@ bool ParentStore::isParentStar(statementNumber parent, statementNumber child) {
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(statementNumber statement) {
-    std::unordered_set<statementNumber> childrens;
-    for (auto const& x : this->ParentMap[statement]) {
-        childrens.insert(x);
-        if (this->ParentMap.find(x) != this->ParentMap.end()) {
-            std::unordered_set<statementNumber> set = getChildrens(x);
-            childrens.insert(set.begin(), set.end());
-        }
-    }
-    return childrens;
+    //print all items in ParentStarMap
+    return this->ParentStarMap[statement];
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getParents(statementNumber statement) {
-    std::unordered_set<statementNumber> parents;
-    while (this->ParentMapReverse.find(statement) != this->ParentMapReverse.end()) {
-        parents.insert(this->ParentMapReverse[statement]);
-        statement = ParentMapReverse[statement];
-    }
-    return parents;
+    return this->ParentStarMapReverse[statement];
 }
 

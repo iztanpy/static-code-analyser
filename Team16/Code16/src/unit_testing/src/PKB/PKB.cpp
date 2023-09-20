@@ -64,8 +64,6 @@ TEST_CASE(" 1") {
 }
 
 
-
-
 TEST_CASE("test Facades for AssignStore") {
     PKB pkb = PKB();
     WriteFacade writeFacade = WriteFacade(pkb);
@@ -153,9 +151,46 @@ TEST_CASE("Test Parent Stores") {
 
     pkb.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
 
-    REQUIRE(pkb.getParent(2) == 1);
-    REQUIRE(pkb.getParent(3) == 1);
-    REQUIRE(pkb.getParent(4) == 2);
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(pkb.parent(wildcard, 2) == 1);
+    REQUIRE(pkb.parent(wildcard, 3) == 1);
+    REQUIRE(pkb.parent(wildcard, 4) == 2);
+    REQUIRE(pkb.parent(wildcard, 5) == 2);
+    REQUIRE(pkb.parent(wildcard, 6) == 3);
+    REQUIRE(pkb.parent(wildcard, 7) == 3);
+
+    for (auto value : pkb.parent(1, wildcard)) {
+		REQUIRE((value == 2 || value == 3));
+	}
+
+    for (auto value : pkb.parent(2, wildcard)) {
+        REQUIRE((value == 4 || value == 5));
+    }
+
+    for (auto value : pkb.parent(3, wildcard)) {
+		REQUIRE((value == 6 || value == 7));
+	}
+
+    for (auto value : pkb.parentStar(1, wildcard)) {
+		REQUIRE((value == 2 || value == 3 || value == 4 || value == 5 || value == 6 || value == 7));
+	}
+
+    for (auto value : pkb.parentStar(wildcard, 2)) {
+        REQUIRE((value == 1));
+    }
+
+    for (auto value : pkb.parentStar(wildcard, 3)) {
+		REQUIRE((value == 1));
+	}
+
+    for (auto value : pkb.parentStar(wildcard, 4)) {
+		REQUIRE((value == 2 || value == 1));
+	}
+
+    for (auto value : pkb.parentStar(wildcard, 6)) {
+        REQUIRE((value == 3 || value == 1));
+    }
 
     REQUIRE(pkb.isParent(1, 2));
     REQUIRE(pkb.isParent(1, 3));
@@ -183,6 +218,30 @@ TEST_CASE("Test Parent Stores") {
     REQUIRE(!pkb.isParentStar(2, 2));
     REQUIRE(!pkb.isParentStar(3, 1));
     REQUIRE(!pkb.isParentStar(3, 2));
+
+    REQUIRE(!pkb.isParent(wildcard, 1));
+    REQUIRE(pkb.isParent(wildcard, 2));
+    REQUIRE(pkb.isParent(wildcard, 3));
+    REQUIRE(pkb.isParent(wildcard, 4));
+    REQUIRE(pkb.isParent(wildcard, 5));
+    REQUIRE(pkb.isParent(wildcard, 6));
+    REQUIRE(pkb.isParent(wildcard, 7));
+
+    REQUIRE(pkb.isParent(1, wildcard));
+    REQUIRE(pkb.isParent(2, wildcard));
+    REQUIRE(pkb.isParent(3, wildcard));
+    REQUIRE(!pkb.isParent(4, wildcard));
+    REQUIRE(!pkb.isParent(5, wildcard));
+    REQUIRE(!pkb.isParent(6, wildcard));
+    REQUIRE(!pkb.isParent(7, wildcard));
+
+    REQUIRE(!pkb.isParentStar(wildcard, 1));
+    REQUIRE(pkb.isParentStar(wildcard, 2));
+    REQUIRE(pkb.isParentStar(wildcard, 3));
+    REQUIRE(pkb.isParentStar(wildcard, 4));
+    REQUIRE(pkb.isParentStar(wildcard, 5));
+    REQUIRE(pkb.isParentStar(wildcard, 6));
+    REQUIRE(pkb.isParentStar(wildcard, 7));
 }
 
 
