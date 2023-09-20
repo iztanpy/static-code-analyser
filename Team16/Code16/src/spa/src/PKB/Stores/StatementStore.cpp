@@ -6,19 +6,30 @@ typedef std::string constant;
 typedef int statementNumber;
 
 StatementStore::StatementStore() {
-    this->numTypeMap = std::unordered_map<statementNumber, StmtEntity>();
+    this->statementMap = std::unordered_map<statementNumber, StmtEntity>();
 }
 
 void StatementStore::addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
-    this->numTypeMap = typeMap;
+    this->statementMap = typeMap;
+    for (auto const& x : typeMap) {
+		this->statementMapReverse[x.second].insert(x.first);
+	} 
 }
 
 std::unordered_set<statementNumber> StatementStore::getStatements(StmtEntity type) {
     std::unordered_set<statementNumber> statements;
-    for (auto const& x : this->numTypeMap) {
+    for (auto const& x : this->statementMap) {
         if (x.second == type) {
             statements.insert(x.first);
         }
     }
     return statements;
+}
+
+std::unordered_set<statementNumber> StatementStore::getAllStatements() {
+    std::unordered_set<statementNumber> statements;
+    for (auto const& x : this->statementMap) {
+		statements.insert(x.first);
+	}
+	return statements;
 }

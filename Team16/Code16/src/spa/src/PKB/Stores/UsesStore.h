@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <PKB/Helper/Wildcard.h>
 
 
 class UsesStore {
@@ -19,7 +20,11 @@ class UsesStore {
 
     void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> statementUsesMap);
 
-    std::unordered_set<variable> getVariablesUsedBy(statementNumber lineNumber);
+    bool isUses(statementNumber lineNumber, variable variableName);
 
-    std::unordered_set<statementNumber> getStatementsUsing(variable variableName);
+    bool isUses(statementNumber lineNumber);
+
+    std::unordered_set<variable> uses(statementNumber lineNumber);
+
+    std::unordered_set<statementNumber> uses(variable variableName);
 };

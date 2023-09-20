@@ -1,9 +1,3 @@
-#include<stdio.h>
-#include <iostream>
-#include <string>
-#include <unordered_set>
-#include <memory>
-
 #include "PKB.h"
 
 
@@ -51,8 +45,51 @@ void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<varia
     usesStore->storeUses(varUsesMap);
 }
 
-std::unordered_set<variable> PKB::getVariablesUsedBy(statementNumber line) {
-    return usesStore->getVariablesUsedBy(line);
+bool PKB::isUses(statementNumber lineNumber, variable variableName) {
+    return usesStore->isUses(lineNumber, variableName);
+}
+
+bool PKB::isUses(statementNumber lineNumber, Wildcard wildcard) {
+    return usesStore->isUses(lineNumber);
+}
+
+std::unordered_set<variable> PKB::uses(statementNumber line) {
+    return usesStore->uses(line);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(StmtEntity type) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+	std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
+    for (auto const& x : relevantStmts) {
+		std::unordered_set<variable> variablesUsed = this->usesStore->uses(x);
+        for (auto const& y : variablesUsed) {
+			result.insert(std::make_pair(x, y));
+		}
+	}
+	return result;
+}
+
+std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName) {
+	std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+	std::unordered_set<statementNumber> result;
+    for (auto const& x : relevantStmts) {
+        if (this->usesStore->uses(x).count(variableName)) {
+			result.insert(x);
+		}
+	}
+	return result;
+}
+
+std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+	std::unordered_set<statementNumber> result;
+    for (auto const& x : relevantStmts) {
+        if (this->usesStore->uses(x).size() > 0) {
+			result.insert(x);
+		}
+	}
+	return result;
+
 }
 
 // ConstantStore methods

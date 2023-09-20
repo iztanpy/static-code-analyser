@@ -15,6 +15,7 @@
 #include "Stores/FollowsStore.h"
 #include "Helper/StmtEntity.h"
 #include "Helper/Wildcard.h"
+#include "utils/hash_utils.h"
 
 typedef std::string variable;
 typedef int statementNumber;
@@ -56,7 +57,17 @@ class PKB {
 
     void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
 
-    std::unordered_set<variable> getVariablesUsedBy(statementNumber line);
+    bool isUses(statementNumber lineNumber, variable variableName);
+
+    bool isUses(statementNumber lineNumber, Wildcard wildcard);
+
+    std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName);
+
+    std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard);
+
+    std::unordered_set<variable> uses(statementNumber line);
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
     // ConstantStore methods
 
@@ -132,12 +143,6 @@ class PKB {
     bool isFollowStar(Wildcard wildcard, statementNumber statement1);
 
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
-
-
-
-
-
-
 
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;

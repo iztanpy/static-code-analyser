@@ -17,8 +17,8 @@ std::unordered_set<variable> ReadFacade::getAllVariables() {
     return pkb.getVariables();
 }
 
-std::unordered_set<variable> ReadFacade::getVariablesUsedBy(statementNumber line) {
-    return pkb.getVariablesUsedBy(line);
+std::unordered_set<variable> ReadFacade::uses(statementNumber line) {
+    return pkb.uses(line);
 }
 
 std::unordered_set<std::string> ReadFacade::getAllConstants() {

@@ -10,9 +10,9 @@ class StatementStore {
     typedef std::string variable;
     typedef std::string constant;
     typedef int statementNumber;
-    typedef std::string statementType;
 
-    std::unordered_map<statementNumber, StmtEntity> numTypeMap;
+    std::unordered_map<statementNumber, StmtEntity> statementMap;
+    std::unordered_map<StmtEntity, std::unordered_set<statementNumber>> statementMapReverse;
 
 
  public:
@@ -21,5 +21,9 @@ class StatementStore {
     void addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap);
 
     std::unordered_set<statementNumber> getStatements(StmtEntity type);
+
+    std::unordered_set<statementNumber> getAllStatements();
+
+
 };
 
