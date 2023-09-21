@@ -10,10 +10,9 @@ class Follows : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  Follows(StmtRef lhs, StmtRef rhs) {
+  Follows(StmtRef lhs, StmtRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
@@ -27,10 +26,9 @@ class FollowsT : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  FollowsT(StmtRef lhs, StmtRef rhs) {
+  FollowsT(StmtRef lhs, StmtRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;

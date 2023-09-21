@@ -10,10 +10,9 @@ class ModifiesP : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
-  ModifiesP(EntRef lhs, EntRef rhs) {
+  ModifiesP(EntRef lhs, EntRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
@@ -27,10 +26,9 @@ class ModifiesS : public SuchThatClause {
   StmtRef lhs;
   EntRef rhs;
 
-  ModifiesS(StmtRef lhs, EntRef rhs) {
+  ModifiesS(StmtRef lhs, EntRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;

@@ -10,10 +10,9 @@ class Parent : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  Parent(StmtRef lhs, StmtRef rhs) {
+  Parent(StmtRef lhs, StmtRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
@@ -27,10 +26,9 @@ class ParentT : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  ParentT(StmtRef lhs, StmtRef rhs) {
+  ParentT(StmtRef lhs, StmtRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;

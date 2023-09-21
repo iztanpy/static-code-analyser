@@ -13,10 +13,9 @@ class UsesS : public SuchThatClause {
   StmtRef lhs;
   EntRef rhs;
 
-  UsesS(StmtRef lhs, EntRef rhs) {
+  UsesS(StmtRef lhs, EntRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
@@ -30,10 +29,9 @@ class UsesP : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
-  UsesP(EntRef lhs, EntRef rhs) {
+  UsesP(EntRef lhs, EntRef rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
-    this->rhs = std::move(rhs);
-    this->lhs = std::move(lhs);
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
