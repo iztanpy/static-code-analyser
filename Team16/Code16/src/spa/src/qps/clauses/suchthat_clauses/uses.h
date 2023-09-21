@@ -3,8 +3,7 @@
 #include <utility>
 #include <unordered_set>
 #include <string>
-#include <functional>
-#include <optional>
+#include <cassert>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
