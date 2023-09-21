@@ -118,6 +118,10 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/uses_evaluator.h
         src/qps/clauses/suchthat_clauses/modifies_evaluator.cpp
         src/qps/clauses/suchthat_clauses/modifies_evaluator.h
+        src/qps/clauses/suchthat_clauses/follows_evaluator.cpp
+        src/qps/clauses/suchthat_clauses/follows_evaluator.h
+        src/qps/clauses/suchthat_clauses/parent_evaluator.cpp
+        src/qps/clauses/suchthat_clauses/parent_evaluator.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
