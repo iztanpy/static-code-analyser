@@ -108,7 +108,7 @@ class PKB {
     // StatementStore methods
 
     void addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap);
-    
+
     std::unordered_set<statementNumber> getStatements(StmtEntity type);
 
     // ParentStore methods
