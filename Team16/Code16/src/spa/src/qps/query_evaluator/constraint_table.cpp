@@ -35,8 +35,17 @@ std::vector<T> SelectByIndex(const std::vector<T>& vec, const std::vector<std::s
   return result;
 }
 
+ConstraintTable::ConstraintTable() {
+  table = {};
+  has_false_constraint = false;
+}
+
 Table ConstraintTable::GetTableForTesting() {
   return table;
+}
+
+bool ConstraintTable::HasNoValidValues() {
+  return (table.empty() || table.begin()->second.empty() || has_false_constraint);
 }
 
 void ConstraintTable::Solve(const UnaryConstraint& constraint) {
@@ -63,6 +72,12 @@ void ConstraintTable::Solve(const BinaryConstraint& constraint) {
   }
 
   return AddHalfExistingBinaryConstraint(constraint);
+}
+
+void ConstraintTable::Solve(const bool constraint) {
+  if (!has_false_constraint) {
+    has_false_constraint = !constraint;
+  }
 }
 
 void ConstraintTable::Solve(Constraint& constraint) {

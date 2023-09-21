@@ -1,10 +1,11 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_
+#pragma once
 
-#include "TNode.h"
 #include <unordered_set>
 #include <string>
 #include <unordered_map>
+
+#include "SP/TNode.h"
+
 
 class TNode;
 class ProcedureTNode;
@@ -24,40 +25,33 @@ class Visitor {
     virtual void visit(const MinusTNode* node, std::string& key) = 0;
     virtual void visit(const ReadTNode* node, std::string& key) = 0;
 
-    std::unordered_map<std::string, std::unordered_set<std::string>> assignVarHashmap;
-    std::unordered_map<std::string, std::unordered_set<std::string>> assignConstHashmap;
-    std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
-    std::unordered_map<int, std::string> usesStatementNumberVarHashmap;
-    std::unordered_set<int> assignmentStatementsHashset;
+    // Procedure
     std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
-    std::unordered_set<std::string> variablesHashset;
-    std::unordered_set<std::string> constantsHashset;
+    // Uses
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap;
+    std::unordered_map<int, std::string> usesLineLHSMap;
+    std::unordered_set<std::string> variables;
+    std::unordered_set<std::string> constants;
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
     std::string currKey;
 
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap() const {
-        return procedureStatementNumberHashmap;
+      return procedureStatementNumberHashmap;
     }
-
-    std::unordered_set<std::string> getVariablesHashset() const {
-        return variablesHashset;
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap() const {
+        return usesLineRHSPatternMap;
     }
-    std::unordered_set<std::string> getConstantsHashset() const {
-        return constantsHashset;
+    std::unordered_map<int, std::string> getUsesLineLHSMap() const {
+        return usesLineLHSMap;
     }
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignVarHashmap() const {
-        return assignVarHashmap;
+    std::unordered_set<std::string> getVariables() const {
+        return variables;
     }
-    std::unordered_map<std::string, std::unordered_set<std::string>> getAssignConstHashmap() const {
-        return assignConstHashmap;
+    std::unordered_set<std::string> getConstants() const {
+        return constants;
     }
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
-        return usesStatementNumberHashmap;
-    }
-    std::unordered_map<int, std::string> getUsesStatementNumberVarHashmap() const {
-        return usesStatementNumberVarHashmap;
-    }
-    std::unordered_set<int> getAssignmentStatementsHashset() const {
-        return assignmentStatementsHashset;
+    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap() const {
+        return usesLineRHSVarMap;
     }
 };
 
@@ -74,4 +68,3 @@ class ASTVisitor : public Visitor {
     void visit(const ReadTNode* node, std::string& key) override;
 };
 
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_VISITOR_H_"

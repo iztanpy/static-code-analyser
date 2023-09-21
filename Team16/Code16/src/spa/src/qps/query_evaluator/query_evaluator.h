@@ -17,5 +17,5 @@ class QueryEvaluator {
 
  public:
   explicit QueryEvaluator(ReadFacade& pkb);
-  std::vector<std::string> Evaluate(const ParsedQuery& query);
+  std::unordered_set<std::string> Evaluate(const ParsedQuery& query);
 };

@@ -35,17 +35,17 @@ add_library(spa ${srcs} ${headers}
         src/PKB/API/WriteFacade.h
         src/PKB/API/ReadFacade.h
         src/PKB/API/ReadFacade.cpp
-        src/SP/SimpleParser.cpp
-        src/SP/SimpleParser.h
-        src/SP/SPTokeniser.cpp
-        src/SP/SPTokeniser.h
-        src/SP/TokenTypes.h
+        src/SP/sp_parser/SimpleParser.h
+        src/SP/sp_parser/SimpleParser.cpp
+        src/SP/sp_tokeniser/SPTokeniser.cpp
+        src/SP/sp_tokeniser/SPTokeniser.h
+        src/SP/sp_tokeniser/TokenTypes.h
         src/SP/Visitor.cpp
         src/SP/Visitor.h
         src/SP/DesignExtractor.h
         src/SP/DesignExtractor.cpp
         src/SP/TNode.cpp
-        src/SP/Token.h
+        src/SP/sp_tokeniser/Token.h
         src/PKB/PKB.cpp
         src/qps/qps.cpp
         src/qps/qps.h
@@ -93,6 +93,20 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/ParentStore.h
         src/PKB/Helper/StmtEntity.h
         src/PKB/Helper/Wildcard.h)
+        src/SP/sp_parser/AssignmentParser.cpp
+        src/SP/sp_parser/AssignmentParser.h
+        src/SP/sp_parser/ReadParser.cpp
+        src/SP/sp_parser/ReadParser.h
+        src/SP/sp_parser/ProcedureParser.cpp
+        src/SP/sp_parser/ProcedureParser.h
+        src/SP/sp_parser/Parser.h
+        src/SP/SourceProcessor.h
+        src/SP/SourceProcessor.cpp
+        src/qps/clauses/pattern_clause.cpp
+        src/qps/clauses/pattern_clause.h
+        src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
+        src/qps/query_parser/clause_builder/pattern_clause_builder.h
+)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

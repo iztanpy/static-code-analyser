@@ -32,8 +32,8 @@ void TestWrapper::parse(std::string filename) {
     input += line;
   }
   WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
-  SimpleParser parser(&writeFacade);
-  parser.tokenise(input);
+  SourceProcessor sourceProcessor(&writeFacade);
+  sourceProcessor.processSource(input);
 }
 
 // method to evaluating a query
@@ -42,6 +42,9 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   QPS qps(readFacade);
 
   std::unordered_set<std::string> raw_results = qps.Evaluate(query);
+
+  // If raw_result is an empty set, we won't even be pushing to results
+  // which is expected
   for (const std::string& result : raw_results) {
     results.push_back(result);
   }

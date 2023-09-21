@@ -1,12 +1,11 @@
-#ifndef TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_
-#define TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_
+#pragma once
 
 #include <utility>
 #include <vector>
 #include <string>
 #include <iostream>
 #include <memory>
-#include "Token.h"
+#include "sp_tokeniser/Token.h"
 #include "utils/Error.h"
 
 class ASTVisitor;
@@ -134,6 +133,3 @@ class TNodeFactory {
         }
     }
 };
-
-
-#endif  // TEAM16_CODE16_SRC_SPA_SRC_SP_TNODE_H_
