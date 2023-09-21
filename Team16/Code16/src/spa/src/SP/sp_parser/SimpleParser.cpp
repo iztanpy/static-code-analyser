@@ -25,6 +25,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
 
             if (next_token.tokenType == TokenType::kEntityAssign) {
                 assignmentParser->lineNumber = lineNumber;
+                assignmentParser->index = curr_index;
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
