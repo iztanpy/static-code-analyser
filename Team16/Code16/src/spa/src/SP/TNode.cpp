@@ -27,6 +27,18 @@ void MinusTNode::accept(ASTVisitor *visitor, std::string& key) const {
     visitor->visit(this, key);
 }
 
+void MultiplyTNode::accept(ASTVisitor *visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
+void DivideTNode::accept(ASTVisitor *visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
+void ModTNode::accept(ASTVisitor *visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
 void ReadTNode::accept(ASTVisitor* visitor, std::string& key) const {
     visitor->visit(this, key);
 }

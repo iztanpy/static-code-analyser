@@ -28,6 +28,9 @@ class Visitor {
     virtual void visit(const ConstantTNode* node, std::string& key) = 0;
     virtual void visit(const PlusTNode* node, std::string& key) = 0;
     virtual void visit(const MinusTNode* node, std::string& key) = 0;
+    virtual void visit(const MultiplyTNode* node, std::string& key) = 0;
+    virtual void visit(const DivideTNode* node, std::string& key) = 0;
+    virtual void visit(const ModTNode* node, std::string& key) = 0;
     virtual void visit(const ReadTNode* node, std::string& key) = 0;
     virtual void visit(const WhileTNode* node, std::string& key) = 0;
     virtual void visit(const PrintTNode* node, std::string& key) = 0;
@@ -102,6 +105,9 @@ class ASTVisitor : public Visitor {
     void visit(const ConstantTNode* node, std::string& key) override;
     void visit(const PlusTNode* node, std::string& key) override;
     void visit(const MinusTNode* node, std::string& key) override;
+    void visit(const MultiplyTNode* node, std::string& key) override;
+    void visit(const DivideTNode* node, std::string& key) override;
+    void visit(const ModTNode* node, std::string& key) override;
     void visit(const ReadTNode* node, std::string& key) override;
     void visit(const WhileTNode* node, std::string& key) override;
     void visit(const PrintTNode* node, std::string& key) override;

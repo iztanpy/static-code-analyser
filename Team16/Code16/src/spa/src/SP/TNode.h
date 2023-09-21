@@ -139,9 +139,38 @@ class CallTNode : public TNode {
     void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
+class MultiplyTNode : public TNode {
+ public:
+  explicit MultiplyTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kOperatorMultiply;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return leftChild->getContent() + " * " + rightChild->getContent();
+  }
+};
 
+class DivideTNode : public TNode {
+ public:
+  explicit DivideTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kOperatorDivide;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return leftChild->getContent() + " / " + rightChild->getContent();
+  }
+};
 
-
+class ModTNode : public TNode {
+ public:
+  explicit ModTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kOperatorMod;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return leftChild->getContent() + " % " + rightChild->getContent();
+  }
+};
 
 class TNodeFactory {
  public:
@@ -178,7 +207,16 @@ class TNodeFactory {
              return std::make_shared<PlusTNode>(statementNumber);
          }
          case TokenType::kOperatorMinus: {
-             return std::make_shared<MinusTNode>(statementNumber);
+            return std::make_shared<MinusTNode>(statementNumber);
+         }
+         case TokenType::kOperatorMultiply: {
+           return std::make_shared<MultiplyTNode>(statementNumber);
+         }
+         case TokenType::kOperatorDivide: {
+           return std::make_shared<DivideTNode>(statementNumber);
+         }
+         case TokenType::kOperatorMod: {
+           return std::make_shared<ModTNode>(statementNumber);
          default:
              throw std::invalid_argument("Error: unknown token type");
          }
