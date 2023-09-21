@@ -3,6 +3,7 @@
 #include <utility>
 #include <unordered_set>
 #include <string>
+#include <functional>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
@@ -13,4 +14,8 @@ class UsesS : public SuchThatClause {
   EntRef rhs;
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+ private:
+  void Validate();
 };
+
