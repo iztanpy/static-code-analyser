@@ -4,6 +4,7 @@
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
+#include "qps/clauses/suchthat_clauses/modifies_evaluator.h"
 
 class ModifiesP : public SuchThatClause {
  public:
