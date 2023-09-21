@@ -80,7 +80,7 @@ Constraint UsesS::Evaluate(ReadFacade& pkb_reader) {
 // we want this to throw exception, so constructor can catch it
 // and throw it back. So whoever calls the constructor will get the exception
 void UsesS::Validate() {
-  SuchThatValidator::ValidateUse(lhs, rhs);
+  SuchThatValidator::ValidateUses(lhs, rhs);
 }
 
 Constraint UsesP::Evaluate(ReadFacade& pkb_reader) {
@@ -91,5 +91,5 @@ Constraint UsesP::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void UsesP::Validate() {
-  SuchThatValidator::ValidateUse(lhs, rhs);
+  SuchThatValidator::ValidateUses(lhs, rhs);
 }

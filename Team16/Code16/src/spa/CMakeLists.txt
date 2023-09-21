@@ -106,10 +106,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
         src/qps/clauses/suchthat_clauses/uses.cpp
         src/qps/clauses/suchthat_clauses/uses.h
-        src/qps/clauses/suchthat_clauses/modifies_p.cpp
-        src/qps/clauses/suchthat_clauses/modifies_p.h
-        src/qps/clauses/suchthat_clauses/modifies_s.cpp
-        src/qps/clauses/suchthat_clauses/modifies_s.h
+        src/qps/clauses/suchthat_clauses/modifies.cpp
+        src/qps/clauses/suchthat_clauses/modifies.h
         src/qps/clauses/suchthat_clauses/parent.cpp
         src/qps/clauses/suchthat_clauses/parent.h
         src/qps/clauses/suchthat_clauses/follows.cpp

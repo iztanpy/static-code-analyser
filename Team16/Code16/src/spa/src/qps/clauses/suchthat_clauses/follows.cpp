@@ -4,7 +4,7 @@ Constraint Follows::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("Not implemented");
 }
 void Follows::Validate() {
-  SuchThatValidator::ValidateParentFollow(lhs, rhs);
+  SuchThatValidator::ValidateParentFollows(lhs, rhs);
 }
 
 Constraint FollowsT::Evaluate(ReadFacade& pkb_reader) {
@@ -12,5 +12,5 @@ Constraint FollowsT::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void FollowsT::Validate() {
-  SuchThatValidator::ValidateParentFollow(lhs, rhs);
+  SuchThatValidator::ValidateParentFollows(lhs, rhs);
 }
