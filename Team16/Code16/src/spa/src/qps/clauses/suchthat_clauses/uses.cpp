@@ -4,115 +4,119 @@
 const bool kIsBoolConstraint = true;
 using MaybeReadFacade = std::optional<std::reference_wrapper<ReadFacade>>;
 
+// TODO(phuccuongngo99): Consider writing header file for this
 struct UsesVisitor {
-  static UnaryConstraint handle(int stmt_num, Declaration& declaration, MaybeReadFacade maybe_pkb_reader) {
+  inline static const std::unordered_set<DesignEntity> kValidRhsDeclaration = {DesignEntity::VARIABLE};
+  inline static const std::unordered_set<DesignEntity> kValidLhsDeclaration =
+      {DesignEntity::STMT, DesignEntity::ASSIGN, DesignEntity::PRINT, DesignEntity::IF_STMT,
+       DesignEntity::WHILE_LOOP, DesignEntity::CALL, DesignEntity::PROCEDURE};
+
+  static UnaryConstraint handle(int lhs, Declaration& rhs, MaybeReadFacade maybe_pkb_reader) {
+    if (kValidRhsDeclaration.find(rhs.design_entity) == kValidRhsDeclaration.end()) {
+      throw QpsSemanticError("[Uses] Invalid RHS synonym");
+    }
+
     if (!maybe_pkb_reader) {
-      return UnaryConstraint{declaration.synonym, std::unordered_set<std::string>{}};
+      return UnaryConstraint{rhs.synonym, std::unordered_set<std::string>{}};
     }
 
     ReadFacade& pkb_reader = maybe_pkb_reader.value().get();
-
-    if (declaration.design_entity == DesignEntity::VARIABLE) {
-      std::unordered_set<std::string> result = pkb_reader.getVariablesUsedBy(stmt_num);
-      return UnaryConstraint{declaration.synonym, result};
-    } else if (declaration.design_entity == DesignEntity::CONSTANT) {
-      return UnaryConstraint{declaration.synonym, pkb_reader.getConstantsUsedBy(stmt_num)};
-    } else {
-      throw QpsSemanticError("Not implemented");
-    }
+    std::unordered_set<std::string> result = pkb_reader.getVariablesUsedBy(lhs);
+    return UnaryConstraint{rhs.synonym, result};
   }
 
-  static bool handle(int stmt_num, Wildcard& wildcard, MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return kIsBoolConstraint;
-    }
-    throw QpsSemanticError("Not implemented");
+  static bool handle(int lhs, Wildcard& rhs, MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] Not implemented");
   }
 
-  static bool handle(int stmt_num, std::string& entity_name, MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return kIsBoolConstraint;
-    }
-    throw QpsSemanticError("Not implemented");
+  static bool handle(int lhs, std::string& rhs, MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] Not implemented");
   }
 
-  static BinaryConstraint handle(Declaration& declaration1,
-                                 Declaration& declaration2,
+  static BinaryConstraint handle(Declaration& lhs,
+                                 Declaration& rhs,
                                  MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return BinaryConstraint{{declaration1.synonym, declaration2.synonym}, {}};
+    if (kValidLhsDeclaration.find(lhs.design_entity) == kValidLhsDeclaration.end()) {
+      throw QpsSemanticError("[Uses] Invalid LHS synonym");
     }
-    throw QpsSemanticError("Not implemented");
+
+    if (kValidRhsDeclaration.find(rhs.design_entity) == kValidRhsDeclaration.end()) {
+      throw QpsSemanticError("[Uses] Invalid RHS synonym");
+    }
+
+    if (!maybe_pkb_reader) {
+      return BinaryConstraint{{rhs.synonym, lhs.synonym}, {}};
+    }
+    throw QpsSemanticError("[Uses] Not implemented");
   }
 
-  static UnaryConstraint handle(Declaration& declaration,
-                                Wildcard& wildcard,
+  static UnaryConstraint handle(Declaration& lhs,
+                                Wildcard& rhs,
                                 MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return UnaryConstraint{declaration.synonym, {}};
+    if (kValidLhsDeclaration.find(lhs.design_entity) == kValidLhsDeclaration.end()) {
+      throw QpsSemanticError("[Uses] Invalid LHS synonym");
     }
-    throw QpsSemanticError("Not implemented");
+
+    if (!maybe_pkb_reader) {
+      return UnaryConstraint{lhs.synonym, {}};
+    }
+    throw QpsSemanticError("[Uses] Not implemented");
   }
 
-  static UnaryConstraint handle(Declaration& declaration,
-                                std::string& entity_name,
+  static UnaryConstraint handle(Declaration& lhs,
+                                std::string& rhs,
                                 MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return UnaryConstraint{declaration.synonym, {}};
+    if (kValidLhsDeclaration.find(lhs.design_entity) == kValidLhsDeclaration.end()) {
+      throw QpsSemanticError("[Uses] Invalid LHS synonym");
     }
-    throw QpsSemanticError("Not implemented");
+
+    if (!maybe_pkb_reader) {
+      return UnaryConstraint{lhs.synonym, {}};
+    }
+    throw QpsSemanticError("[Uses] Not implemented");
   }
 
-  static UnaryConstraint handle(Wildcard& wildcard,
-                                Declaration& declaration,
+  static UnaryConstraint handle(Wildcard& lhs,
+                                Declaration& rhs,
                                 MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return UnaryConstraint{declaration.synonym, {}};
-    }
-    throw QpsSemanticError("Not implemented");
+    throw QpsSemanticError("[Uses] LHS cannot be wildcard");
   }
 
-  static bool handle(Wildcard& wildcard1, Wildcard& wildcard2, MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return kIsBoolConstraint;
-    }
-    throw QpsSemanticError("Not implemented");
+  static bool handle(Wildcard& lhs, Wildcard& rhs, MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] LHS cannot be wildcard");
   }
 
-  static bool handle(Wildcard& wildcard, std::string& entity_name, MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return kIsBoolConstraint;
-    }
-    throw QpsSemanticError("Not implemented");
+  static bool handle(Wildcard& lhs, std::string& rhs, MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] LHS cannot be wildcard");
   }
 
-  static BinaryConstraint handle(std::string& proc_name,
-                                 Declaration& declaration,
-                                 MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return BinaryConstraint{{proc_name, declaration.synonym}, {}};
+  static UnaryConstraint handle(std::string& lhs_procname,
+                                Declaration& rhs,
+                                MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] Not required by Milestone1");
+    if (kValidRhsDeclaration.find(rhs.design_entity) == kValidRhsDeclaration.end()) {
+      throw QpsSemanticError("[Uses] Invalid RHS synonym");
     }
-    throw QpsSemanticError("Not required by Milestone1");
   }
 
-  static bool handle(std::string& proc_name, Wildcard& wildcard, MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return kIsBoolConstraint;
-    }
-    throw QpsSemanticError("Not required by Milestone1");
+  static bool handle(std::string& lhs_proc_name, Wildcard& rhs, MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] Not required by Milestone1");
   }
 
-  static bool handle(std::string& proc_name, std::string& entity_name, MaybeReadFacade maybe_pkb_reader) {
-    if (!maybe_pkb_reader) {
-      return kIsBoolConstraint;
-    }
-    throw QpsSemanticError("Not required by Milestone1");
+  static bool handle(std::string& lhs_proc_name, std::string& rhs, MaybeReadFacade maybe_pkb_reader) {
+    throw QpsSemanticError("[Uses] Not required by Milestone1");
   }
 };
 
 UsesS::UsesS(StmtRef lhs, EntRef rhs) {
   this->rhs = std::move(rhs);
   this->lhs = std::move(lhs);
+
+  try {
+    Validate();
+  } catch (const QpsSemanticError& e) {
+    throw;
+  }
 }
 
 Constraint UsesS::Evaluate(ReadFacade& pkb_reader) {
