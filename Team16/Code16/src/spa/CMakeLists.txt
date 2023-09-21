@@ -102,12 +102,10 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
         src/qps/query_parser/clause_builder/pattern_clause_builder.h
-        src/qps/clauses/suchthat_clauses/uses_p.cpp
-        src/qps/clauses/suchthat_clauses/uses_p.h
         src/qps/clauses/clauses_types.h
         src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
-        src/qps/clauses/suchthat_clauses/uses_s.cpp
-        src/qps/clauses/suchthat_clauses/uses_s.h
+        src/qps/clauses/suchthat_clauses/uses.cpp
+        src/qps/clauses/suchthat_clauses/uses.h
         src/qps/clauses/suchthat_clauses/modifies_p.cpp
         src/qps/clauses/suchthat_clauses/modifies_p.h
         src/qps/clauses/suchthat_clauses/modifies_s.cpp

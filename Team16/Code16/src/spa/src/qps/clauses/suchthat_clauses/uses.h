@@ -19,3 +19,13 @@ class UsesS : public SuchThatClause {
   void Validate();
 };
 
+class UsesP : public SuchThatClause {
+ public:
+  UsesP(EntRef lhs, EntRef rhs);
+  EntRef lhs;
+  EntRef rhs;
+
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
+ private:
+  void Validate();
+};

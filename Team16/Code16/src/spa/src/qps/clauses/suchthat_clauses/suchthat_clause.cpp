@@ -1,4 +1,4 @@
-#include "suchthat_clause.h"
+#include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
 #include <utility>
 
