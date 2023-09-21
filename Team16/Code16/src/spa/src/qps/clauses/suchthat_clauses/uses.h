@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <string>
 #include <functional>
+#include <optional>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
