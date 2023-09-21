@@ -108,7 +108,7 @@ class PKB {
     // StatementStore methods
 
     void addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap);
-
+    
     std::unordered_set<statementNumber> getStatements(StmtEntity type);
 
     // ParentStore methods
@@ -140,6 +140,7 @@ class PKB {
     bool isParentStar(Wildcard wildcard, Wildcard wildcard2);
 
     // FollowStore Method
+
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 
     std::unordered_set<statementNumber> follows(Wildcard wildcard, StmtEntity entity);
