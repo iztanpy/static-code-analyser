@@ -24,8 +24,28 @@ std::unordered_set<statementNumber> PKB::getAllAssigns() {
     return assignStore->getAllAssigns();
 }
 
+std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, Wildcard wildcard) {
+    return assignStore->getAssigns(LHS, wildcard);
+}
+
+std::unordered_set<statementNumber> PKB::getAssigns(Wildcard wildcard, possibleCombinations RHS) {
+    return assignStore->getAssigns(wildcard, RHS);
+}
+
 std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, possibleCombinations RHS) {
     return assignStore->getAssigns(LHS, RHS);
+}
+
+std::unordered_set<statementNumber> PKB::getAssigns(Wildcard wildcard, Wildcard wildcard2) {
+    return assignStore->getAssigns(wildcard, wildcard2);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPair(partialMatch partial) {
+    return assignStore->getAssignPair(partial);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPair(Wildcard wildcard) {
+    return assignStore->getAssignPair(wildcard);
 }
 
 

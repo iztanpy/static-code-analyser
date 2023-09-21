@@ -23,6 +23,7 @@ typedef int statementNumber;
 typedef std::string possibleCombinations;
 typedef std::string constant;
 typedef std::string statementType;
+typedef std::string partialMatch;
 
 class PKB {
  private:
@@ -47,7 +48,17 @@ class PKB {
 
     std::unordered_set<statementNumber> getAllAssigns();
 
-    std::unordered_set<statementNumber> getAssigns(variable LHS, possibleCombinations RHS);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(partialMatch partial);
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(Wildcard wildcard);
+
+    std::unordered_set<statementNumber> getAssigns(Wildcard lhs, partialMatch rhs);
+
+    std::unordered_set<statementNumber> getAssigns(Wildcard lhs, Wildcard rhs);
+
+    std::unordered_set<statementNumber> getAssigns(partialMatch lhs, partialMatch rhs);
+
+    std::unordered_set<statementNumber> getAssigns(partialMatch lhs, Wildcard rhs);
 
     // VariableStore methods
 
