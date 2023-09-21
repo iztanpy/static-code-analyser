@@ -8,3 +8,6 @@ Parent::Parent(StmtRef lhs, StmtRef rhs) {
 Constraint Parent::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("Not implemented");
 }
+
+void Parent::Validate() {
+}

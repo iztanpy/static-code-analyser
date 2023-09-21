@@ -11,4 +11,7 @@ class ModifiesS : public SuchThatClause {
   EntRef rhs;
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+ private:
+  void Validate() override;
 };

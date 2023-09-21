@@ -11,4 +11,7 @@ class FollowsT : public SuchThatClause {
   StmtRef rhs;
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+ private:
+  void Validate() override;
 };

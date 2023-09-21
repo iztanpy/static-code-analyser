@@ -139,6 +139,12 @@ void UsesS::Validate() {
 UsesP::UsesP(EntRef lhs, EntRef rhs) {
   this->rhs = std::move(rhs);
   this->lhs = std::move(lhs);
+
+  try {
+    Validate();
+  } catch (const QpsSemanticError& e) {
+    throw;
+  }
 }
 
 Constraint UsesP::Evaluate(ReadFacade& pkb_reader) {

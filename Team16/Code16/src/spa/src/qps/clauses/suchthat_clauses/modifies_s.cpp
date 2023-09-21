@@ -8,3 +8,5 @@ ModifiesS::ModifiesS(StmtRef lhs, EntRef rhs) {
 Constraint ModifiesS::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("Not implemented");
 }
+void ModifiesS::Validate() {
+}

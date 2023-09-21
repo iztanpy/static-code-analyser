@@ -16,7 +16,7 @@ class UsesS : public SuchThatClause {
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 
  private:
-  void Validate();
+  void Validate() override;
 };
 
 class UsesP : public SuchThatClause {
@@ -27,5 +27,5 @@ class UsesP : public SuchThatClause {
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
  private:
-  void Validate();
+  void Validate() override;
 };

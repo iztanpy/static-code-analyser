@@ -8,3 +8,5 @@ FollowsT::FollowsT(StmtRef lhs, StmtRef rhs) {
 Constraint FollowsT::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("Not implemented");
 }
+void FollowsT::Validate() {
+}

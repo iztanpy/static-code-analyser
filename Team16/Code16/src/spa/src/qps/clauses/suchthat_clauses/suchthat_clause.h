@@ -35,6 +35,9 @@ class SuchThatClause : public Clause {
 
   virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
   ~SuchThatClause() override = default;
+
+ private:
+  virtual void Validate() = 0;
 };
 
 
