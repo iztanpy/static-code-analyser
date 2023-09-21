@@ -35,14 +35,17 @@ UnaryConstraint UsesEvaluator::Handle(Wildcard& lhs,
                                       Declaration& rhs,
                                       ReadFacade& pkb_reader) {
   assert(false && "[Uses] This code should never be reached! Make sure to call Validate() within constructor");
+  return UnaryConstraint{rhs.synonym, {}};
 }
 
 bool UsesEvaluator::Handle(Wildcard& lhs, Wildcard& rhs, ReadFacade& pkb_reader) {
   assert(false && "[Uses] This code should never be reached! Make sure to call Validate() within constructor");
+  return false;
 }
 
 bool UsesEvaluator::Handle(Wildcard& lhs, std::string& rhs, ReadFacade& pkb_reader) {
   assert(false && "[Uses] This code should never be reached! Make sure to call Validate() within constructor");
+  return false;
 }
 
 UnaryConstraint UsesEvaluator::Handle(std::string& lhs_procname,
