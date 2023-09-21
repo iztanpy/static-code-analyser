@@ -34,9 +34,19 @@ std::shared_ptr<TNode> AssignmentParser::parseTerm(const std::vector<Token>& tok
 
 std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> node = nullptr;
-  while (ParseUtils::isVarOrConst(tokens[index])) {
-    node = TNodeFactory::createNode(tokens[index], lineNumber);
+  if (tokens[index].tokenType == TokenType::kSepOpenParen) {
     incrementIndex();
+    node = parseExpression(tokens);
+    if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+      throw InvalidSyntaxError();
+    }
+    incrementIndex();
+    return node;
+  } else {
+    while (ParseUtils::isVarOrConst(tokens[index])) {
+      node = TNodeFactory::createNode(tokens[index], lineNumber);
+      incrementIndex();
+    }
   }
 
   return node;

@@ -380,7 +380,7 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
-  std::string simpleProgram = "procedure p {a = x + 1 * y / 5 + 1; kay = five / 9 - var;}";
+  std::string simpleProgram = "procedure p {a = (x + 1) * y / 5 + 1; kay = five / 9 - var;}";
   sourceProcessor.processSource(simpleProgram);
 
   std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "y", "a", "kay", "five", "var" });
@@ -389,10 +389,11 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
       { {1, "a"}, {2, "kay"}});
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
       std::unordered_set<std::string>>({
-        {1, {"x + 1 * y / 5 + 1", "x + 1 * y / 5", "1 * y / 5", "1 * y", "1", "y", "5", "x", "1"}},
+        {1, {"x + 1 * y / 5 + 1", "x + 1 * y / 5", "x + 1 * y", "x + 1", "y", "5", "x", "1"}},
         {2, {"five / 9 - var", "five / 9", "five", "9", "var"}}});
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
        std::unordered_set<std::string>>({{1, {"x", "y"}}, {2, {"five", "var"}}});
+
   REQUIRE(sourceProcessor.getVariables() == varSet);
   REQUIRE(sourceProcessor.getConstants() == constSet);
   REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
