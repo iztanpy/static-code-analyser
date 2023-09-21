@@ -1,4 +1,3 @@
-#pragma once
 #include "catch.hpp"
 #include <stdio.h>
 #include <unordered_set>
