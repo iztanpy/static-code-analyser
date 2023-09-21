@@ -6,7 +6,7 @@
 Item | Version
 -|-
 OS | Windows
-Toolchain | Windows Visual Studio 2019 Community (CMake Project)
+Toolchain | Visual Studio 17 2022, C & CXX compiler: MSVC 19.35.32217.1 
 C++ Standard | C++17
 
 ### Additional Build Instructions
