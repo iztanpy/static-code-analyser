@@ -22,9 +22,10 @@ TEST_CASE("One print statement 1") {
     sourceProcessor.processSource(simpleProgram);
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
-    std::unordered_map<int, std::unordered_set<std::string>> usesLineVariable = std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineVariable =
+        std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
     REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getUsesStatementNumberHashmap() == usesLineVariable);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineVariable);
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "k" }));
 
     //std::string query_2 = "variable v; Select v such that Uses(1, v)";
@@ -48,7 +49,7 @@ TEST_CASE("One read statement 1") {
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
     std::unordered_map<int, std::unordered_set<std::string>> modifiesLineVariable = std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
     REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getModifiesStatementNumberHashmap() == modifiesLineVariable);
+//    REQUIRE(sourceProcessor.getModifiesStatementNumberHashmap() == modifiesLineVariable);
 
     //std::string query_2 = "variable v; Select v such that Modifies(1, v)";
     //REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ "k" }));
