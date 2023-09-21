@@ -20,19 +20,19 @@ void ModifiesStore::storeModifies(std::unordered_map<statementNumber, variable> 
 bool ModifiesStore::isModifies(statementNumber statement, variable variable) {
     if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
         if (ModifiesVariableMap[statement] == variable) {
-			return true;
-		}
-	}
-	return false;
+            return true;
+        }
+    }
+    return false;
 }
 
 bool ModifiesStore::isModifies(statementNumber statement) {
     if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
         if (ModifiesVariableMap[statement].size() > 0) {
-			return true;
-		}
-	}
-	return false;
+            return true;
+        }
+    }
+    return false;
 }
 
 std::unordered_set<statementNumber> ModifiesStore::modifies(ModifiesStore::variable variable) {

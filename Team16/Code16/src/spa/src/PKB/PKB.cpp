@@ -1,6 +1,5 @@
 #include "PKB.h"
 
-
 PKB::PKB() {
     assignStore = std::make_unique<AssignStore>();
     variableStore = std::make_unique<VariableStore>();
@@ -80,89 +79,88 @@ std::unordered_set<variable> PKB::uses(statementNumber line) {
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-	std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
-		std::unordered_set<variable> variablesUsed = this->usesStore->uses(x);
+        std::unordered_set<variable> variablesUsed = this->usesStore->uses(x);
         for (auto const& y : variablesUsed) {
-			result.insert(std::make_pair(x, y));
-		}
-	}
-	return result;
+            result.insert(std::make_pair(x, y));
+        }
+    }
+    return result;
 }
 
 std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName) {
-	std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-	std::unordered_set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
         if (this->usesStore->uses(x).count(variableName)) {
-			result.insert(x);
-		}
-	}
-	return result;
+            result.insert(x);
+        }
+    }
+    return result;
 }
 
 std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-	std::unordered_set<statementNumber> result;
+    std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
         if (this->usesStore->uses(x).size() > 0) {
-			result.insert(x);
-		}
-	}
-	return result;
-
+            result.insert(x);
+        }
+    }
+    return result;
 }
 
 // ModifiesStore methods
 
 void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
-	modifiesStore->storeModifies(varModifiesMap);
+    modifiesStore->storeModifies(varModifiesMap);
 }
 
 bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
-	return modifiesStore->isModifies(lineNumber, variableName);
+    return modifiesStore->isModifies(lineNumber, variableName);
 }
 
 bool PKB::isModifies(statementNumber lineNumber, Wildcard wildcard) {
-	return modifiesStore->isModifies(lineNumber);
+    return modifiesStore->isModifies(lineNumber);
 }
 
 variable PKB::modifies(statementNumber line) {
-	return modifiesStore->modifies(line);
+    return modifiesStore->modifies(line);
 }
 
 std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, variable variableName) {
-	std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-	std::unordered_set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
         if (this->modifiesStore->modifies(x) == variableName) {
-			result.insert(x);
-		}
-	}
-	return result;
+            result.insert(x);
+        }
+    }
+    return result;
 }
 
 std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, Wildcard wildcard) {
-	std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-	std::unordered_set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
         if (this->modifiesStore->modifies(x) != "") {
-			result.insert(x);
-		}
-	}
-	return result;
+            result.insert(x);
+        }
+    }
+    return result;
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies(StmtEntity type) {
-	std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-	std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
-		variable variableModified = this->modifiesStore->modifies(x);
+        variable variableModified = this->modifiesStore->modifies(x);
         if (variableModified != "") {
-			result.insert(std::make_pair(x, variableModified));
-		}
-	}
-	return result;
+            result.insert(std::make_pair(x, variableModified));
+        }
+    }
+    return result;
 }
 
 // ConstantStore methods

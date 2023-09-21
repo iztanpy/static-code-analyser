@@ -12,8 +12,8 @@ StatementStore::StatementStore() {
 void StatementStore::addStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
     this->statementMap = typeMap;
     for (auto const& x : typeMap) {
-		this->statementMapReverse[x.second].insert(x.first);
-	} 
+        this->statementMapReverse[x.second].insert(x.first);
+    }
 }
 
 std::unordered_set<statementNumber> StatementStore::getStatements(StmtEntity type) {
@@ -29,7 +29,7 @@ std::unordered_set<statementNumber> StatementStore::getStatements(StmtEntity typ
 std::unordered_set<statementNumber> StatementStore::getAllStatements() {
     std::unordered_set<statementNumber> statements;
     for (auto const& x : this->statementMap) {
-		statements.insert(x.first);
-	}
-	return statements;
+        statements.insert(x.first);
+    }
+    return statements;
 }

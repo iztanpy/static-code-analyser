@@ -1,6 +1,5 @@
 #include "AssignStore.h"
-#include <unordered_map>
-#include <unordered_set>
+
 
 
 typedef std::string variable;
@@ -49,7 +48,7 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::
         results.insert(pair);
     }
     return results;
-};
+}
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>  AssignStore::getAssignPair(Wildcard wildcard) {
     auto results = std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
@@ -59,16 +58,15 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash>  AssignStore:
         results.insert(pair);
     }
     return results;
-
-};
+}
 
 std::unordered_set<statementNumber> AssignStore::getAssigns(Wildcard lhs, partialMatch rhs) {
     return reverseNumRHSMap[rhs];
-};
+}
 
 std::unordered_set<statementNumber> AssignStore::getAssigns(Wildcard lhs, Wildcard rhs) {
     return getAllAssigns();
-};
+}
 
 std::unordered_set<statementNumber> AssignStore::getAssigns(partialMatch lhs, partialMatch rhs) {
     std::unordered_set<statementNumber> results;
@@ -79,8 +77,8 @@ std::unordered_set<statementNumber> AssignStore::getAssigns(partialMatch lhs, pa
         }
     }
     return results;
-};
+}
 
 std::unordered_set<statementNumber> AssignStore::getAssigns(partialMatch lhs, Wildcard rhs) {
     return reverseNumLHSMap[lhs];
-};
+}

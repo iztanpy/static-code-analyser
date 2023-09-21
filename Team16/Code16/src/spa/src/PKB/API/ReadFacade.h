@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <utility>
 #include "PKB/PKB.h"
+
 
 typedef std::string partialMatch;
 typedef std::string variable;
@@ -13,6 +15,7 @@ typedef std::string constant;
 class ReadFacade {
  private:
   PKB& pkb;
+
  public:
   explicit ReadFacade(PKB& pkb);
 

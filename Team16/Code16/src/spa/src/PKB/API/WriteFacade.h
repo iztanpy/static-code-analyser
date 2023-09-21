@@ -47,5 +47,4 @@ class WriteFacade {
 
     // FollowStore Method
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
-
 };

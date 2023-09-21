@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include <iostream>
 #include <string>
+#include <utility>
 #include <unordered_set>
 #include <unordered_map>
 #include <memory>
@@ -97,7 +98,7 @@ class PKB {
     std::unordered_set<statementNumber> modifies(StmtEntity type, Wildcard wildcard);
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
-    
+
     // ConstantStore methods
 
     void addConstants(std::unordered_set<constant> constants);

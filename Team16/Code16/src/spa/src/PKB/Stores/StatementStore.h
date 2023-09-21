@@ -23,7 +23,5 @@ class StatementStore {
     std::unordered_set<statementNumber> getStatements(StmtEntity type);
 
     std::unordered_set<statementNumber> getAllStatements();
-
-
 };
 

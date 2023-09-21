@@ -20,6 +20,5 @@ class ModifiesStore {
     bool isModifies(statementNumber statement);
 
     variable modifies(statementNumber statement);
-    
     std::unordered_set<statementNumber> modifies(variable variable);
 };
