@@ -39,6 +39,14 @@ void ModTNode::accept(ASTVisitor *visitor, std::string& key) const {
     visitor->visit(this, key);
 }
 
+void RelOperatorTNode::accept(ASTVisitor* visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
+void CondOperatorTNode::accept(ASTVisitor* visitor, std::string& key) const {
+    visitor->visit(this, key);
+}
+
 void ReadTNode::accept(ASTVisitor* visitor, std::string& key) const {
     visitor->visit(this, key);
 }

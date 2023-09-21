@@ -172,6 +172,70 @@ class ModTNode : public TNode {
   }
 };
 
+class RelOperatorTNode : public TNode {
+ public:
+  explicit RelOperatorTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
+    type = tokenType;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    std::string rep = "";
+    switch (type) {
+      case TokenType::kOperatorEqual:
+        rep = " == ";
+        break;
+      case TokenType::kOperatorNotEqual:
+        rep = " != ";
+        break;
+      case TokenType::kOperatorGreater:
+        rep = " > ";
+        break;
+      case TokenType::kOperatorLess:
+        rep = " < ";
+        break;
+      case TokenType::kOperatorGreaterEqual:
+        rep = " >= ";
+        break;
+      case TokenType::kOperatorLessEqual:
+        rep = " <= ";
+        break;
+      default:
+        throw InvalidTokenTypeError("Error: invalid token type");
+    }
+    return leftChild->getContent() + rep + rightChild->getContent();
+  }
+};
+
+
+class CondOperatorTNode : public TNode {
+ public:
+  explicit CondOperatorTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
+    type = tokenType;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    std::string rep = "";
+    switch (type) {
+      case TokenType::kOperatorLogicalNot:
+        rep = "!";
+        break;
+      case TokenType::kOperatorLogicalAnd:
+        rep = " && ";
+        break;
+      case TokenType::kOperatorLogicalOr:
+        rep = "||";
+        break;
+      default:
+        throw InvalidTokenTypeError("Error: invalid token type");
+    }
+    if (!leftChild) {
+      return rep + "(" + rightChild->getContent() + ")";
+    }
+    return "(" + leftChild->getContent() + ")" + rep + "(" + rightChild->getContent() + ")";
+  }
+};
+
+
 class TNodeFactory {
  public:
      static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
@@ -217,6 +281,19 @@ class TNodeFactory {
          }
          case TokenType::kOperatorMod: {
            return std::make_shared<ModTNode>(statementNumber);
+         }
+         case TokenType::kOperatorEqual:
+         case TokenType::kOperatorNotEqual:
+         case TokenType::kOperatorGreater:
+         case TokenType::kOperatorLess:
+         case TokenType::kOperatorGreaterEqual:
+         case TokenType::kOperatorLessEqual: {
+           return std::make_shared<RelOperatorTNode>(statementNumber, token.tokenType);
+         }
+         case TokenType::kOperatorLogicalAnd:
+         case TokenType::kOperatorLogicalOr:
+         case TokenType::kOperatorLogicalNot: {
+           return std::make_shared<CondOperatorTNode>(statementNumber, token.tokenType);
          default:
              throw std::invalid_argument("Error: unknown token type");
          }

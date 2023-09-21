@@ -17,16 +17,20 @@ void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
     } else {
         std::unordered_set<std::string>& setVar = usesLineRHSVarMap[node->statementNumber];
         setVar.insert(node->content);
-        std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
-        set.insert(node->content);
+        if (key != "not pattern") {
+          std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
+          set.insert(node->content);
+        }
     }
     variables.insert(node->content);
 }
 
 void ASTVisitor::visit(const ConstantTNode* node, std::string& key) {
     constants.insert(node->content);
-    std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
-    set.insert(node->content);
+    if (key != "not pattern") {
+      std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
+      set.insert(node->content);
+    }
 }
 
 void ASTVisitor::visit(const PlusTNode* node, std::string& key) {
@@ -62,6 +66,24 @@ void ASTVisitor::visit(const ModTNode* node, std::string& key) {
   node->rightChild->accept(this, key);
   std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
   set.insert(node->getContent());
+}
+
+void ASTVisitor::visit(const CondOperatorTNode* node, std::string& key) {
+  std::string notPattern = "not pattern";
+  node->leftChild->accept(this, notPattern);
+  if (node->rightChild) {
+    node->rightChild->accept(this, notPattern);
+  }
+//  std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
+//  set.insert(node->getContent());
+}
+
+void ASTVisitor::visit(const RelOperatorTNode* node, std::string& key) {
+  std::string notPattern = "not pattern";
+  node->leftChild->accept(this, notPattern);
+  node->rightChild->accept(this, notPattern);
+//  std::unordered_set<std::string>& set = usesLineRHSPatternMap[node->statementNumber];
+//  set.insert(node->getContent());
 }
 
 void ASTVisitor::visit(const ReadTNode* node, std::string& key) {

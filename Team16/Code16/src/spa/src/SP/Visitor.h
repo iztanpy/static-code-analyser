@@ -31,6 +31,8 @@ class Visitor {
     virtual void visit(const MultiplyTNode* node, std::string& key) = 0;
     virtual void visit(const DivideTNode* node, std::string& key) = 0;
     virtual void visit(const ModTNode* node, std::string& key) = 0;
+    virtual void visit(const CondOperatorTNode* node, std::string& key) = 0;
+    virtual void visit(const RelOperatorTNode* node, std::string& key) = 0;
     virtual void visit(const ReadTNode* node, std::string& key) = 0;
     virtual void visit(const WhileTNode* node, std::string& key) = 0;
     virtual void visit(const PrintTNode* node, std::string& key) = 0;
@@ -43,6 +45,7 @@ class Visitor {
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap;
     std::unordered_map<int, std::string> usesLineLHSMap;
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
+    // to remove
     std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
 
     // Modifies
@@ -108,6 +111,8 @@ class ASTVisitor : public Visitor {
     void visit(const MultiplyTNode* node, std::string& key) override;
     void visit(const DivideTNode* node, std::string& key) override;
     void visit(const ModTNode* node, std::string& key) override;
+    void visit(const CondOperatorTNode* node, std::string& key) override;
+    void visit(const RelOperatorTNode* node, std::string& key) override;
     void visit(const ReadTNode* node, std::string& key) override;
     void visit(const WhileTNode* node, std::string& key) override;
     void visit(const PrintTNode* node, std::string& key) override;
