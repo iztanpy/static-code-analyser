@@ -65,9 +65,9 @@ class PKB {
 
     std::unordered_set<variable> uses(statementNumber line);
 
-    std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName);
+    std::unordered_set<statementNumber> uses(StmtEntity type, variable variableName);
 
-    std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard);
+    std::unordered_set<statementNumber> uses(StmtEntity type, Wildcard wildcard);
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
