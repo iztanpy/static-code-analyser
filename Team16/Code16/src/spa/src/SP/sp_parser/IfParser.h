@@ -13,7 +13,6 @@
 #include "SP/sp_parser/Parser.h"
 #include "SP/utils/ParseUtils.h"
 
-#include "SP/sp_parser/ConditionParser.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
