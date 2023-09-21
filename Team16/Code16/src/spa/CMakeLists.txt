@@ -114,8 +114,6 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/parent.h
         src/qps/clauses/suchthat_clauses/follows.cpp
         src/qps/clauses/suchthat_clauses/follows.h
-        src/qps/clauses/suchthat_clauses/follows_t.cpp
-        src/qps/clauses/suchthat_clauses/follows_t.h
         src/qps/clauses/suchthat_clauses/suchthat_validator.cpp
         src/qps/clauses/suchthat_clauses/suchthat_validator.h
 )
