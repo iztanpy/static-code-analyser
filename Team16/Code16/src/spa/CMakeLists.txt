@@ -92,7 +92,7 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/ParentStore.cpp
         src/PKB/Stores/ParentStore.h
         src/PKB/Helper/StmtEntity.h
-        src/PKB/Helper/Wildcard.h)
+        src/PKB/Helper/Wildcard.h
         src/SP/sp_parser/AssignmentParser.cpp
         src/SP/sp_parser/AssignmentParser.h
         src/SP/sp_parser/ReadParser.cpp
