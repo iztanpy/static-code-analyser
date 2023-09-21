@@ -20,9 +20,6 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 10
-    strategy:
-      fail-fast: true
 
     steps:
       - uses: actions/checkout@v2
