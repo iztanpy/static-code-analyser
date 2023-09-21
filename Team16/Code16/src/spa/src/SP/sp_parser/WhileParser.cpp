@@ -2,12 +2,37 @@
 #include "WhileParser.h"
 
 int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    std::vector<Token> conditionTokens = WhileParser::getConditionTokens(tokens, curr_index);
-    int validCondition = conditionParser->parse(conditionTokens, 0);
-    if (validCondition == -1) {
+    // Validate that statement has at least 5 tokens (min: lhs = rhs ;)
+    if (tokens.size() - index < 4) {
+      return -1;
+    }
+    index++;
+
+    // Validate open parenthesis
+    if (tokens[index].tokenType != TokenType::kSepOpenParen) {
         throw InvalidSyntaxError();
     }
-    return curr_index + conditionTokens.size() + 2;  // Continue evaluation + Skip Open Brace
+    index++;
+
+    ParseUtils::setValues(index, lineNumber);
+    std::shared_ptr<TNode> whileCondNode = ParseUtils::parseCondExpression(tokens);
+    index = ParseUtils::getIndex();
+
+    // Validate close parenthesis
+    if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+      throw InvalidSyntaxError();
+    }
+    index++;
+
+    // Validate open braces
+    if (tokens[index].tokenType != TokenType::kSepOpenBrace) {
+      throw InvalidSyntaxError();
+    }
+    index++;
+
+    designExtractor->extractDesign(whileCondNode, visitor);
+
+    return index;
 }
 
 std::vector<Token> WhileParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {

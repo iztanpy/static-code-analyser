@@ -12,6 +12,7 @@
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
 #include "SP/sp_parser/ConditionParser.h"
+#include "SP/utils/ParseUtils.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -30,6 +31,7 @@ class WhileParser : public Parser {
     ASTVisitor* visitor;
     ConditionParser* conditionParser = new ConditionParser(visitor);
     int lineNumber = 0;
+    int index = 0;
     /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
 };
 

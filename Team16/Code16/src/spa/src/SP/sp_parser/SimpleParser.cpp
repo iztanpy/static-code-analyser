@@ -64,6 +64,8 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         } else if (curr_token.tokenType == TokenType::kEntityWhile) {
             controlStructureStack.push("while");
             parentStatementStack.push(lineNumber);
+            whileParser->lineNumber = lineNumber;
+            whileParser->index = curr_index;
             int next_index = whileParser->parse(tokens, curr_index);
             currWhileDepth++;
 
