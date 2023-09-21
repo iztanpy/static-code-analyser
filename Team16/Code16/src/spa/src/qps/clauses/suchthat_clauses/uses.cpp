@@ -65,19 +65,12 @@ struct UsesVisitor {
   }
 };
 
-inline static const std::unordered_set<DesignEntity> kValidRhsDeclaration = {DesignEntity::VARIABLE};
-inline static const std::unordered_set<DesignEntity> kValidLhsDeclaration =
+static const std::unordered_set<DesignEntity> kValidRhsDeclaration = {DesignEntity::VARIABLE};
+static const std::unordered_set<DesignEntity> kValidLhsDeclaration =
     {DesignEntity::STMT, DesignEntity::ASSIGN, DesignEntity::PRINT, DesignEntity::IF_STMT,
      DesignEntity::WHILE_LOOP, DesignEntity::CALL, DesignEntity::PROCEDURE};
 
-UsesS::UsesS(StmtRef lhs, EntRef rhs) {
-  this->rhs = std::move(rhs);
-  this->lhs = std::move(lhs);
-  Validate();
-}
-
 Constraint UsesS::Evaluate(ReadFacade& pkb_reader) {
-//  throw QpsSemanticError("Not implemented");
   return std::visit([this, &pkb_reader](auto&& lhs_arg, auto&& rhs_arg) {
     return Constraint{UsesVisitor::handle(lhs_arg, rhs_arg, pkb_reader)};
   }, this->lhs, this->rhs);
@@ -87,29 +80,7 @@ Constraint UsesS::Evaluate(ReadFacade& pkb_reader) {
 // we want this to throw exception, so constructor can catch it
 // and throw it back. So whoever calls the constructor will get the exception
 void UsesS::Validate() {
-  if (std::holds_alternative<Declaration>(lhs)) {
-    Declaration lhs_decl = std::get<Declaration>(lhs);
-    if (kValidLhsDeclaration.find(lhs_decl.design_entity) == kValidLhsDeclaration.end()) {
-      throw QpsSemanticError("[Uses] Invalid LHS synonym");
-    }
-  }
-
-  if (std::holds_alternative<Wildcard>(lhs)) {
-    throw QpsSemanticError("[Uses] LHS cannot be wildcard");
-  }
-
-  if (std::holds_alternative<Declaration>(rhs)) {
-    Declaration rhs_decl = std::get<Declaration>(rhs);
-    if (kValidRhsDeclaration.find(rhs_decl.design_entity) == kValidRhsDeclaration.end()) {
-      throw QpsSemanticError("[Uses] Invalid RHS synonym");
-    }
-  }
-}
-
-UsesP::UsesP(EntRef lhs, EntRef rhs) {
-  this->rhs = std::move(rhs);
-  this->lhs = std::move(lhs);
-  Validate();
+  SuchThatValidator::ValidateUse(lhs, rhs);
 }
 
 Constraint UsesP::Evaluate(ReadFacade& pkb_reader) {
@@ -120,21 +91,5 @@ Constraint UsesP::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void UsesP::Validate() {
-  if (std::holds_alternative<Declaration>(lhs)) {
-    Declaration lhs_decl = std::get<Declaration>(lhs);
-    if (kValidLhsDeclaration.find(lhs_decl.design_entity) == kValidLhsDeclaration.end()) {
-      throw QpsSemanticError("[Uses] Invalid LHS synonym");
-    }
-  }
-
-  if (std::holds_alternative<Wildcard>(lhs)) {
-    throw QpsSemanticError("[Uses] LHS cannot be wildcard");
-  }
-
-  if (std::holds_alternative<Declaration>(rhs)) {
-    Declaration rhs_decl = std::get<Declaration>(rhs);
-    if (kValidRhsDeclaration.find(rhs_decl.design_entity) == kValidRhsDeclaration.end()) {
-      throw QpsSemanticError("[Uses] Invalid RHS synonym");
-    }
-  }
+  SuchThatValidator::ValidateUse(lhs, rhs);
 }

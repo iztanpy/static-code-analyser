@@ -112,12 +112,12 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/modifies_s.h
         src/qps/clauses/suchthat_clauses/parent.cpp
         src/qps/clauses/suchthat_clauses/parent.h
-        src/qps/clauses/suchthat_clauses/parent_s.cpp
-        src/qps/clauses/suchthat_clauses/parent_s.h
         src/qps/clauses/suchthat_clauses/follows.cpp
         src/qps/clauses/suchthat_clauses/follows.h
         src/qps/clauses/suchthat_clauses/follows_t.cpp
         src/qps/clauses/suchthat_clauses/follows_t.h
+        src/qps/clauses/suchthat_clauses/suchthat_validator.cpp
+        src/qps/clauses/suchthat_clauses/suchthat_validator.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

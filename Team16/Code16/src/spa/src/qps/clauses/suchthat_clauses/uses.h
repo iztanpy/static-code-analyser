@@ -6,12 +6,18 @@
 #include <cassert>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
+#include "qps/clauses/suchthat_clauses/suchthat_validator.h"
 
 class UsesS : public SuchThatClause {
  public:
-  UsesS(StmtRef lhs, EntRef rhs);
   StmtRef lhs;
   EntRef rhs;
+
+  UsesS(StmtRef lhs, EntRef rhs) {
+    Validate();
+    this->rhs = std::move(rhs);
+    this->lhs = std::move(lhs);
+  }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 
@@ -21,9 +27,14 @@ class UsesS : public SuchThatClause {
 
 class UsesP : public SuchThatClause {
  public:
-  UsesP(EntRef lhs, EntRef rhs);
   EntRef lhs;
   EntRef rhs;
+
+  UsesP(EntRef lhs, EntRef rhs) {
+    Validate();
+    this->rhs = std::move(rhs);
+    this->lhs = std::move(lhs);
+  }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
  private:

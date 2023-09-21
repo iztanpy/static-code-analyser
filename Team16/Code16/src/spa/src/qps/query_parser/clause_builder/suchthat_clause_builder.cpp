@@ -150,7 +150,7 @@ std::unique_ptr<SuchThatClause> SuchThatClauseBuilder::getClause() const {
       }
     case RelRefType::PARENTT:
       if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
-        return std::make_unique<ParentS>(std::get<StmtRef>(lhs),
+        return std::make_unique<ParentT>(std::get<StmtRef>(lhs),
                                          std::get<StmtRef>(rhs));
       } else {
         throw QpsSyntaxError("Syntax error");

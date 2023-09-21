@@ -8,5 +8,6 @@ ModifiesP::ModifiesP(EntRef lhs, EntRef rhs) {
 Constraint ModifiesP::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("Not implemented");
 }
+
 void ModifiesP::Validate() {
 }

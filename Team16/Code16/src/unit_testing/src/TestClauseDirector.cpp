@@ -37,7 +37,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of parent relat
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<Parent *>(such_that_clause.get());
+  auto* clause = dynamic_cast<Parent*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -57,7 +57,7 @@ TEST_CASE("Clause Director can create such that clause with parent relation") {
   };
 
   std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<Parent *>(such_that_clause.get());
+  auto* clause = dynamic_cast<Parent*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -80,7 +80,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of parent* rela
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<ParentS *>(such_that_clause.get());
+  auto* clause = dynamic_cast<ParentT*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -100,7 +100,7 @@ TEST_CASE("Clause Director can create such that clause with parent* relation") {
   };
 
   std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<ParentS *>(such_that_clause.get());
+  auto* clause = dynamic_cast<ParentT*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -123,7 +123,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of follows rela
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<Follows *>(such_that_clause.get());
+  auto* clause = dynamic_cast<Follows*>(such_that_clause.get());
   RefParam expectedRhs = StmtRef(declarations[0]);
   RefParam expectedLhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -143,7 +143,7 @@ TEST_CASE("Clause Director can create such that clause with follows relation") {
   };
 
   std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<Follows *>(such_that_clause.get());
+  auto* clause = dynamic_cast<Follows*>(such_that_clause.get());
   RefParam expectedRhs = StmtRef(declarations[0]);
   RefParam expectedLhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -166,7 +166,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of UsesS('stmtR
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<UsesS *>(such_that_clause.get());
+  auto* clause = dynamic_cast<UsesS*>(such_that_clause.get());
   RefParam expectedRhs = EntRef(declarations[0]);
   RefParam expectedLhs = StmtRef(7);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -189,7 +189,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of UsesP('entRe
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<UsesP *>(such_that_clause.get());
+  auto* clause = dynamic_cast<UsesP*>(such_that_clause.get());
   RefParam expectedRhs = EntRef(declarations[0]);
   RefParam expectedLhs = EntRef("main");
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expectedLhs));
@@ -212,7 +212,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of ModifiesS('s
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<ModifiesS *>(such_that_clause.get());
+  auto* clause = dynamic_cast<ModifiesS*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = EntRef("x");
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -232,7 +232,7 @@ TEST_CASE("Clause Director can create such that clause with ModifiesS('stmtRef',
   };
 
   std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<ModifiesS *>(such_that_clause.get());
+  auto* clause = dynamic_cast<ModifiesS*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = EntRef("x");
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -255,7 +255,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of ModifiesP('e
   builder.setLhs(params[1], declarations);
   builder.setRhs(params[2], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
-  auto *clause = dynamic_cast<ModifiesP *>(such_that_clause.get());
+  auto* clause = dynamic_cast<ModifiesP*>(such_that_clause.get());
   RefParam expectedLhs = EntRef("y");
   RefParam expectedRhs = EntRef("x");
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expectedLhs));
@@ -275,7 +275,7 @@ TEST_CASE("Clause Director can create such that clause with ModifiesS with wildc
   };
 
   std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<ModifiesS *>(such_that_clause.get());
+  auto* clause = dynamic_cast<ModifiesS*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = EntRef(Wildcard::Value);
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expectedLhs));
@@ -297,7 +297,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExp
   PatternClauseBuilder builder;
 
   std::unique_ptr<PatternClause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<PartialPattern *>(pattern_clause.get());
+  auto* clause = dynamic_cast<PartialPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[1]);
   ExprSpec expected_rhs = ExprSpec("x+y");
@@ -320,7 +320,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
 
   PatternClauseBuilder builder;
   std::unique_ptr<PatternClause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<ExactPattern *>(pattern_clause.get());
+  auto* clause = dynamic_cast<ExactPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[1]);
   ExprSpec expected_rhs = ExprSpec("x+y");
@@ -342,7 +342,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
 
   PatternClauseBuilder builder;
   std::unique_ptr<PatternClause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
-  auto *clause = dynamic_cast<ExactPattern *>(pattern_clause.get());
+  auto* clause = dynamic_cast<ExactPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = Wildcard::Value;
   ExprSpec expected_rhs = ExprSpec("x+y");
