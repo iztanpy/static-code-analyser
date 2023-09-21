@@ -1,10 +1,13 @@
 #include "catch.hpp"
 #include <stdio.h>
 #include <unordered_set>
+#include <iostream>
+using namespace std;
 
 #include "PKB/PKB.h"
 #include "PKB/API/ReadFacade.h"
 #include "PKB/API/WriteFacade.h"
+#include "PKB/Helper/Wildcard.h"
 
 
 TEST_CASE(" 1") {
@@ -14,9 +17,9 @@ TEST_CASE(" 1") {
 
 	//make unordered map for <int, string > for assignments
 	std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
-	assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
-	assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
-    assignmentsRHS.insert({ 3, { "y + w", "x" } });
+    assignmentsRHS.insert({ 1, { "x", "y" } });
+    assignmentsRHS.insert({ 2, { "y" } });
+    assignmentsRHS.insert({ 3, { "x", "1", "2" } });
 
 	std::unordered_map<statementNumber, variable> assignmentsLHS;
 	assignmentsLHS.insert({ 1, "a" });
@@ -27,23 +30,21 @@ TEST_CASE(" 1") {
 
     REQUIRE(readFacade.getAllAssigns().size() == 3);
 
-	for (int value : readFacade.getAssigns("a", "x + y")) {
-		REQUIRE(value == 1);
+	for (int value : readFacade.getAssigns(Wildcard(), "1")) {
+        REQUIRE(value == 3);
 	}
 
-	for (int value : readFacade.getAssigns("b", "y + z")) {
+	for (int value : readFacade.getAssigns("b", "y")) {
 		REQUIRE(value == 2);
 	}
 
-    REQUIRE(readFacade.getAssigns("_", "x + y").size() == 2);
+    REQUIRE(readFacade.getAssigns(Wildcard() , Wildcard()).size() == 3);
 
-    REQUIRE(readFacade.getAssigns("_", "_").size() == 3);
-
-    REQUIRE(readFacade.getAssigns("b", "_").size() == 2);
+    REQUIRE(readFacade.getAssigns("b", Wildcard()).size() == 2);
 
 	writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
 
-	for (std::string value : readFacade.getAllVariables()) {
+	for (std::string value : readFacade.getVariables()) {
 		REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
 	}
 
@@ -58,7 +59,7 @@ TEST_CASE(" 1") {
 	}
 	writeFacade.storeConstants({ "1", "2", "3" });
 
-	for (std::string value : readFacade.getAllConstants()) {
+	for (std::string value : readFacade.getConstants()) {
 		REQUIRE((value == "1" || value == "2" || value == "3"));
 	}
 }
@@ -70,9 +71,9 @@ TEST_CASE("test Facades for AssignStore") {
     ReadFacade readFacade = ReadFacade(pkb);
 
     std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
-    assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
-    assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
-    assignmentsRHS.insert({ 3, { "y + w", "x" } });
+    assignmentsRHS.insert({ 1, { "x", "y" } });
+    assignmentsRHS.insert({ 2, { "x" } });
+    assignmentsRHS.insert({ 3, { "x", "1", "2" } });
 
     std::unordered_map<statementNumber, variable> assignmentsLHS;
     assignmentsLHS.insert({ 1, "a" });
@@ -83,27 +84,19 @@ TEST_CASE("test Facades for AssignStore") {
 
     REQUIRE(readFacade.getAllAssigns().size() == 3);
 
-//    for (int value: readFacade.getAllAssigns()) {
-//        std::cout << value << std::endl;
-//    }
+    REQUIRE(readFacade.getAssigns(Wildcard(), Wildcard()).size() == 3);
 
-    for (int value : readFacade.getAssigns("a", "x + y")) {
-        REQUIRE(value == 1);
-    }
+    REQUIRE(readFacade.getAssigns("b", Wildcard()).size() == 2);
 
-    for (int value : readFacade.getAssigns("b", "y + z")) {
-        REQUIRE(value == 2);
-    }
+    REQUIRE(readFacade.getAssigns("b", "x").size() == 2);
 
-    REQUIRE(readFacade.getAssigns("_", "x + y").size() == 2);
+    REQUIRE(readFacade.getAssigns("b", "1").size() == 1);
 
-    REQUIRE(readFacade.getAssigns("_", "_").size() == 3);
-
-    REQUIRE(readFacade.getAssigns("b", "_").size() == 2);
+    REQUIRE(readFacade.getAssigns("b", "2").size() == 1);
 
     writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
 
-    for (std::string value : readFacade.getAllVariables()) {
+    for (std::string value : readFacade.getVariables()) {
         REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
     }
 
@@ -125,7 +118,7 @@ TEST_CASE("Test Facades for Variable Store"){
 
     writeFacade.storeVariables({"x", "y", "z", "a", "b"});
 
-    for (std::string value : readFacade.getAllVariables()) {
+    for (std::string value : readFacade.getVariables()) {
         REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
     }
 }
