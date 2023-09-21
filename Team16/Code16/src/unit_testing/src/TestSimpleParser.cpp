@@ -92,27 +92,27 @@ TEST_CASE(("Test SP storing of assignment statements")) {
     REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
-TEST_CASE(("Test SP Uses: nested while")) {
+TEST_CASE(("Test SP Uses: nested while and if/then/else")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
-      "procedure p {x = x + 1; read r; while (i == 0) { while( (a==3)||(b>1) ) { read f;}} } "
+      "procedure p {x = x + 1; read r; while (i == 0) { if( (a==3)||(b>1) ) then{ read f;} else{ read k; }} } "
       "procedure wee { while(!(c==1)){y = y + x + 1;}}";
   sourceProcessor.processSource(simpleProgram);
 
   std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
-      { {1, "x"}, {7, "y"} });
+      { {1, "x"}, {8, "y"} });
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
       std::unordered_set<std::string>>({ {1, {"x", "1", "x + 1"}},
-                                            {7, {"y", "x", "y + x", "y + x + 1", "1"}} });
+                                            {8, {"y", "x", "y + x", "y + x + 1", "1"}} });
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
       std::unordered_set<std::string>>({
           {1, {"x"}},
           {3, {"i"}},
           {4, {"a", "b"}},
-          {6, {"c"}},
-          {7, {"x", "y"}}
+          {7, {"c"}},
+          {8, {"x", "y"}}
       });
   REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
   REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
