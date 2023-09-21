@@ -17,28 +17,20 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(const ParsedQuery& quer
   // Evaluate such-that clauses, if at any point that the table is empty
   // then return empty result
   for (const auto& clausePtr : query.such_that_clauses) {
-    try {
-      Constraint constraint = clausePtr->Evaluate(pkb);
-      constraint_table.Solve(constraint);
-      if (constraint_table.HasNoValidValues()) {
-        return {};
-      }
-    } catch (const QpsSemanticError& e) {
-      throw e;
+    Constraint constraint = clausePtr->Evaluate(pkb);
+    constraint_table.Solve(constraint);
+    if (constraint_table.HasNoValidValues()) {
+      return {};
     }
   }
 
   // Evaluate pattern clauses, if at any point that the table is empty
   // then return empty result
   for (const auto& clausePtr : query.pattern_clauses) {
-    try {
-      Constraint constraint = clausePtr->Evaluate(pkb);
-      constraint_table.Solve(constraint);
-      if (constraint_table.HasNoValidValues()) {
-        return {};
-      }
-    } catch (const QpsSemanticError& e) {
-      throw e;
+    Constraint constraint = clausePtr->Evaluate(pkb);
+    constraint_table.Solve(constraint);
+    if (constraint_table.HasNoValidValues()) {
+      return {};
     }
   }
 
