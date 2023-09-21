@@ -10,7 +10,7 @@
 #include "utils/string_utils.h"
 
 bool QueryUtil::IsWildcard(const std::string & s) {
-  return s == qps_constants::kWildcard;
+  return s[0] == qps_constants::kWildcard && s.length() == 1;
 }
 
 bool QueryUtil::IsSynonym(const std::string & s) {

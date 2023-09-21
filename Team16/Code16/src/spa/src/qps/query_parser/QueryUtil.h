@@ -8,9 +8,7 @@
 #include "qps/declaration.h"
 
 class QueryUtil {
-
  public:
-
   /*!
    * Checks if a given string is a wildcard
    * @param s is the input string
@@ -46,6 +44,12 @@ class QueryUtil {
    */
   static bool IsDesignEntity(const std::string & s);
 
+  /*!
+   * Checks if a string is ina set of declarations
+   * @param s is the input string
+   * @param declarations the set of declared entities
+   * @return True if the string is in a set of declarations, else false
+   */
   static bool IsInDeclarations(const std::string & s, const std::vector<Declaration> & declarations);
 
   /*!

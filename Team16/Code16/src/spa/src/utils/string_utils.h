@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace string_util {
 /*!
@@ -52,5 +53,4 @@ std::string GetFirstWord(std::string & str);
  * @return the remainder of the string
  */
 std::string RemoveFirstWord(std::string & str);
-}
-
+}  // namespace string_util

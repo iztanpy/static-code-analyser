@@ -1,4 +1,5 @@
 #include <string>
+#include <algorithm>
 #include <utility>
 #include <vector>
 #include <set>
@@ -106,13 +107,13 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
 
     // Find the position of "such that" and "pattern" clauses
     if (suchThatPos != std::string::npos) {
-      indexes.push_back(suchThatPos); // "such that" has 9 characters
-      startPos = suchThatPos + 9; // Move the starting position past "such that"
+      indexes.push_back(suchThatPos);  // "such that" has 9 characters
+      startPos = suchThatPos + 9;  // Move the starting position past "such that"
     } else if (patternPos != std::string::npos) {
-      indexes.push_back(patternPos); // "pattern" has 7 characters
-      startPos = patternPos + 7; // Move the starting position past "pattern"
+      indexes.push_back(patternPos);  // "pattern" has 7 characters
+      startPos = patternPos + 7;  // Move the starting position past "pattern"
     } else {
-      break; // No more "such that" or "pattern" clauses found
+      break;  // No more "such that" or "pattern" clauses found
     }
   }
 

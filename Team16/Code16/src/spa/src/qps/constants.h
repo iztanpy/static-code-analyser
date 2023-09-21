@@ -1,14 +1,16 @@
 #pragma once
 
 #include <regex>
+#include <vector>
+#include <string>
 
 namespace qps_constants {
-const std::string kOpenBracket = "(";
-const std::string kCloseBracket = ")";
-const std::string kComma = ",";
-const std::string kEqual = "=";
-const std::string kSemicolon = ";";
-const std::vector<std::string> kSpecialTokens = {
+const char kOpenBracket = '(';
+const char kCloseBracket = ')';
+const char kComma = ',';
+const char kEqual = '=';
+const char kSemicolon = ';';
+const std::vector<char> kSpecialTokens = {
     kOpenBracket,
     kCloseBracket,
     kComma,
@@ -16,8 +18,8 @@ const std::vector<std::string> kSpecialTokens = {
     kSemicolon
 };
 
-const std::string kWildcard = "_";
+const char kWildcard = '_';
 
 const std::regex kSuchThatClauseRegex("such that [A_Za-z]");
 const std::regex kPatternClauseRegex("such that [A_Za-z]");
-}
+}  // namespace qps_constants

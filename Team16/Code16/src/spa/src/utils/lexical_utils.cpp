@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lexical_utils.h"
+#include "utils/lexical_utils.h"
 
 #include <utility>
 
@@ -16,7 +16,7 @@ bool lexical_utils::IsDigit(char c) {
 bool lexical_utils::IsNzDigit(char c) {
   return (c >= '1' && c <= '9');
 }
-//ai-gen end
+// ai-gen end
 
 bool lexical_utils::IsIdent(std::string str) {
   bool starts_with_letter = IsLetter(str[0]);

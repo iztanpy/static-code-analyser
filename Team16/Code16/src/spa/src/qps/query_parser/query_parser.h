@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 #include "qps/query_parser/parsed_query.h"
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/clauses/select_clause.h"

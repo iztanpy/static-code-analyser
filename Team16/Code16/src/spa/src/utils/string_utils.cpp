@@ -2,7 +2,8 @@
 
 #include <regex>
 #include <sstream>
-#include "string_utils.h"
+#include <vector>
+#include "utils/string_utils.h"
 
 // ai-gen start(gpt3, 1)
 std::string string_util::LeftTrim(const std::string & str) {
@@ -61,4 +62,4 @@ std::string string_util::RemoveFirstWord(std::string & str) {
   // If there's no space, return an empty string
   return "";
 }
-//ai-gen end
+// ai-gen end

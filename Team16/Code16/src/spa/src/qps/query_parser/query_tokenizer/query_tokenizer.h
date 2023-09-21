@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include "qps/declaration.h"
 
 // Token types
