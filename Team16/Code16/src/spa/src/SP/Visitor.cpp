@@ -57,8 +57,8 @@ void ASTVisitor::visit(const WhileTNode* node, std::string& key) {
 }
 
 void ASTVisitor::visit(const PrintTNode* node, std::string& key) {
-    std::unordered_set<std::string>& set = usesStatementNumberHashmap[node->statementNumber];
-    set.insert(node->getContent());
+    std::unordered_set<std::string>& set = usesLineRHSVarMap[node->statementNumber];
+    set.insert(node->content);
     variables.insert(node->getContent());
 }
 
