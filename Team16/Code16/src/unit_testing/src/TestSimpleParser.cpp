@@ -86,11 +86,37 @@ TEST_CASE(("Test SP storing of assignment statements")) {
         std::unordered_set<std::string>>({ {1, {"x", "1", "x + 1"}},
                                           {5, {"y", "x", "y + x", "y + x + 1", "1"}} });
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
-        std::unordered_set<std::string>>({ {1, {"x"}}, {5, {"x", "y"}} });
-
+        std::unordered_set<std::string>>({ {1, {"x"}}, {3, {"i"}}, {5, {"x", "y"}} });
     REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
     REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
     REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+}
+
+TEST_CASE(("Test SP Uses: nested while")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram =
+      "procedure p {x = x + 1; read r; while (i == 0) { while( (a==3)||(b>1) ) { read f;}} } "
+      "procedure wee { while(!(c==1)){y = y + x + 1;}}";
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+      { {1, "x"}, {7, "y"} });
+  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int,
+      std::unordered_set<std::string>>({ {1, {"x", "1", "x + 1"}},
+                                            {7, {"y", "x", "y + x", "y + x + 1", "1"}} });
+  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
+      std::unordered_set<std::string>>({
+          {1, {"x"}},
+          {3, {"i"}},
+          {4, {"a", "b"}},
+          {6, {"c"}},
+          {7, {"x", "y"}}
+      });
+  REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 
@@ -132,7 +158,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval")) {
     std::string simpleProgram2 = "procedure p { while ((x == 1) || (x==2))  { read x; } }";
     sourceProcessor.processSource(simpleProgram2);
     std::string simpleProgram3 = "procedure p { while ((x != 1) || (y != 1)) { read x; } }";
-    sourceProcessor.processSource(simpleProgram3); 
+    sourceProcessor.processSource(simpleProgram3);
     std::string simpleProgram4 = "procedure p { while (!(x == 1)) { read x; } }";
     sourceProcessor.processSource(simpleProgram4);
     std::string simpleProgram5 = "procedure p { while ((!x) || (x == y)) { read x; } }";
