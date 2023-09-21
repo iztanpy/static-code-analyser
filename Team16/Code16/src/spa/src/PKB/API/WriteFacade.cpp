@@ -21,3 +21,21 @@ void WriteFacade::storeUses(std::unordered_map<statementNumber, std::unordered_s
 void WriteFacade::storeConstants(std::unordered_set<constant> constants) {
     pkb.addConstants(constants);
 }
+
+void WriteFacade::storeStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
+    pkb.addStatements(typeMap);
+}
+
+void WriteFacade::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
+    pkb.storeParent(map);
+}
+
+void WriteFacade::storeFollows(std::unordered_map<statementNumber, statementNumber> map) {
+    pkb.storeFollows(map);
+}
+
+void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
+    pkb.storeModifies(varModifiesMap);
+}
+
+
