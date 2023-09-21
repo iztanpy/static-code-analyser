@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "../Helper/Wildcard.h"
 #include "../Helper/StmtEntity.h"
+#include "utils/hash_utils.h"
 
 
 
@@ -26,9 +27,9 @@ class AssignStore {
 
     std::unordered_set<statementNumber> getAllAssigns();
 
-    std::vector<std::pair<statementNumber, variable>> getAssignPair(partialMatch partial);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(partialMatch partial);
 
-    std::vector<std::pair<statementNumber, variable>> getAssignPair(Wildcard wildcard);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(Wildcard wildcard);
 
     std::unordered_set<statementNumber> getAssigns(Wildcard lhs, partialMatch rhs);
 

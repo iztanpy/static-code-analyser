@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+
 typedef std::string variable;
 typedef std::string possibleCombinations;
 typedef int statementNumber;
@@ -40,22 +41,22 @@ std::unordered_set<statementNumber> AssignStore::getAllAssigns() {
     return assigns;
 }
 
-std::vector<std::pair<statementNumber, variable>> AssignStore::getAssignPair(partialMatch partial) {
-    auto results = std::vector<std::pair<statementNumber, variable>>();
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::getAssignPair(partialMatch partial) {
+    auto results = std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
     std::unordered_set<statementNumber> relevantStmt = reverseNumRHSMap[partial];
     for (auto const& x : relevantStmt) {
         std::pair<statementNumber, variable> pair = std::make_pair(x, numLHSMap[x]);
-        results.push_back(pair);
+        results.insert(pair);
     }
     return results;
 };
 
-std::vector<std::pair<statementNumber, variable>> AssignStore::getAssignPair(Wildcard wildcard) {
-    auto results = std::vector<std::pair<statementNumber, variable>>();
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>  AssignStore::getAssignPair(Wildcard wildcard) {
+    auto results = std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
     std::unordered_set<statementNumber> relevantStmt = getAllAssigns();
     for (auto const& x : relevantStmt) {
         std::pair<statementNumber, variable> pair = std::make_pair(x, numLHSMap[x]);
-        results.push_back(pair);
+        results.insert(pair);
     }
     return results;
 
