@@ -66,7 +66,9 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     assignNode->addChild(lhs);
     incrementIndex();
     incrementIndex();
-    std::shared_ptr<TNode> rhs = parseExpression(tokens);
+    ParseUtils::setValues(index, lineNumber);
+    std::shared_ptr<TNode> rhs = ParseUtils::parseExpression(tokens);
+    index = ParseUtils::getIndex();
     assignNode->addChild(rhs);
     // Validate that assignment ends with ;
     if (tokens[index].tokenType != TokenType::kSepSemicolon) {
