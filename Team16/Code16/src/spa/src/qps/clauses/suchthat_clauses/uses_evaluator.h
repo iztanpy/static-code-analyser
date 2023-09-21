@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_set>
+#include <cassert>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
