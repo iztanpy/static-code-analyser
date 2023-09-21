@@ -86,6 +86,8 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         } else if (curr_token.tokenType == TokenType::kEntityIf) {
             controlStructureStack.push("if");
             parentStatementStack.push(lineNumber);
+            ifParser->lineNumber = lineNumber;
+            ifParser->index = curr_index;
             int next_index = ifParser->parse(tokens, curr_index);
             currIfDepth++;
 

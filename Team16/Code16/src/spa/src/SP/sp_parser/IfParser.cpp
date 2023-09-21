@@ -1,49 +1,39 @@
 #include "IfParser.h"
 
 int IfParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    std::vector<Token> conditionTokens = IfParser::getConditionTokens(tokens, curr_index);
-    int validCondition = conditionParser->parse(conditionTokens, 0);
-    if (validCondition == -1) {
-        throw InvalidSyntaxError();
-    }
+  // Validate that statement has at least 9 tokens (min: If ( a ) { } else { } )
+  if (tokens.size() - index < 8) {
+    return -1;
+  }
+  index++;
 
-    // verify then keyword
-    if (!(curr_index + conditionTokens.size() + 1 < tokens.size())) {
-        throw InvalidSyntaxError();
-    }
-    Token thenToken = tokens[curr_index + conditionTokens.size() + 1];
-    if (thenToken.tokenType != TokenType::kEntityThen) throw InvalidSyntaxError();
+  // Validate open parenthesis
+  if (tokens[index].tokenType != TokenType::kSepOpenParen) {
+    throw InvalidSyntaxError();
+  }
+  index++;
 
-    return curr_index + conditionTokens.size() + 3;  // Continue evaluation and skip pass closing brace
-}
+  ParseUtils::setValues(index, lineNumber);
+  std::shared_ptr<TNode> ifCondNode = ParseUtils::parseCondExpression(tokens);
+  index = ParseUtils::getIndex();
 
-std::vector<Token> IfParser::getConditionTokens(const std::vector<Token>& tokens, int curr_index) {
-    // Initialize condition tokens
-    std::vector<Token> conditionTokens;
+  // Validate close parenthesis
+  if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+    throw InvalidSyntaxError();
+  }
+  index++;
 
-    // curr_index points to the "while" keyword
-    if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].tokenType == TokenType::kSepOpenParen) {
-        int openParenCount = 1;
-        conditionTokens.push_back(tokens[curr_index + 1]);
-        int closeParenIndex = curr_index + 2;
-        while (closeParenIndex < tokens.size() && openParenCount > 0) {
-            if (tokens[closeParenIndex].tokenType == TokenType::kSepOpenParen) {
-                openParenCount++;
-            } else if (tokens[closeParenIndex].tokenType == TokenType::kSepCloseParen) {
-                openParenCount--;
-            }
-            conditionTokens.push_back(tokens[closeParenIndex]);  // Add tokens within the condition
-            closeParenIndex++;
-        }
+  // Validate 'then' keyword
+  if (tokens[index].tokenType != TokenType::kEntityThen) throw InvalidSyntaxError();
+  index++;
 
-        if (openParenCount > 0) {
-            // Implies that there is a missing closing parenthesis somewhere
-            throw InvalidSyntaxError();
-        }
-        curr_index = closeParenIndex;  // Modify curr_index to the new position
-    } else {
-        // Implies that there is a missing open parenthesis somewhere
-        throw InvalidSyntaxError();
-    }
-    return conditionTokens;
+  // Validate open braces
+  if (tokens[index].tokenType != TokenType::kSepOpenBrace) {
+    throw InvalidSyntaxError();
+  }
+  index++;
+
+  designExtractor->extractDesign(ifCondNode, visitor);
+
+  return index;
 }
