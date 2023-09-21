@@ -43,10 +43,14 @@ std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& t
     incrementIndex();
     return node;
   } else {
-    while (ParseUtils::isVarOrConst(tokens[index])) {
+    if (ParseUtils::isVarOrConst(tokens[index])) {
       node = TNodeFactory::createNode(tokens[index], lineNumber);
       incrementIndex();
     }
+  }
+
+  if (node == nullptr) {
+    throw InvalidSyntaxError();
   }
 
   return node;
