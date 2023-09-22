@@ -98,9 +98,9 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/Parser.h
         src/SP/SourceProcessor.h
         src/SP/SourceProcessor.cpp
-        src/SP/sp_parser/WhileParser.cpp 
-        src/SP/sp_parser/WhileParser.h 
-        src/SP/sp_parser/ConditionParser.h 
+        src/SP/sp_parser/WhileParser.cpp
+        src/SP/sp_parser/WhileParser.h
+        src/SP/sp_parser/ConditionParser.h
         src/SP/sp_parser/ConditionParser.cpp
         src/SP/sp_parser/PrintParser.cpp
         src/SP/sp_parser/PrintParser.h
@@ -113,6 +113,13 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
         src/qps/query_parser/clause_builder/pattern_clause_builder.h
+        src/utils/string_utils.cpp
+        src/utils/string_utils.h
+        src/utils/lexical_utils.cpp
+        src/utils/lexical_utils.h
+        src/qps/constants.h
+        src/qps/query_parser/QueryUtil.cpp
+        src/qps/query_parser/QueryUtil.h
         src/SP/utils/ParseUtils.cpp
         src/SP/utils/ParseUtils.h
 )
