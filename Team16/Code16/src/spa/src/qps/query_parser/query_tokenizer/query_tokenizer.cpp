@@ -171,7 +171,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     if (!QueryUtil::IsInDeclarations(lhs[1], declarations)) {
-      throw QpsSyntaxError("LHS synonym not declared");
+      throw QpsSemanticError("LHS synonym not declared");
     }
     left_token = {lhs[1], PQLTokenType::SYNONYM};
   }
@@ -185,7 +185,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     if (!QueryUtil::IsInDeclarations(rhs[0], declarations)) {
-      throw QpsSyntaxError("RHS synonym not declared");
+      throw QpsSemanticError("RHS synonym not declared");
     }
     right_token = {rhs[0], PQLTokenType::SYNONYM};
   }
@@ -229,7 +229,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     if (!QueryUtil::IsInDeclarations(lhs[1], declarations)) {
-      throw QpsSyntaxError("LHS synonym not declared");
+      throw QpsSemanticError("LHS synonym not declared");
     }
     left_token = {lhs[1], PQLTokenType::SYNONYM};
   }
@@ -294,10 +294,10 @@ std::pair<std::vector<QueryToken>,
     } else if (clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
       std::string clause_with_pattern_removed = string_util::RemoveFirstWord(curr_clause);
       std::string syn_assign = string_util::GetFirstWord(clause_with_pattern_removed);
-      if (QueryUtil::IsSynAssign(syn_assign, declarations)) {
+      if (QueryUtil::IsSynonym(syn_assign)) {
         pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
       } else {
-        throw QpsSyntaxError("Synonym assign is not declared");
+        throw QpsSemanticError("Synonym assign is not declared");
       }
 
       std::string pattern_arg_pair = string_util::RemoveFirstWord(clause_with_pattern_removed);

@@ -187,7 +187,7 @@ TEST_CASE("Test get relationship reference arguments") {
   REQUIRE(args_3.second.type == expected_args_3.second.type);
 
   QpsSyntaxError more_than_2_error = QpsSyntaxError("More than 2 synonyms in relation reference");
-  QpsSyntaxError not_declared_error = QpsSyntaxError("RHS synonym not declared");
+  QpsSemanticError not_declared_error = QpsSemanticError("RHS synonym not declared");
   std::vector<Declaration> error_declarations = {
       {"a", DesignEntity::ASSIGN}
   };
@@ -256,7 +256,7 @@ TEST_CASE("Test get pattern arguments") {
   REQUIRE(args_3.second.type == expected_args_3.second.type);
 
   QpsSyntaxError more_than_2_error = QpsSyntaxError("More than 2 synonyms in relation reference");
-  QpsSyntaxError not_declared_error = QpsSyntaxError("LHS synonym not declared");
+  QpsSemanticError not_declared_error = QpsSemanticError("LHS synonym not declared");
   std::vector<Declaration> error_declarations = {
       {"s", DesignEntity::STMT}
   };
