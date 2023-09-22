@@ -98,10 +98,26 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/Parser.h
         src/SP/SourceProcessor.h
         src/SP/SourceProcessor.cpp
+        src/SP/sp_parser/WhileParser.cpp
+        src/SP/sp_parser/WhileParser.h
+        src/SP/sp_parser/ConditionParser.h
+        src/SP/sp_parser/ConditionParser.cpp
+        src/SP/sp_parser/PrintParser.cpp
+        src/SP/sp_parser/PrintParser.h
+        src/SP/sp_parser/IfParser.h
+        src/SP/sp_parser/IfParser.cpp
+        src/SP/sp_parser/CallParser.cpp
+        src/SP/sp_parser/CallParser.h
+        src/SP/sp_parser/ParserFactory.h
+        src/SP/sp_parser/ParserFactory.cpp
+        src/SP/sp_parser/CallParser.cpp
+        src/SP/sp_parser/CallParser.h
         src/qps/clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
         src/qps/query_parser/clause_builder/pattern_clause_builder.h
+        src/SP/utils/ParseUtils.cpp
+        src/SP/utils/ParseUtils.h
         src/qps/clauses/clauses_types.h
         src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
         src/qps/clauses/suchthat_clauses/uses.cpp

@@ -192,14 +192,18 @@ TEST_CASE(("Test procedure")) {
     REQUIRE(tokens_simple[12].tokenType == TokenType::kOperatorPlus);
     REQUIRE(tokens_simple[13].tokenType == TokenType::kLiteralInteger);
     REQUIRE(tokens_simple[14].tokenType == TokenType::kSepSemicolon);
+    REQUIRE(tokens_simple[15].tokenType == TokenType::kSepCloseBrace);
 
-    REQUIRE(tokens_simple[15].tokenType == TokenType::kEntityProcedure);
-    REQUIRE(tokens_simple[16].tokenType == TokenType::kLiteralName);
-    REQUIRE(tokens_simple[17].tokenType == TokenType::kSepOpenBrace);
+ 
+    REQUIRE(tokens_simple[16].tokenType == TokenType::kEntityProcedure);
 
-    REQUIRE(tokens_simple[18].tokenType == TokenType::kEntityRead);
-    REQUIRE(tokens_simple[19].tokenType == TokenType::kLiteralName);
-    REQUIRE(tokens_simple[20].tokenType == TokenType::kSepSemicolon);
+    REQUIRE(tokens_simple[17].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[18].tokenType == TokenType::kSepOpenBrace);
+
+    REQUIRE(tokens_simple[19].tokenType == TokenType::kEntityRead);
+    REQUIRE(tokens_simple[20].tokenType == TokenType::kLiteralName);
+    REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
+    REQUIRE(tokens_simple[22].tokenType == TokenType::kSepCloseBrace);
 
 
     REQUIRE(tokens_simple[0].lineNumber == 1);
@@ -219,15 +223,15 @@ TEST_CASE(("Test procedure")) {
     REQUIRE(tokens_simple[13].lineNumber == 3);
     REQUIRE(tokens_simple[14].lineNumber == 3);
 
-    REQUIRE(tokens_simple[15].lineNumber == 4);
     REQUIRE(tokens_simple[16].lineNumber == 4);
     REQUIRE(tokens_simple[17].lineNumber == 4);
+    REQUIRE(tokens_simple[18].lineNumber == 4);
 
-    REQUIRE(tokens_simple[18].lineNumber == 5);
     REQUIRE(tokens_simple[19].lineNumber == 5);
     REQUIRE(tokens_simple[20].lineNumber == 5);
+    REQUIRE(tokens_simple[21].lineNumber == 5);
 
-    REQUIRE(tokens_simple.size() == 21);
+    REQUIRE(tokens_simple.size() == 23);
 
 }
 
