@@ -115,9 +115,20 @@ class PKB {
 
     void storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map);
 
-    std::unordered_set<statementNumber> parent(statementNumber statement, Wildcard wildcard);
+    std::unordered_set<statementNumber> parent(Wildcard wildcard, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parent(statementNumber num, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parent(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> parent(StmtEntity entity, Wildcard wildcard);
 
     statementNumber parent(Wildcard wildcard, statementNumber statement);
+
+    std::unordered_set<statementNumber> parent(statementNumber statement, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    parent(StmtEntity entity, StmtEntity entity2);
 
     bool isParent(statementNumber parent, statementNumber child);
 
@@ -130,6 +141,17 @@ class PKB {
     std::unordered_set<statementNumber> parentStar(statementNumber statement, Wildcard wildcard);
 
     std::unordered_set<statementNumber> parentStar(Wildcard wildcard, statementNumber statement);
+
+    std::unordered_set<statementNumber> parentStar(Wildcard wildcard, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parentStar(statementNumber num, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parentStar(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> parentStar(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    parentStar(StmtEntity entity, StmtEntity entity2);
 
     bool isParentStar(statementNumber parent, statementNumber child);
 
