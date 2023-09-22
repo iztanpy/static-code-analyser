@@ -1,7 +1,5 @@
 #include "ProcedureParser.h"
 
-ProcedureParser::ProcedureParser(std::shared_ptr<TNode> rootTNode) : rootTNode(rootTNode) { }
-
 int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // validate procedure declaration: procedure (already validated), name, open brace
     // validations will be refactored into a (syntactic/semantic)evaluator in the future
@@ -39,14 +37,9 @@ int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
     std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, 0);
 
     // set root node
-    rootTNode = root;
+    designExtractor->extractDesign(root, visitor);
 
 
     curr_index = curr_index + 3;
     return curr_index;
-}
-
-
-std::unordered_map<std::string, std::unordered_set<int>> ProcedureParser::getProcedureStatementNumberHashmap() {
-    return procedureVisitor->getProcedureStatementNumberHashmap();
 }

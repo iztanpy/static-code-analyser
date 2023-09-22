@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/SourceProcessor.h"
+#include "utils/statementTypes.h"
 #include "PKB/API/WriteFacade.h"
 #include <string>
 #include <unordered_set>
@@ -425,4 +426,53 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
   REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
   REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
   REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+}
+
+TEST_CASE(("Test SP Statement type storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; }}}";
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, StatementTypes> statementTypesMap = std::unordered_map<int, StatementTypes>(
+      {{0, StatementTypes::PROC},
+       {1, StatementTypes::WHILE},
+       {2, StatementTypes::IF},
+       {3, StatementTypes::READ},
+       {4, StatementTypes::PRINT},
+       {5, StatementTypes::ASSIGN}});
+
+  std::unordered_map<int, StatementTypes> res = sourceProcessor.getStatementTypesMap();
+  for (auto& it : res) {
+    std::cout << it.first << std::endl;
+    switch (it.second) {
+      case StatementTypes::PROC:
+        std::cout << "Proc";
+        break;
+      case StatementTypes::WHILE:
+        std::cout << "While";
+        break;
+      case StatementTypes::IF:
+        std::cout << "If";
+        break;
+      case StatementTypes::READ:
+        std::cout << "Read";
+        break;
+      case StatementTypes::PRINT:
+        std::cout << "Print";
+        break;
+      case StatementTypes::CALL:
+        std::cout << "Call";
+        break;
+      case StatementTypes::ASSIGN:
+        std::cout << "Assign";
+        break;
+      default:
+        std::cout << "Unknown";
+    }
+    std::cout << " " << std::endl;
+
+  }
+  REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
 }

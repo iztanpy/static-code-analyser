@@ -138,7 +138,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             curr_index = temp + 1;
         }
     }
-
+    // Store Uses
     // <line, RHS patterns>, <line, LHS var>
     writeFacade->storeAssignments(visitor->getUsesLineRHSPatternMap(), visitor->getUsesLineLHSMap());
     // <all var in LHS and RHS>
@@ -148,5 +148,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // <all var in RHS>
     //    writeFacade->storeUses(visitor->getUsesLineRHSVarMap
     writeFacade->storeLineUses(visitor->getUsesStatementNumberHashmap());
+    // Store Statement Types (TBC with PKB)
+//    writeFacade->storeStatementTypes(visitor->getStatementTypesMap());
     return curr_index;
 }

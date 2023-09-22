@@ -6,6 +6,7 @@
 #include <set>
 
 #include "SP/TNode.h"
+#include "utils/statementTypes.h"
 
 class TNode;
 class ProcedureTNode;
@@ -57,6 +58,8 @@ class Visitor {
     // Follows
     std::unordered_map<int, std::unordered_set<int>> followStatementNumberHashmap;
 
+    // Other
+    std::unordered_map<int, StatementTypes> statementTypesMap;
     std::unordered_set<std::string> variables;
     std::unordered_set<std::string> constants;
 
@@ -86,6 +89,9 @@ class Visitor {
     }
     std::unordered_map<int, std::string> getUsesLineLHSMap() const {
         return usesLineLHSMap;
+    }
+    std::unordered_map<int, StatementTypes> getStatementTypesMap() const {
+      return statementTypesMap;
     }
     std::unordered_set<std::string> getVariables() const {
         return variables;
