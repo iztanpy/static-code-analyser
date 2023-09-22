@@ -6,7 +6,7 @@
 #include <set>
 
 #include "SP/TNode.h"
-#include "PKB/Helper/StmtEntity.h"
+#include "utils/StmtEntity.h"
 
 class TNode;
 class ProcedureTNode;
