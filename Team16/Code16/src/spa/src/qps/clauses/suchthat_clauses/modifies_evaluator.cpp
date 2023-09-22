@@ -15,7 +15,6 @@ bool ModifiesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader
 BinaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                            Declaration& rhs,
                                            ReadFacade& pkb_reader) {
-
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
       = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity));
   return {{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};

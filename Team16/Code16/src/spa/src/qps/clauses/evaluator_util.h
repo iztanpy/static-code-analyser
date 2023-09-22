@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <string>
+#include <utility>
 
 #include "utils/hash_utils.h"
 
@@ -11,28 +12,9 @@ using StringPairSet = std::unordered_set<std::pair<std::string, std::string>, Pa
 
 struct EvaluatorUtil {
   // TODO(phuccuongngo99): Move these to .cpp file please
-  static StringPairSet ToStringPairSet(IntStringPairSet& original) {
-    StringPairSet converted;
-    for (const auto& entry : original) {
-      std::string first_str = std::to_string(entry.first);
-      converted.insert({first_str, entry.second});
-    }
-    return converted;
-  }
+  static StringPairSet ToStringPairSet(IntStringPairSet& original);
 
-  static StringPairSet ToStringPairSet(IntPairSet& original) {
-    StringPairSet converted;
-    for (const auto& entry : original) {
-      converted.insert({std::to_string(entry.first), std::to_string(entry.second)});
-    }
-    return converted;
-  }
+  static StringPairSet ToStringPairSet(IntPairSet& original);
 
-  static std::unordered_set<std::string> ToStringSet(std::unordered_set<int>& original) {
-    std::unordered_set<std::string> converted;
-    for (const auto& entry : original) {
-      converted.insert(std::to_string(entry));
-    }
-    return converted;
-  }
+  static std::unordered_set<std::string> ToStringSet(std::unordered_set<int>& original);
 };

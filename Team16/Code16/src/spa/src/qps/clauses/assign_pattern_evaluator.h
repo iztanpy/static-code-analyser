@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <unordered_set>
+
 #include "qps/query_evaluator/constraint.h"
 #include "qps/declaration.h"
 #include "PKB/API/ReadFacade.h"
