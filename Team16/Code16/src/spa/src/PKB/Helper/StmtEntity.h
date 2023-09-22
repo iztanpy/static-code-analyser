@@ -8,5 +8,6 @@ enum class StmtEntity {
     kCall,
     kWhile,
     kIf,
-    kAssign
+    kAssign,
+    kProcedure,
 };

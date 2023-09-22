@@ -21,7 +21,7 @@ std::unordered_set<std::string> SourceProcessor::getConstants() {
   return visitor.getConstants();
 }
 
-std::unordered_map<int, StatementTypes> SourceProcessor::getStatementTypesMap() {
+std::unordered_map<int, StmtEntity> SourceProcessor::getStatementTypesMap() {
   return visitor.getStatementTypesMap();
 }
 

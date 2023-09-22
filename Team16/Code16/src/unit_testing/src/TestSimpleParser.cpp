@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/SourceProcessor.h"
-#include "utils/statementTypes.h"
+#include "PKB/Helper/StmtEntity.h"
 #include "PKB/API/WriteFacade.h"
 #include <string>
 #include <unordered_set>
@@ -522,13 +522,13 @@ TEST_CASE(("Test SP Statement type storage")) {
   std::string simpleProgram = "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; }}}";
   sourceProcessor.processSource(simpleProgram);
 
-  std::unordered_map<int, StatementTypes> statementTypesMap = std::unordered_map<int, StatementTypes>(
-      {{0, StatementTypes::PROC},
-       {1, StatementTypes::WHILE},
-       {2, StatementTypes::IF},
-       {3, StatementTypes::READ},
-       {4, StatementTypes::PRINT},
-       {5, StatementTypes::ASSIGN}});
+  std::unordered_map<int, StmtEntity> statementTypesMap = std::unordered_map<int, StmtEntity>(
+      {{0, StmtEntity::kProcedure},
+       {1, StmtEntity::kWhile},
+       {2, StmtEntity::kIf},
+       {3, StmtEntity::kRead},
+       {4, StmtEntity::kPrint},
+       {5, StmtEntity::kAssign}});
   REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
 }
 
