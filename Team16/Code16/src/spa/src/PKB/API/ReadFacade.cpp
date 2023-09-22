@@ -167,6 +167,23 @@ ReadFacade::parentStar(StmtEntity entity, StmtEntity entity2) {
     return pkb.parentStar(entity, entity2);
 }
 
+bool ReadFacade::isParentStar(statementNumber parent, statementNumber child) {
+    return pkb.isParentStar(parent, child);
+}
+
+bool ReadFacade::isParentStar(statementNumber parent, Wildcard wildcard) {
+    return pkb.isParentStar(parent, wildcard);
+}
+
+bool ReadFacade::isParentStar(Wildcard wildcard, statementNumber child) {
+    return pkb.isParentStar(wildcard, child);
+}
+
+bool ReadFacade::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
+    return pkb.isParentStar(wildcard, wildcard2);
+}
+
+
 std::unordered_set<statementNumber> ReadFacade::follows(Wildcard wildcard, StmtEntity entity) {
     return pkb.follows(wildcard, entity);
 }
