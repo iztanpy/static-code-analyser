@@ -56,6 +56,57 @@ TEST_CASE("One read statement 1") {
   //REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ "k" }));
 }
 
+
+TEST_CASE("Test SP-PKB connection") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+
+    std::string simpleProgram = "procedure p {x = z - 3 + I; x = x + 1; y = y + z + 4;}";
+
+    sourceProcessor.processSource(simpleProgram);
+
+    REQUIRE((readFacade.getAllAssigns() == std::unordered_set<statementNumber>({1, 2, 3})));
+
+    REQUIRE((readFacade.getAssignPair("x") == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{2, "x"}})));
+
+    REQUIRE((readFacade.getAssignPair("y") == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{3, "y"}})));
+
+    REQUIRE((readFacade.getAssignPair("z") == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {1, "x"}, {3, "y"} })));
+
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE((readFacade.getAssignPair(wildcard) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {1, "x"}, {2, "x"}, {3, "y"} })));
+
+    REQUIRE((readFacade.getAssigns(wildcard, "x") == std::unordered_set<statementNumber>({2})));
+
+    REQUIRE((readFacade.getAssigns(wildcard, "y") == std::unordered_set<statementNumber>({3})));
+
+    REQUIRE((readFacade.getAssigns(wildcard, "z") == std::unordered_set<statementNumber>({1, 3})));
+
+    REQUIRE((readFacade.getAssigns(wildcard, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
+
+    REQUIRE((readFacade.getAssigns("x", "z") == std::unordered_set<statementNumber>({ 1 })));
+
+    REQUIRE(readFacade.getVariables() == std::unordered_set<variable>({"x", "z", "I", "y"}));
+
+    REQUIRE(readFacade.modifies(1) == std::unordered_set<variable>({"x"}));
+    REQUIRE(readFacade.modifies(2) == std::unordered_set<variable>({"x"}));
+    REQUIRE(readFacade.modifies(3) == std::unordered_set<variable>({"y"}));
+
+    REQUIRE(readFacade.uses(1) == std::unordered_set<variable>({"z", "I"}));
+    REQUIRE(readFacade.uses(2) == std::unordered_set<variable>({"x"}));
+    REQUIRE(readFacade.uses(3) == std::unordered_set<variable>({"y", "z"}));
+
+
+
+
+
+    
+    
+}
+
 TEST_CASE("One assign statement 1") {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
