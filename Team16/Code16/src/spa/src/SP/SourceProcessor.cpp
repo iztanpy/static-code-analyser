@@ -35,7 +35,7 @@ std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUse
   return visitor.getUsesStatementNumberHashmap();
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getModifiesMap() {
+std::unordered_map<int, std::string> SourceProcessor::getModifiesMap() {
   return visitor.getModifiesMap();
 }
 

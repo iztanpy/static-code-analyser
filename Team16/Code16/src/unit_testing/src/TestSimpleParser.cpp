@@ -442,37 +442,22 @@ TEST_CASE(("Test SP Statement type storage")) {
        {3, StatementTypes::READ},
        {4, StatementTypes::PRINT},
        {5, StatementTypes::ASSIGN}});
-
-  std::unordered_map<int, StatementTypes> res = sourceProcessor.getStatementTypesMap();
-  for (auto& it : res) {
-    std::cout << it.first << std::endl;
-    switch (it.second) {
-      case StatementTypes::PROC:
-        std::cout << "Proc";
-        break;
-      case StatementTypes::WHILE:
-        std::cout << "While";
-        break;
-      case StatementTypes::IF:
-        std::cout << "If";
-        break;
-      case StatementTypes::READ:
-        std::cout << "Read";
-        break;
-      case StatementTypes::PRINT:
-        std::cout << "Print";
-        break;
-      case StatementTypes::CALL:
-        std::cout << "Call";
-        break;
-      case StatementTypes::ASSIGN:
-        std::cout << "Assign";
-        break;
-      default:
-        std::cout << "Unknown";
-    }
-    std::cout << " " << std::endl;
-
-  }
   REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
+}
+
+
+TEST_CASE(("Test SP Modifies storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = "procedure p { if (i != 0) then { x = x + 1 + r; } else { read k; a = 1 + w; }}";
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, std::string> modifiesMap =
+      std::unordered_map<int, std::string>(
+      {{2, "x"},
+         {3, "k"},
+         {4, "a"}});
+
+  REQUIRE(sourceProcessor.getModifiesMap() == modifiesMap);
 }

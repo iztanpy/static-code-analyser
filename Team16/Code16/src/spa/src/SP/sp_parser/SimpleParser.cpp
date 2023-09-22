@@ -138,6 +138,8 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             curr_index = temp + 1;
         }
     }
+    // Store Modifies
+//    writeFacade->storeModifies(visitor->getModifiesMap());
     // Store Uses
     // <line, RHS patterns>, <line, LHS var>
     writeFacade->storeAssignments(visitor->getUsesLineRHSPatternMap(), visitor->getUsesLineLHSMap());
