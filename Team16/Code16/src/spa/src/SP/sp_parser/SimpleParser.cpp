@@ -174,7 +174,9 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // Store Constants <all const in RHS>
     writeFacade->storeConstants(visitor->getConstants());
     // Store Statement types
-//    writeFacade->storeStatements(visitor->getStatementTypesMap());
+    writeFacade->storeStatements(visitor->getStatementTypesMap());
+    // Store Procedures
+//    writeFacade->storeProcedures(visitor->getProcedureLabels());
     return curr_index;
 }
 

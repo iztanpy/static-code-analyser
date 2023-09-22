@@ -55,3 +55,8 @@ std::unordered_map<int, std::unordered_set<int>> SourceProcessor::getParentState
 std::unordered_map<int, int> SourceProcessor::getFollowStatementNumberMap() {
     return visitor.getFollowStatementNumberMap();
 }
+
+std::set<std::string> SourceProcessor::getProcedureLabels() {
+  return visitor.getProcedureLabels();
+}
+

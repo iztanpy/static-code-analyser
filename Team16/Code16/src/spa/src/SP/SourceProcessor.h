@@ -33,6 +33,7 @@ class SourceProcessor {
     std::unordered_map<int, std::string> getModifiesMap();
     std::unordered_map<int, std::unordered_set<int>> getParentStatementNumberMap();
     std::unordered_map<int, int> getFollowStatementNumberMap();
+    std::set<std::string> getProcedureLabels();
 };
 
 

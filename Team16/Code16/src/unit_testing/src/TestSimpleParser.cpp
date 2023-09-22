@@ -570,3 +570,14 @@ TEST_CASE(("Test SP Modifies storage")) {
 
   REQUIRE(sourceProcessor.getModifiesMap() == modifiesMap);
 }
+
+TEST_CASE(("Test SP Procedures storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram =
+      "procedure p { if (i != 0) then { x = x + 1 + r; }} procedure k { read r; } procedure kay { print k; a = 1 + w; }";
+  sourceProcessor.processSource(simpleProgram);
+  std::set<std::string> procedures = std::set<std::string>({"p","k","kay"});
+  REQUIRE(sourceProcessor.getProcedureLabels() == procedures);
+}
