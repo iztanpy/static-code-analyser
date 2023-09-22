@@ -10,10 +10,7 @@
 #include "qps/query_evaluator/constraint.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "PKB/API/ReadFacade.h"
-
-enum class Wildcard {
-  Value
-};
+#include "PKB/Helper/Wildcard.h"
 
 using StmtRef = std::variant<Declaration, Wildcard, int>;
 using EntRef = std::variant<Declaration, Wildcard, std::string>;

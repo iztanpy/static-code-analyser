@@ -79,10 +79,8 @@ UsesS::UsesS(StmtRef lhs, EntRef rhs) {
 
 Constraint UsesS::handle(int stmt_num, Declaration& declaration, ReadFacade& pkb_reader) {
   if (declaration.design_entity == DesignEntity::VARIABLE) {
-    std::unordered_set<std::string> result = pkb_reader.getVariablesUsedBy(stmt_num);
+    std::unordered_set<std::string> result = pkb_reader.uses(stmt_num);
     return UnaryConstraint{declaration.synonym, result};
-  } else if (declaration.design_entity == DesignEntity::CONSTANT) {
-    return UnaryConstraint{declaration.synonym, pkb_reader.getConstantsUsedBy(stmt_num)};
   } else {
     throw QpsSemanticError("Not implemented");
   }

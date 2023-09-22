@@ -1,10 +1,13 @@
+#include "catch.hpp"
 #include <stdio.h>
 #include <unordered_set>
-#include "catch.hpp"
+#include <iostream>
+using namespace std;
 
 #include "PKB/PKB.h"
 #include "PKB/API/ReadFacade.h"
 #include "PKB/API/WriteFacade.h"
+#include "PKB/Helper/Wildcard.h"
 
 
 TEST_CASE(" 1") {
@@ -14,9 +17,9 @@ TEST_CASE(" 1") {
 
 	//make unordered map for <int, string > for assignments
 	std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
-	assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
-	assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
-    assignmentsRHS.insert({ 3, { "y + w", "x" } });
+    assignmentsRHS.insert({ 1, { "x", "y" } });
+    assignmentsRHS.insert({ 2, { "y" } });
+    assignmentsRHS.insert({ 3, { "x", "1", "2" } });
 
 	std::unordered_map<statementNumber, variable> assignmentsLHS;
 	assignmentsLHS.insert({ 1, "a" });
@@ -27,54 +30,39 @@ TEST_CASE(" 1") {
 
     REQUIRE(readFacade.getAllAssigns().size() == 3);
 
-	for (int value : readFacade.getAssigns("a", "x + y")) {
-		REQUIRE(value == 1);
+	for (int value : readFacade.getAssigns(Wildcard(), "1")) {
+        REQUIRE(value == 3);
 	}
 
-	for (int value : readFacade.getAssigns("b", "y + z")) {
+	for (int value : readFacade.getAssigns("b", "y")) {
 		REQUIRE(value == 2);
 	}
 
-    REQUIRE(readFacade.getAssigns("_", "x + y").size() == 2);
+    REQUIRE(readFacade.getAssigns(Wildcard() , Wildcard()).size() == 3);
 
-    REQUIRE(readFacade.getAssigns("_", "_").size() == 3);
-
-    REQUIRE(readFacade.getAssigns("b", "_").size() == 2);
+    REQUIRE(readFacade.getAssigns("b", Wildcard()).size() == 2);
 
 	writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
 
-	for (std::string value : readFacade.getAllVariables()) {
+	for (std::string value : readFacade.getVariables()) {
 		REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
 	}
 
-	writeFacade.addLineUsesVar({{1, {"x", "y"}}, {2, {"y", "z"}} });
+	writeFacade.storeUses({{1, {"x", "y"}}, {2, {"y", "z"}} });
 
-	for (std::string value : readFacade.getVariablesUsedBy(1)) {
+	for (std::string value : readFacade.uses(1)) {
 		REQUIRE((value == "x" || value == "y"));
 	}
 
-	for (std::string value : readFacade.getVariablesUsedBy(2)) {
+	for (std::string value : readFacade.uses(2)) {
 		REQUIRE((value == "y" || value == "z"));
 	}
+	writeFacade.storeConstants({ "1", "2", "3" });
 
-	writeFacade.addLineUsesConst({ {1, {"a", "b"}}, {2, {"b", "c"}} });
-
-	for (std::string value : readFacade.getConstantsUsedBy(1)) {
-		REQUIRE((value == "a" || value == "b"));
-	}
-
-	for (std::string value : readFacade.getConstantsUsedBy(2)) {
-		REQUIRE((value == "b" || value == "c"));
-	}
-
-	writeFacade.storeConstants({ "a", "b", "c" });
-
-	for (std::string value : readFacade.getAllConstants()) {
-		REQUIRE((value == "a" || value == "b" || value == "c"));
+	for (std::string value : readFacade.getConstants()) {
+		REQUIRE((value == "1" || value == "2" || value == "3"));
 	}
 }
-
-
 
 
 TEST_CASE("test Facades for AssignStore") {
@@ -83,9 +71,9 @@ TEST_CASE("test Facades for AssignStore") {
     ReadFacade readFacade = ReadFacade(pkb);
 
     std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
-    assignmentsRHS.insert({ 1, { "x + y", "y + a" } });
-    assignmentsRHS.insert({ 2, { "x + y", "y + z" } });
-    assignmentsRHS.insert({ 3, { "y + w", "x" } });
+    assignmentsRHS.insert({ 1, { "x", "y" } });
+    assignmentsRHS.insert({ 2, { "x" } });
+    assignmentsRHS.insert({ 3, { "x", "1", "2" } });
 
     std::unordered_map<statementNumber, variable> assignmentsLHS;
     assignmentsLHS.insert({ 1, "a" });
@@ -96,37 +84,29 @@ TEST_CASE("test Facades for AssignStore") {
 
     REQUIRE(readFacade.getAllAssigns().size() == 3);
 
-//    for (int value: readFacade.getAllAssigns()) {
-//        std::cout << value << std::endl;
-//    }
+    REQUIRE(readFacade.getAssigns(Wildcard(), Wildcard()).size() == 3);
 
-    for (int value : readFacade.getAssigns("a", "x + y")) {
-        REQUIRE(value == 1);
-    }
+    REQUIRE(readFacade.getAssigns("b", Wildcard()).size() == 2);
 
-    for (int value : readFacade.getAssigns("b", "y + z")) {
-        REQUIRE(value == 2);
-    }
+    REQUIRE(readFacade.getAssigns("b", "x").size() == 2);
 
-    REQUIRE(readFacade.getAssigns("_", "x + y").size() == 2);
+    REQUIRE(readFacade.getAssigns("b", "1").size() == 1);
 
-    REQUIRE(readFacade.getAssigns("_", "_").size() == 3);
-
-    REQUIRE(readFacade.getAssigns("b", "_").size() == 2);
+    REQUIRE(readFacade.getAssigns("b", "2").size() == 1);
 
     writeFacade.storeVariables({ "x", "y", "z", "a", "b" });
 
-    for (std::string value : readFacade.getAllVariables()) {
+    for (std::string value : readFacade.getVariables()) {
         REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
     }
 
-    writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
+    writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
-    for (std::string value : readFacade.getVariablesUsedBy(1)) {
+    for (std::string value : readFacade.uses(1)) {
         REQUIRE((value == "x" || value == "y"));
     }
 
-    for (std::string value : readFacade.getVariablesUsedBy(2)) {
+    for (std::string value : readFacade.uses(2)) {
         REQUIRE((value == "y" || value == "z"));
     }
 }
@@ -138,7 +118,7 @@ TEST_CASE("Test Facades for Variable Store"){
 
     writeFacade.storeVariables({"x", "y", "z", "a", "b"});
 
-    for (std::string value : readFacade.getAllVariables()) {
+    for (std::string value : readFacade.getVariables()) {
         REQUIRE((value == "x" || value == "y" || value == "z" || value == "a" || value == "b"));
     }
 }
@@ -148,15 +128,217 @@ TEST_CASE("Test Facades for Uses Store") {
     WriteFacade writeFacade = WriteFacade(pkb);
     ReadFacade readFacade = ReadFacade(pkb);
 
-    writeFacade.addLineUsesVar({ {1, {"x", "y"}}, {2, {"y", "z"}} });
+    writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}} });
 
-    for (std::string value : readFacade.getVariablesUsedBy(1)) {
+    for (std::string value : readFacade.uses(1)) {
         REQUIRE((value == "x" || value == "y"));
     }
 
-    for (std::string value : readFacade.getVariablesUsedBy(2)) {
+    for (std::string value : readFacade.uses(2)) {
         REQUIRE((value == "y" || value == "z"));
     }
+}
+
+TEST_CASE("Test Parent Stores") {
+    PKB pkb = PKB();
+
+    pkb.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
+
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(pkb.parent(wildcard, 2) == 1);
+    REQUIRE(pkb.parent(wildcard, 3) == 1);
+    REQUIRE(pkb.parent(wildcard, 4) == 2);
+    REQUIRE(pkb.parent(wildcard, 5) == 2);
+    REQUIRE(pkb.parent(wildcard, 6) == 3);
+    REQUIRE(pkb.parent(wildcard, 7) == 3);
+
+    for (auto value : pkb.parent(1, wildcard)) {
+		REQUIRE((value == 2 || value == 3));
+	}
+
+    for (auto value : pkb.parent(2, wildcard)) {
+        REQUIRE((value == 4 || value == 5));
+    }
+
+    for (auto value : pkb.parent(3, wildcard)) {
+		REQUIRE((value == 6 || value == 7));
+	}
+
+    for (auto value : pkb.parentStar(1, wildcard)) {
+		REQUIRE((value == 2 || value == 3 || value == 4 || value == 5 || value == 6 || value == 7));
+	}
+
+    for (auto value : pkb.parentStar(wildcard, 2)) {
+        REQUIRE((value == 1));
+    }
+
+    for (auto value : pkb.parentStar(wildcard, 3)) {
+		REQUIRE((value == 1));
+	}
+
+    for (auto value : pkb.parentStar(wildcard, 4)) {
+		REQUIRE((value == 2 || value == 1));
+	}
+
+    for (auto value : pkb.parentStar(wildcard, 6)) {
+        REQUIRE((value == 3 || value == 1));
+    }
+
+    REQUIRE(pkb.isParent(1, 2));
+    REQUIRE(pkb.isParent(1, 3));
+    REQUIRE(pkb.isParent(2, 4));
+    REQUIRE(pkb.isParent(2, 5));
+    REQUIRE(pkb.isParent(3, 6));
+    REQUIRE(pkb.isParent(3, 7));
+    REQUIRE(!pkb.isParent(1, 4));
+    REQUIRE(!pkb.isParent(1, 5));
+    REQUIRE(!pkb.isParent(1, 6));
+    REQUIRE(!pkb.isParent(1, 7));
+    REQUIRE(!pkb.isParent(2, 6));
+
+    REQUIRE(pkb.isParentStar(1, 2));
+    REQUIRE(pkb.isParentStar(1, 3));
+    REQUIRE(pkb.isParentStar(1, 4));
+    REQUIRE(pkb.isParentStar(1, 5));
+    REQUIRE(pkb.isParentStar(1, 6));
+    REQUIRE(pkb.isParentStar(1, 7));
+    REQUIRE(pkb.isParentStar(2, 4));
+    REQUIRE(pkb.isParentStar(2, 5));
+    REQUIRE(pkb.isParentStar(3, 6));
+    REQUIRE(pkb.isParentStar(3, 7));
+    REQUIRE(!pkb.isParentStar(1, 1));
+    REQUIRE(!pkb.isParentStar(2, 2));
+    REQUIRE(!pkb.isParentStar(3, 1));
+    REQUIRE(!pkb.isParentStar(3, 2));
+
+    REQUIRE(!pkb.isParent(wildcard, 1));
+    REQUIRE(pkb.isParent(wildcard, 2));
+    REQUIRE(pkb.isParent(wildcard, 3));
+    REQUIRE(pkb.isParent(wildcard, 4));
+    REQUIRE(pkb.isParent(wildcard, 5));
+    REQUIRE(pkb.isParent(wildcard, 6));
+    REQUIRE(pkb.isParent(wildcard, 7));
+
+    REQUIRE(pkb.isParent(1, wildcard));
+    REQUIRE(pkb.isParent(2, wildcard));
+    REQUIRE(pkb.isParent(3, wildcard));
+    REQUIRE(!pkb.isParent(4, wildcard));
+    REQUIRE(!pkb.isParent(5, wildcard));
+    REQUIRE(!pkb.isParent(6, wildcard));
+    REQUIRE(!pkb.isParent(7, wildcard));
+
+    REQUIRE(!pkb.isParentStar(wildcard, 1));
+    REQUIRE(pkb.isParentStar(wildcard, 2));
+    REQUIRE(pkb.isParentStar(wildcard, 3));
+    REQUIRE(pkb.isParentStar(wildcard, 4));
+    REQUIRE(pkb.isParentStar(wildcard, 5));
+    REQUIRE(pkb.isParentStar(wildcard, 6));
+    REQUIRE(pkb.isParentStar(wildcard, 7));
+}
+
+TEST_CASE("Test Uses stores") {
+    PKB pkb = PKB();
+
+    pkb.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}}, {3, {"z"}} });
+
+    REQUIRE(pkb.isUses(1, "x"));
+    REQUIRE(pkb.isUses(1, "y"));
+    REQUIRE(pkb.isUses(2, "y"));
+    REQUIRE(pkb.isUses(2, "z"));
+    REQUIRE(!pkb.isUses(1, "z"));
+    REQUIRE(!pkb.isUses(2, "x"));
+
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(pkb.isUses(1, wildcard));
+    REQUIRE(pkb.isUses(2, wildcard));
+    REQUIRE(pkb.isUses(3, wildcard));
+    REQUIRE(!pkb.isUses(4, wildcard));
+
+    // store StmtEntity
+    pkb.addStatements({ { 1, StmtEntity::kAssign }, { 2, StmtEntity::kAssign }, { 3, StmtEntity::kRead } });
+    
+    variable x = "x";
+    REQUIRE(pkb.uses(1) == std::unordered_set<variable>{"x", "y"});
+    REQUIRE(pkb.uses(2) == std::unordered_set<variable>{"y", "z"});
+
+    StmtEntity assign = StmtEntity::kAssign;
+    REQUIRE(pkb.uses(assign, wildcard) == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.uses(assign, x) == std::unordered_set<statementNumber>{1});
+    REQUIRE(pkb.uses(assign, "y") == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.uses(assign, "z") == std::unordered_set<statementNumber>{2});
+
+    StmtEntity read = StmtEntity::kRead;
+    REQUIRE(pkb.uses(read, wildcard) == std::unordered_set<statementNumber>{3});
+    REQUIRE(pkb.uses(read, x) == std::unordered_set<statementNumber>{});
+    REQUIRE(pkb.uses(read, "y") == std::unordered_set<statementNumber>{});
+    REQUIRE(pkb.uses(read, "z") == std::unordered_set<statementNumber>{3});
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.uses(assign);
+
+    for (auto value : result) {
+		REQUIRE((value.first == 1 || value.first == 2));
+		REQUIRE((value.second == "x" || value.second == "y" || value.second == "z"));
+	}
+
+    result = pkb.uses(read);
+
+    for (auto value : result) {
+        REQUIRE((value.first == 3));
+        REQUIRE((value.second == "z"));
+    }
+    
+}
+
+TEST_CASE("Test modifies stores") {
+    PKB pkb = PKB();
+
+    pkb.storeParent({{1, {2, 3}}});
+
+    pkb.storeModifies({ {1, "x"}, {2, "y"}, {3, "x"}});
+
+    REQUIRE(pkb.isModifies(1, "x"));
+    REQUIRE(pkb.isModifies(2, "y"));
+    REQUIRE(pkb.isModifies(3, "x"));
+    REQUIRE(pkb.isModifies(1, "y"));
+    REQUIRE(!pkb.isModifies(2, "x"));
+
+    Wildcard wildcard = Wildcard();
+
+    REQUIRE(pkb.isModifies(1, wildcard));
+    REQUIRE(pkb.isModifies(2, wildcard));
+    REQUIRE(pkb.isModifies(3, wildcard));
+    REQUIRE(!pkb.isModifies(4, wildcard));
+
+    // store StmtEntity
+    pkb.addStatements({ { 1, StmtEntity::kAssign },
+                        { 2, StmtEntity::kAssign },
+                        { 3, StmtEntity::kRead } });
+
+    REQUIRE(pkb.modifies(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>{1});
+    REQUIRE(pkb.modifies(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>{2,1});
+    REQUIRE(pkb.modifies(StmtEntity::kRead, "x") == std::unordered_set<statementNumber>{3});
+    REQUIRE(pkb.modifies(StmtEntity::kRead, "y") == std::unordered_set<statementNumber>{});
+
+    REQUIRE(pkb.modifies(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.modifies(StmtEntity::kRead, wildcard) == std::unordered_set<statementNumber>{3});
+    REQUIRE(pkb.modifies(StmtEntity::kIf, wildcard) == std::unordered_set<statementNumber>{});
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.modifies(StmtEntity::kAssign);
+
+    for (auto value : result) {
+		REQUIRE((value.first == 1 || value.first == 2));
+		REQUIRE((value.second == "x" || value.second == "y"));
+	}
+
+    result = pkb.modifies(StmtEntity::kRead);
+
+    for (auto value : result) {
+		REQUIRE((value.first == 3));
+		REQUIRE((value.second == "x"));
+	}
+
 }
 
 
@@ -235,5 +417,5 @@ TEST_CASE("Test Facades for Uses Store") {
 //        REQUIRE(constants.find(value) != constants.end());
 //    }
 //
-//    REQUIRE(readFacade.getVariablesUsedBy(1) == std::unordered_set<std::string>{"a", "b"});
+//    REQUIRE(readFacade.Uses(1) == std::unordered_set<std::string>{"a", "b"});
 //}

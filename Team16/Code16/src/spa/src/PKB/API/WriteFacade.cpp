@@ -14,22 +14,28 @@ void WriteFacade::storeVariables(std::unordered_set<std::string> variables) {
     pkb.addVariables(variables);
 }
 
-void WriteFacade::addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
-    pkb.addLineUsesVar(varUsesMap);
-}
-
-void WriteFacade::addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constUsesMap) {
-    pkb.addLineUsesConst(constUsesMap);
+void WriteFacade::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
+    pkb.storeUses(varUsesMap);
 }
 
 void WriteFacade::storeConstants(std::unordered_set<constant> constants) {
     pkb.addConstants(constants);
 }
 
-void WriteFacade::storeUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS) {
-}
-void WriteFacade::storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS) {
+void WriteFacade::storeStatements(std::unordered_map<statementNumber, StmtEntity> typeMap) {
+    pkb.addStatements(typeMap);
 }
 
-void WriteFacade::storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants) {
+void WriteFacade::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
+    pkb.storeParent(map);
 }
+
+void WriteFacade::storeFollows(std::unordered_map<statementNumber, statementNumber> map) {
+    pkb.storeFollows(map);
+}
+
+void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
+    pkb.storeModifies(varModifiesMap);
+}
+
+
