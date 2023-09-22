@@ -1,0 +1,20 @@
+#include "catch.hpp"
+#include "SP/sp_tokeniser/Token.h"
+#include "SP/SourceProcessor.h"
+#include "PKB/API/WriteFacade.h"
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <vector>
+#include <memory>
+
+
+//TEST_CASE(("Test Conditional Tokens Retrieval")) {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    auto writeFacade = WriteFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram2 = "procedure p { while (x == 1) { read x; } }";
+//    sourceProcessor.processSource(simpleProgram2);
+//
+//    REQUIRE(1 == 1);
+//}

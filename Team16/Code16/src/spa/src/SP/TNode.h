@@ -105,31 +105,198 @@ class MinusTNode : public TNode {
   }
 };
 
+class WhileTNode : public TNode {
+ public:
+  explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kEntityWhile;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+class PrintTNode : public TNode {
+ public:
+    explicit PrintTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
+        type = TokenType::kEntityPrint;
+        content = c;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+class IfTNode : public TNode {
+ public:
+    explicit IfTNode(int statementNumber) : TNode(statementNumber) {
+        type = TokenType::kEntityIf;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+class CallTNode : public TNode {
+ public:
+    explicit CallTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
+        type = TokenType::kEntityCall;
+        content = c;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
+};
+
+class MultiplyTNode : public TNode {
+ public:
+  explicit MultiplyTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kOperatorMultiply;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return leftChild->getContent() + " * " + rightChild->getContent();
+  }
+};
+
+class DivideTNode : public TNode {
+ public:
+  explicit DivideTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kOperatorDivide;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return leftChild->getContent() + " / " + rightChild->getContent();
+  }
+};
+
+class ModTNode : public TNode {
+ public:
+  explicit ModTNode(int statementNumber) : TNode(statementNumber) {
+    type = TokenType::kOperatorMod;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return leftChild->getContent() + " % " + rightChild->getContent();
+  }
+};
+
+class RelOperatorTNode : public TNode {
+ public:
+  explicit RelOperatorTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
+    type = tokenType;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    std::string rep = "";
+    switch (type) {
+      case TokenType::kOperatorEqual:
+        rep = " == ";
+        break;
+      case TokenType::kOperatorNotEqual:
+        rep = " != ";
+        break;
+      case TokenType::kOperatorGreater:
+        rep = " > ";
+        break;
+      case TokenType::kOperatorLess:
+        rep = " < ";
+        break;
+      case TokenType::kOperatorGreaterEqual:
+        rep = " >= ";
+        break;
+      case TokenType::kOperatorLessEqual:
+        rep = " <= ";
+        break;
+      default:
+        throw InvalidTokenTypeError("Error: invalid token type");
+    }
+    return leftChild->getContent() + rep + rightChild->getContent();
+  }
+};
+
+
+class CondOperatorTNode : public TNode {
+ public:
+  explicit CondOperatorTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
+    type = tokenType;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    std::string rep = "";
+    switch (type) {
+      case TokenType::kOperatorLogicalNot:
+        rep = "!";
+        break;
+      case TokenType::kOperatorLogicalAnd:
+        rep = " && ";
+        break;
+      case TokenType::kOperatorLogicalOr:
+        rep = "||";
+        break;
+      default:
+        throw InvalidTokenTypeError("Error: invalid token type");
+    }
+    if (!leftChild) {
+      return rep + "(" + rightChild->getContent() + ")";
+    }
+    return "(" + leftChild->getContent() + ")" + rep + "(" + rightChild->getContent() + ")";
+  }
+};
+
+
 class TNodeFactory {
  public:
-    static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
-        switch (token.tokenType) {
-        case TokenType::kEntityProcedure: {
-            return std::make_shared<ProcedureTNode>(token.value);
-        }
-        case TokenType::kEntityRead: {
-            return std::make_shared<ReadTNode>(statementNumber, token.value);
-        }
-        case TokenType::kEntityAssign: {
-            return std::make_shared<AssignTNode>(statementNumber);
-        }
-        case TokenType::kLiteralName: {
-            return std::make_shared<VariableTNode>(statementNumber, token.value);
-        }
-        case TokenType::kLiteralInteger: {
-            return std::make_shared<ConstantTNode>(statementNumber, token.value);
-        }
-        case TokenType::kOperatorPlus:
-            return std::make_shared<PlusTNode>(statementNumber);
-        case TokenType::kOperatorMinus:
+     static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
+         switch (token.tokenType) {
+         case TokenType::kEntityProcedure: {
+             return std::make_shared<ProcedureTNode>(token.value);
+         }
+         case TokenType::kEntityWhile: {
+             return std::make_shared<WhileTNode>(statementNumber);  // probably needs more information than this
+         }
+         case TokenType::kEntityPrint: {
+             return std::make_shared<PrintTNode>(statementNumber, token.value);
+         }
+         case TokenType::kEntityCall: {
+             return std::make_shared<PrintTNode>(statementNumber, token.value);
+         }
+         case TokenType::kEntityIf: {
+             return std::make_shared<IfTNode>(statementNumber);
+         }
+         case TokenType::kEntityRead: {
+             return std::make_shared<ReadTNode>(statementNumber, token.value);
+         }
+         case TokenType::kEntityAssign: {
+             return std::make_shared<AssignTNode>(statementNumber);
+         }
+         case TokenType::kLiteralName: {
+             return std::make_shared<VariableTNode>(statementNumber, token.value);
+         }
+         case TokenType::kLiteralInteger: {
+             return std::make_shared<ConstantTNode>(statementNumber, token.value);
+         }
+         case TokenType::kOperatorPlus: {
+             return std::make_shared<PlusTNode>(statementNumber);
+         }
+         case TokenType::kOperatorMinus: {
             return std::make_shared<MinusTNode>(statementNumber);
-        default:
-            throw std::invalid_argument("Error: unknown token type");
-        }
-    }
+         }
+         case TokenType::kOperatorMultiply: {
+           return std::make_shared<MultiplyTNode>(statementNumber);
+         }
+         case TokenType::kOperatorDivide: {
+           return std::make_shared<DivideTNode>(statementNumber);
+         }
+         case TokenType::kOperatorMod: {
+           return std::make_shared<ModTNode>(statementNumber);
+         }
+         case TokenType::kOperatorEqual:
+         case TokenType::kOperatorNotEqual:
+         case TokenType::kOperatorGreater:
+         case TokenType::kOperatorLess:
+         case TokenType::kOperatorGreaterEqual:
+         case TokenType::kOperatorLessEqual: {
+           return std::make_shared<RelOperatorTNode>(statementNumber, token.tokenType);
+         }
+         case TokenType::kOperatorLogicalAnd:
+         case TokenType::kOperatorLogicalOr:
+         case TokenType::kOperatorLogicalNot: {
+           return std::make_shared<CondOperatorTNode>(statementNumber, token.tokenType);
+         default:
+             throw std::invalid_argument("Error: unknown token type");
+         }
+         }
+     }
 };

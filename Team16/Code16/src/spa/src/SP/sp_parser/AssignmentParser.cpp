@@ -1,68 +1,82 @@
 #include "AssignmentParser.h"
 
-int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
-    std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[curr_index], lineNumber);
-    std::shared_ptr<TNode> root = TNodeFactory::createNode(tokens[curr_index + 1], lineNumber);
-    std::shared_ptr<TNode> parentNode = root;
-    root->addChild(lhs);
+void AssignmentParser::incrementIndex() {
+  index++;
+}
 
-    curr_index = curr_index + 2;
-    std::shared_ptr<TNode> currentNode = TNodeFactory::createNode(tokens[curr_index], lineNumber);
+std::shared_ptr<TNode> AssignmentParser::parseExpression(const std::vector<Token>& tokens) {
+  std::shared_ptr<TNode> tree = parseTerm(tokens);
+  while (ParseUtils::isPlusOrMinus(tokens[index])) {
+    std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
+    operatorNode->addChild(tree);
+    incrementIndex();
+    std::shared_ptr<TNode> rhs = parseTerm(tokens);
+    operatorNode->addChild(rhs);
+    tree = operatorNode;
+  }
 
-    while (curr_index + 1 < tokens.size()) {
-        Token curr = tokens[curr_index];
-        Token next = tokens[curr_index + 1];
-        // check next token
-        if (next.tokenType == TokenType::kSepSemicolon) {
-            parentNode->addChild(currentNode);
-            curr_index += 1;
-            break;
-        } else if (next.tokenType == TokenType::kOperatorPlus || next.tokenType == TokenType::kOperatorMinus) {
-            int next_index = curr_index + 1;
-            // create operator node
-            std::shared_ptr<TNode> subtreeRoot = TNodeFactory::createNode(next, lineNumber);
-            // Add operator lhs node to operator node
-            subtreeRoot->addChild(currentNode);
-            // create operator rhs node
-            Token subtreeRHSToken = tokens[curr_index + 2];
-            if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger
-                && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
-                return -1;
-            }
-            std::shared_ptr<TNode> rhsSubtree = TNodeFactory::createNode(subtreeRHSToken, lineNumber);
-            subtreeRoot->addChild(rhsSubtree);
-            // set current node to be operator node
-            currentNode = subtreeRoot;
+  return tree;
+}
 
-            // loop for subsequent operators
-            int temp_index = curr_index + 3;
-            while (temp_index < tokens.size()
-                && (tokens[temp_index].tokenType == TokenType::kOperatorPlus
-                    || tokens[temp_index].tokenType == TokenType::kOperatorMinus)) {
-                // create operator node
-                subtreeRoot = TNodeFactory::createNode(tokens[temp_index], lineNumber);
-                // Add operator lhs node to operator node
-                subtreeRoot->addChild(currentNode);
-                // create operator rhs node
-                subtreeRHSToken = tokens[temp_index + 1];
-                if (subtreeRHSToken.tokenType != TokenType::kLiteralInteger
-                    && subtreeRHSToken.tokenType != TokenType::kLiteralName) {
-                    return -1;
-                }
-                rhsSubtree = TNodeFactory::createNode(subtreeRHSToken, lineNumber);
-                subtreeRoot->addChild(rhsSubtree);
-                // set current node to be operator node
-                currentNode = subtreeRoot;
-                temp_index += 2;
-            }
-            curr_index = temp_index - 1;
-        } else {
-            return -1;
-        }
+std::shared_ptr<TNode> AssignmentParser::parseTerm(const std::vector<Token>& tokens) {
+  std::shared_ptr<TNode> tree = parseFactor(tokens);
+  while (ParseUtils::isMultiplyDivideOrModulo(tokens[index])) {
+    std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
+    operatorNode->addChild(tree);
+    incrementIndex();
+    std::shared_ptr<TNode> rhs = parseFactor(tokens);
+    operatorNode->addChild(rhs);
+    tree = operatorNode;
+  }
+
+  return tree;
+}
+
+std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& tokens) {
+  std::shared_ptr<TNode> node = nullptr;
+  if (tokens[index].tokenType == TokenType::kSepOpenParen) {
+    incrementIndex();
+    node = parseExpression(tokens);
+    if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+      throw InvalidSyntaxError();
     }
-    curr_index += 1;
-    designExtractor->extractDesign(root, visitor);
+    incrementIndex();
+    return node;
+  } else {
+    if (ParseUtils::isVarOrConst(tokens[index])) {
+      node = TNodeFactory::createNode(tokens[index], lineNumber);
+      incrementIndex();
+    }
+  }
 
-    return curr_index;
+  if (node == nullptr) {
+    throw InvalidSyntaxError();
+  }
+
+  return node;
+}
+
+int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
+    // Validate that statement has at least 4 tokens (min: lhs = rhs ;)
+    if (tokens.size() - index < 3) {
+        return -1;
+    }
+    std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[index], lineNumber);
+    std::shared_ptr<TNode> assignNode = TNodeFactory::createNode(tokens[index + 1], lineNumber);
+    assignNode->addChild(lhs);
+    incrementIndex();
+    incrementIndex();
+    ParseUtils::setValues(index, lineNumber);
+    std::shared_ptr<TNode> rhs = ParseUtils::parseExpression(tokens);
+    index = ParseUtils::getIndex();
+    assignNode->addChild(rhs);
+    // Validate that assignment ends with ;
+    if (tokens[index].tokenType != TokenType::kSepSemicolon) {
+        return -1;
+    }
+    index += 1;
+    designExtractor->extractDesign(assignNode, visitor);
+
+    return index;
 }
 
