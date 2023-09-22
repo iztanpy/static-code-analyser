@@ -2,6 +2,16 @@
 
 void ASTVisitor::visit(const ProcedureTNode* node, std::string& key) {
     statementTypesMap.insert({0, StmtEntity::kProcedure});
+    std::set<std::string> procedureLabels = getProcedureLabels();
+    auto existingLabel = procedureLabels.find(node->getContent());
+    for (const std::string& element : procedureLabels) {
+        std::cout << element << " ";
+    }
+    if (existingLabel != procedureLabels.end()) {
+        throw InvalidSemanticError();
+    } else {
+        insertProcedureLabel(node->getContent());
+    }
 }
 
 void ASTVisitor::visit(const AssignTNode* node, std::string& key) {

@@ -25,6 +25,7 @@ int ProcedureParser::parse(const std::vector<Token>& tokens, int curr_index) {
     if (procedureNameToken.tokenType != TokenType::kLiteralName) {
         return -1;
     }
+
     // validate procedure open brace
     size_t openBracesIndex = curr_index + 2;
     if (tokens[openBracesIndex].tokenType != TokenType::kSepOpenBrace) {

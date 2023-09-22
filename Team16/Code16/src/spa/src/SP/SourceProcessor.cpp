@@ -11,6 +11,9 @@ void SourceProcessor::processSource(const std::string& simpleProgram) {
     } catch (const InvalidTokenTypeError e) {
         e.log();
     }
+    catch (const InvalidSemanticError e) {
+        e.log();
+    }
 }
 
 std::unordered_set<std::string> SourceProcessor::getVariables() {
@@ -52,5 +55,3 @@ std::unordered_map<int, std::unordered_set<int>> SourceProcessor::getParentState
 std::unordered_map<int, int> SourceProcessor::getFollowStatementNumberMap() {
     return visitor.getFollowStatementNumberMap();
 }
-
-
