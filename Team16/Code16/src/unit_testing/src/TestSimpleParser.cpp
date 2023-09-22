@@ -54,10 +54,10 @@ TEST_CASE("Test follows & parent relation two level nesting") {
           x = 0;
           while (x == 0) {
             if (x == 1) then {
-              x = x + 4;
+              read x;
               x = x + 1;
             } else {
-              x = x + 2;
+              print k;
               x = x + 3;
             }
             x = x + 1;

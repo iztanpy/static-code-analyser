@@ -22,8 +22,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             visitor->setParentStatementNumberMap(parentStatementNumber, lineNumber);
         }
 
-        // check for no procedure declaration
-        if (tokens[0].tokenType != TokenType::kEntityProcedure) {
+        if (followsStatementStack.empty() && tokens[curr_index].tokenType != TokenType::kEntityProcedure) {
             throw InvalidSyntaxError();
         }
 
