@@ -10,7 +10,10 @@ add_executable(unit_testing ${srcs}
         src/test_constraint_table.cpp
         src/PKB/FollowsStoreTest.cpp
         src/TestWhileParser.cpp
-        src/TestSemanticValidator.cpp)
+        src/TestSemanticValidator.cpp
+        src/TestStringUtil.cpp
+        src/TestWhileParser.cpp
+)
 
 target_link_libraries(unit_testing spa)
 
