@@ -69,7 +69,7 @@ bool ReadFacade::isModifies(statementNumber lineNumber, Wildcard wildcard) {
     return pkb.isModifies(lineNumber, wildcard);
 }
 
-variable ReadFacade::modifies(statementNumber line) {
+std::unordered_set<variable> ReadFacade::modifies(statementNumber line) {
     return pkb.modifies(line);
 }
 

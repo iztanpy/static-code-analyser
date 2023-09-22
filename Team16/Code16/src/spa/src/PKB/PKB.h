@@ -91,7 +91,7 @@ class PKB {
 
     bool isModifies(statementNumber lineNumber, Wildcard wildcard);
 
-    variable modifies(statementNumber line);
+    std::unordered_set<variable> modifies(statementNumber line);
 
     std::unordered_set<statementNumber> modifies(StmtEntity type, variable variableName);
 

@@ -6,20 +6,22 @@ typedef std::string constant;
 typedef int statementNumber;
 
 ModifiesStore::ModifiesStore() {
-    std::unordered_map<statementNumber, variable> ModifiesVariableMap;
+    std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesVariableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> ModifiesVariableMapReverse;
 }
 
-void ModifiesStore::storeModifies(std::unordered_map<statementNumber, variable> relations) {
+void ModifiesStore::storeModifies(std::unordered_map<statementNumber, std::unordered_set<variable>> relations) {
     this->ModifiesVariableMap = relations;
     for (auto const& x : relations) {
-        this->ModifiesVariableMapReverse[x.second].insert(x.first);
+        for (auto const& y : x.second) {
+            this->ModifiesVariableMapReverse[y].insert(x.first);
+        }
     }
 }
 
 bool ModifiesStore::isModifies(statementNumber statement, variable variable) {
     if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
-        if (ModifiesVariableMap[statement] == variable) {
+        if (ModifiesVariableMap[statement].find(variable) != ModifiesVariableMap[statement].end()) {
             return true;
         }
     }
@@ -28,9 +30,7 @@ bool ModifiesStore::isModifies(statementNumber statement, variable variable) {
 
 bool ModifiesStore::isModifies(statementNumber statement) {
     if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
-        if (ModifiesVariableMap[statement].size() > 0) {
-            return true;
-        }
+        return true;
     }
     return false;
 }
@@ -40,7 +40,6 @@ std::unordered_set<statementNumber> ModifiesStore::modifies(ModifiesStore::varia
     return statements;
 }
 
-variable ModifiesStore::modifies(ModifiesStore::statementNumber statement) {
-    variable variable = ModifiesVariableMap[statement];
-    return variable;
+std::unordered_set<variable> ModifiesStore::modifies(ModifiesStore::statementNumber statement) {
+    return ModifiesVariableMap[statement];
 }

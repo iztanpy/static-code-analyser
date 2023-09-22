@@ -114,7 +114,16 @@ std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard
 // ModifiesStore methods
 
 void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
-    modifiesStore->storeModifies(varModifiesMap);
+    std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesMapWithCall;
+
+    for (auto const &x : varModifiesMap) {
+        ModifiesMapWithCall[x.first].insert(x.second);
+        auto parents = parentStore->getParents(x.first);
+        for (auto const &y : parents) {
+            ModifiesMapWithCall[y].insert(x.second);
+        }
+    }
+    modifiesStore->storeModifies(ModifiesMapWithCall);
 }
 
 bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
@@ -125,15 +134,16 @@ bool PKB::isModifies(statementNumber lineNumber, Wildcard wildcard) {
     return modifiesStore->isModifies(lineNumber);
 }
 
-variable PKB::modifies(statementNumber line) {
+std::unordered_set<variable> PKB::modifies(statementNumber line) {
     return modifiesStore->modifies(line);
 }
 
 std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, variable variableName) {
-    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
+    std::unordered_set<statementNumber> relevantStmts = statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->modifiesStore->modifies(x) == variableName) {
+        if (modifiesStore->modifies(x).find(variableName)
+        != modifiesStore->modifies(x).end()) {
             result.insert(x);
         }
     }
@@ -144,9 +154,10 @@ std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, Wildcard wild
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->modifiesStore->modifies(x) != "") {
-            result.insert(x);
+        if (this->modifiesStore->modifies(x).empty()) {
+            continue;
         }
+        result.insert(x);
     }
     return result;
 }
@@ -155,9 +166,9 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
-        variable variableModified = this->modifiesStore->modifies(x);
-        if (variableModified != "") {
-            result.insert(std::make_pair(x, variableModified));
+        std::unordered_set<variable> variablesModified = this->modifiesStore->modifies(x);
+        for (auto const& y : variablesModified) {
+            result.insert(std::make_pair(x, y));
         }
     }
     return result;
