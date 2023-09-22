@@ -1,7 +1,17 @@
 #include "Visitor.h"
 
 void ASTVisitor::visit(const ProcedureTNode* node, std::string& key) {
-    statementTypesMap.insert({0, StatementTypes::PROC});
+    statementTypesMap.insert({0, StmtEntity::kProcedure});
+    std::set<std::string> procedureLabels = getProcedureLabels();
+    auto existingLabel = procedureLabels.find(node->getContent());
+    for (const std::string& element : procedureLabels) {
+        std::cout << element << " ";
+    }
+    if (existingLabel != procedureLabels.end()) {
+        throw InvalidSemanticError();
+    } else {
+        insertProcedureLabel(node->getContent());
+    }
 }
 
 void ASTVisitor::visit(const AssignTNode* node, std::string& key) {
@@ -9,7 +19,7 @@ void ASTVisitor::visit(const AssignTNode* node, std::string& key) {
     std::string isNotLHS;
     node->leftChild->accept(this, isLHS);
     node->rightChild->accept(this, isNotLHS);
-    statementTypesMap.insert({node->statementNumber, StatementTypes::ASSIGN});
+    statementTypesMap.insert({node->statementNumber, StmtEntity::kAssign});
 }
 
 void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
@@ -92,29 +102,29 @@ void ASTVisitor::visit(const RelOperatorTNode* node, std::string& key) {
 
 void ASTVisitor::visit(const ReadTNode* node, std::string& key) {
     variables.insert(node->getContent());
-    statementTypesMap.insert({node->statementNumber, StatementTypes::READ});
+    statementTypesMap.insert({node->statementNumber, StmtEntity::kRead});
     modifiesMap.insert({node->statementNumber, node->getContent()});
 }
 
 void ASTVisitor::visit(const WhileTNode* node, std::string& key) {
     node->leftChild->accept(this, key);
-    statementTypesMap.insert({node->statementNumber, StatementTypes::WHILE});
+    statementTypesMap.insert({node->statementNumber, StmtEntity::kWhile});
 }
 
 void ASTVisitor::visit(const PrintTNode* node, std::string& key) {
     std::unordered_set<std::string>& set = usesLineRHSVarMap[node->statementNumber];
     set.insert(node->content);
     variables.insert(node->getContent());
-    statementTypesMap.insert({node->statementNumber, StatementTypes::PRINT});
+    statementTypesMap.insert({node->statementNumber, StmtEntity::kPrint});
 }
 
 void ASTVisitor::visit(const IfTNode* node, std::string& key) {
     node->leftChild->accept(this, key);
-    statementTypesMap.insert({node->statementNumber, StatementTypes::IF});
+    statementTypesMap.insert({node->statementNumber, StmtEntity::kIf});
 }
 
 void ASTVisitor::visit(const CallTNode* node, std::string& key) {
-    statementTypesMap.insert({node->statementNumber, StatementTypes::CALL});
+    statementTypesMap.insert({node->statementNumber, StmtEntity::kCall});
 }
 
 

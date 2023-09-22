@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 #include <string>
 #include <memory>
 #include <unordered_map>
@@ -25,7 +26,7 @@ class SourceProcessor {
     void processSource(const std::string& simpleProgram);
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getConstants();
-    std::unordered_map<int, StatementTypes> getStatementTypesMap();
+    std::unordered_map<int, StmtEntity> getStatementTypesMap();
     std::unordered_map<int, std::string> getUsesLineLHSMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap();
@@ -33,6 +34,7 @@ class SourceProcessor {
     std::unordered_map<int, std::string> getModifiesMap();
     std::unordered_map<int, std::unordered_set<int>> getParentStatementNumberMap();
     std::unordered_map<int, int> getFollowStatementNumberMap();
+    std::set<std::string> getProcedureLabels();
 };
 
 

@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/SourceProcessor.h"
-#include "utils/statementTypes.h"
+#include "utils/StmtEntity.h"
 #include "PKB/API/WriteFacade.h"
 #include <string>
 #include <unordered_set>
@@ -32,6 +32,8 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+
+
 TEST_CASE("Test follows relation one level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
@@ -42,8 +44,23 @@ TEST_CASE("Test follows relation one level nesting") {
         {1, 2},
         {2, 3},
     };
+    std::unordered_map<int, int> res = sourceProcessor.getFollowStatementNumberMap();
+    for (auto it = res.begin(); it != res.end(); ++it) {
+        std::cout << it->first << " " << it->second << std::endl;
+    }
     REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
 }
+
+//
+//TEST_CASE("Test Multiple Procedures") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; } procedure p { x = x + 1; x = x + 2; x = x + 3; }";
+//    sourceProcessor.processSource(simpleProgram3);
+//    // check std log to see if error is logged
+//    REQUIRE(1 == 1); 
+//}
 
 TEST_CASE("Test follows & parent relation two level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -80,6 +97,11 @@ TEST_CASE("Test follows & parent relation two level nesting") {
         {3, {4, 5, 6, 7}},
         {9, {10}}
     };
+
+    std::unordered_map<int, int> res = sourceProcessor.getFollowStatementNumberMap();
+    for (auto it = res.begin(); it != res.end(); ++it) {
+        std::cout << it->first << " " << it->second << std::endl;
+    }
     REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
     REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
@@ -244,11 +266,11 @@ TEST_CASE(("Test Conditional Tokens Retrieval")) {
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p { while ((x == 1) || (x==2))  { read x; } }";
     sourceProcessor.processSource(simpleProgram2);
-    std::string simpleProgram3 = "procedure p { while ((x != 1) || (y != 1)) { read x; } }";
+    std::string simpleProgram3 = "procedure q { while ((x != 1) || (y != 1)) { read x; } }";
     sourceProcessor.processSource(simpleProgram3);
-    std::string simpleProgram4 = "procedure p { while (!(x == 1)) { read x; } }";
+    std::string simpleProgram4 = "procedure r { while (!(x == 1)) { read x; } }";
     sourceProcessor.processSource(simpleProgram4);
-    std::string simpleProgram5 = "procedure p { while ((!x) || (x == y)) { read x; } }";
+    std::string simpleProgram5 = "procedure s { while ((!x) || (x == y)) { read x; } }";
     sourceProcessor.processSource(simpleProgram5);
   
     REQUIRE(1 == 1);
@@ -522,13 +544,13 @@ TEST_CASE(("Test SP Statement type storage")) {
   std::string simpleProgram = "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; }}}";
   sourceProcessor.processSource(simpleProgram);
 
-  std::unordered_map<int, StatementTypes> statementTypesMap = std::unordered_map<int, StatementTypes>(
-      {{0, StatementTypes::PROC},
-       {1, StatementTypes::WHILE},
-       {2, StatementTypes::IF},
-       {3, StatementTypes::READ},
-       {4, StatementTypes::PRINT},
-       {5, StatementTypes::ASSIGN}});
+  std::unordered_map<int, StmtEntity> statementTypesMap = std::unordered_map<int, StmtEntity>(
+      {{0, StmtEntity::kProcedure},
+       {1, StmtEntity::kWhile},
+       {2, StmtEntity::kIf},
+       {3, StmtEntity::kRead},
+       {4, StmtEntity::kPrint},
+       {5, StmtEntity::kAssign}});
   REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
 }
 
@@ -547,4 +569,15 @@ TEST_CASE(("Test SP Modifies storage")) {
          {4, "a"}});
 
   REQUIRE(sourceProcessor.getModifiesMap() == modifiesMap);
+}
+
+TEST_CASE(("Test SP Procedures storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram =
+      "procedure p { if (i != 0) then { x = x + 1 + r; }} procedure k { read r; } procedure kay { print k; a = 1 + w; }";
+  sourceProcessor.processSource(simpleProgram);
+  std::set<std::string> procedures = std::set<std::string>({"p","k","kay"});
+  REQUIRE(sourceProcessor.getProcedureLabels() == procedures);
 }

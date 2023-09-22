@@ -14,3 +14,8 @@ void InvalidSyntaxError::log() const {
   std::cerr << "Error: " << message << std::endl;
   exit(1);
 }
+
+void InvalidSemanticError::log() const {
+  std::cerr << "Error: " << message << std::endl;
+  exit(1);
+}
