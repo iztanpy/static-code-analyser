@@ -62,9 +62,12 @@ std::unordered_set<ParentStore::statementNumber> ParentStore::getChildren(statem
     return children;
 }
 
-ParentStore::statementNumber ParentStore::getParent(statementNumber statement) {
+std::unordered_set<ParentStore::statementNumber> ParentStore::getParent(statementNumber statement) {
     statementNumber parent = this->ParentMapReverse[statement];
-    return parent;
+    if (parent == 0) {
+        return std::unordered_set<ParentStore::statementNumber>{};
+    }
+    return std::unordered_set<ParentStore::statementNumber>{parent};
 }
 
 bool ParentStore::isParent(statementNumber parent, statementNumber child) {

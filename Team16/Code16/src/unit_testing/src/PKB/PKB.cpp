@@ -211,12 +211,12 @@ TEST_CASE("Test Parent Stores 2") {
 
 
 
-    REQUIRE(pkb.parent(wildcard, 2) == 1);
-    REQUIRE(pkb.parent(wildcard, 3) == 1);
-    REQUIRE(pkb.parent(wildcard, 4) == 2);
-    REQUIRE(pkb.parent(wildcard, 5) == 2);
-    REQUIRE(pkb.parent(wildcard, 6) == 3);
-    REQUIRE(pkb.parent(wildcard, 7) == 3);
+    REQUIRE(pkb.parent(wildcard, 2) == std::unordered_set<statementNumber> {1});
+    REQUIRE(pkb.parent(wildcard, 3) == std::unordered_set<statementNumber> {1});
+    REQUIRE(pkb.parent(wildcard, 4) == std::unordered_set<statementNumber> {2});
+    REQUIRE(pkb.parent(wildcard, 5) == std::unordered_set<statementNumber> {2});
+    REQUIRE(pkb.parent(wildcard, 6) == std::unordered_set<statementNumber> {3});
+    REQUIRE(pkb.parent(wildcard, 7) == std::unordered_set<statementNumber> {3});
 
     for (auto value : pkb.parent(1, wildcard)) {
         REQUIRE((value == 2 || value == 3));

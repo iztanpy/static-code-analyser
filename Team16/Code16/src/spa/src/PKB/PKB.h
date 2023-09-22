@@ -133,7 +133,7 @@ class PKB {
 
     std::unordered_set<statementNumber> parent(StmtEntity entity, Wildcard wildcard);
 
-    statementNumber parent(Wildcard wildcard, statementNumber statement);
+    std::unordered_set<statementNumber> parent(Wildcard wildcard, statementNumber statement);
 
     std::unordered_set<statementNumber> parent(statementNumber statement, Wildcard wildcard);
 
