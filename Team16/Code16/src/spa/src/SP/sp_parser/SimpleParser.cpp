@@ -9,11 +9,15 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
     std::stack<std::string> controlStructureStack;  // Track the current control structures (if, else, while)
     std::stack<int> parentStatementStack;  // Track the parent statement lines
+    std::unordered_map<std::string, std::unordered_set<int>> statementsByNestingLevel;
+    bool hasElse = false; 
+   
+
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
         bool isWhileParent = !controlStructureStack.empty() && controlStructureStack.top() == "while";
         bool isIfParent = !controlStructureStack.empty() && (
-            controlStructureStack.top() == "if" || controlStructureStack.top() == "else");
+            controlStructureStack.top() == "if");
         int parentStatementNumber = !parentStatementStack.empty() ? parentStatementStack.top() : -1;
         if ((isWhileParent || isIfParent) && parentStatementNumber != -1
             && curr_token.tokenType != TokenType::kSepCloseBrace) {
@@ -31,6 +35,9 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 if (next_index == -1) {
                     throw InvalidSyntaxError();
                 } else {
+                    if (isWhileParent) statementsByNestingLevel["while_" + std::to_string(nestingLevel)].insert(lineNumber);
+                    else if (!hasElse) statementsByNestingLevel[std::to_string(nestingLevel)].insert(lineNumber);
+                    else if (hasElse) statementsByNestingLevel["else_" + std::to_string(nestingLevel)].insert(lineNumber);
                     lineNumber++;
                     curr_index = next_index;
                 }
@@ -49,6 +56,9 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             if (next_index == -1) {
                 throw InvalidSyntaxError();
             } else {
+                if (isWhileParent) statementsByNestingLevel["while_" + std::to_string(nestingLevel)].insert(lineNumber);
+                else if (!hasElse) statementsByNestingLevel[std::to_string(nestingLevel)].insert(lineNumber);
+                else if (hasElse) statementsByNestingLevel["else_" + std::to_string(nestingLevel)].insert(lineNumber);
                 lineNumber++;
                 curr_index = next_index;
             }
@@ -58,6 +68,9 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             if (next_index == -1) {
                 throw InvalidSyntaxError();
             } else {
+                if (isWhileParent) statementsByNestingLevel["while_" + std::to_string(nestingLevel)].insert(lineNumber);
+                else if (!hasElse) statementsByNestingLevel[std::to_string(nestingLevel)].insert(lineNumber);
+                else if (hasElse) statementsByNestingLevel["else_" + std::to_string(nestingLevel)].insert(lineNumber);
                 lineNumber++;
                 curr_index = next_index;
             }
@@ -72,10 +85,14 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             if (next_index == -1) {
                 throw InvalidSyntaxError();
             } else {
+                if (isWhileParent) statementsByNestingLevel["while_" + std::to_string(nestingLevel)].insert(lineNumber);
+                else if (!hasElse) statementsByNestingLevel[std::to_string(nestingLevel)].insert(lineNumber);
+                else if (hasElse) statementsByNestingLevel["else_" + std::to_string(nestingLevel)].insert(lineNumber);
                 lineNumber++;
+                nestingLevel++;
                 curr_index = next_index;
             }
-        } else if (curr_token.tokenType == TokenType::kEntityCall) {
+        } /*else if (curr_token.tokenType == TokenType::kEntityCall) {
             int next_index = callParser->parse(tokens, curr_index);
             if (next_index == -1) {
                 throw InvalidSyntaxError();
@@ -83,7 +100,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 lineNumber++;
                 curr_index = next_index;
             }
-        } else if (curr_token.tokenType == TokenType::kEntityIf) {
+        }*/ else if (curr_token.tokenType == TokenType::kEntityIf) {
             controlStructureStack.push("if");
             parentStatementStack.push(lineNumber);
             ifParser->lineNumber = lineNumber;
@@ -94,12 +111,17 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             if (next_index == -1) {
                 throw InvalidSyntaxError();
             } else {
+                if (isWhileParent) statementsByNestingLevel["while_" + std::to_string(nestingLevel)].insert(lineNumber);
+                else if (!hasElse) statementsByNestingLevel[std::to_string(nestingLevel)].insert(lineNumber);
+                else if (hasElse) statementsByNestingLevel["else_" + std::to_string(nestingLevel)].insert(lineNumber);
                 lineNumber++;
                 nestingLevel++;
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
             if (!controlStructureStack.empty() && controlStructureStack.top() == "if") {
+                hasElse = true;
+                statementsByNestingLevel["else_" + std::to_string(nestingLevel)].insert(lineNumber);
                 curr_index += 2;  // skip over the next open brace
             } else {
                 // Error: Unexpected 'else' without matching 'if'
@@ -114,14 +136,16 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
                 if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].tokenType != TokenType::kEntityElse) {
                     currIfDepth--;  // Decrease the depth
-                    nestingLevel--;
                     controlStructureStack.pop();  // Pop the 'if'
                     parentStatementStack.pop();  // Pop the parent
-                }
+                    nestingLevel--;
+                    hasElse = false; 
+                } 
             } else {  // other cases which have brackets
                 if (!controlStructureStack.empty() && currWhileDepth > 0) {
                     currWhileDepth--;  // Decrease the depth
                     currIfDepth--;  // Decrease the depth
+                    nestingLevel--;  // Decrease the nesting level
                 }
             }
             curr_index += 1;
@@ -139,6 +163,32 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
         }
     }
 
+    for (const auto& pair : statementsByNestingLevel) {
+        std::string key = pair.first;
+        const std::unordered_set<int>& value = pair.second; // Use a reference to avoid copying
+        
+        if (value.size() > 1) {
+            auto it = value.begin();
+            auto nextIt = std::next(it);
+
+            // Iterate up to the second-to-last element
+            while (nextIt != value.end()) {
+                // Compare *it and *nextIt
+                int parent = *it;
+                int child = *nextIt;
+                visitor->setFollowStatementNumberMap(parent, child);
+
+                ++it;
+                ++nextIt;
+            }
+        }
+    }
+
+
+ 
+
+
+    
     // <line, RHS patterns>, <line, LHS var>
     writeFacade->storeAssignments(visitor->getUsesLineRHSPatternMap(), visitor->getUsesLineLHSMap());
     // <all var in LHS and RHS>
@@ -150,3 +200,5 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     writeFacade->storeLineUses(visitor->getUsesStatementNumberHashmap());
     return curr_index;
 }
+
+

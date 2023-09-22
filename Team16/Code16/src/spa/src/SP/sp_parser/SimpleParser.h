@@ -39,7 +39,7 @@ class SimpleParser : public Parser {
     WriteFacade* writeFacade;
     ASTVisitor* visitor;
     int lineNumber = 1;
-    int nestingLevel = 1;
+    int nestingLevel = 0;
     int currWhileDepth;
     int currIfDepth;
  public:

@@ -27,6 +27,49 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+//TEST_CASE("Test follows relation one level nesting") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; }";
+//    sourceProcessor.processSource(simpleProgram3);
+//    std::unordered_map<int, std::unordered_set<int>> followStatementNumberHashmap2 = {
+//        {1, {2}},
+//        {2, {3}}, 
+//    };
+//    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getFollowStatementNumberMap();
+//    REQUIRE(followStatementNumberHashmap2 == res2);
+//}
+//
+//TEST_CASE("Test follows relation two level nesting") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = R"(
+//        procedure p {
+//          x = 0; 
+//          if (x == 1) then { 
+//            x = x + 4; 
+//            x = x + 1; 
+//          } else {
+//            x = x + 2; 
+//            x = x + 3; 
+//          }
+//          while (x > 0) { 
+//            x = x + 1; 
+//          }
+//        }
+//     )";
+//    sourceProcessor.processSource(simpleProgram3);
+//    std::unordered_map<int, std::unordered_set<int>> followStatementNumberHashmap2 = {
+//        {1, {2}},
+//        {2, {7}},
+//        {3, {4}},
+//    };
+//    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getFollowStatementNumberMap();
+//    REQUIRE(followStatementNumberHashmap2 == res2);
+//}
+
 
 TEST_CASE("Test if else nested loop retrieval") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -55,22 +98,52 @@ TEST_CASE("Test if else loop retrieval") {
     REQUIRE(parentStatementNumberHashmap == res);
 }
 
-
-TEST_CASE(("Test if else while nested retrieval")) {
+TEST_CASE("Test if-else-while nested retrieval") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram2 = "procedure p {  while (number > 0) { if (x == 1) then { while ( x== 1) { x = x+1; }} else { x = x +2; } }";
+    std::string complexProgram = "procedure p { "
+        "while (number > 0) { " // 1
+        "if (x == 1) then { " // 2
+        "while (x == 1) { " // 3
+        "x = x + 1; " // 4
+        "} "
+        "} else { "
+        "x = x + 2; " // 5
+        "} "
+        "} "
+        "}";
+    sourceProcessor.processSource(complexProgram);
+
+    // Expected parent statement numbers map (with while starting from index 1)
+    std::unordered_map<int, std::unordered_set<int>> expectedParentStatementNumberHashmap = {
+        {1, {2}},    // Procedure p contains while (number > 0)
+        {2, {3,5}}, // While (number > 0) contains if (x == 1) and else
+        {3, {4}},    // If (x == 1) contains while (x == 1)
+    };
+
+    // Retrieve the actual parent statement numbers map, excluding the procedure declaration (statement 1)
+    std::unordered_map<int, std::unordered_set<int>> actualParentStatementNumberHashmap = sourceProcessor.getParentStatementNumberMap();
+
+    // Check if the actual map matches the expected map
+    REQUIRE(expectedParentStatementNumberHashmap == actualParentStatementNumberHashmap);
+
+}
+
+TEST_CASE(("Test multiple while while nested retrieval")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram2 = "procedure p {  while (number > 0) { while (x > 0) { while (a > b) {x = x + 1; } } }";
     sourceProcessor.processSource(simpleProgram2);
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
-        {1, {2}}, 
-        {2, {3,5}}, 
+        {1, {2}},
+        {2, {3}},
         {3, {4}}
     };
     std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap == res);
 }
-
 
 TEST_CASE(("Test SP storing of assignment statements")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
