@@ -20,6 +20,6 @@ const std::vector<char> kSpecialTokens = {
 
 const char kWildcard = '_';
 
-const std::regex kSuchThatClauseRegex("such that [A_Za-z]");
-const std::regex kPatternClauseRegex("such that [A_Za-z]");
+const std::regex kSuchThatClauseRegex("such that");
+const std::regex kPatternClauseRegex("pattern");
 }  // namespace qps_constants

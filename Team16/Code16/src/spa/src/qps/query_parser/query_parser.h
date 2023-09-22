@@ -18,5 +18,4 @@ class QueryParser {
   ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens, const std::vector<Declaration> & declarations);
   static std::vector<std::unique_ptr<PatternClause>>
   ExtractPatternClauses(const std::vector<QueryToken> & patternTokens, const std::vector<Declaration> & declarations);
-  static std::vector<QueryToken> ExtractPatternTokens(const std::vector<QueryToken> & tokens);
 };

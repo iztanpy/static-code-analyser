@@ -6,7 +6,6 @@
 #include <regex>
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/design_entity.h"
-#include "qps/rel_ref.h"
 #include "utils/string_utils.h"
 #include "utils/lexical_utils.h"
 #include "qps/qps_errors/qps_syntax_error.h"
@@ -148,7 +147,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     throw QpsSyntaxError("More than 2 open brackets");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
-  if (rhs.size() != 2) {
+  if (rhs.size() != 1) {
     throw QpsSyntaxError("More than 2 close brackets");
   }
 
@@ -168,7 +167,8 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
   } else if (lexical_utils::IsInteger(lhs[1])) {
     left_token = {lhs[1], PQLTokenType::INTEGER};
   } else if (QueryUtil::IsIdentWithDoubleQuotes(lhs[1])) {
-    left_token = {lhs[1], PQLTokenType::IDENT};
+    std::string remove_quotations = QueryUtil::RemoveQuotations(lhs[1]);
+    left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     if (!QueryUtil::IsInDeclarations(lhs[1], declarations)) {
       throw QpsSyntaxError("LHS synonym not declared");
@@ -181,7 +181,8 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
   } else if (lexical_utils::IsInteger(rhs[0])) {
     right_token = {rhs[0], PQLTokenType::INTEGER};
   } else if (QueryUtil::IsIdentWithDoubleQuotes(rhs[0])) {
-    right_token = {rhs[0], PQLTokenType::IDENT};
+    std::string remove_quotations = QueryUtil::RemoveQuotations(rhs[0]);
+    right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     if (!QueryUtil::IsInDeclarations(rhs[0], declarations)) {
       throw QpsSyntaxError("RHS synonym not declared");
@@ -197,7 +198,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
                                                                  const std::vector<Declaration> & declarations) {
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause);
   if (arguments.size() != 2) {
-    throw QpsSyntaxError("More than 2 arguments in relation reference");
+    throw QpsSyntaxError("More than 2 arguments in patter clause");
   }
 
   std::vector<std::string> lhs = string_util::SplitStringBy('(', arguments[0]);
@@ -205,7 +206,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     throw QpsSyntaxError("More than 2 open brackets");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', arguments[1]);
-  if (rhs.size() != 2) {
+  if (rhs.size() != 1) {
     throw QpsSyntaxError("More than 2 close brackets");
   }
 
@@ -224,7 +225,8 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
   if (QueryUtil::IsWildcard(lhs[1])) {
     left_token = {lhs[1], PQLTokenType::WILDCARD};
   } else if (QueryUtil::IsIdentWithDoubleQuotes(lhs[1])) {
-    left_token = {lhs[1], PQLTokenType::IDENT};
+    std::string remove_quotations = QueryUtil::RemoveQuotations(lhs[1]);
+    left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     if (!QueryUtil::IsInDeclarations(lhs[1], declarations)) {
       throw QpsSyntaxError("LHS synonym not declared");
@@ -235,7 +237,8 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
   if (QueryUtil::IsWildcard(rhs[0])) {
     right_token = {rhs[0], PQLTokenType::WILDCARD};
   } else if (QueryUtil::IsIdentWithDoubleQuotes(rhs[0])) {
-    right_token = {rhs[0], PQLTokenType::IDENT};
+    std::string remove_quotations = QueryUtil::RemoveQuotations(rhs[0]);
+    right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
     std::string remove_wildcard = string_util::Trim(rhs[0].substr(1, rhs[0].length() - 2));
     std::string remove_quotations = QueryUtil::RemoveQuotations(remove_wildcard);
@@ -259,14 +262,18 @@ std::pair<std::vector<QueryToken>,
     return {such_that_tokens, pattern_tokens};
   }
   std::vector<size_t> clause_beginning_indexes = getClauseIndexes(remaining_statement);
-  std::set < std::string > stringRelRef = RelRef::getStringRelRef();
   std::string prev_clause;
   std::string curr_clause;
   std::string processed_clause;
   size_t start_index = 0;
 
-  for (int i = 0; i < clause_beginning_indexes.size() - 1; i++) {
-    size_t next_index = clause_beginning_indexes[i + 1];
+  for (int i = 0; i <= clause_beginning_indexes.size() - 1; i++) {
+    size_t next_index;
+    if (clause_beginning_indexes.size() == 1) {
+      next_index = remaining_statement.length();
+    } else {
+      next_index = clause_beginning_indexes[i + 1];
+    }
     curr_clause = string_util::Trim(remaining_statement.substr(start_index, next_index - start_index));
     start_index = next_index;
     if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
@@ -297,6 +304,8 @@ std::pair<std::vector<QueryToken>,
       std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg_pair, declarations);
       pattern_tokens.push_back(pattern_args.first);
       pattern_tokens.push_back(pattern_args.second);
+    } else {
+      throw QpsSyntaxError("Unrecognized clause");
     }
   }
 

@@ -30,7 +30,7 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string & query) {
   }
 
   std::vector<QueryToken> patternTokens = tokenised_query.pattern_tokens;
-  if (!suchThatTokens.empty()) {
+  if (!patternTokens.empty()) {
     std::vector<std::unique_ptr<PatternClause>> patternClauses = ExtractPatternClauses(patternTokens, declarations);
     parsedQuery.pattern_clauses = std::move(patternClauses);
   }
