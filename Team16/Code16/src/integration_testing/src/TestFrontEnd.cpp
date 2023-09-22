@@ -89,6 +89,38 @@ TEST_CASE("Test SP-PKB connection") {
 
     REQUIRE((readFacade.getAssigns("x", "z") == std::unordered_set<statementNumber>({ 1 })));
 
+    REQUIRE((readFacade.getAssigns("x", wildcard) == std::unordered_set<statementNumber>({1, 2})));
+
+    REQUIRE((readFacade.isUses(1, "z")));
+
+    REQUIRE((readFacade.isUses(1, "I")));
+
+    REQUIRE(!(readFacade.isUses(1, "x")));
+
+    REQUIRE((readFacade.isUses(2, "x")));
+
+    REQUIRE((readFacade.isUses(3, "y")));
+
+    REQUIRE((readFacade.isUses(3, "z")));
+
+    REQUIRE((readFacade.uses(StmtEntity::kAssign, "z") == std::unordered_set<statementNumber>({1, 3})));
+
+    REQUIRE((readFacade.uses(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>({2})));
+
+    REQUIRE((readFacade.uses(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>({3})));
+
+    REQUIRE((readFacade.uses(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> pairSet = std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {1, "z"}, {1, "I"}, {2, "x"}, {3, "y"}, {3, "z"}});
+
+    REQUIRE((readFacade.uses(StmtEntity::kAssign) == pairSet));
+
+
+
+
+
+
+
     REQUIRE(readFacade.getVariables() == std::unordered_set<variable>({"x", "z", "I", "y"}));
 
     REQUIRE(readFacade.modifies(1) == std::unordered_set<variable>({"x"}));
@@ -98,13 +130,6 @@ TEST_CASE("Test SP-PKB connection") {
     REQUIRE(readFacade.uses(1) == std::unordered_set<variable>({"z", "I"}));
     REQUIRE(readFacade.uses(2) == std::unordered_set<variable>({"x"}));
     REQUIRE(readFacade.uses(3) == std::unordered_set<variable>({"y", "z"}));
-
-
-
-
-
-    
-    
 }
 
 TEST_CASE("One assign statement 1") {
