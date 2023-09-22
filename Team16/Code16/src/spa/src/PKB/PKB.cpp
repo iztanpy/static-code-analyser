@@ -135,20 +135,23 @@ bool PKB::isModifies(statementNumber lineNumber, Wildcard wildcard) {
 }
 
 std::unordered_set<variable> PKB::modifies(statementNumber line) {
-    return modifiesStore->modifies(line);
+    return this-> modifiesStore->modifies(line);
 }
 
 std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, variable variableName) {
     std::unordered_set<statementNumber> relevantStmts = statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
-    for (auto const& x : relevantStmts) {
-        if (modifiesStore->modifies(x).find(variableName)
-        != modifiesStore->modifies(x).end()) {
-            result.insert(x);
+
+    for (auto const& stmt : relevantStmts) {
+        const std::unordered_set<variable>& modifiedVariables = modifiesStore->modifies(stmt);
+        if (modifiedVariables.find(variableName) != modifiedVariables.end()) {
+            result.insert(stmt);
         }
     }
+
     return result;
 }
+
 
 std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
