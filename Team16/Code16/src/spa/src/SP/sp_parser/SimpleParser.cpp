@@ -41,6 +41,8 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                     lineNumber++;
                     curr_index = next_index;
                 }
+            } else {
+                curr_token.tokenType = ParseUtils::convertLiteralToEntity(curr_token.getValue());
             }
         } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
             int next_index = procedureParser->parse(tokens, curr_index);
@@ -116,14 +118,12 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
-            if (!controlStructureStack.empty() && controlStructureStack.top() == "if") {
-                std::set<int> elseFollowsSet;
-                followsStatementStack.push(elseFollowsSet);
-                curr_index += 2;  // skip over the next open brace
-            } else {
-                // Error: Unexpected 'else' without matching 'if'
-                throw InvalidSyntaxError();
-            }
+            if (!controlStructureStack.empty() && controlStructureStack.top() != "if")  throw InvalidSyntaxError();
+            if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].tokenType != TokenType::kSepOpenBrace) throw InvalidSyntaxError();
+            std::set<int> elseFollowsSet;
+            followsStatementStack.push(elseFollowsSet);
+            curr_index += 2;  // skip over the next open brace
+           
         } else if (curr_token.tokenType == TokenType::kSepCloseBrace) {
           std::set<int> top_set = followsStatementStack.top();
           insertFollowsHashMap(top_set);
@@ -131,21 +131,25 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
           if (!controlStructureStack.empty() && controlStructureStack.top() == "while" && currWhileDepth >= 1) {
                 controlStructureStack.pop();  // Pop the 'while'
                 parentStatementStack.pop();  // Pop the parent statement
-                currWhileDepth--;  // Decrease the depth
-
-            } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
-                if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].tokenType != TokenType::kEntityElse) {
-                    currIfDepth--;  // Decrease the depth
-                    controlStructureStack.pop();  // Pop the 'if'
-                    parentStatementStack.pop();  // Pop the parent
-                }
-            } else {  // other cases which have brackets
-                if (!controlStructureStack.empty() && currWhileDepth > 0) {
-                    currWhileDepth--;  // Decrease the depth
-                    currIfDepth--;  // Decrease the depth
-                }
+                currWhileDepth--;  // Decrease the 
+          } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
+            if (curr_index + 1 < tokens.size() && tokens[curr_index + 1].getValue() != "else") {
+                currIfDepth--;  // Decrease the depth
+                controlStructureStack.pop();  // Pop the 'if'
+                parentStatementStack.pop();  // Pop the parent
+         
+            } else if (curr_index + 2 < tokens.size() && tokens[curr_index + 2].tokenType == TokenType::kSepOpenBrace) {
+                curr_index += 1;
+                // increment curr index to point to else
+                continue;
             }
-            curr_index += 1;
+          } else {  // other cases which have brackets
+            if (!controlStructureStack.empty() && currWhileDepth > 0) {
+                currWhileDepth--;  // Decrease the depth
+                currIfDepth--;  // Decrease the depth
+            }
+          }
+          curr_index += 1;
         }  else {
             // currently unsupported, skip line for now
             int temp = curr_index;

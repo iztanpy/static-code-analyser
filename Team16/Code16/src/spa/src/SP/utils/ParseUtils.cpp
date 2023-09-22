@@ -163,3 +163,38 @@ std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& toke
 
   return node;
 }
+
+
+std::vector<TokenType> unconfirmed_entities = {
+    TokenType::kEntityIf,
+    TokenType::kEntityElse,
+    TokenType::kEntityWhile,
+    TokenType::kEntityRead,
+    TokenType::kEntityProcedure,
+    TokenType::kEntityPrint,
+    TokenType::kEntityCall,
+};
+
+
+
+
+TokenType ParseUtils::convertLiteralToEntity(std::string value) {
+    if (value == "if") {
+        return TokenType::kEntityIf;
+    } else if (value == "while") {
+        return TokenType::kEntityWhile;
+    } else if (value == "else") {
+        return TokenType::kEntityElse;
+    } else if (value == "read") {
+        return TokenType::kEntityRead;
+    } else if (value == "procedure") {
+        return TokenType::kEntityProcedure;
+    } else if (value == "print") {
+        return TokenType::kEntityPrint;
+    } else if (value == "call") {
+        return TokenType::kEntityCall;
+    } else {
+        return TokenType::kLiteralName;
+    }
+}
+

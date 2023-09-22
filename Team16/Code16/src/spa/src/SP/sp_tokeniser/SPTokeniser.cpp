@@ -21,14 +21,6 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 
 
     // entity
-    {TokenType::kEntityIf, std::regex("^(\\bif\\b)")},
-    {TokenType::kEntityElse, std::regex("^(\\belse\\b)")},
-    {TokenType::kEntityWhile, std::regex("^(\\bwhile\\b)")},
-    {TokenType::kEntityRead, std::regex("^(\\bread\\b)")},
-    {TokenType::kEntityProcedure, std::regex("^(\\bprocedure\\b)")},
-    {TokenType::kEntityPrint, std::regex("^(\\bprint\\b)")},
-    {TokenType::kEntityAssign, std::regex("^(=)")},
-    {TokenType::kEntityCall, std::regex("^(\\bcall\\b)")},
     {TokenType::kEntityThen, std::regex("^(\\bthen\\b)")},
 
     // separators

@@ -61,6 +61,7 @@ int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
     if (tokens.size() - index < 3) {
         return -1;
     }
+
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[index], lineNumber);
     std::shared_ptr<TNode> assignNode = TNodeFactory::createNode(tokens[index + 1], lineNumber);
     assignNode->addChild(lhs);
