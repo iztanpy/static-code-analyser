@@ -17,7 +17,7 @@ TokenType endType = TokenType::kSepSemicolon;
 TokenType plusType = TokenType::kOperatorPlus;
 TokenType equalType = TokenType::kEntityAssign;
 TokenType readType = TokenType::kEntityRead;
-Token tokenProc = Token(TokenType::kEntityProcedure, "p", 0);
+Token tokenProc = Token(TokenType::kEntityProcedure, "procedure", 0);
 Token tokenProcName = Token(TokenType::kLiteralName, "poo", 0);
 Token tokenOpenBrace = Token(TokenType::kSepOpenBrace, 0);
 Token tokenCloseBrace = Token(TokenType::kSepCloseBrace, 0);
@@ -31,10 +31,85 @@ Token token1 = Token(constantType, "1", 0);
 Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
-
+//
+//TEST_CASE("Test invalid else statement at the end.") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = R"(
+//    procedure p {
+//       x = 0;
+//	   if (x == 0) then {
+//            s = s + 1;
+//            x = x + 1;
+//	   }
+//       else; 
+//    }
+//     )";
+//    sourceProcessor.processSource(simpleProgram3);
+//    REQUIRE(1 == 1);
+//}
 
 
 TEST_CASE("Test follows relation one level nesting") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+       x = 0;
+	   if (x == 0) then {
+            s = s + 1;
+            x = x + 1;
+	   }
+       else = else + 1; 
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, int> followStatementNumberHashmap = {
+        {1, 2},
+        {3, 4},
+        {2, 5},
+    };
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
+       {2, {3,4}},
+    };
+
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+
+    for (const auto& pair : res) {
+        int key = pair.first;
+        const std::unordered_set<int>& values = pair.second;
+
+        std::cout << key << "key";
+
+        for (const int& value : values) {
+            std::cout << value << "val";
+        }
+
+        std::cout << std::endl;
+    }
+
+    REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
+    REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
+}
+
+
+
+TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SimpleParser parser(&writeFacade, new ASTVisitor());
+    std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
+                                 tokenEnd, tokenCloseBrace};
+    std::cout << "tokens size " << my_tokens.size() << std::endl;
+    REQUIRE(parser.parse(my_tokens, 0) == 10);
+}
+
+
+
+
+TEST_CASE("Test key and variable same name one level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
@@ -45,9 +120,6 @@ TEST_CASE("Test follows relation one level nesting") {
         {2, 3},
     };
     std::unordered_map<int, int> res = sourceProcessor.getFollowStatementNumberMap();
-    for (auto it = res.begin(); it != res.end(); ++it) {
-        std::cout << it->first << " " << it->second << std::endl;
-    }
     REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
 }
 
@@ -295,17 +367,6 @@ TEST_CASE(("Test Call Parser")) {
     REQUIRE(1 == 1);
 }
 
-
-TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
-    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(&writeFacade, new ASTVisitor());
-    std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
-                                 tokenEnd, tokenCloseBrace };
-    std::cout << "tokens size " << my_tokens.size() << std::endl;
-    REQUIRE(parser.parse(my_tokens, 0) == 10);
-}
-//
 //TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
 //    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenEqual.lineNumber);
 //    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
