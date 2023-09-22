@@ -5,6 +5,8 @@
 #include <cassert>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
+#include "qps/clauses/evaluator_util.h"
+#include "utils/StmtEntity.h"
 
 struct ParentEvaluator {
   static bool Handle(int lhs, int rhs, ReadFacade& pkb_reader, bool is_ParentT);
