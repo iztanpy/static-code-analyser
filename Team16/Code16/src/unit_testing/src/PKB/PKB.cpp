@@ -341,6 +341,42 @@ TEST_CASE("Test modifies stores") {
 
 }
 
+TEST_CASE("Tes follows store") {
+    PKB pkb = PKB();
+
+    pkb.storeFollows({ {1, 2}, {2, 3}, {3, 4} });
+    pkb.addStatements({ {1, StmtEntity::kAssign}, {2, StmtEntity::kAssign }, {3, StmtEntity::kRead}, {4, StmtEntity::kAssign} });
+
+    REQUIRE(pkb.isFollow(1, 2));
+    REQUIRE(pkb.isFollow(2, 3));
+    REQUIRE(pkb.isFollow(3, 4));
+
+    REQUIRE(!pkb.isFollow(1, 3));
+    REQUIRE(!pkb.isFollow(2, 4));
+    REQUIRE(!pkb.isFollow(1, 4));
+
+    REQUIRE(pkb.follows(StmtEntity::kAssign, 1) == std::unordered_set<statementNumber>{});
+    REQUIRE(pkb.follows(StmtEntity::kAssign, 2) == std::unordered_set<statementNumber>{1});
+    REQUIRE(pkb.follows(StmtEntity::kAssign, 3) == std::unordered_set<statementNumber>{2});
+    REQUIRE(pkb.follows(StmtEntity::kRead, 4) == std::unordered_set<statementNumber>{3});
+
+    REQUIRE(pkb.follows(StmtEntity::kAssign, Wildcard()) == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.follows(StmtEntity::kRead, Wildcard()) == std::unordered_set<statementNumber>{3});
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result = pkb.follows(StmtEntity::kAssign, StmtEntity::kAssign);
+
+    for (auto value : result) {
+        REQUIRE((value.first == 1));
+        REQUIRE((value.second == 2));
+    }
+
+    result = pkb.follows(StmtEntity::kAssign, StmtEntity::kRead);
+    for (auto value : result) {
+        REQUIRE((value.first == 2));
+        REQUIRE((value.second == 3));
+    }
+}
+
 
 //TEST_CASE("Test PKB") {
 //    std::unordered_set<int> assignments = {1, 2, 3};

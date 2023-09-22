@@ -145,16 +145,20 @@ std::unordered_set<statementNumber> ReadFacade::follows(Wildcard wildcard, StmtE
     return pkb.follows(wildcard, entity);
 }
 
-statementNumber ReadFacade::follows(statementNumber num, StmtEntity entity) {
+std::unordered_set<statementNumber> ReadFacade::follows(statementNumber num, StmtEntity entity) {
     return pkb.follows(num, entity);
 }
 
-statementNumber ReadFacade::follows(StmtEntity entity, statementNumber num) {
+std::unordered_set<statementNumber> ReadFacade::follows(StmtEntity entity, statementNumber num) {
     return pkb.follows(entity, num);
 }
 
 std::unordered_set<statementNumber> ReadFacade::follows(StmtEntity entity, Wildcard wildcard) {
     return pkb.follows(entity, wildcard);
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  ReadFacade::follows(StmtEntity entity1, StmtEntity entity2) {
+    return pkb.follows(entity1, entity2);
 }
 
 bool ReadFacade::isFollow(statementNumber statement1, statementNumber statement2) {

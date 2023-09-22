@@ -103,11 +103,13 @@ class ReadFacade {
 
     std::unordered_set<statementNumber> follows(Wildcard wildcard, StmtEntity entity);
 
-    statementNumber follows(statementNumber num, StmtEntity entity);
+    std::unordered_set<statementNumber> follows(statementNumber num, StmtEntity entity);
 
-    statementNumber follows(StmtEntity entity, statementNumber num);
+    std::unordered_set<statementNumber> follows(StmtEntity entity, statementNumber num);
 
     std::unordered_set<statementNumber> follows(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  follows(StmtEntity entity1, StmtEntity entity2);
 
     bool isFollow(statementNumber statement1, statementNumber statement2);
 

@@ -267,31 +267,56 @@ std::unordered_set<statementNumber> PKB::follows(Wildcard wildcard, StmtEntity t
     return result;
 }
 
-statementNumber PKB::follows(statementNumber num, StmtEntity type) {
+std::unordered_set<statementNumber> PKB::follows(statementNumber num, StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     statementNumber numResult = this->followsStore->getFollower(num);
     if (relevantStmts.count(numResult)) {
-        return numResult;
+        if (numResult != 0) {
+			return {numResult};
+		}
+        return {};
     }
-    return 0;
+    return {};
 }
 
-statementNumber PKB::follows(StmtEntity type, statementNumber num) {
+std::unordered_set<statementNumber> PKB::follows(StmtEntity type, statementNumber num) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     statementNumber numResult = this->followsStore->getLeader(num);
     if (relevantStmts.count(numResult)) {
-        return numResult;
+        if (numResult != 0) {
+            return { numResult };
+        }
+        return {};
     }
-    return 0;
+    return {};
 }
 
 std::unordered_set<statementNumber> PKB::follows(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        result.insert(this->followsStore->getFollower(x));
+        if (this->followsStore->getFollower(x) != 0) {
+			result.insert(x);
+		}
     }
     return result;
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::follows(StmtEntity entity1, StmtEntity entity2) {
+    std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(entity1);
+	std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(entity2);
+	std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
+    for (auto const& x : relevantStmts1) {
+        if (x == 0) {
+            continue;
+        }
+        if (relevantStmts2.count(this->followsStore->getFollower(x))) {
+            if (this->followsStore->getFollower(x) != 0) {
+                result.insert(std::make_pair(x, this->followsStore->getFollower(x)));
+            }
+		}
+	}
+	return result;
 }
 
 bool PKB::isFollow(statementNumber statement1, statementNumber statement2) {
