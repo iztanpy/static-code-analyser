@@ -87,8 +87,8 @@ class Visitor {
     void setParentStatementNumberMap(int parent, int child) {
         parentStatementNumberHashmap[parent].insert(child);
     }
-    void setFollowStatementNumberMap(int parent, int child) {
-        followStatementNumberHashmap[parent] = child;
+    void setFollowStatementNumberMap(int before, int after) {
+        followStatementNumberHashmap[before] = after;
     }
     std::unordered_map<int, std::string> getUsesLineLHSMap() const {
         return usesLineLHSMap;

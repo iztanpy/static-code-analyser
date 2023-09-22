@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 #include <memory>
 #include <stack>
 
@@ -53,6 +54,6 @@ class SimpleParser : public Parser {
     PrintParser* printParser = new PrintParser(visitor);
     IfParser* ifParser = new IfParser(visitor);
     CallParser* callParser = new CallParser(visitor);
-    void insertFollowsHashMap(std::unordered_set<int> followsSet);
+    void insertFollowsHashMap(std::set<int> followsSet);
 };
 

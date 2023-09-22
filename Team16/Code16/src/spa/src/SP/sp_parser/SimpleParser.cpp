@@ -9,7 +9,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
     std::stack<std::string> controlStructureStack;  // Track the current control structures (if, else, while)
     std::stack<int> parentStatementStack;  // Track the parent statement lines
-    std::stack<std::unordered_set<int>> followsStatementStack;
+    std::stack<std::set<int>> followsStatementStack;
 
     while (curr_index < tokens.size()) {
         Token curr_token = tokens[curr_index];
@@ -50,7 +50,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             } else {
                 curr_index = next_index;
             }
-            std::unordered_set<int> procedureFollowsSet;
+            std::set<int> procedureFollowsSet;
             followsStatementStack.push(procedureFollowsSet);
         } else if (curr_token.tokenType == TokenType::kEntityRead) {
             readParser->lineNumber = lineNumber;
@@ -84,7 +84,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 throw InvalidSyntaxError();
             } else {
                 followsStatementStack.top().insert(lineNumber);
-                std::unordered_set<int> whileFollowsSet;
+                std::set<int> whileFollowsSet;
                 followsStatementStack.push(whileFollowsSet);
                 lineNumber++;
                 curr_index = next_index;
@@ -109,7 +109,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 throw InvalidSyntaxError();
             } else {
                 followsStatementStack.top().insert(lineNumber);
-                std::unordered_set<int> ifFollowsSet;
+                std::set<int> ifFollowsSet;
                 followsStatementStack.push(ifFollowsSet);
                 lineNumber++;
 
@@ -117,7 +117,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
             if (!controlStructureStack.empty() && controlStructureStack.top() == "if") {
-                std::unordered_set<int> elseFollowsSet;
+                std::set<int> elseFollowsSet;
                 followsStatementStack.push(elseFollowsSet);
                 curr_index += 2;  // skip over the next open brace
             } else {
@@ -125,7 +125,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
                 throw InvalidSyntaxError();
             }
         } else if (curr_token.tokenType == TokenType::kSepCloseBrace) {
-          std::unordered_set<int> top_set = followsStatementStack.top();
+          std::set<int> top_set = followsStatementStack.top();
           insertFollowsHashMap(top_set);
           followsStatementStack.pop();
           if (!controlStructureStack.empty() && controlStructureStack.top() == "while" && currWhileDepth >= 1) {
@@ -175,7 +175,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
 }
 
 
-void SimpleParser::insertFollowsHashMap(std::unordered_set<int> followsSet) {
+void SimpleParser::insertFollowsHashMap(std::set<int> followsSet) {
   if (followsSet.size() > 1) {
     auto it = followsSet.begin();
     auto nextIt = std::next(it);
@@ -183,9 +183,9 @@ void SimpleParser::insertFollowsHashMap(std::unordered_set<int> followsSet) {
     // Iterate up to the second-to-last element
     while (nextIt != followsSet.end()) {
       // Compare *it and *nextIt
-      int parent = *it;
-      int child = *nextIt;
-      visitor->setFollowStatementNumberMap(child, parent);
+      int before = *it;
+      int after = *nextIt;
+      visitor->setFollowStatementNumberMap(before, after);
 
       ++it;
       ++nextIt;

@@ -4,7 +4,13 @@ SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) : simpleParser(wri
 
 void SourceProcessor::processSource(const std::string& simpleProgram) {
     std::vector<struct Token> tokens = tokeniser.tokenise(simpleProgram);
-    simpleParser.parse(tokens, 0);
+    try {
+        simpleParser.parse(tokens, 0);
+    } catch (const InvalidSyntaxError e) {
+        e.log();
+    } catch (const InvalidTokenTypeError e) {
+        e.log();
+    }
 }
 
 std::unordered_set<std::string> SourceProcessor::getVariables() {
