@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/SourceProcessor.h"
+#include "utils/statementTypes.h"
 #include "PKB/API/WriteFacade.h"
 #include <string>
 #include <unordered_set>
@@ -498,4 +499,38 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
   REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
   REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
   REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+}
+
+TEST_CASE(("Test SP Statement type storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; }}}";
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, StatementTypes> statementTypesMap = std::unordered_map<int, StatementTypes>(
+      {{0, StatementTypes::PROC},
+       {1, StatementTypes::WHILE},
+       {2, StatementTypes::IF},
+       {3, StatementTypes::READ},
+       {4, StatementTypes::PRINT},
+       {5, StatementTypes::ASSIGN}});
+  REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
+}
+
+
+TEST_CASE(("Test SP Modifies storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = "procedure p { if (i != 0) then { x = x + 1 + r; } else { read k; a = 1 + w; }}";
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, std::string> modifiesMap =
+      std::unordered_map<int, std::string>(
+      {{2, "x"},
+         {3, "k"},
+         {4, "a"}});
+
+  REQUIRE(sourceProcessor.getModifiesMap() == modifiesMap);
 }

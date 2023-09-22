@@ -25,11 +25,12 @@ class SourceProcessor {
     void processSource(const std::string& simpleProgram);
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getConstants();
+    std::unordered_map<int, StatementTypes> getStatementTypesMap();
     std::unordered_map<int, std::string> getUsesLineLHSMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap();
     std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
-    std::unordered_map<int, std::unordered_set<std::string>> getModifiesMap();
+    std::unordered_map<int, std::string> getModifiesMap();
     std::unordered_map<int, std::unordered_set<int>> getParentStatementNumberMap();
     std::unordered_map<int, std::unordered_set<int>> getFollowStatementNumberMap();
 };

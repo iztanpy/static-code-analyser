@@ -24,12 +24,9 @@
  * assignment statements. It also contains methods for accessing information related to the parsed assignments.
  */
 class ProcedureParser : public Parser {
- private:
-    std::shared_ptr<TNode> rootTNode;
  public:
-    explicit ProcedureParser(std::shared_ptr<TNode> rootTNode);
+    explicit ProcedureParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* procedureVisitor = new ASTVisitor();
-    std::unordered_map<std::string, std::unordered_set<int>> getProcedureStatementNumberHashmap();
+    ASTVisitor* visitor;
 };
 

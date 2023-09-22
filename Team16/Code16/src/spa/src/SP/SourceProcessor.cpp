@@ -15,6 +15,10 @@ std::unordered_set<std::string> SourceProcessor::getConstants() {
   return visitor.getConstants();
 }
 
+std::unordered_map<int, StatementTypes> SourceProcessor::getStatementTypesMap() {
+  return visitor.getStatementTypesMap();
+}
+
 std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesLineRHSPatternMap() {
   return visitor.getUsesLineRHSPatternMap();
 }
@@ -31,7 +35,7 @@ std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUse
   return visitor.getUsesStatementNumberHashmap();
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getModifiesMap() {
+std::unordered_map<int, std::string> SourceProcessor::getModifiesMap() {
   return visitor.getModifiesMap();
 }
 

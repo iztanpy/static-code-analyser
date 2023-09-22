@@ -6,6 +6,9 @@ int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
     if (tokens.size() - index < 5) {
       return -1;
     }
+
+    // Create a new while node
+    std::shared_ptr<TNode> whileNode = TNodeFactory::createNode(tokens[index], lineNumber);
     index++;
 
     // Validate open parenthesis
@@ -17,6 +20,7 @@ int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
     ParseUtils::setValues(index, lineNumber);
     std::shared_ptr<TNode> whileCondNode = ParseUtils::parseCondExpression(tokens);
     index = ParseUtils::getIndex();
+    whileNode->addChild(whileCondNode);
 
     // Validate close parenthesis
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
@@ -30,7 +34,7 @@ int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
     }
     index++;
 
-    designExtractor->extractDesign(whileCondNode, visitor);
+    designExtractor->extractDesign(whileNode, visitor);
 
     return index;
 }

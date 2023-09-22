@@ -47,7 +47,7 @@ class SimpleParser : public Parser {
     int parse(const std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
     AssignmentParser* assignmentParser = new AssignmentParser(visitor);
-    ProcedureParser* procedureParser = new ProcedureParser(rootTNode);
+    ProcedureParser* procedureParser = new ProcedureParser(visitor);
     ReadParser* readParser = new ReadParser(visitor);
     WhileParser* whileParser = new WhileParser(visitor);
     PrintParser* printParser = new PrintParser(visitor);
