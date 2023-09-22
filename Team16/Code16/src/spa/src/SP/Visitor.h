@@ -56,7 +56,7 @@ class Visitor {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
 
     // Follows
-    std::unordered_map<int, std::unordered_set<int>> followStatementNumberHashmap;
+    std::unordered_map<int, int> followStatementNumberHashmap;
 
     // Other
     std::unordered_map<int, StatementTypes> statementTypesMap;
@@ -81,14 +81,14 @@ class Visitor {
     std::unordered_map<int, std::unordered_set<int>> getParentStatementNumberMap() const {
         return parentStatementNumberHashmap;
     }
-    std::unordered_map<int, std::unordered_set<int>> getFollowStatementNumberMap() const {
+    std::unordered_map<int, int> getFollowStatementNumberMap() const {
         return followStatementNumberHashmap;
     }
     void setParentStatementNumberMap(int parent, int child) {
         parentStatementNumberHashmap[parent].insert(child);
     }
     void setFollowStatementNumberMap(int parent, int child) {
-        followStatementNumberHashmap[parent].insert(child);
+        followStatementNumberHashmap[parent] = child;
     }
     std::unordered_map<int, std::string> getUsesLineLHSMap() const {
         return usesLineLHSMap;

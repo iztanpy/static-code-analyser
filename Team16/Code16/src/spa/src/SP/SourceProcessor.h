@@ -32,7 +32,7 @@ class SourceProcessor {
     std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
     std::unordered_map<int, std::string> getModifiesMap();
     std::unordered_map<int, std::unordered_set<int>> getParentStatementNumberMap();
-    std::unordered_map<int, std::unordered_set<int>> getFollowStatementNumberMap();
+    std::unordered_map<int, int> getFollowStatementNumberMap();
 };
 
 

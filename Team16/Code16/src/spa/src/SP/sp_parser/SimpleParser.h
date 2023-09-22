@@ -53,5 +53,6 @@ class SimpleParser : public Parser {
     PrintParser* printParser = new PrintParser(visitor);
     IfParser* ifParser = new IfParser(visitor);
     CallParser* callParser = new CallParser(visitor);
+    void insertFollowsHashMap(std::unordered_set<int> followsSet);
 };
 

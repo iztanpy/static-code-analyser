@@ -43,7 +43,7 @@ std::unordered_map<int, std::unordered_set<int>> SourceProcessor::getParentState
     return visitor.getParentStatementNumberMap();
 }
 
-std::unordered_map<int, std::unordered_set<int>> SourceProcessor::getFollowStatementNumberMap() {
+std::unordered_map<int, int> SourceProcessor::getFollowStatementNumberMap() {
     return visitor.getFollowStatementNumberMap();
 }
 

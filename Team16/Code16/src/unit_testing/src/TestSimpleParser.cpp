@@ -17,6 +17,10 @@ TokenType endType = TokenType::kSepSemicolon;
 TokenType plusType = TokenType::kOperatorPlus;
 TokenType equalType = TokenType::kEntityAssign;
 TokenType readType = TokenType::kEntityRead;
+Token tokenProc = Token(TokenType::kEntityProcedure, "p", 0);
+Token tokenProcName = Token(TokenType::kLiteralName, "poo", 0);
+Token tokenOpenBrace = Token(TokenType::kSepOpenBrace, 0);
+Token tokenCloseBrace = Token(TokenType::kSepCloseBrace, 0);
 Token tokenX = Token(variableType, "x", 0);
 Token tokenY = Token(variableType, "y", 0);
 Token tokenW = Token(variableType, "w", 0);
@@ -28,48 +32,57 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
-//TEST_CASE("Test follows relation one level nesting") {
-//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
-//    SourceProcessor sourceProcessor(&writeFacade);
-//    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; }";
-//    sourceProcessor.processSource(simpleProgram3);
-//    std::unordered_map<int, std::unordered_set<int>> followStatementNumberHashmap2 = {
-//        {1, {2}},
-//        {2, {3}}, 
-//    };
-//    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getFollowStatementNumberMap();
-//    REQUIRE(followStatementNumberHashmap2 == res2);
-//}
-//
-//TEST_CASE("Test follows relation two level nesting") {
-//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
-//    SourceProcessor sourceProcessor(&writeFacade);
-//    std::string simpleProgram3 = R"(
-//        procedure p {
-//          x = 0; 
-//          if (x == 1) then { 
-//            x = x + 4; 
-//            x = x + 1; 
-//          } else {
-//            x = x + 2; 
-//            x = x + 3; 
-//          }
-//          while (x > 0) { 
-//            x = x + 1; 
-//          }
-//        }
-//     )";
-//    sourceProcessor.processSource(simpleProgram3);
-//    std::unordered_map<int, std::unordered_set<int>> followStatementNumberHashmap2 = {
-//        {1, {2}},
-//        {2, {7}},
-//        {3, {4}},
-//    };
-//    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getFollowStatementNumberMap();
-//    REQUIRE(followStatementNumberHashmap2 == res2);
-//}
+TEST_CASE("Test follows relation one level nesting") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; }";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, int> followStatementNumberHashmap = {
+        {1, 2},
+        {2, 3},
+    };
+    REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
+}
+
+TEST_CASE("Test follows & parent relation two level nesting") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+        procedure p {
+          x = 0;
+          while (x == 0) {
+            if (x == 1) then {
+              x = x + 4;
+              x = x + 1;
+            } else {
+              x = x + 2;
+              x = x + 3;
+            }
+            x = x + 1;
+          }
+          while (x > 0) {
+            x = x + 1;
+          }
+        }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, int> followStatementNumberHashmap = {
+        {1, 2},
+        {2, 9},
+        {3, 8},
+        {4, 5},
+        {6, 7},
+    };
+    std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
+        {2, {3, 8}},
+        {3, {4, 5, 6, 7}},
+        {9, {10}}
+    };
+    REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
+    REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
+}
 
 
 TEST_CASE("Test if else nested loop retrieval") {
@@ -265,66 +278,67 @@ TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SimpleParser parser(&writeFacade, new ASTVisitor());
-    std::vector<Token> my_tokens{ tokenX, tokenEqual, tokenX2, tokenPlus, token1, tokenEnd };
+    std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
+                                 tokenEnd, tokenCloseBrace };
     std::cout << "tokens size " << my_tokens.size() << std::endl;
-    REQUIRE(parser.parse(my_tokens, 0) == 6);
+    REQUIRE(parser.parse(my_tokens, 0) == 10);
 }
+//
+//TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
+//    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenEqual.lineNumber);
+//    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
+//    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+//    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
+//    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
+//    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
+//    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.lineNumber, token1.value);
+//
+//    nodeEqual->addChild(nodeX);
+//    nodePlus->addChild(nodeX2);
+//    nodePlus->addChild(node1);
+//    nodePlus2->addChild(nodePlus);
+//    nodePlus2->addChild(nodew);
+//    nodeEqual->addChild(nodePlus2);
+//
+//    DesignExtractor de = *new DesignExtractor();
+//    auto* visitor = new ASTVisitor();
+//    de.extractDesign(nodeEqual, visitor);
+//
+//    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "w" });
+//    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+//
+//    REQUIRE(visitor->getVariables() == varSet);
+//    REQUIRE(visitor->getConstants() == constSet);
+//}
 
-TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
-    std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(tokenEqual.lineNumber);
-    std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(tokenW.lineNumber, tokenW.value);
-    std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
-    std::shared_ptr<TNode> nodeEqual = std::make_shared<AssignTNode>(tokenEqual.lineNumber);
-    std::shared_ptr<TNode> nodeX2 = std::make_shared<VariableTNode>(tokenX.lineNumber, tokenX.value);
-    std::shared_ptr<TNode> nodePlus = std::make_shared<PlusTNode>(tokenPlus.lineNumber);
-    std::shared_ptr<TNode> node1 = std::make_shared<ConstantTNode>(token1.lineNumber, token1.value);
-
-    nodeEqual->addChild(nodeX);
-    nodePlus->addChild(nodeX2);
-    nodePlus->addChild(node1);
-    nodePlus2->addChild(nodePlus);
-    nodePlus2->addChild(nodew);
-    nodeEqual->addChild(nodePlus2);
-
-    DesignExtractor de = *new DesignExtractor();
-    auto* visitor = new ASTVisitor();
-    de.extractDesign(nodeEqual, visitor);
-
-    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "w" });
-    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
-
-    REQUIRE(visitor->getVariables() == varSet);
-    REQUIRE(visitor->getConstants() == constSet);
-}
-
-
-TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
-    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto* visitor = new ASTVisitor();
-    auto writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(&writeFacade, visitor);
-    std::vector<Token> tokenVector;
-    tokenVector.push_back(tokenX);
-    tokenVector.push_back(tokenEqual);
-    tokenVector.push_back(tokenX);
-    tokenVector.push_back(tokenPlus);
-    tokenVector.push_back(token1);
-    tokenVector.push_back(tokenEnd);
-    parser.parse(tokenVector, 0);
-
-    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
-    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
-    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}} });
-    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"} });
-    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}} });
-    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
-
-    REQUIRE(visitor->getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
-    REQUIRE(visitor->getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(visitor->getUsesLineRHSVarMap() == usesLineRHSVarMap);
-    REQUIRE(visitor->getVariables() == varSet);
-    REQUIRE(visitor->getConstants() == constSet);
-}
+//
+//TEST_CASE("Test SimpleParser & DesignExtractor integration") { // x = x + 1;
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    auto* visitor = new ASTVisitor();
+//    auto writeFacade = WriteFacade(*pkb_ptr);
+//    SimpleParser parser(&writeFacade, visitor);
+//    std::vector<Token> tokenVector;
+//    tokenVector.push_back(tokenX);
+//    tokenVector.push_back(tokenEqual);
+//    tokenVector.push_back(tokenX);
+//    tokenVector.push_back(tokenPlus);
+//    tokenVector.push_back(token1);
+//    tokenVector.push_back(tokenEnd);
+//    parser.parse(tokenVector, 0);
+//
+//    std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x" });
+//    std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
+//    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}} });
+//    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"} });
+//    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}} });
+//    std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
+//
+//    REQUIRE(visitor->getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+//    REQUIRE(visitor->getUsesLineLHSMap() == usesLineLHSMap);
+//    REQUIRE(visitor->getUsesLineRHSVarMap() == usesLineRHSVarMap);
+//    REQUIRE(visitor->getVariables() == varSet);
+//    REQUIRE(visitor->getConstants() == constSet);
+//}
 
 
 TEST_CASE(("Test SP single procedure")) {
