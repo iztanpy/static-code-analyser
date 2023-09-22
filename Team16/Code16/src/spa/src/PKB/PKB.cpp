@@ -62,6 +62,14 @@ std::unordered_set<variable> PKB::getVariables() {
 // UsesStore methods
 
 void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
+    std::unordered_map<statementNumber, std::unordered_set<variable>> usesMapWithCall;
+    for (auto const &x : varUsesMap) {
+        usesMapWithCall[x.first] = x.second;
+        auto parents = parentStore->getParents(x.first);
+        for (auto const &y : parents) {
+            usesMapWithCall[y].insert(x.second.begin(), x.second.end());
+        }
+    }
     usesStore->storeUses(varUsesMap);
 }
 
@@ -203,12 +211,75 @@ void PKB::storeParent(std::unordered_map<statementNumber, std::unordered_set<sta
     parentStore->storeParent(map);
 }
 
+
+// return all the entities that are nested in any statement
+std::unordered_set<statementNumber> PKB::parent(Wildcard wildcard, StmtEntity entity) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : relevantStmts) {
+        if (this->parentStore->getParent(x) != 0) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return the case where we have an entity that is directly nested in num
+std::unordered_set<statementNumber> PKB::parent(statementNumber num, StmtEntity entity) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> nestedStmts = this->parentStore->getChildren(num);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : nestedStmts) {
+        if (relevantStmts.count(x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return the cases where we have a specified number directly nested in a specified entity?
+std::unordered_set<statementNumber> PKB::parent(StmtEntity entity, statementNumber num) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    statementNumber parentStmt = this->parentStore->getParent(num);
+    if (relevantStmts.count(parentStmt)) {
+        return {parentStmt};
+    }
+    return {};
+}
+
+// return all the specified entities that are parents of any statement
+std::unordered_set<statementNumber> PKB::parent(StmtEntity entity, Wildcard wildcard) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : relevantStmts) {
+        if (this->parentStore->getChildren(x).size() > 0) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
 std::unordered_set<statementNumber> PKB::parent(statementNumber statement, Wildcard wildcard) {
     return parentStore->getChildren(statement);
 }
 
 statementNumber PKB::parent(Wildcard wildcard, statementNumber statement) {
     return parentStore->getParent(statement);
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+        PKB::parent(StmtEntity entity, StmtEntity entity2) {
+    std::unordered_set<statementNumber> parentStatements = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> childStatements = this->statementStore->getStatements(entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
+    for (auto const &x : parentStatements) {
+        for (auto const &y : childStatements) {
+            if (this->parentStore->isParent(x, y)) {
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
 }
 
 bool PKB::isParent(statementNumber parent, statementNumber child) {
@@ -233,6 +304,71 @@ std::unordered_set<statementNumber> PKB::parentStar(statementNumber statement, W
 
 std::unordered_set<statementNumber> PKB::parentStar(Wildcard wildcard, statementNumber statement) {
     return parentStore->getParents(statement);
+}
+
+// return all the entities that are nested
+std::unordered_set<statementNumber> PKB::parentStar(Wildcard wildcard, StmtEntity entity) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : relevantStmts) {
+        if (this->parentStore->getParents(x).size() > 0) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return all the entities which are nested in num on any nesting level
+std::unordered_set<statementNumber> PKB::parentStar(statementNumber num, StmtEntity entity) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> nestedStmts = this->parentStore->getChildrens(num);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : nestedStmts) {
+        if (relevantStmts.count(x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return all the entities that are parents of num on any nesting level
+std::unordered_set<statementNumber> PKB::parentStar(StmtEntity entity, statementNumber num) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> parentStmts = this->parentStore->getParents(num);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : parentStmts) {
+        if (relevantStmts.count(x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+// return all the entities which are parents
+std::unordered_set<statementNumber> PKB::parentStar(StmtEntity entity, Wildcard wildcard) {
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : relevantStmts) {
+        if (this->parentStore->getChildren(x).size() > 0) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+        PKB::parentStar(StmtEntity entity, StmtEntity entity2) {
+    std::unordered_set<statementNumber> parentStatements = this->statementStore->getStatements(entity);
+    std::unordered_set<statementNumber> childStatements = this->statementStore->getStatements(entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
+    for (auto const &x : parentStatements) {
+        for (auto const &y : childStatements) {
+            if (this->parentStore->isParentStar(x, y)) {
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
 }
 
 bool PKB::isParentStar(statementNumber parent, statementNumber child) {
