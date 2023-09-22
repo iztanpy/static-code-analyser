@@ -11,6 +11,7 @@
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
+#include "SP/utils/ParseUtils.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -28,7 +29,13 @@ class AssignmentParser : public Parser {
  public:
     explicit AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {}
     int parse(const std::vector<Token>& tokens, int curr_index) override;
+    std::shared_ptr<TNode> parseExpression(const std::vector<Token>& tokens);
+    std::shared_ptr<TNode> parseTerm(const std::vector<Token>& tokens);
+    std::shared_ptr<TNode> parseFactor(const std::vector<Token>& tokens);
+    void incrementIndex();
+
     ASTVisitor* visitor;  // Initialize to nullptr in the constructor
     int lineNumber = 0;
+    int index = 0;
 };
 

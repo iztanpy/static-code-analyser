@@ -29,6 +29,7 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     {TokenType::kEntityPrint, std::regex("^(\\bprint\\b)")},
     {TokenType::kEntityAssign, std::regex("^(=)")},
     {TokenType::kEntityCall, std::regex("^(\\bcall\\b)")},
+    {TokenType::kEntityThen, std::regex("^(\\bthen\\b)")},
 
     // separators
     {TokenType::kSepComma, std::regex("^(,)")},
@@ -169,6 +170,8 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 char top = braceStack.top();
                 if (matchedValue[0] == '}' && top == '{') {
                     braceStack.pop();
+                    Token token{ matchedType, matchedValue, lineNumber, linePosition };
+                    tokens.push_back(token);
                 } else if (matchedValue[0] == ')' && top == '(') {
                     braceStack.pop();
                     // insert ')' as a token
