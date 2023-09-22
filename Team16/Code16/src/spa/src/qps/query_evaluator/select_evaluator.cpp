@@ -11,9 +11,12 @@ UnaryConstraint SelectEvaluator::Evaluate() {
       case DesignEntity::PRINT:
       case DesignEntity::CALL:
       case DesignEntity::WHILE_LOOP:
-      case DesignEntity::IF_STMT:
-      case DesignEntity::ASSIGN: {
+      case DesignEntity::IF_STMT: {
         std::unordered_set<int> result = pkb_reader.getStatements(ConvertToStmtEntity(select_clause.design_entity));
+        return EvaluatorUtil::ToStringSet(result);
+      }
+      case DesignEntity::ASSIGN: {
+        std::unordered_set<int> result = pkb_reader.getAllAssigns();
         return EvaluatorUtil::ToStringSet(result);
       }
       case DesignEntity::CONSTANT:return pkb_reader.getConstants();

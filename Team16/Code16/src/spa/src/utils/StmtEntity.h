@@ -12,7 +12,7 @@ enum class StmtEntity {
   kWhile,
   kIf,
   kAssign,
-    kProcedure
+  kProcedure
 };
 
 enum class DesignEntity {
