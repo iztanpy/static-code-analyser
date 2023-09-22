@@ -17,7 +17,7 @@ TEST_CASE("One print statement 1") {
     QPS qps(readFacade);
 
     // Initialize SP and SP tokenizer
-    std::string simpleProgram = "print k;";
+    std::string simpleProgram = "procedure k {print k;}";
     std::string query_1 = "variable v; Select v";
     sourceProcessor.processSource(simpleProgram);
 
@@ -41,7 +41,7 @@ TEST_CASE("One read statement 1") {
     QPS qps(readFacade);
 
     // Initialize SP and SP tokenizer
-    std::string simpleProgram = "read k;";
+    std::string simpleProgram = "procedure poo{read k;}";
     std::string query_1 = "variable v; Select v";
     sourceProcessor.processSource(simpleProgram);
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "k" }));
@@ -64,7 +64,7 @@ TEST_CASE("One assign statement 1") {
     QPS qps(readFacade);
 
     // Initialize SP and SP tokenizer
-    std::string simpleProgram = "x = x + 1;";
+    std::string simpleProgram = "procedure p {x = x + 1;}";
     std::string query_1 = "variable v; Select v";
     std::string query_2 = "constant c; Select c";
 
@@ -120,7 +120,7 @@ TEST_CASE("Simple assign statements") {
   QPS qps(readFacade);
 
 
-    std::string simpleProgram = "x = 3; y = 4;";
+    std::string simpleProgram = "procedure p {x = 3; y = 4;}";
     std::string query_1 = "variable v; Select v";
     std::string query_2 = "constant c; Select c";
 
@@ -138,7 +138,7 @@ TEST_CASE("Multiple assign statements") {
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
-    std::string simpleProgram = "x = z - 3; y = y + 4; i = i + 10;";
+    std::string simpleProgram = "procedure p{x = z - 3; y = y + 4; i = i + 10;}";
     std::string query_1 = "variable v; Select v";
     std::string query_2 = "constant c; Select c";
 
@@ -156,7 +156,7 @@ TEST_CASE("Assign statements with many SIMPLE RHS terms and whitespaces") {
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
-    std::string simpleProgram = "x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd; \t  y = y + 4;";
+    std::string simpleProgram = "procedure p{x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd; \t  y = y + 4; }";
     std::string query_1 = "variable v; Select v";
     std::string query_2 = "constant c; Select c";
 
