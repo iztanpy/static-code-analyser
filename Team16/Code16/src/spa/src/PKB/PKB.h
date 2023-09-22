@@ -190,6 +190,8 @@ class PKB {
     std::unordered_set<statementNumber> followStar(StmtEntity entity, statementNumber num);
 
     std::unordered_set<statementNumber> followStar(StmtEntity entity, Wildcard wildcard);
+    
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  followStar(StmtEntity entity1, StmtEntity entity2);
 
     bool isFollowStar(statementNumber statement1, statementNumber statement2);
 

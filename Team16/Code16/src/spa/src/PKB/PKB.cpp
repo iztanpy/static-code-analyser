@@ -538,3 +538,22 @@ std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, Wildcard wi
     return result;
 }
 
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::followStar(StmtEntity entity1, StmtEntity entity2) {
+    std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(entity1);
+	std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(entity2);
+	std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
+    for (auto const& x : relevantStmts1) {
+        if (x == 0) {
+			continue;
+		}
+        for (auto const& y : relevantStmts2) {
+            if (y == 0) {
+				continue;
+			}
+            if (this->followsStore->isFollowStar(x, y)) {
+				result.insert(std::make_pair(x, y));
+			}
+		}
+	}
+	return result;
+}

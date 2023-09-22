@@ -375,6 +375,13 @@ TEST_CASE("Tes follows store") {
         REQUIRE((value.first == 2));
         REQUIRE((value.second == 3));
     }
+
+    result = pkb.followStar(StmtEntity::kAssign, StmtEntity::kAssign);
+
+    for (auto value : result) {
+        REQUIRE((value.first == 1 || value.first == 2));
+        REQUIRE((value.second == 2 || value.second == 4));
+    }
 }
 
 
