@@ -9,10 +9,10 @@ void PatternClauseBuilder::setSynAssignment(Declaration declaration) {
   syn_assignment = std::move(declaration);
 }
 
-void PatternClauseBuilder::setLhs(const QueryToken & param, const std::vector<Declaration> & declarations) {
+void PatternClauseBuilder::setLhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
   switch (param.type) {
     case PQLTokenType::SYNONYM:
-      for (const Declaration & declaration : declarations) {
+      for (const Declaration& declaration : declarations) {
         if (declaration.synonym == param.text) {
           lhs = declaration;
           break;
@@ -27,7 +27,7 @@ void PatternClauseBuilder::setLhs(const QueryToken & param, const std::vector<De
   }
 }
 
-void PatternClauseBuilder::setRhs(const QueryToken & param, const std::vector<Declaration> & declarations) {
+void PatternClauseBuilder::setRhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
   rhs_type = param.type;
   switch (param.type) {
     // these 2 are cases for expression and partial expressions

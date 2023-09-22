@@ -2,8 +2,8 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
-#include "../Helper/StmtEntity.h"
-#include "../Helper/Wildcard.h"
+#include "utils/StmtEntity.h"
+#include "utils/clauses_types.h"
 #include "./StatementStore.h"
 
 

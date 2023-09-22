@@ -50,7 +50,7 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
   for (std::string statement : declaration_statements) {
     std::string entity = string_util::GetFirstWord(statement);
 
-    if (stringDesignEntities.find(entity) == stringDesignEntities.end()) {
+    if (!QueryUtil::IsDesignEntity(entity)) {
       throw QpsSyntaxError("Design entity is not valid");
     }
 
@@ -198,7 +198,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
                                                                  const std::vector<Declaration> & declarations) {
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause);
   if (arguments.size() != 2) {
-    throw QpsSyntaxError("More than 2 arguments in patter clause");
+    throw QpsSyntaxError("More than 2 arguments in pattern clause");
   }
 
   std::vector<std::string> lhs = string_util::SplitStringBy('(', arguments[0]);

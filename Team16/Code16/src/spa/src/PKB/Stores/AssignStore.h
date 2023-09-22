@@ -3,8 +3,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <utility>
-#include "../Helper/Wildcard.h"
-#include "../Helper/StmtEntity.h"
+#include "utils/clauses_types.h"
+#include "utils/StmtEntity.h"
 #include "utils/hash_utils.h"
 
 
