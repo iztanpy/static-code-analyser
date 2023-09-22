@@ -7,7 +7,7 @@ using namespace std;
 #include "PKB/PKB.h"
 #include "PKB/API/ReadFacade.h"
 #include "PKB/API/WriteFacade.h"
-#include "PKB/Helper/Wildcard.h"
+#include "utils/clauses_types.h"
 
 
 TEST_CASE(" 1") {
@@ -139,47 +139,112 @@ TEST_CASE("Test Facades for Uses Store") {
     }
 }
 
-TEST_CASE("Test Parent Stores") {
+TEST_CASE("Test Parent Stores 2") {
     PKB pkb = PKB();
 
-    pkb.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
+    pkb.storeParent({ {1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}} });
+    pkb.addStatements({ { 1, StmtEntity::kIf },
+                        { 2, StmtEntity::kIf },
+                        { 3, StmtEntity::kIf },
+                        { 4, StmtEntity::kAssign },
+                        { 5, StmtEntity::kAssign },
+                        { 6, StmtEntity::kAssign },
+                        { 7, StmtEntity::kRead } });
 
     Wildcard wildcard = Wildcard();
 
-    REQUIRE(pkb.parent(wildcard, 2) == 1);
-    REQUIRE(pkb.parent(wildcard, 3) == 1);
-    REQUIRE(pkb.parent(wildcard, 4) == 2);
-    REQUIRE(pkb.parent(wildcard, 5) == 2);
-    REQUIRE(pkb.parent(wildcard, 6) == 3);
-    REQUIRE(pkb.parent(wildcard, 7) == 3);
+    // Test Wildcard wildcard, StmtEntity entity
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kRead).size() == 1);
+
+
+    // Test StmtEntity entity, statementNumber num
+    REQUIRE(pkb.parent(StmtEntity::kIf, 4) == std::unordered_set<statementNumber> {2});
+    REQUIRE(pkb.parent(StmtEntity::kRead, 6) == std::unordered_set<statementNumber> {});
+
+    // Test StmtEntity entity, Wildcard wildcard
+    REQUIRE(pkb.parent(StmtEntity::kIf, wildcard).size() == 3);
+    REQUIRE(pkb.parent(StmtEntity::kAssign, wildcard).size() == 0);
+    REQUIRE(pkb.parent(StmtEntity::kRead, wildcard).size() == 0);
+
+    // Test StmtEntity entity, entity2
+    REQUIRE(pkb.parent(StmtEntity::kIf, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parent(StmtEntity::kAssign, StmtEntity::kRead).size() == 0);
+
+    // Test Wildcard wildcard, StmtEntity entity
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kRead).size() == 1);
+
+    // Test statementNumber num, StmtEntity entity
+    REQUIRE(pkb.parent(1, StmtEntity::kAssign) == std::unordered_set<statementNumber> {});
+    REQUIRE(pkb.parent(2, StmtEntity::kAssign) == std::unordered_set<statementNumber> {4, 5});
+    REQUIRE(pkb.parent(3, StmtEntity::kRead) == std::unordered_set<statementNumber> {7});
+    REQUIRE(pkb.parent(3, StmtEntity::kAssign) == std::unordered_set<statementNumber> {6});
+
+    // PARENTS STAR
+
+    // Test StmtEntity num
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, 2) == std::unordered_set<statementNumber> {1});
+//    REQUIRE(pkb.parentStar(StmtEntity::kIf, 4) == std::unordered_set<statementNumber> {1, 2});
+//    for (auto value: pkb.parentStar(StmtEntity::kIf, 5)) {
+//        std::cout << "val: " << value << std::endl;
+//        REQUIRE((value == 1 || value == 2));
+//    }
+    REQUIRE(pkb.parentStar(StmtEntity::kAssign, 6) == std::unordered_set<statementNumber> {});
+
+
+    // Test StmtEntity entity, Wildcard wildcard
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, wildcard).size() == 3);
+    REQUIRE(pkb.parentStar(StmtEntity::kAssign, wildcard).size() == 0);
+    REQUIRE(pkb.parentStar(StmtEntity::kRead, wildcard).size() == 0);
+
+    // Test StmtEntity entity, entity2
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, StmtEntity::kAssign).size() == 6);
+    REQUIRE(pkb.parentStar(StmtEntity::kAssign, StmtEntity::kRead).size() == 0);
+
+    // Test Wildcard wildcard, StmtEntity entity
+    REQUIRE(pkb.parentStar(wildcard, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parentStar(wildcard, StmtEntity::kRead).size() == 1);
+
+    // Test statementNumber num, StmtEntity entity
+    REQUIRE(pkb.parentStar(1, StmtEntity::kAssign) == std::unordered_set<statementNumber> {4,5,6});
+    REQUIRE(pkb.parentStar(2, StmtEntity::kAssign) == std::unordered_set<statementNumber> {4, 5});
+    REQUIRE(pkb.parentStar(3, StmtEntity::kRead) == std::unordered_set<statementNumber> {7});
+    REQUIRE(pkb.parentStar(3, StmtEntity::kAssign) == std::unordered_set<statementNumber> {6});
+
+
+
+
+    REQUIRE(pkb.parent(wildcard, 2) == std::unordered_set<statementNumber> {1});
+    REQUIRE(pkb.parent(wildcard, 3) == std::unordered_set<statementNumber> {1});
+    REQUIRE(pkb.parent(wildcard, 4) == std::unordered_set<statementNumber> {2});
+    REQUIRE(pkb.parent(wildcard, 5) == std::unordered_set<statementNumber> {2});
+    REQUIRE(pkb.parent(wildcard, 6) == std::unordered_set<statementNumber> {3});
+    REQUIRE(pkb.parent(wildcard, 7) == std::unordered_set<statementNumber> {3});
 
     for (auto value : pkb.parent(1, wildcard)) {
-		REQUIRE((value == 2 || value == 3));
-	}
+        REQUIRE((value == 2 || value == 3));
+    }
 
     for (auto value : pkb.parent(2, wildcard)) {
         REQUIRE((value == 4 || value == 5));
     }
 
     for (auto value : pkb.parent(3, wildcard)) {
-		REQUIRE((value == 6 || value == 7));
-	}
-
-    for (auto value : pkb.parentStar(1, wildcard)) {
-		REQUIRE((value == 2 || value == 3 || value == 4 || value == 5 || value == 6 || value == 7));
-	}
+        REQUIRE((value == 6 || value == 7));
+    }
 
     for (auto value : pkb.parentStar(wildcard, 2)) {
         REQUIRE((value == 1));
     }
 
     for (auto value : pkb.parentStar(wildcard, 3)) {
-		REQUIRE((value == 1));
-	}
+        REQUIRE((value == 1));
+    }
 
     for (auto value : pkb.parentStar(wildcard, 4)) {
-		REQUIRE((value == 2 || value == 1));
-	}
+        REQUIRE((value == 2 || value == 1));
+    }
 
     for (auto value : pkb.parentStar(wildcard, 6)) {
         REQUIRE((value == 3 || value == 1));
@@ -339,6 +404,49 @@ TEST_CASE("Test modifies stores") {
 		REQUIRE((value.second == "x"));
 	}
 
+}
+
+TEST_CASE("Tes follows store") {
+    PKB pkb = PKB();
+
+    pkb.storeFollows({ {1, 2}, {2, 3}, {3, 4} });
+    pkb.addStatements({ {1, StmtEntity::kAssign}, {2, StmtEntity::kAssign }, {3, StmtEntity::kRead}, {4, StmtEntity::kAssign} });
+
+    REQUIRE(pkb.isFollow(1, 2));
+    REQUIRE(pkb.isFollow(2, 3));
+    REQUIRE(pkb.isFollow(3, 4));
+
+    REQUIRE(!pkb.isFollow(1, 3));
+    REQUIRE(!pkb.isFollow(2, 4));
+    REQUIRE(!pkb.isFollow(1, 4));
+
+    REQUIRE(pkb.follows(StmtEntity::kAssign, 1) == std::unordered_set<statementNumber>{});
+    REQUIRE(pkb.follows(StmtEntity::kAssign, 2) == std::unordered_set<statementNumber>{1});
+    REQUIRE(pkb.follows(StmtEntity::kAssign, 3) == std::unordered_set<statementNumber>{2});
+    REQUIRE(pkb.follows(StmtEntity::kRead, 4) == std::unordered_set<statementNumber>{3});
+
+    REQUIRE(pkb.follows(StmtEntity::kAssign, Wildcard()) == std::unordered_set<statementNumber>{1, 2});
+    REQUIRE(pkb.follows(StmtEntity::kRead, Wildcard()) == std::unordered_set<statementNumber>{3});
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result = pkb.follows(StmtEntity::kAssign, StmtEntity::kAssign);
+
+    for (auto value : result) {
+        REQUIRE((value.first == 1));
+        REQUIRE((value.second == 2));
+    }
+
+    result = pkb.follows(StmtEntity::kAssign, StmtEntity::kRead);
+    for (auto value : result) {
+        REQUIRE((value.first == 2));
+        REQUIRE((value.second == 3));
+    }
+
+    result = pkb.followStar(StmtEntity::kAssign, StmtEntity::kAssign);
+
+    for (auto value : result) {
+        REQUIRE((value.first == 1 || value.first == 2));
+        REQUIRE((value.second == 2 || value.second == 4));
+    }
 }
 
 

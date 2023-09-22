@@ -37,6 +37,10 @@ std::unordered_set<variable> ReadFacade::getVariables() {
     return pkb.getVariables();
 }
 
+std::unordered_set<procedure> ReadFacade::getProcedures() {
+    return pkb.getProcedures();
+}
+
 bool ReadFacade::isUses(statementNumber lineNumber, variable variableName) {
     return pkb.isUses(lineNumber, variableName);
 }
@@ -93,12 +97,33 @@ std::unordered_set<statementNumber> ReadFacade::getStatements(StmtEntity type) {
     return pkb.getStatements(type);
 }
 
+std::unordered_set<statementNumber> ReadFacade::parent(Wildcard wildcard, StmtEntity entity) {
+    return pkb.parent(wildcard, entity);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parent(statementNumber num, StmtEntity entity) {
+    return pkb.parent(num, entity);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parent(StmtEntity entity, statementNumber num) {
+    return pkb.parent(entity, num);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parent(StmtEntity entity, Wildcard wildcard) {
+    return pkb.parent(entity, wildcard);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parent(Wildcard wildcard, statementNumber statement) {
+    return pkb.parent(wildcard, statement);
+}
+
 std::unordered_set<statementNumber> ReadFacade::parent(statementNumber statement, Wildcard wildcard) {
     return pkb.parent(statement, wildcard);
 }
 
-statementNumber ReadFacade::parent(Wildcard wildcard, statementNumber statement) {
-    return pkb.parent(wildcard, statement);
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+ReadFacade::parent(StmtEntity entity, StmtEntity entity2) {
+    return pkb.parent(entity, entity2);
 }
 
 bool ReadFacade::isParent(statementNumber parent, statementNumber child) {
@@ -125,6 +150,27 @@ std::unordered_set<statementNumber> ReadFacade::parentStar(Wildcard wildcard, st
     return pkb.parentStar(wildcard, statement);
 }
 
+std::unordered_set<statementNumber> ReadFacade::parentStar(Wildcard wildcard, StmtEntity entity) {
+    return pkb.parentStar(wildcard, entity);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parentStar(statementNumber num, StmtEntity entity) {
+    return pkb.parentStar(num, entity);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parentStar(StmtEntity entity, statementNumber num) {
+    return pkb.parentStar(entity, num);
+}
+
+std::unordered_set<statementNumber> ReadFacade::parentStar(StmtEntity entity, Wildcard wildcard) {
+    return pkb.parentStar(entity, wildcard);
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+ReadFacade::parentStar(StmtEntity entity, StmtEntity entity2) {
+    return pkb.parentStar(entity, entity2);
+}
+
 bool ReadFacade::isParentStar(statementNumber parent, statementNumber child) {
     return pkb.isParentStar(parent, child);
 }
@@ -141,20 +187,26 @@ bool ReadFacade::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
     return pkb.isParentStar(wildcard, wildcard2);
 }
 
+
 std::unordered_set<statementNumber> ReadFacade::follows(Wildcard wildcard, StmtEntity entity) {
     return pkb.follows(wildcard, entity);
 }
 
-statementNumber ReadFacade::follows(statementNumber num, StmtEntity entity) {
+std::unordered_set<statementNumber> ReadFacade::follows(statementNumber num, StmtEntity entity) {
     return pkb.follows(num, entity);
 }
 
-statementNumber ReadFacade::follows(StmtEntity entity, statementNumber num) {
+std::unordered_set<statementNumber> ReadFacade::follows(StmtEntity entity, statementNumber num) {
     return pkb.follows(entity, num);
 }
 
 std::unordered_set<statementNumber> ReadFacade::follows(StmtEntity entity, Wildcard wildcard) {
     return pkb.follows(entity, wildcard);
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> ReadFacade::follows(StmtEntity entity1,
+    StmtEntity entity2) {
+    return pkb.follows(entity1, entity2);
 }
 
 bool ReadFacade::isFollow(statementNumber statement1, statementNumber statement2) {
@@ -187,6 +239,11 @@ std::unordered_set<statementNumber> ReadFacade::followStar(StmtEntity entity, st
 
 std::unordered_set<statementNumber> ReadFacade::followStar(StmtEntity entity, Wildcard wildcard) {
     return pkb.followStar(entity, wildcard);
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> ReadFacade::followStar(StmtEntity entity1 ,
+    StmtEntity entity2) {
+    return pkb.followStar(entity1, entity2);
 }
 
 bool ReadFacade::isFollowStar(statementNumber statement1, statementNumber statement2) {

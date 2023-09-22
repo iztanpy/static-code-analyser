@@ -2,9 +2,8 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
-#include "../Helper/StmtEntity.h"
-#include "../Helper/Wildcard.h"
-
+#include "utils/StmtEntity.h"
+#include "utils/clauses_types.h"
 
 class ParentStore {
  private:
@@ -30,7 +29,7 @@ class ParentStore {
 
     std::unordered_set<statementNumber> getChildren(statementNumber statement);
 
-    statementNumber getParent(statementNumber statement);
+    std::unordered_set<statementNumber> getParent(statementNumber statement);
 
     bool isParentStar(statementNumber parent, statementNumber child);
 

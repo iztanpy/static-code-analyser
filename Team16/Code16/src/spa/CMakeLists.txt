@@ -24,8 +24,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/select_evaluator.cpp
         src/qps/query_evaluator/select_evaluator.h
         src/PKB/PKB.h
-        src/qps/clauses/suchthat_clause.cpp
-        src/qps/clauses/suchthat_clause.h
+        src/qps/clauses/suchthat_clauses/suchthat_clause.cpp
+        src/qps/clauses/suchthat_clauses/suchthat_clause.h
         src/qps/query_evaluator/query_evaluator.cpp
         src/qps/query_evaluator/query_evaluator.h
         src/utils/hash_utils.h
@@ -91,7 +91,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/clause_builder/suchthat_clause_builder.h
         src/PKB/Stores/ParentStore.cpp
         src/PKB/Stores/ParentStore.h
-        src/PKB/Helper/StmtEntity.h
+        src/utils/StmtEntity.h
         src/PKB/Helper/Wildcard.h
         src/SP/sp_parser/AssignmentParser.cpp
         src/SP/sp_parser/AssignmentParser.h
@@ -112,7 +112,10 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/IfParser.cpp
         src/SP/sp_parser/CallParser.cpp
         src/SP/sp_parser/CallParser.h
-        "src/SP/sp_parser/ParserFactory.h" "src/SP/sp_parser/ParserFactory.cpp" "src/SP/sp_parser/CallParser.cpp" "src/SP/sp_parser/CallParser.h"
+        src/SP/sp_parser/ParserFactory.h
+        src/SP/sp_parser/ParserFactory.cpp
+        src/SP/sp_parser/CallParser.cpp
+        src/SP/sp_parser/CallParser.h
         src/qps/clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -126,6 +129,29 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/QueryUtil.h
         src/SP/utils/ParseUtils.cpp
         src/SP/utils/ParseUtils.h
+        src/utils/clauses_types.h
+        src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
+        src/qps/clauses/suchthat_clauses/uses.cpp
+        src/qps/clauses/suchthat_clauses/uses.h
+        src/qps/clauses/suchthat_clauses/modifies.cpp
+        src/qps/clauses/suchthat_clauses/modifies.h
+        src/qps/clauses/suchthat_clauses/parent.cpp
+        src/qps/clauses/suchthat_clauses/parent.h
+        src/qps/clauses/suchthat_clauses/follows.cpp
+        src/qps/clauses/suchthat_clauses/follows.h
+        src/qps/clauses/suchthat_clauses/suchthat_validator.cpp
+        src/qps/clauses/suchthat_clauses/suchthat_validator.h
+        src/qps/clauses/suchthat_clauses/uses_evaluator.cpp
+        src/qps/clauses/suchthat_clauses/uses_evaluator.h
+        src/qps/clauses/suchthat_clauses/modifies_evaluator.cpp
+        src/qps/clauses/suchthat_clauses/modifies_evaluator.h
+        src/qps/clauses/suchthat_clauses/follows_evaluator.cpp
+        src/qps/clauses/suchthat_clauses/follows_evaluator.h
+        src/qps/clauses/suchthat_clauses/parent_evaluator.cpp
+        src/qps/clauses/suchthat_clauses/parent_evaluator.h
+        src/qps/clauses/pattern_validator.cpp
+        src/qps/clauses/pattern_validator.h
+        src/PKB/Stores/ProcedureStore.cpp
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

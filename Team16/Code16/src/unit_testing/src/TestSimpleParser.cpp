@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/SourceProcessor.h"
-#include "PKB/Helper/StmtEntity.h"
+#include "utils/StmtEntity.h"
 #include "PKB/API/WriteFacade.h"
 #include <string>
 #include <unordered_set>

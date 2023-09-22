@@ -1,5 +1,5 @@
 #include "PKB/Stores/StatementStore.h"
-#include "PKB/Helper/StmtEntity.h"
+#include "utils/StmtEntity.h"
 #include <unordered_set>
 #include <unordered_map>
 #include "catch.hpp"

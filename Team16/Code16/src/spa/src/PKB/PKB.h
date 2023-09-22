@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <set>
 #include <unordered_set>
 #include <unordered_map>
 #include <memory>
@@ -15,8 +16,9 @@
 #include "Stores/ParentStore.h"
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
-#include "Helper/StmtEntity.h"
-#include "Helper/Wildcard.h"
+#include "Stores/ProcedureStore.h"
+#include "utils/StmtEntity.h"
+#include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
 
 typedef std::string variable;
@@ -25,6 +27,7 @@ typedef std::string possibleCombinations;
 typedef std::string constant;
 typedef std::string statementType;
 typedef std::string partialMatch;
+typedef std::string procedure;
 
 class PKB {
  private:
@@ -36,6 +39,7 @@ class PKB {
      std::unique_ptr<ParentStore> parentStore;
      std::unique_ptr<FollowsStore> followsStore;
      std::unique_ptr<ModifiesStore> modifiesStore;
+     std::unique_ptr<ProcedureStore> procedureStore;
 
 
  public:
@@ -60,6 +64,12 @@ class PKB {
     std::unordered_set<statementNumber> getAssigns(partialMatch lhs, partialMatch rhs);
 
     std::unordered_set<statementNumber> getAssigns(partialMatch lhs, Wildcard rhs);
+
+    // ProcedureStore methods
+
+    void addProcedures(std::set<procedure> procedures);
+
+    std::unordered_set<procedure> getProcedures();
 
     // VariableStore methods
 
@@ -115,9 +125,20 @@ class PKB {
 
     void storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map);
 
+    std::unordered_set<statementNumber> parent(Wildcard wildcard, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parent(statementNumber num, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parent(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> parent(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<statementNumber> parent(Wildcard wildcard, statementNumber statement);
+
     std::unordered_set<statementNumber> parent(statementNumber statement, Wildcard wildcard);
 
-    statementNumber parent(Wildcard wildcard, statementNumber statement);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    parent(StmtEntity entity, StmtEntity entity2);
 
     bool isParent(statementNumber parent, statementNumber child);
 
@@ -130,6 +151,17 @@ class PKB {
     std::unordered_set<statementNumber> parentStar(statementNumber statement, Wildcard wildcard);
 
     std::unordered_set<statementNumber> parentStar(Wildcard wildcard, statementNumber statement);
+
+    std::unordered_set<statementNumber> parentStar(Wildcard wildcard, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parentStar(statementNumber num, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parentStar(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> parentStar(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    parentStar(StmtEntity entity, StmtEntity entity2);
 
     bool isParentStar(statementNumber parent, statementNumber child);
 
@@ -145,11 +177,14 @@ class PKB {
 
     std::unordered_set<statementNumber> follows(Wildcard wildcard, StmtEntity entity);
 
-    statementNumber follows(statementNumber num, StmtEntity entity);
+    std::unordered_set<statementNumber> follows(statementNumber num, StmtEntity entity);
 
-    statementNumber follows(StmtEntity entity, statementNumber num);
+    std::unordered_set<statementNumber> follows(StmtEntity entity, statementNumber num);
 
     std::unordered_set<statementNumber> follows(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  follows(StmtEntity entity1,
+        StmtEntity entity2);
 
     bool isFollow(statementNumber statement1, statementNumber statement2);
 
@@ -166,6 +201,9 @@ class PKB {
     std::unordered_set<statementNumber> followStar(StmtEntity entity, statementNumber num);
 
     std::unordered_set<statementNumber> followStar(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  followStar(StmtEntity entity1,
+        StmtEntity entity2);
 
     bool isFollowStar(statementNumber statement1, statementNumber statement2);
 

@@ -2,7 +2,7 @@
 #include <unordered_set>
 #include "catch.hpp"
 #include "PKB/Stores/FollowsStore.h"
-#include "PKB/Helper/Wildcard.h"
+#include "utils/clauses_types.h"
 
 typedef int statementNumber;
 

@@ -180,7 +180,7 @@ int SimpleParser::parse(const std::vector<Token>& tokens, int curr_index) {
     // Store Statement types
     writeFacade->storeStatements(visitor->getStatementTypesMap());
     // Store Procedures
-//    writeFacade->storeProcedures(visitor->getProcedureLabels());
+    writeFacade->storeProcedures(visitor->getProcedureLabels());
     return curr_index;
 }
 

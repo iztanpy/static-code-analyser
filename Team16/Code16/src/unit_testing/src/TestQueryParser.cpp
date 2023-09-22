@@ -1,6 +1,7 @@
 #include <catch.hpp>
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/query_parser/query_parser.h"
+#include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 
 TEST_CASE("Query Parser can extract select clause") {
   std::string sample_query = "variable v; Select v";
@@ -25,7 +26,7 @@ TEST_CASE(
   REQUIRE(such_that_clauses.size() == 1);
 
   std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
-  auto *clause = dynamic_cast<UsesP *>(such_that_clause.get());
+  auto* clause = dynamic_cast<UsesP*>(such_that_clause.get());
   RefParam expected_rhs = EntRef(declarations[0]);
   RefParam expected_lhs = EntRef("main");
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
@@ -43,7 +44,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
   REQUIRE(pattern_clauses.size() == 1);
 
   std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto *clause = dynamic_cast<WildCardPattern *>(pattern_clause.get());
+  auto* clause = dynamic_cast<WildCardPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = Wildcard::Value;
@@ -73,7 +74,7 @@ TEST_CASE("Query Parser can return a parsed query") {
   REQUIRE(parsed_pattern_query.select.equals(expected));
   REQUIRE(parsed_pattern_query.such_that_clauses.empty());
 
-  auto *clause = dynamic_cast<WildCardPattern *>(pattern_clause.get());
+  auto* clause = dynamic_cast<WildCardPattern*>(pattern_clause.get());
   REQUIRE(clause->syn_assignment.equals(declarations[1]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(clause->rhs == Wildcard::Value);
