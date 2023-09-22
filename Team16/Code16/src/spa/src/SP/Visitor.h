@@ -90,6 +90,10 @@ class Visitor {
     void setFollowStatementNumberMap(int before, int after) {
         followStatementNumberHashmap[before] = after;
     }
+
+    void insertProcedureLabel(std::string label) {
+        procedureLabels.insert(label);
+    }
     std::unordered_map<int, std::string> getUsesLineLHSMap() const {
         return usesLineLHSMap;
     }
@@ -101,6 +105,9 @@ class Visitor {
     }
     std::unordered_set<std::string> getConstants() const {
         return constants;
+    }
+    std::set<std::string> getProcedureLabels() const {
+        return procedureLabels;
     }
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap() const {
         return usesLineRHSVarMap;
