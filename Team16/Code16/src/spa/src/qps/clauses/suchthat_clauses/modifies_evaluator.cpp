@@ -1,7 +1,6 @@
 #include "qps/clauses/suchthat_clauses/modifies_evaluator.h"
 
 UnaryConstraint ModifiesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  std::unordered_set<std::string> result = pkb_reader.getVariablesUsedBy(lhs);
   throw QpsSemanticError("[Modifies] Not implemented");
 }
 
