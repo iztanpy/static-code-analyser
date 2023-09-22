@@ -29,9 +29,9 @@ class ReadFacade {
 
     std::unordered_set<statementNumber> getAssigns(Wildcard lhs, Wildcard rhs);
 
-    std::unordered_set<statementNumber> getAssigns(partialMatch lhs, partialMatch rhs);
+    std::unordered_set<statementNumber> getAssigns(variable lhs, partialMatch rhs);
 
-    std::unordered_set<statementNumber> getAssigns(partialMatch lhs, Wildcard rhs);
+    std::unordered_set<statementNumber> getAssigns(variable lhs, Wildcard rhs);
 
     // VariableStore methods
 
