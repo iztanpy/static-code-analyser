@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
+#include "qps/clauses/evaluator_util.h"
 
 struct UsesEvaluator {
   static UnaryConstraint Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader);

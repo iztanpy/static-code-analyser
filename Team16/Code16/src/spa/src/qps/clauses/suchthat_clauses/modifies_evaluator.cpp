@@ -24,7 +24,6 @@ BinaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
 UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                           Wildcard& rhs,
                                           ReadFacade& pkb_reader) {
-
   std::unordered_set<statementNumber> results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
