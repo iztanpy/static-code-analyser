@@ -16,7 +16,7 @@ TEST_CASE("Query Parser can extract select clause") {
 
 TEST_CASE(
     "Query Parser can extract multiple such that clauses with UsesP('entRef', 'entRef') relation") {
-  std::string sample_query = "variable v;\n Select v such that Uses (\"main\", v)";
+  std::string sample_query = "variable v;\n Select v such that Uses(\"main\", v)";
   TokenisedQuery tokenised_query = QueryTokenizer::tokenize(sample_query);
   std::vector<Declaration> declarations = tokenised_query.declarations;
   std::vector<QueryToken> such_that_tokens = tokenised_query.such_that_tokens;
@@ -34,7 +34,7 @@ TEST_CASE(
 }
 
 TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
-  std::string sample_query = "variable v; assign a; Select v pattern a (v, _)";
+  std::string sample_query = "variable v; assign a; Select v pattern a(v, _)";
   TokenisedQuery tokenised_query = QueryTokenizer::tokenize(sample_query);
   std::vector<Declaration> declarations = tokenised_query.declarations;
   std::vector<QueryToken> pattern_tokens = tokenised_query.pattern_tokens;
@@ -54,7 +54,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
 }
 
 TEST_CASE("Query Parser can return a parsed query") {
-  std::string sample_pattern_query = "variable v; assign a; Select v pattern a (v, _)";
+  std::string sample_pattern_query = "variable v; assign a; Select v pattern a(v, _)";
   ParsedQuery parsed_pattern_query = QueryParser::ParseTokenizedQuery(sample_pattern_query);
   std::vector<Declaration> declarations = {
       {"v", DesignEntity::VARIABLE},
