@@ -109,7 +109,8 @@ class ReadFacade {
 
     std::unordered_set<statementNumber> follows(StmtEntity entity, Wildcard wildcard);
 
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  follows(StmtEntity entity1, StmtEntity entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> follows(StmtEntity entity1,
+        StmtEntity entity2);
 
     bool isFollow(statementNumber statement1, statementNumber statement2);
 
@@ -127,7 +128,8 @@ class ReadFacade {
 
     std::unordered_set<statementNumber> followStar(StmtEntity entity, Wildcard wildcard);
 
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  followStar(StmtEntity entity1, StmtEntity entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  followStar(StmtEntity entity1,
+        StmtEntity entity2);
 
     bool isFollowStar(statementNumber statement1, statementNumber statement2);
 

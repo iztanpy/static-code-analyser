@@ -408,8 +408,8 @@ std::unordered_set<statementNumber> PKB::follows(statementNumber num, StmtEntity
     statementNumber numResult = this->followsStore->getFollower(num);
     if (relevantStmts.count(numResult)) {
         if (numResult != 0) {
-			return {numResult};
-		}
+            return {numResult};
+        }
         return {};
     }
     return {};
@@ -432,16 +432,17 @@ std::unordered_set<statementNumber> PKB::follows(StmtEntity type, Wildcard wildc
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
         if (this->followsStore->getFollower(x) != 0) {
-			result.insert(x);
-		}
+            result.insert(x);
+        }
     }
     return result;
 }
 
-std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::follows(StmtEntity entity1, StmtEntity entity2) {
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::follows(StmtEntity entity1,
+    StmtEntity entity2) {
     std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(entity1);
-	std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(entity2);
-	std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
+    std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
     for (auto const& x : relevantStmts1) {
         if (x == 0) {
             continue;
@@ -450,9 +451,9 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::
             if (this->followsStore->getFollower(x) != 0) {
                 result.insert(std::make_pair(x, this->followsStore->getFollower(x)));
             }
-		}
-	}
-	return result;
+        }
+    }
+    return result;
 }
 
 bool PKB::isFollow(statementNumber statement1, statementNumber statement2) {
@@ -538,22 +539,23 @@ std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, Wildcard wi
     return result;
 }
 
-std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::followStar(StmtEntity entity1, StmtEntity entity2) {
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::followStar(StmtEntity entity1,
+    StmtEntity entity2) {
     std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(entity1);
-	std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(entity2);
-	std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
+    std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
     for (auto const& x : relevantStmts1) {
         if (x == 0) {
-			continue;
-		}
+            continue;
+        }
         for (auto const& y : relevantStmts2) {
             if (y == 0) {
-				continue;
-			}
+                continue;
+            }
             if (this->followsStore->isFollowStar(x, y)) {
-				result.insert(std::make_pair(x, y));
-			}
-		}
-	}
-	return result;
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
 }
