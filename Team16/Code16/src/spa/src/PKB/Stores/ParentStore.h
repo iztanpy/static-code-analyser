@@ -5,7 +5,6 @@
 #include "../Helper/StmtEntity.h"
 #include "../Helper/Wildcard.h"
 
-
 class ParentStore {
  private:
     typedef std::string variable;

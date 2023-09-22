@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <set>
 
 #include "PKB/API/WriteFacade.h"
 
@@ -12,6 +13,10 @@ void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
 
 void WriteFacade::storeVariables(std::unordered_set<std::string> variables) {
     pkb.addVariables(variables);
+}
+
+void WriteFacade::storeProcedures(std::set<std::string> procedures) {
+    pkb.addProcedures(procedures);
 }
 
 void WriteFacade::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {

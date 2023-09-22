@@ -37,6 +37,10 @@ std::unordered_set<variable> ReadFacade::getVariables() {
     return pkb.getVariables();
 }
 
+std::unordered_set<procedure> ReadFacade::getProcedures() {
+    return pkb.getProcedures();
+}
+
 bool ReadFacade::isUses(statementNumber lineNumber, variable variableName) {
     return pkb.isUses(lineNumber, variableName);
 }

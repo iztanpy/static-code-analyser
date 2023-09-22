@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <set>
 #include "PKB/PKB.h"
 
 typedef std::string variable;
@@ -24,6 +25,10 @@ class WriteFacade {
     // VariableStore methods
 
     void storeVariables(std::unordered_set<variable> variables);
+
+    // ProcedureStore methods\
+
+    void storeProcedures(std::set<std::string> procedures);
 
     // UsesStore methods
 

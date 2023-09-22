@@ -126,7 +126,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/QueryUtil.h
         src/SP/utils/ParseUtils.cpp
         src/SP/utils/ParseUtils.h
-)
+ "src/PKB/Stores/ProcedureStore.cpp" "src/PKB/Stores/ProcedureStore.h")
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

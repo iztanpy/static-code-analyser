@@ -11,6 +11,7 @@ typedef std::string partialMatch;
 typedef std::string variable;
 typedef int statementNumber;
 typedef std::string constant;
+typedef std::string procedure;
 
 class ReadFacade {
  private:
@@ -36,6 +37,9 @@ class ReadFacade {
     // VariableStore methods
 
     std::unordered_set<variable> getVariables();
+
+    // ProcedureStore methods
+    std::unordered_set<procedure> getProcedures();
 
     // UsesStore methods
 

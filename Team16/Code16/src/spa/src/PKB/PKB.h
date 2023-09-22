@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <set>
 #include <unordered_set>
 #include <unordered_map>
 #include <memory>
@@ -15,6 +16,7 @@
 #include "Stores/ParentStore.h"
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
+#include "Stores/ProcedureStore.h"
 #include "Helper/StmtEntity.h"
 #include "Helper/Wildcard.h"
 #include "utils/hash_utils.h"
@@ -25,6 +27,7 @@ typedef std::string possibleCombinations;
 typedef std::string constant;
 typedef std::string statementType;
 typedef std::string partialMatch;
+typedef std::string procedure;
 
 class PKB {
  private:
@@ -36,6 +39,7 @@ class PKB {
      std::unique_ptr<ParentStore> parentStore;
      std::unique_ptr<FollowsStore> followsStore;
      std::unique_ptr<ModifiesStore> modifiesStore;
+     std::unique_ptr<ProcedureStore> procedureStore;
 
 
  public:
@@ -60,6 +64,12 @@ class PKB {
     std::unordered_set<statementNumber> getAssigns(partialMatch lhs, partialMatch rhs);
 
     std::unordered_set<statementNumber> getAssigns(partialMatch lhs, Wildcard rhs);
+
+    // ProcedureStore methods
+
+    void addProcedures(std::set<procedure> procedures);
+
+    std::unordered_set<procedure> getProcedures();
 
     // VariableStore methods
 

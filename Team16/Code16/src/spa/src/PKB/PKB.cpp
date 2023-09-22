@@ -9,6 +9,7 @@ PKB::PKB() {
     parentStore = std::make_unique<ParentStore>();
     followsStore = std::make_unique<FollowsStore>();
     modifiesStore = std::make_unique<ModifiesStore>();
+    procedureStore = std::make_unique<ProcedureStore>();
 }
 
 // AssignStore methods
@@ -47,6 +48,15 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssig
     return assignStore->getAssignPair(wildcard);
 }
 
+// ProcedureStore methods
+
+void PKB::addProcedures(std::set<procedure> procedures) {
+    return procedureStore->addProcedures(procedures);
+}
+
+std::unordered_set<procedure> PKB::getProcedures() {
+    return procedureStore->getAllProcedures();
+}
 
 // VariableStore methods
 
