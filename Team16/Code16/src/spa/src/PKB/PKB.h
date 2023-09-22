@@ -17,8 +17,8 @@
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
 #include "Stores/ProcedureStore.h"
-#include "Helper/StmtEntity.h"
-#include "Helper/Wildcard.h"
+#include "utils/StmtEntity.h"
+#include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
 
 typedef std::string variable;

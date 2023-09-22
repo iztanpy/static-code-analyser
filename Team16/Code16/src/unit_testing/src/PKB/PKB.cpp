@@ -7,7 +7,7 @@ using namespace std;
 #include "PKB/PKB.h"
 #include "PKB/API/ReadFacade.h"
 #include "PKB/API/WriteFacade.h"
-#include "PKB/Helper/Wildcard.h"
+#include "utils/clauses_types.h"
 
 
 TEST_CASE(" 1") {

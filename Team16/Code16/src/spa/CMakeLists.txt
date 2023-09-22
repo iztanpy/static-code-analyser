@@ -91,7 +91,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/clause_builder/suchthat_clause_builder.h
         src/PKB/Stores/ParentStore.cpp
         src/PKB/Stores/ParentStore.h
-        src/PKB/Helper/StmtEntity.h
+        src/utils/StmtEntity.h
         src/PKB/Helper/Wildcard.h
         src/SP/sp_parser/AssignmentParser.cpp
         src/SP/sp_parser/AssignmentParser.h
@@ -129,7 +129,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/QueryUtil.h
         src/SP/utils/ParseUtils.cpp
         src/SP/utils/ParseUtils.h
-        src/qps/clauses/clauses_types.h
+        src/utils/clauses_types.h
         src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
         src/qps/clauses/suchthat_clauses/uses.cpp
         src/qps/clauses/suchthat_clauses/uses.h
@@ -151,6 +151,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/parent_evaluator.h
         src/qps/clauses/pattern_validator.cpp
         src/qps/clauses/pattern_validator.h
+        src/PKB/Stores/ProcedureStore.cpp
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
