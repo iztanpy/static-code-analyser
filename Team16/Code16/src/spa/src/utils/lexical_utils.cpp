@@ -1,5 +1,3 @@
-#pragma once
-
 #include <utility>
 #include "utils/lexical_utils.h"
 

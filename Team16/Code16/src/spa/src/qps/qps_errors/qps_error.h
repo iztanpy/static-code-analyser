@@ -11,5 +11,5 @@ class QpsError : public std::runtime_error {
  public:
   explicit QpsError(const std::string& message) : std::runtime_error(message) {}
 
-  const char* what() const noexcept override = 0;
+//  const char* what() const noexcept override = 0;
 };

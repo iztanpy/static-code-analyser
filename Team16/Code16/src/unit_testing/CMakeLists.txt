@@ -14,6 +14,8 @@ add_executable(unit_testing ${srcs}
         src/PKB/UsesStoreTest.cpp
         src/PKB/AssignStoreTest.cpp
         src/PKB/StatementStoreTest.cpp
+        src/TestWhileParser.cpp
+        src/TestSemanticValidator.cpp
         src/TestStringUtil.cpp
         src/TestWhileParser.cpp
  "src/PKB/ProcedureStoreTest.cpp")

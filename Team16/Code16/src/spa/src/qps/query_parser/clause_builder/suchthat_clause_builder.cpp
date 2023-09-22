@@ -1,8 +1,4 @@
-#include <memory>
-#include <vector>
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
-#include "qps/query_parser/query_tokenizer/query_tokenizer.h"
-#include "qps/qps_errors/qps_syntax_error.h"
 
 SuchThatClauseBuilder::SuchThatClauseBuilder() = default;
 
@@ -154,7 +150,7 @@ std::unique_ptr<SuchThatClause> SuchThatClauseBuilder::getClause() const {
       }
     case RelRefType::PARENTT:
       if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
-        return std::make_unique<ParentS>(std::get<StmtRef>(lhs),
+        return std::make_unique<ParentT>(std::get<StmtRef>(lhs),
                                          std::get<StmtRef>(rhs));
       } else {
         throw QpsSyntaxError("Syntax error");

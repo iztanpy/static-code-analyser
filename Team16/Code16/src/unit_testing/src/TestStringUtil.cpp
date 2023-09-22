@@ -1,5 +1,3 @@
-#pragma once
-
 #include <catch.hpp>
 #include "utils/string_utils.h"
 

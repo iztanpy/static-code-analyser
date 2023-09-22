@@ -10,5 +10,5 @@ class QpsSyntaxError : public QpsError {
  public:
   explicit QpsSyntaxError(const std::string& message) : QpsError(message) {}
 
-  const char* what() const noexcept override;
+//  const char* what() const noexcept override;
 };
