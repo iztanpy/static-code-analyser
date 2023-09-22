@@ -8,12 +8,12 @@ typedef int statementNumber;
 TEST_CASE("Test Parent Store Add") {
     auto parentStore = ParentStore();
     parentStore.storeParent({ {1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}, {6, {8, 9}} });
-    REQUIRE(parentStore.getParent(2) == 1);
-    REQUIRE(parentStore.getParent(3) == 1);
-    REQUIRE(parentStore.getParent(4) == 2);
-    REQUIRE(parentStore.getParent(5) == 2);
-    REQUIRE(parentStore.getParent(6) == 3);
-    REQUIRE(parentStore.getParent(7) == 3);
+    REQUIRE(parentStore.getParent(2) == std::unordered_set<statementNumber> {1});
+    REQUIRE(parentStore.getParent(3) == std::unordered_set<statementNumber> {1});
+    REQUIRE(parentStore.getParent(4) == std::unordered_set<statementNumber> {2});
+    REQUIRE(parentStore.getParent(5) == std::unordered_set<statementNumber> {2});
+    REQUIRE(parentStore.getParent(6) == std::unordered_set<statementNumber> {3});
+    REQUIRE(parentStore.getParent(7) == std::unordered_set<statementNumber> {3});
 
     REQUIRE(parentStore.isParent(1, 2));
     REQUIRE(parentStore.isParent(1, 3));

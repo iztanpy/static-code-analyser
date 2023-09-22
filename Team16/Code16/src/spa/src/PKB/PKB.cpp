@@ -217,7 +217,7 @@ std::unordered_set<statementNumber> PKB::parent(Wildcard wildcard, StmtEntity en
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        if (this->parentStore->getParent(x) != 0) {
+        if (!this->parentStore->getParent(x).empty()) {
             result.insert(x);
         }
     }
@@ -240,11 +240,14 @@ std::unordered_set<statementNumber> PKB::parent(statementNumber num, StmtEntity 
 // return the cases where we have a specified number directly nested in a specified entity?
 std::unordered_set<statementNumber> PKB::parent(StmtEntity entity, statementNumber num) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(entity);
-    statementNumber parentStmt = this->parentStore->getParent(num);
-    if (relevantStmts.count(parentStmt)) {
-        return {parentStmt};
+    std::unordered_set<statementNumber> parentStmt = this->parentStore->getParent(num);
+    std::unordered_set<statementNumber> result;
+    for (auto const &x : parentStmt) {
+        if (relevantStmts.count(x)) {
+            result.insert(x);
+        }
     }
-    return {};
+    return result;
 }
 
 // return all the specified entities that are parents of any statement
@@ -263,7 +266,7 @@ std::unordered_set<statementNumber> PKB::parent(statementNumber statement, Wildc
     return parentStore->getChildren(statement);
 }
 
-statementNumber PKB::parent(Wildcard wildcard, statementNumber statement) {
+std::unordered_set<statementNumber> PKB::parent(Wildcard wildcard, statementNumber statement) {
     return parentStore->getParent(statement);
 }
 

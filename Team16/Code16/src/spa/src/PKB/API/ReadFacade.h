@@ -77,7 +77,18 @@ class ReadFacade {
 
     std::unordered_set<statementNumber> parent(statementNumber statement, Wildcard wildcard);
 
-    statementNumber parent(Wildcard wildcard, statementNumber statement);
+    std::unordered_set<statementNumber> parent(Wildcard wildcard, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parent(statementNumber num, StmtEntity entity);
+
+    std::unordered_set<statementNumber> parent(StmtEntity entity, statementNumber num);
+
+    std::unordered_set<statementNumber> parent(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<statementNumber> parent(Wildcard wildcard, statementNumber statement);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    parent(StmtEntity entity, StmtEntity entity2);
 
     bool isParent(statementNumber parent, statementNumber child);
 
@@ -91,13 +102,16 @@ class ReadFacade {
 
     std::unordered_set<statementNumber> parentStar(Wildcard wildcard, statementNumber statement);
 
-    bool isParentStar(statementNumber parent, statementNumber child);
+    std::unordered_set<statementNumber> parentStar(Wildcard wildcard, StmtEntity entity);
 
-    bool isParentStar(statementNumber parent, Wildcard wildcard);
+    std::unordered_set<statementNumber> parentStar(statementNumber num, StmtEntity entity);
 
-    bool isParentStar(Wildcard wildcard, statementNumber child);
+    std::unordered_set<statementNumber> parentStar(StmtEntity entity, statementNumber num);
 
-    bool isParentStar(Wildcard wildcard, Wildcard wildcard2);
+    std::unordered_set<statementNumber> parentStar(StmtEntity entity, Wildcard wildcard);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    parentStar(StmtEntity entity, StmtEntity entity2);
 
     // FollowStore Method
 
