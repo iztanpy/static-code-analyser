@@ -2,6 +2,8 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include "utils/clauses_types.h"
+
 
 
 class UsesStore {
@@ -12,19 +14,18 @@ class UsesStore {
 
     std::unordered_map<statementNumber, std::unordered_set<variable>> UsesVariableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> UsesVariableMapReverse;
-    std::unordered_map<statementNumber, std::unordered_set<constant>> UsesConstantMap;
 
 
  public:
     UsesStore();
 
-    void addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> statementUsesMap);
+    void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> statementUsesMap);
 
-    void addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> variableUsesMap);
+    bool isUses(statementNumber lineNumber, variable variableName);
 
-    std::unordered_set<variable> getVariablesUsedBy(statementNumber lineNumber);
+    bool isUses(statementNumber lineNumber);
 
-    std::unordered_set<statementNumber> getStatementsUsing(variable variableName);
+    std::unordered_set<variable> uses(statementNumber lineNumber);
 
-    std::unordered_set<constant> getConstantsUsedBy(statementNumber lineNumber);
+    std::unordered_set<statementNumber> uses(variable variableName);
 };

@@ -1,7 +1,7 @@
 #include "qps/clauses/suchthat_clauses/uses_evaluator.h"
 
 UnaryConstraint UsesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  std::unordered_set<std::string> result = pkb_reader.getVariablesUsedBy(lhs);
+  std::unordered_set<std::string> result = pkb_reader.uses(lhs);
   return UnaryConstraint{rhs.synonym, result};
 }
 

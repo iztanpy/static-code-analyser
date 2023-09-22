@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <set>
 #include "PKB/PKB.h"
 
 typedef std::string variable;
@@ -17,19 +18,38 @@ class WriteFacade {
  public:
     explicit WriteFacade(PKB& pkb);
 
-     void storeAssignments(std::unordered_map<statementNumber,
-         std::unordered_set<possibleCombinations>> numRHSMap, std::unordered_map<statementNumber, variable> numLHSMap);
+    void storeAssignments(std::unordered_map<statementNumber,
+            std::unordered_set<possibleCombinations>> numRHSMap,
+                        std::unordered_map<statementNumber, variable> numLHSMap);
 
-     void storeVariables(std::unordered_set<variable> variables);
+    // VariableStore methods
 
-     void addLineUsesVar(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
+    void storeVariables(std::unordered_set<variable> variables);
 
-     void addLineUsesConst(std::unordered_map<statementNumber, std::unordered_set<constant>> constUsesMap);
+    // ProcedureStore methods\
 
-     void storeConstants(std::unordered_set<constant> constants);
+    void storeProcedures(std::set<std::string> procedures);
 
-    void storeUsesConst(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
-    void storeUsesVar(std::unordered_map<std::string, std::unordered_set<std::string>> LHSAndRHS);
+    // UsesStore methods
 
-    void storeLineUses(std::unordered_map<int, std::unordered_set<std::string>> usesVariableAndConstants);
+    void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
+
+    // ModifiesStore methods
+
+    void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
+
+    // ConstantStore methods
+
+    void storeConstants(std::unordered_set<constant> constants);
+
+    // StatementStore methods
+
+    void storeStatements(std::unordered_map<statementNumber, StmtEntity> typeMap);
+
+    // ParentStore methods
+
+    void storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map);
+
+    // FollowStore Method
+    void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 };

@@ -17,9 +17,9 @@ UnaryConstraint SelectEvaluator::Evaluate() {
         }
         return assigns_string;
       }
-      case DesignEntity::CONSTANT:return pkb_reader.getAllConstants();
+      case DesignEntity::CONSTANT:return pkb_reader.getConstants();
 
-      case DesignEntity::VARIABLE:return pkb_reader.getAllVariables();
+      case DesignEntity::VARIABLE:return pkb_reader.getVariables();
 
       default:throw std::runtime_error("Haven't implemented yet");
     }

@@ -2,7 +2,7 @@
 
 #include <unordered_set>
 #include "qps/design_entity.h"
-#include "qps/clauses/clauses_types.h"
+#include "utils/clauses_types.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 
 struct PatternValidator {
