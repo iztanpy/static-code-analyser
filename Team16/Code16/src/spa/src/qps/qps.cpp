@@ -5,7 +5,11 @@ QPS::QPS(ReadFacade& pkb_reader) : query_evaluator(pkb_reader) {}
 std::unordered_set<std::string> QPS::Evaluate(std::string& query) {
   try {
     ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(query);
-    return query_evaluator.Evaluate(parsed_query);
+    std::unordered_set<std::string> results = query_evaluator.Evaluate(parsed_query);
+    if (results.empty()) {
+      results.insert("None");
+    }
+    return results;
   } catch (const QpsSyntaxError& e) {
     return {"SyntaxError"};
   } catch (const QpsSemanticError& e) {
