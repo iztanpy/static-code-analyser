@@ -139,12 +139,77 @@ TEST_CASE("Test Facades for Uses Store") {
     }
 }
 
-TEST_CASE("Test Parent Stores") {
+TEST_CASE("Test Parent Stores 2") {
     PKB pkb = PKB();
 
-    pkb.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
+    pkb.storeParent({ {1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}} });
+    pkb.addStatements({ { 1, StmtEntity::kIf },
+                        { 2, StmtEntity::kIf },
+                        { 3, StmtEntity::kIf },
+                        { 4, StmtEntity::kAssign },
+                        { 5, StmtEntity::kAssign },
+                        { 6, StmtEntity::kAssign },
+                        { 7, StmtEntity::kRead } });
 
     Wildcard wildcard = Wildcard();
+
+    // Test Wildcard wildcard, StmtEntity entity
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kRead).size() == 1);
+
+
+    // Test StmtEntity entity, statementNumber num
+    REQUIRE(pkb.parent(StmtEntity::kIf, 4) == std::unordered_set<statementNumber> {2});
+    REQUIRE(pkb.parent(StmtEntity::kRead, 6) == std::unordered_set<statementNumber> {});
+
+    // Test StmtEntity entity, Wildcard wildcard
+    REQUIRE(pkb.parent(StmtEntity::kIf, wildcard).size() == 3);
+    REQUIRE(pkb.parent(StmtEntity::kAssign, wildcard).size() == 0);
+    REQUIRE(pkb.parent(StmtEntity::kRead, wildcard).size() == 0);
+
+    // Test StmtEntity entity, entity2
+    REQUIRE(pkb.parent(StmtEntity::kIf, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parent(StmtEntity::kAssign, StmtEntity::kRead).size() == 0);
+
+    // Test Wildcard wildcard, StmtEntity entity
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parent(wildcard, StmtEntity::kRead).size() == 1);
+
+    // Test statementNumber num, StmtEntity entity
+    REQUIRE(pkb.parent(1, StmtEntity::kAssign) == std::unordered_set<statementNumber> {});
+    REQUIRE(pkb.parent(2, StmtEntity::kAssign) == std::unordered_set<statementNumber> {4, 5});
+    REQUIRE(pkb.parent(3, StmtEntity::kRead) == std::unordered_set<statementNumber> {7});
+    REQUIRE(pkb.parent(3, StmtEntity::kAssign) == std::unordered_set<statementNumber> {6});
+
+    // PARENTS STAR
+
+    // Test StmtEntity num
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, 2) == std::unordered_set<statementNumber> {1});
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, 4) == std::unordered_set<statementNumber> {1, 2});
+    REQUIRE(pkb.parentStar(StmtEntity::kAssign, 6) == std::unordered_set<statementNumber> {});
+
+
+    // Test StmtEntity entity, Wildcard wildcard
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, wildcard).size() == 3);
+    REQUIRE(pkb.parentStar(StmtEntity::kAssign, wildcard).size() == 0);
+    REQUIRE(pkb.parentStar(StmtEntity::kRead, wildcard).size() == 0);
+
+    // Test StmtEntity entity, entity2
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, StmtEntity::kAssign).size() == 6);
+    REQUIRE(pkb.parentStar(StmtEntity::kAssign, StmtEntity::kRead).size() == 0);
+
+    // Test Wildcard wildcard, StmtEntity entity
+    REQUIRE(pkb.parentStar(wildcard, StmtEntity::kAssign).size() == 3);
+    REQUIRE(pkb.parentStar(wildcard, StmtEntity::kRead).size() == 1);
+
+    // Test statementNumber num, StmtEntity entity
+    REQUIRE(pkb.parentStar(1, StmtEntity::kAssign) == std::unordered_set<statementNumber> {4,5,6});
+    REQUIRE(pkb.parentStar(2, StmtEntity::kAssign) == std::unordered_set<statementNumber> {4, 5});
+    REQUIRE(pkb.parentStar(3, StmtEntity::kRead) == std::unordered_set<statementNumber> {7});
+    REQUIRE(pkb.parentStar(3, StmtEntity::kAssign) == std::unordered_set<statementNumber> {6});
+
+
+
 
     REQUIRE(pkb.parent(wildcard, 2) == 1);
     REQUIRE(pkb.parent(wildcard, 3) == 1);
@@ -154,32 +219,28 @@ TEST_CASE("Test Parent Stores") {
     REQUIRE(pkb.parent(wildcard, 7) == 3);
 
     for (auto value : pkb.parent(1, wildcard)) {
-		REQUIRE((value == 2 || value == 3));
-	}
+        REQUIRE((value == 2 || value == 3));
+    }
 
     for (auto value : pkb.parent(2, wildcard)) {
         REQUIRE((value == 4 || value == 5));
     }
 
     for (auto value : pkb.parent(3, wildcard)) {
-		REQUIRE((value == 6 || value == 7));
-	}
-
-    for (auto value : pkb.parentStar(1, wildcard)) {
-		REQUIRE((value == 2 || value == 3 || value == 4 || value == 5 || value == 6 || value == 7));
-	}
+        REQUIRE((value == 6 || value == 7));
+    }
 
     for (auto value : pkb.parentStar(wildcard, 2)) {
         REQUIRE((value == 1));
     }
 
     for (auto value : pkb.parentStar(wildcard, 3)) {
-		REQUIRE((value == 1));
-	}
+        REQUIRE((value == 1));
+    }
 
     for (auto value : pkb.parentStar(wildcard, 4)) {
-		REQUIRE((value == 2 || value == 1));
-	}
+        REQUIRE((value == 2 || value == 1));
+    }
 
     for (auto value : pkb.parentStar(wildcard, 6)) {
         REQUIRE((value == 3 || value == 1));

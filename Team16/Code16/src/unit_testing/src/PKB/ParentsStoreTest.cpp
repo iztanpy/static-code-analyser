@@ -1,4 +1,5 @@
 #include <unordered_set>
+#include <iostream>
 #include "catch.hpp"
 #include "PKB/Stores/ParentStore.h"
 
@@ -6,7 +7,7 @@ typedef int statementNumber;
 
 TEST_CASE("Test Parent Store Add") {
     auto parentStore = ParentStore();
-    parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
+    parentStore.storeParent({ {1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}, {6, {8, 9}} });
     REQUIRE(parentStore.getParent(2) == 1);
     REQUIRE(parentStore.getParent(3) == 1);
     REQUIRE(parentStore.getParent(4) == 2);
@@ -41,6 +42,7 @@ TEST_CASE("Test Parent Store Add") {
     REQUIRE(!parentStore.isParentStar(3, 1));
     REQUIRE(!parentStore.isParentStar(3, 2));
 
+
     Wildcard wildcard = Wildcard();
 
     REQUIRE(!parentStore.isParent(wildcard, 1));
@@ -56,7 +58,7 @@ TEST_CASE("Test Parent Store Add") {
     REQUIRE(parentStore.isParent(3, wildcard));
     REQUIRE(!parentStore.isParent(4, wildcard));
     REQUIRE(!parentStore.isParent(5, wildcard));
-    REQUIRE(!parentStore.isParent(6, wildcard));
+    REQUIRE(parentStore.isParent(6, wildcard));
     REQUIRE(!parentStore.isParent(7, wildcard));
 
     REQUIRE(!parentStore.isParentStar(wildcard, 1));
@@ -72,7 +74,7 @@ TEST_CASE("Test Parent Store Add") {
     REQUIRE(parentStore.isParentStar(3, wildcard));
     REQUIRE(!parentStore.isParentStar(4, wildcard));
     REQUIRE(!parentStore.isParentStar(5, wildcard));
-    REQUIRE(!parentStore.isParentStar(6, wildcard));
+    REQUIRE(parentStore.isParentStar(6, wildcard));
     REQUIRE(!parentStore.isParentStar(7, wildcard));
 
 }
