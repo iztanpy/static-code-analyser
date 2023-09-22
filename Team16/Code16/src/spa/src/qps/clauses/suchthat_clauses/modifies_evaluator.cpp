@@ -1,33 +1,39 @@
 #include "qps/clauses/suchthat_clauses/modifies_evaluator.h"
 
 UnaryConstraint ModifiesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Modifies] Not implemented");
+  return {rhs.synonym, pkb_reader.modifies(lhs)};
 }
 
 bool ModifiesEvaluator::Handle(int lhs, Wildcard& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Modifies] Not implemented");
+  return pkb_reader.isModifies(lhs, rhs);
 }
 
 bool ModifiesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Modifies] Not implemented");
+  return pkb_reader.isModifies(lhs, rhs);
 }
 
 BinaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                            Declaration& rhs,
                                            ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Modifies] Not implemented");
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
+      = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity));
+  return {{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 
 UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                           Wildcard& rhs,
                                           ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Modifies] Not implemented");
+
+  std::unordered_set<statementNumber> results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
+  return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                           std::string& rhs,
                                           ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Modifies] Not implemented");
+  std::unordered_set<statementNumber> results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
+  return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint ModifiesEvaluator::Handle(Wildcard& lhs,

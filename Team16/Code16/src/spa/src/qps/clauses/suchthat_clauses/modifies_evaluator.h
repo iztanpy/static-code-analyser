@@ -1,10 +1,10 @@
 #pragma once
 
-#pragma once
-
 #include <string>
 #include <unordered_set>
 #include <cassert>
+#include "utils/StmtEntity.h"
+#include "qps/clauses/evaluator_util.h"
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
