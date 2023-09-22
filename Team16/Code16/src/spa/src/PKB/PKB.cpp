@@ -62,6 +62,16 @@ std::unordered_set<variable> PKB::getVariables() {
 // UsesStore methods
 
 void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
+
+    std::unordered_map<statementNumber, std::unordered_set<variable>> usesMapWithCall;
+
+    for (auto const &x : varUsesMap) {
+        usesMapWithCall[x.first] = x.second;
+        auto parents = parentStore->getParents(x.first);
+        for (auto const &y : parents) {
+            usesMapWithCall[y].insert(x.second.begin(), x.second.end());
+        }
+    }
     usesStore->storeUses(varUsesMap);
 }
 
