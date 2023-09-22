@@ -1,11 +1,15 @@
 #pragma once
 
 #include <string>
-#include "qps/clauses/clause.h"
-#include "qps/clauses/suchthat_clauses/suchthat_clause.h"
-#include "qps/clauses/pattern_validator.h"
+#include <variant>
 
-using ExprSpec = std::variant<std::string, Wildcard>;
+#include "qps/query_evaluator/constraint.h"
+#include "qps/clauses/clause.h"
+#include "qps/clauses/pattern_validator.h"
+#include "qps/clauses/assign_pattern_evaluator.h"
+#include "PKB/API/ReadFacade.h"
+#include "utils/clauses_types.h"
+
 class PatternClause : public Clause {
  public:
   Declaration syn_assignment;

@@ -14,4 +14,4 @@ enum class Wildcard {
 using StmtRef = std::variant<Declaration, Wildcard, int>;
 using EntRef = std::variant<Declaration, Wildcard, std::string>;
 using RefParam = std::variant<StmtRef, EntRef>;
-
+using ExprSpec = std::variant<std::string, Wildcard>;
