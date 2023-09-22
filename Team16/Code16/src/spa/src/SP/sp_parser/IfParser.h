@@ -26,7 +26,7 @@
 class IfParser : public Parser {
  public:
   explicit IfParser(ASTVisitor* visitor) : visitor(visitor) {}
-  int parse(const std::vector<Token>& tokens, int curr_index) override;
+  int parse(std::vector<Token>& tokens, int curr_index) override;
 
   ASTVisitor* visitor;
   int lineNumber = 0;

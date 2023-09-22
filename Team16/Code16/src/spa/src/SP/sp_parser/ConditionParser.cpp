@@ -3,7 +3,7 @@
 /*
 * ConditionParser returns -1 if the conditional parsing is not ok and returns 0 if the parsing is ok
 */
-int ConditionParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int ConditionParser::parse(std::vector<Token>& tokens, int curr_index) {
     // just need to verify if the condition is valid or not
     return evaluateCondition(tokens, 0) == -1 ? -1 : 0;
 }

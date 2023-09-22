@@ -1,6 +1,6 @@
 #include "PrintParser.h"
 
-int PrintParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int PrintParser::parse(std::vector<Token>& tokens, int curr_index) {
     // Check if there are enough tokens for a valid print statement
     if (curr_index + 3 > tokens.size()) {
         return -1;

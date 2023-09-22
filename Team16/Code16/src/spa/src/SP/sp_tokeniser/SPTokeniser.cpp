@@ -22,6 +22,7 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 
     // entity
     {TokenType::kEntityThen, std::regex("^(\\bthen\\b)")},
+    {TokenType::kEntityAssign, std::regex("^(=)")},
 
     // separators
     {TokenType::kSepComma, std::regex("^(,)")},

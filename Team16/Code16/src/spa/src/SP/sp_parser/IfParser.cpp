@@ -1,6 +1,6 @@
 #include "IfParser.h"
 
-int IfParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int IfParser::parse(std::vector<Token>& tokens, int curr_index) {
   // Validate that statement has at least 9 tokens (min: If ( a ) { } else { } )
   if (tokens.size() - index < 8) {
     return -1;

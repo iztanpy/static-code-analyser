@@ -56,7 +56,7 @@ std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& t
   return node;
 }
 
-int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int AssignmentParser::parse(std::vector<Token>& tokens, int curr_index) {
     // Validate that statement has at least 4 tokens (min: lhs = rhs ;)
     if (tokens.size() - index < 3) {
         return -1;

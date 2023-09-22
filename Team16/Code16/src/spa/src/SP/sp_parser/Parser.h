@@ -17,6 +17,6 @@ class Parser {
  public:
     Parser() = default;
     virtual ~Parser() = default;
-    virtual int parse(const std::vector<Token>& tokens, int curr_index) = 0;
+    virtual int parse(std::vector<Token>& tokens, int curr_index) = 0;
     DesignExtractor* designExtractor = new DesignExtractor();  // Initialize to nullptr in the constructor
 };

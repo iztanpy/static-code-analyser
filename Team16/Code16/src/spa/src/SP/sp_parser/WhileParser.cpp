@@ -1,7 +1,7 @@
 // ai-gen start (gpt3, 2)
 #include "WhileParser.h"
 
-int WhileParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
     // Validate that statement has at least 6 tokens (min: while ( a ) { })
     if (tokens.size() - index < 5) {
       return -1;

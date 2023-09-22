@@ -45,7 +45,7 @@ class SimpleParser : public Parser {
     int currIfDepth;
  public:
     explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
-    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
     AssignmentParser* assignmentParser = new AssignmentParser(visitor);
     ProcedureParser* procedureParser = new ProcedureParser(visitor);
