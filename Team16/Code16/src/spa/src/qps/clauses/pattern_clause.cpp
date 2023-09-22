@@ -2,34 +2,28 @@
 #include <utility>
 #include "qps/clauses/pattern_clause.h"
 
-WildCardPattern::WildCardPattern(Declaration syn_assignment, EntRef lhs, Wildcard rhs) {
-  this->syn_assignment = std::move(syn_assignment);
-  this->lhs = std::move(lhs);
-  this->rhs = rhs;
-}
-
 Constraint WildCardPattern::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("WildCardPattern::Evaluate not implemented");
 }
 
-ExactPattern::ExactPattern(Declaration syn_assignment, EntRef lhs, std::string rhs) {
-  this->syn_assignment = std::move(syn_assignment);
-  this->lhs = std::move(lhs);
-  this->rhs = std::move(rhs);
+void WildCardPattern::Validate() {
+  PatternValidator::Validate(syn_assignment, lhs);
 }
 
 Constraint ExactPattern::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("ExactPattern::Evaluate not implemented");
 }
 
-PartialPattern::PartialPattern(Declaration syn_assignment, EntRef lhs, std::string rhs) {
-  this->syn_assignment = std::move(syn_assignment);
-  this->lhs = std::move(lhs);
-  this->rhs = std::move(rhs);
+void ExactPattern::Validate() {
+  PatternValidator::Validate(syn_assignment, lhs);
 }
 
 Constraint PartialPattern::Evaluate(ReadFacade& pkb_reader) {
   throw QpsSemanticError("PartialPattern::Evaluate not implemented");
+}
+
+void PartialPattern::Validate() {
+  PatternValidator::Validate(syn_assignment, lhs);
 }
 
 bool PatternClause::are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2) {

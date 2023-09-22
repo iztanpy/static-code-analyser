@@ -23,14 +23,14 @@ TEST_CASE("Test split query") {
     std::string sample_query_2 = "variable v;";
     QueryStructure statements_2 = QueryTokenizer::splitQuery(sample_query_2);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == no_select_error.what());
+    REQUIRE(strcmp(e.what(), no_select_error.what()) == 0);
   }
 
   try {
     std::string sample_query_3 = "variable v; Select v; assign v;";
     QueryStructure statements_3 = QueryTokenizer::splitQuery(sample_query_3);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == statement_after_select_error.what());
+    REQUIRE(strcmp(e.what(), statement_after_select_error.what()) == 0);
   }
 }
 
@@ -58,7 +58,7 @@ TEST_CASE("Test extract declarations") {
     std::vector<std::string> declaration_statements_2 = statements_2.declaration_statements;
     std::vector<Declaration> declarations_2 = QueryTokenizer::extractDeclarations(declaration_statements_2);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == invalid_entity_error.what());
+    REQUIRE(strcmp(e.what(), invalid_entity_error.what()) == 0);
   }
 
   try {
@@ -67,7 +67,7 @@ TEST_CASE("Test extract declarations") {
     std::vector<std::string> declaration_statements_3 = statements_3.declaration_statements;
     std::vector<Declaration> declarations_3 = QueryTokenizer::extractDeclarations(declaration_statements_3);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == invalid_entity_error.what());
+    REQUIRE(strcmp(e.what(), missing_synonym_error.what()) == 0);
   }
 
   try {
@@ -76,7 +76,7 @@ TEST_CASE("Test extract declarations") {
     std::vector<std::string> declaration_statements_4 = statements_4.declaration_statements;
     std::vector<Declaration> declarations_4 = QueryTokenizer::extractDeclarations(declaration_statements_4);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == lexical_error.what());
+    REQUIRE(strcmp(e.what(), lexical_error.what()) == 0);
   }
 
   try {
@@ -85,7 +85,7 @@ TEST_CASE("Test extract declarations") {
     std::vector<std::string> declaration_statements_5 = statements_5.declaration_statements;
     std::vector<Declaration> declarations_5 = QueryTokenizer::extractDeclarations(declaration_statements_5);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == repeated_synonym_declaration_error.what());
+    REQUIRE(strcmp(e.what(), repeated_synonym_declaration_error.what()) == 0);
   }
 }
 
@@ -111,7 +111,7 @@ TEST_CASE("Test extract select tokens") {
     std::vector<QueryToken>
         select_tokens_2 = QueryTokenizer::extractSelectToken(statements_2.select_statement, declarations_2);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == undeclared_error.what());
+    REQUIRE(strcmp(e.what(), undeclared_error.what()) == 0);
   }
 }
 
@@ -129,14 +129,14 @@ TEST_CASE("Test get clause index") {
     std::string wrong_clause = "such That Uses (a, b)";
     std::vector<size_t> wrong_clause_indexes = QueryTokenizer::getClauseIndexes(wrong_clause);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == wrong_clause_error.what());
+    REQUIRE(strcmp(e.what(), wrong_clause_error.what()) == 0);
   }
 
   try {
     std::string unexpected_clause = "something such that Uses (a, b)";
     std::vector<size_t> unexpected_clause_indexes = QueryTokenizer::getClauseIndexes(unexpected_clause);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == unexpected_clause_error.what());
+    REQUIRE(strcmp(e.what(), unexpected_clause_error.what()) == 0);
   }
 }
 
@@ -197,7 +197,7 @@ TEST_CASE("Test get relationship reference arguments") {
     std::pair<QueryToken, QueryToken>
         more_than_2_error_args = QueryTokenizer::getRelRefArgs(more_that_2_arg, error_declarations);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == more_than_2_error.what());
+    REQUIRE(strcmp(e.what(), more_than_2_error.what()) == 0);
   }
 
   try {
@@ -205,7 +205,7 @@ TEST_CASE("Test get relationship reference arguments") {
     std::pair<QueryToken, QueryToken>
         not_declared_error_args = QueryTokenizer::getRelRefArgs(not_declared_arg, error_declarations);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == not_declared_error.what());
+    REQUIRE(strcmp(e.what(), not_declared_error.what()) == 0);
   }
 }
 
@@ -255,7 +255,7 @@ TEST_CASE("Test get pattern arguments") {
   REQUIRE(args_3.second.text == expected_args_3.second.text);
   REQUIRE(args_3.second.type == expected_args_3.second.type);
 
-  QpsSyntaxError more_than_2_error = QpsSyntaxError("More than 2 synonyms in relation reference");
+  QpsSyntaxError more_than_2_error = QpsSyntaxError("More than 2 arguments in pattern clause");
   QpsSemanticError not_declared_error = QpsSemanticError("LHS synonym not declared");
   std::vector<Declaration> error_declarations = {
       {"s", DesignEntity::STMT}
@@ -266,7 +266,7 @@ TEST_CASE("Test get pattern arguments") {
     std::pair<QueryToken, QueryToken>
         more_than_2_error_args = QueryTokenizer::getPatternArgs(more_that_2_arg, error_declarations);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == more_than_2_error.what());
+    REQUIRE(strcmp(e.what(), more_than_2_error.what()) == 0);
   }
 
   try {
@@ -274,7 +274,7 @@ TEST_CASE("Test get pattern arguments") {
     std::pair<QueryToken, QueryToken>
         more_than_2_error_args = QueryTokenizer::getPatternArgs(not_declared_arg, error_declarations);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == not_declared_error.what());
+    REQUIRE(strcmp(e.what(), not_declared_error.what()) == 0);
   }
 }
 
@@ -331,8 +331,8 @@ TEST_CASE("Test extract clause tokens") {
   REQUIRE(results_2.second[2].type == expected_2.second[2].type);
   REQUIRE(results_2.first.empty());
 
-  QpsSyntaxError unknown_clause_error = QpsSyntaxError("Unexpected clause expression");
-  QpsSyntaxError undeclared_pattern_error = QpsSyntaxError("Synonym assign is not declared");
+  QpsSyntaxError unknown_clause_error = QpsSyntaxError("Invalid clause expressions");
+  QpsSyntaxError undeclared_pattern_error = QpsSyntaxError("Invalid argument for RHS of pattern clause");
   std::vector<Declaration> error_declarations = {
       {"v", DesignEntity::VARIABLE}
   };
@@ -342,7 +342,7 @@ TEST_CASE("Test extract clause tokens") {
     std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
         unknown_clause_result = QueryTokenizer::extractClauseTokens(unknown_clause_statement, error_declarations);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == unknown_clause_error.what());
+    REQUIRE(strcmp(e.what(), unknown_clause_error.what()) == 0);
   }
 
   try {
@@ -350,8 +350,7 @@ TEST_CASE("Test extract clause tokens") {
     std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
         unknown_clause_result = QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations);
   } catch (const QpsError & e) {
-    REQUIRE(e.what() == undeclared_pattern_error.what());
-
+    REQUIRE(strcmp(e.what(), undeclared_pattern_error.what()) == 0);
   }
 
 }
