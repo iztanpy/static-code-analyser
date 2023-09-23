@@ -9,4 +9,4 @@ jobs:
       - run: pip install cpplint
       - run: |
           cd Team16/Code16/src/spa
-          cpplint --recursive --exclude=src/qps/constants.h --exclude=src/qps/query_parser/query_tokenizer/query_tokenizer.cpp --exclude=src/utils/string_utils.cpp --filter=-legal/copyright,-runtime/references --linelength=120 extensions=cpp,h .
+          cpplint --recursive --exclude=src/qps/constants.h --exclude=src/qps/query_parser/query_tokenizer/query_tokenizer.cpp --exclude=src/qps/query_parser/query_tokenizer/query_tokenizer.h --exclude=src/utils/string_utils.cpp --filter=-legal/copyright,-runtime/references --linelength=120 extensions=cpp,h .

@@ -1,11 +1,9 @@
 #include <catch.hpp>
-#include <regex>
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/qps_errors/qps_error.h"
 #include "qps/qps_errors/qps_syntax_error.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/string_utils.h"
-#include "qps/constants.h"
 
 TEST_CASE("Test split query") {
   std::string sample_query_1 = "variable v; Select v";

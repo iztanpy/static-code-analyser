@@ -25,6 +25,9 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
 
   for (std::string statement : statements) {
     if (is_select_statement_processed) {
+      if (statement.empty()) {
+        throw QpsSyntaxError("Extra character at the end of query");
+      }
       throw QpsSyntaxError("Statements after select statement are invalid");
     }
     std::string first_word = string_util::GetFirstWord(statement);
@@ -83,6 +86,22 @@ std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_
   std::vector<QueryToken> select_tokens;
   // remove the Select keyword (guaranteed to exist since we already checked)
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
+
+  if (remaining_statement.empty()) {
+    throw QpsSyntaxError("Missing select statement");
+  }
+
+  // remove the synonym and check if it can still be a such that / pattern clause
+  std::string synonym_removed_statement = string_util::RemoveFirstWord(remaining_statement);
+  bool statement_can_match_clause =
+      QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kSuchThatClauseRegex) ||
+      QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kPatternClauseRegex);
+
+  if (!synonym_removed_statement.empty() && !statement_can_match_clause) {
+    // it is syntactically invalid
+    throw QpsSyntaxError("Missing select synonym");
+  }
+
   // then extract the first word after 'Select'
   std::string first_word = string_util::GetFirstWord(remaining_statement);
   if (!QueryUtil::IsInDeclarations(first_word, declarations)) {
@@ -128,7 +147,7 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
   return indexes;
 }
 
-bool clauseMatch(std::string & clause, const std::regex & regexPattern) {
+bool QueryTokenizer::clauseMatch(std::string & clause, const std::regex & regexPattern) {
   return std::regex_search(clause, regexPattern);
 }
 
@@ -144,7 +163,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     throw QpsSyntaxError("More than 2 open brackets");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
-  if (rhs.size() != 1) {
+  if (rhs.size() != 2) {
     throw QpsSyntaxError("More than 2 close brackets");
   }
 
@@ -203,7 +222,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     throw QpsSyntaxError("More than 2 open brackets or missing arguments");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', arguments[1]);
-  if (rhs.size() != 1) {
+  if (rhs.size() != 2) {
     throw QpsSyntaxError("More than 2 close brackets or missing arguments");
   }
 

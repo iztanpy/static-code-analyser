@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <regex>
 #include "qps/declaration.h"
 
 // Token types
@@ -40,8 +41,6 @@ struct QueryStructure {
 class QueryTokenizer {
  public:
   static TokenisedQuery tokenize(const std::string & query);
-  static bool isEnclosedInDoubleQuotes(const std::string & token);
-  static bool isEnclosedInWildcards(const std::string & token);
 
   /*!
    * Splits sanitized query into declarations and select statements
@@ -73,6 +72,8 @@ class QueryTokenizer {
    */
   static std::vector<size_t> getClauseIndexes(const std::string & remaining_statement);
 
+
+  static bool clauseMatch(std::string & clause, const std::regex & regexPattern);
   /*!
    * Returns the LHS and RHS of relationship reference query as a pair
    * @param clause is the trimmed string from a relationship reference

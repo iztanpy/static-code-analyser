@@ -17,6 +17,15 @@ std::string string_util::RightTrim(const std::string& str) {
 std::string string_util::Trim(const std::string& str) {
   return RightTrim(LeftTrim(str));
 }
+
+bool string_util::IsWhiteSpace(const std::string& str) {
+  for (char c : str) {
+    if (!std::isspace(static_cast<unsigned char>(c))) {
+      return false;
+    }
+  }
+  return true;
+}
 // ai-gen end
 
 /*
@@ -37,6 +46,12 @@ std::vector<std::string> string_util::SplitStringBy(const char& delimiter, std::
   while (std::getline(tokenizer, token, delimiter)) {
     result.push_back(Trim(token));
   }
+
+  // a check for extra characters at the end
+  if (token.empty()) {
+    result.emplace_back("");
+  }
+
   return result;
 }
 
