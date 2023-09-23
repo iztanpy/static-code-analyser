@@ -7,29 +7,22 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(const ParsedQuery& quer
   SelectClause select_clause = query.select;
   std::unordered_set<std::string> select_results = SelectEvaluator(pkb, select_clause).Evaluate().values;
 
-  // If there's only select clause -> return select result
-  if (query.such_that_clauses.empty() && query.pattern_clauses.empty()) {
-    return select_results;
-  }
-
   ConstraintTable constraint_table;
 
-  // Evaluate such-that clauses, if at any point that the table is empty
-  // then return empty result
+  // Evaluate such-that clauses
   for (const auto& clausePtr : query.such_that_clauses) {
     Constraint constraint = clausePtr->Evaluate(pkb);
     constraint_table.Solve(constraint);
-    if (constraint_table.HasNoValidValues()) {
+    if (!constraint_table.IsValid()) {
       return {};
     }
   }
 
-  // Evaluate pattern clauses, if at any point that the table is empty
-  // then return empty result
+  // Evaluate pattern clauses
   for (const auto& clausePtr : query.pattern_clauses) {
     Constraint constraint = clausePtr->Evaluate(pkb);
     constraint_table.Solve(constraint);
-    if (constraint_table.HasNoValidValues()) {
+    if (!constraint_table.IsValid()) {
       return {};
     }
   }
