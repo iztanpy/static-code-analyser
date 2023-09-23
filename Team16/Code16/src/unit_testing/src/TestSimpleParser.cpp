@@ -660,7 +660,6 @@ TEST_CASE(("Test SP valid SIMPLE1")) {
 //      "procedure p { if (i != 0) then { else; }} ";
 //  sourceProcessor.processSource(simpleProgram);
 //}
-//
 //TEST_CASE(("Test SP invalid SIMPLE - else after closing bracket but not any statement type")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 //  auto writeFacade = WriteFacade(*pkb_ptr);
@@ -679,11 +678,20 @@ TEST_CASE(("Test SP valid SIMPLE1")) {
 //}
 
 // To be fixed, should throw error!
-TEST_CASE(("Test SP invalid SIMPLE3")) {
+TEST_CASE(("Test SP invalid SIMPLE - empty statement lists")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
       "procedure p { if (i == 0) then {} else {} } ";
+  sourceProcessor.processSource(simpleProgram);
+}
+// To be fixed, should throw error!
+TEST_CASE(("Test SP invalid SIMPLE - only ';' in statement lists")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram =
+      "procedure p { if (i == 0) then {;} else {;;;;;} } ";
   sourceProcessor.processSource(simpleProgram);
 }
