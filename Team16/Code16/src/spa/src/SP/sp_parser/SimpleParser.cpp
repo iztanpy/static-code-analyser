@@ -64,9 +64,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             readParser->lineNumber = lineNumber;
             int next_index = readParser->parse(tokens, curr_index);
             if (next_index == -1) {
-                //throw InvalidSyntaxError();
                 throw std::runtime_error("Syntactic error! We don't support anything and everything.");
-
             } else {
                 followsStatementStack.top().insert(lineNumber);
                 lineNumber++;
@@ -76,7 +74,6 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             printParser->lineNumber = lineNumber;
             int next_index = printParser->parse(tokens, curr_index);
             if (next_index == -1) {
-                //throw InvalidSyntaxError();
               throw std::runtime_error("Syntactic error! We don't support anything and everything.");
             } else {
                 followsStatementStack.top().insert(lineNumber);
@@ -130,11 +127,17 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
-            if (!controlStructureStack.empty() && controlStructureStack.top() != "if")  throw std::runtime_error("Syntactic error! We don't support anything and everything.");//throw InvalidSyntaxError();
+            if (!controlStructureStack.empty() && controlStructureStack.top() != "if") {
+                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+            }
             if (curr_index + 1 < tokens.size()
-                && tokens[curr_index + 1].tokenType != TokenType::kSepOpenBrace) throw std::runtime_error("Syntactic error! We don't support anything and everything.");//throw InvalidSyntaxError();
+                && tokens[curr_index + 1].tokenType != TokenType::kSepOpenBrace) {
+                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+            }
             if (curr_index - 1 > 0
-                && tokens[curr_index - 1].tokenType != TokenType::kSepCloseBrace) throw std::runtime_error("Syntactic error! We don't support anything and everything.");//throw InvalidSyntaxError();
+                && tokens[curr_index - 1].tokenType != TokenType::kSepCloseBrace) {
+                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+            }
             std::set<int> elseFollowsSet;
             followsStatementStack.push(elseFollowsSet);
             curr_index += 2;  // skip over the next open brace
