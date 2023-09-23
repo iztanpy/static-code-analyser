@@ -30,17 +30,20 @@ UnaryConstraint FollowsEvaluator::Handle(Declaration& lhs, int rhs, ReadFacade& 
   std::unordered_set<statementNumber> results = pkb_reader.follows(stmt_entity, rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
-BinaryConstraint FollowsEvaluator::Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_FollowT) {
+Constraint FollowsEvaluator::Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_FollowT) {
+  if (lhs.equals(rhs)) {
+    return false;
+  }
   StmtEntity lhs_stmt_entity = ConvertToStmtEntity(lhs.design_entity);
   StmtEntity rhs_stmt_entity = ConvertToStmtEntity(rhs.design_entity);
   if (is_FollowT) {
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> raw_results
         = pkb_reader.followStar(lhs_stmt_entity, rhs_stmt_entity);
-    return {{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+    return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
   }
   std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> raw_results
       = pkb_reader.follows(lhs_stmt_entity, rhs_stmt_entity);
-  return {{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+  return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 UnaryConstraint FollowsEvaluator::Handle(Declaration& lhs, Wildcard& rhs, ReadFacade& pkb_reader, bool is_FollowT) {
   StmtEntity stmt_entity = ConvertToStmtEntity(lhs.design_entity);
