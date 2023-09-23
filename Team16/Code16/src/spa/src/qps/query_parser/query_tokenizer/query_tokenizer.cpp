@@ -17,7 +17,7 @@ QueryStructure::QueryStructure(std::vector<std::string> declaration_statements, 
     : declaration_statements(std::move(declaration_statements)), select_statement(std::move(select_statement)) {}
 
 QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
-  std::vector<std::string> statements = string_util::SplitStringBy(';', sanitized_query);
+  std::vector<std::string> statements = string_util::SplitStringBy(qps_constants::kSemicolon, sanitized_query);
   std::vector<std::string> declaration_statements;
   std::string select_statement;
   // indicator to ensure we only have 1 select statement and nothing else at the back
@@ -43,8 +43,8 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
 }
 
 std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<std::string> & declaration_statements) {
-  std::set < std::string > stringDesignEntities = Entity::getStringDesignEntities();
   std::vector<Declaration> declarations;
+  std::set < std::string > processed_synonyms;
   for (std::string statement : declaration_statements) {
     std::string entity = string_util::GetFirstWord(statement);
 
@@ -59,7 +59,6 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
       throw QpsSyntaxError("Missing synonyms for design entity");
     }
 
-    std::set < std::string > processed_synonyms;
     std::vector<std::string> synonyms = string_util::SplitStringBy(',', statement);
     for (const std::string & synonym : synonyms) {
       // synonym must be IDENT
@@ -129,7 +128,7 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
   return indexes;
 }
 
-bool clauseMatch(const std::string & clause, const std::regex & regexPattern) {
+bool clauseMatch(std::string & clause, const std::regex & regexPattern) {
   return std::regex_search(clause, regexPattern);
 }
 
@@ -201,11 +200,11 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
 
   std::vector<std::string> lhs = string_util::SplitStringBy('(', arguments[0]);
   if (lhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 open brackets");
+    throw QpsSyntaxError("More than 2 open brackets or missing arguments");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', arguments[1]);
   if (rhs.size() != 1) {
-    throw QpsSyntaxError("More than 2 close brackets");
+    throw QpsSyntaxError("More than 2 close brackets or missing arguments");
   }
 
   QueryToken right_token;
@@ -274,6 +273,9 @@ std::pair<std::vector<QueryToken>,
     if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
       std::string clause_with_such_that_removed = string_util::RemoveFirstWord(curr_clause);
       clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
+      if (clause_with_such_that_removed.empty()) {
+        throw QpsSyntaxError("Missing input after such that");
+      }
       std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
 
       if (QueryUtil::IsRelRef(rel_ref)) {
@@ -288,6 +290,9 @@ std::pair<std::vector<QueryToken>,
       such_that_tokens.push_back(rel_ref_args.second);
     } else if (clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
       std::string clause_with_pattern_removed = string_util::RemoveFirstWord(curr_clause);
+      if (clause_with_pattern_removed.empty()) {
+        throw QpsSyntaxError("Missing input after pattern");
+      }
       std::string syn_assign = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
       if (QueryUtil::IsSynonym(syn_assign)) {
         pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
