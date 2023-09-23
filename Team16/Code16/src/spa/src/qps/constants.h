@@ -10,6 +10,8 @@ const char kCloseBracket = ')';
 const char kComma = ',';
 const char kEqual = '=';
 const char kSemicolon = ';';
+const char kWildcard = '_';
+
 const std::vector<char> kSpecialTokens = {
     kOpenBracket,
     kCloseBracket,
@@ -17,8 +19,6 @@ const std::vector<char> kSpecialTokens = {
     kEqual,
     kSemicolon
 };
-
-const char kWildcard = '_';
 
 const std::regex kSuchThatClauseRegex("such that [A-Za-z]");
 const std::regex kPatternClauseRegex("pattern [A-Za-z]");

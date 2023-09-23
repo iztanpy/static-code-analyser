@@ -10,9 +10,8 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string & query) {
   ParsedQuery parsedQuery;
 
   TokenisedQuery tokenised_query = QueryTokenizer::tokenize(query);
-  // from the tokens, identify the declarations together with its synonyms
   std::vector<Declaration> declarations = tokenised_query.declarations;
-  // from the tokens, look for select/ such that/ pattern clauses and call the builders
+
   std::vector<QueryToken> selectTokens = tokenised_query.select_tokens;
   std::vector<SelectClause> selectClauses = ExtractSelectClauses(selectTokens, declarations);
   /* For now, we only have one synonym for select clause

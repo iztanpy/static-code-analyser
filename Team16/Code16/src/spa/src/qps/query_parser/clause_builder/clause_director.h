@@ -13,12 +13,35 @@
 
 class ClauseDirector {
  public:
+  /*!
+   * Builds a select clause
+   * @param builder is the select clause builder
+   * @param token is a query token
+   * @param declarations is the set of declarations
+   * @return a Select clause
+   */
   static SelectClause makeSelectClause(
       SelectClauseBuilder builder, const QueryToken & token, const std::vector<Declaration> & declarations);
+
+  /*!
+   * Builds a Such that clause
+   * @param builder is the such that clause builder
+   * @param tokens is a vector of query tokens
+   * @param declarations is the set of declarations
+   * @return a pointer to a such that clause
+   */
   static std::unique_ptr<SuchThatClause> makeSuchThatClause(
       SuchThatClauseBuilder builder,
       const std::vector<QueryToken> & tokens,
       const std::vector<Declaration> & declarations);
+
+  /*!
+   * Builds a Patter clause
+   * @param builder is the pattern clause builder
+   * @param tokens is a vector of query tokens
+   * @param declarations is the set of declarations
+   * @return a pointer to a pattern clause
+   */
   static std::unique_ptr<PatternClause> makePatternClause(
       PatternClauseBuilder builder,
       const std::vector<QueryToken> & tokens,

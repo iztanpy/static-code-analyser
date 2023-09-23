@@ -16,10 +16,15 @@ class PatternClause : public Clause {
   EntRef lhs;
   ExprSpec rhs;
 
+  /*!
+   * Checks if two expression-specs are equal
+   * @param expr_1 first expression-spec
+   * @param expr_2 second expression-spec
+   * @return true if they are equal, else false
+   */
   static bool are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2);
 
   // TODO(phuccuongngo99): Can we put this virtual method within
-  // Clause class instead?
   virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
   ~PatternClause() override = default;
 
