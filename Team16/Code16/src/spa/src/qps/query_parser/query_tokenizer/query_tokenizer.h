@@ -42,7 +42,6 @@ class QueryTokenizer {
  public:
   static TokenisedQuery tokenize(const std::string & query);
 
-  static bool checkQueryExtraCharacters(const std::vector<std::string> & statements);
   /*!
    * Splits sanitized query into declarations and select statements
    * @param sanitized_query query without unnecessary white spaces

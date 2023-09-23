@@ -16,28 +16,8 @@
 QueryStructure::QueryStructure(std::vector<std::string> declaration_statements, std::string select_statement)
     : declaration_statements(std::move(declaration_statements)), select_statement(std::move(select_statement)) {}
 
-bool QueryTokenizer::checkQueryExtraCharacters(const std::vector<std::string> & statements) {
-  if (statements.empty()) {
-    // no statements being parsed which should not be the case
-    throw QpsSyntaxError("Empty query");
-  } else {
-    // Check if the last element is empty or contains only whitespace
-    const std::string & lastStatement = statements.back();
-    if (string_util::IsWhiteSpace(lastStatement)) {
-      // this indicates that there's an extra semicolon at the end
-      return false;
-    }
-  }
-  return true;
-}
-
 QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
   std::vector<std::string> statements = string_util::SplitStringBy(qps_constants::kSemicolon, sanitized_query);
-
-  if (!QueryTokenizer::checkQueryExtraCharacters(statements)) {
-    throw QpsSyntaxError("Extra character at the end of query");
-  }
-
   std::vector<std::string> declaration_statements;
   std::string select_statement;
   // indicator to ensure we only have 1 select statement and nothing else at the back
@@ -45,6 +25,9 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
 
   for (std::string statement : statements) {
     if (is_select_statement_processed) {
+      if (statement.empty()) {
+        throw QpsSyntaxError("Extra character at the end of query");
+      }
       throw QpsSyntaxError("Statements after select statement are invalid");
     }
     std::string first_word = string_util::GetFirstWord(statement);
