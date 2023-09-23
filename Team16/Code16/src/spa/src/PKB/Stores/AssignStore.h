@@ -87,6 +87,31 @@ class AssignStore {
     std::unordered_set<statementNumber> getAssigns(Wildcard lhs, partialMatch rhs);
 
     /**
+    * @brief Retrieves assignment statements matching specific wildcard left-hand side (LHS) and wildcard right-hand side (RHS) patterns.
+    *
+    * This method returns an unordered set of statement numbers representing assignment statements that match
+    * the provided wildcard left-hand side (LHS) and wildcard right-hand side (RHS) patterns.
+    *
+    * @param lhs The wildcard pattern for LHS of assignments.
+    * @param rhs The wildcard pattern for RHS of assignments.
+    * @return An unordered set of statement numbers representing assignment statements matching the specified patterns.
+    */
+    std::unordered_set<statementNumber> getAssigns(Wildcard lhs, Wildcard rhs);
+
+    /**
+    * @brief Retrieves assignment statements matching specific partial left-hand side (LHS) and partial right-hand side (RHS) patterns.
+    *
+    * This method returns an unordered set of statement numbers representing assignment statements that match
+    * the provided partial left-hand side (LHS) and partial right-hand side (RHS) patterns.
+    *
+    * @param lhs The partial match pattern for LHS of assignments.
+    * @param rhs The partial match pattern for RHS of assignments.
+    * @return An unordered set of statement numbers representing assignment statements matching the specified patterns.
+    */
+    std::unordered_set<statementNumber> getAssigns(partialMatch lhs, partialMatch rhs);
+
+
+    /**
     * @brief Retrieves assignment statements matching specific partial left-hand side (LHS) and wildcard right-hand side (RHS) patterns.
     *
     * This method returns an unordered set of statement numbers representing assignment statements that match
