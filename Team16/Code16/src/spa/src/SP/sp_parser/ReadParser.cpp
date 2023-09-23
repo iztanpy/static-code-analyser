@@ -1,6 +1,6 @@
 #include "ReadParser.h"
 
-int ReadParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int ReadParser::parse(std::vector<Token>& tokens, int curr_index) {
     // Check if there are enough tokens for a valid read statement
     if (curr_index + 3 > tokens.size()) {
         return -1;

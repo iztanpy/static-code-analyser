@@ -3,10 +3,12 @@
 // Headers from standard libraries
 #include <vector>
 #include <memory>
+#include <string>
 
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
+#include "SP/sp_tokeniser/TokenTypes.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
 #include "SP/utils/ParseUtils.h"
@@ -22,6 +24,7 @@ class ParseUtils {
   static bool isVarOrConst(const Token& token);
   static bool isCondExpressionOperator(const Token& token);
   static bool isRelFactorOperator(const Token& token);
+  static TokenType convertLiteralToEntity(std::string value);
 
   static int index;
   static int lineNumber;

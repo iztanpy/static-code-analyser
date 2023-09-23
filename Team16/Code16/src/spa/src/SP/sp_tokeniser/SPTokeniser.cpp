@@ -21,15 +21,8 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 
 
     // entity
-    {TokenType::kEntityIf, std::regex("^(\\bif\\b)")},
-    {TokenType::kEntityElse, std::regex("^(\\belse\\b)")},
-    {TokenType::kEntityWhile, std::regex("^(\\bwhile\\b)")},
-    {TokenType::kEntityRead, std::regex("^(\\bread\\b)")},
-    {TokenType::kEntityProcedure, std::regex("^(\\bprocedure\\b)")},
-    {TokenType::kEntityPrint, std::regex("^(\\bprint\\b)")},
-    {TokenType::kEntityAssign, std::regex("^(=)")},
-    {TokenType::kEntityCall, std::regex("^(\\bcall\\b)")},
     {TokenType::kEntityThen, std::regex("^(\\bthen\\b)")},
+    {TokenType::kEntityAssign, std::regex("^(=)")},
 
     // separators
     {TokenType::kSepComma, std::regex("^(,)")},
@@ -200,6 +193,9 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
         }
 
         if (matchedType == TokenType::kSepSemicolon || matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
+    }
+    if (!braceStack.empty()) {
+        throw std::runtime_error("Syntactic error: Unmatched opening brace");
     }
     return tokens;
 }

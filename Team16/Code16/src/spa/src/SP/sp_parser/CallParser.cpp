@@ -1,6 +1,6 @@
 #include "CallParser.h"
 
-int CallParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int CallParser::parse(std::vector<Token>& tokens, int curr_index) {
     // Check if there are enough tokens for a valid call statement
     if (curr_index + 3 > tokens.size()) {
         return -1;

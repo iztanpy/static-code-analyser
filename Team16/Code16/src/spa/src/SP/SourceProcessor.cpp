@@ -6,12 +6,11 @@ void SourceProcessor::processSource(const std::string& simpleProgram) {
     std::vector<struct Token> tokens = tokeniser.tokenise(simpleProgram);
     try {
         simpleParser.parse(tokens, 0);
-    } catch (const InvalidSyntaxError e) {
+    } catch (const InvalidSyntaxError& e) {
         e.log();
-    } catch (const InvalidTokenTypeError e) {
+    } catch (const InvalidTokenTypeError& e) {
         e.log();
-    }
-    catch (const InvalidSemanticError e) {
+    } catch (const InvalidSemanticError& e) {
         e.log();
     }
 }

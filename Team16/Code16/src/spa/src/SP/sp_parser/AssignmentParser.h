@@ -28,7 +28,7 @@
 class AssignmentParser : public Parser {
  public:
     explicit AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {}
-    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> parseExpression(const std::vector<Token>& tokens);
     std::shared_ptr<TNode> parseTerm(const std::vector<Token>& tokens);
     std::shared_ptr<TNode> parseFactor(const std::vector<Token>& tokens);

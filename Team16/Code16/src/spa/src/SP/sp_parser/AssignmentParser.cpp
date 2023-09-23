@@ -38,7 +38,8 @@ std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& t
     incrementIndex();
     node = parseExpression(tokens);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw InvalidSyntaxError();
+//      throw InvalidSyntaxError();
+      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
     }
     incrementIndex();
     return node;
@@ -50,17 +51,19 @@ std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& t
   }
 
   if (node == nullptr) {
-    throw InvalidSyntaxError();
+//    throw InvalidSyntaxError();
+    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
   }
 
   return node;
 }
 
-int AssignmentParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int AssignmentParser::parse(std::vector<Token>& tokens, int curr_index) {
     // Validate that statement has at least 4 tokens (min: lhs = rhs ;)
     if (tokens.size() - index < 3) {
         return -1;
     }
+
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[index], lineNumber);
     std::shared_ptr<TNode> assignNode = TNodeFactory::createNode(tokens[index + 1], lineNumber);
     assignNode->addChild(lhs);
