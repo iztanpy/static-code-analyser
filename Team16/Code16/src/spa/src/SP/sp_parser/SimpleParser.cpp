@@ -142,6 +142,9 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             followsStatementStack.push(elseFollowsSet);
             curr_index += 2;  // skip over the next open brace
         } else if (curr_token.tokenType == TokenType::kSepCloseBrace) {
+          if (curr_index - 1 > 0 && tokens[curr_index - 1].tokenType == TokenType::kSepOpenBrace) {
+              throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+          }
           std::set<int> top_set = followsStatementStack.top();
           insertFollowsHashMap(top_set);
           followsStatementStack.pop();
@@ -172,16 +175,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
           }
           curr_index += 1;
         }  else {
-            // currently unsupported, skip line for now
-            int temp = curr_index;
-
-            while (tokens[temp].tokenType != TokenType::kSepSemicolon &&
-                tokens[temp].tokenType != TokenType::kSepOpenBrace) {
-                temp++;
-            }
-
-            lineNumber++;
-            curr_index = temp + 1;
+            throw std::runtime_error("Syntactic error! We don't support anything and everything.");
         }
     }
     // Store Parent <line, set<line>>
