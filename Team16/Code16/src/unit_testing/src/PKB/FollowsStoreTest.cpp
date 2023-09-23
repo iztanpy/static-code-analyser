@@ -10,9 +10,9 @@ typedef int statementNumber;
 TEST_CASE("Test Follows Store Add") {
     auto followsStore = FollowsStore();
     followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
-    REQUIRE(followsStore.getFollower(1) == 2);
-    REQUIRE(followsStore.getFollower(2) == 3);
-    REQUIRE(followsStore.getFollower(3) == 4);
+    REQUIRE(followsStore.getAfter(1) == 2);
+    REQUIRE(followsStore.getAfter(2) == 3);
+    REQUIRE(followsStore.getAfter(3) == 4);
 }
 
 TEST_CASE("Test Boolean Follows") {
@@ -56,9 +56,9 @@ TEST_CASE("Test Boolean Follows") {
 TEST_CASE("Test Follows Store Reverse") {
     auto followsStore = FollowsStore();
     followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
-    REQUIRE(followsStore.getLeader(2) == 1);
-    REQUIRE(followsStore.getLeader(3) == 2);
-    REQUIRE(followsStore.getLeader(4) == 3);
+    REQUIRE(followsStore.getBefore(2) == 1);
+    REQUIRE(followsStore.getBefore(3) == 2);
+    REQUIRE(followsStore.getBefore(4) == 3);
 }
 
 TEST_CASE("Test Follows Store Get Followers") {

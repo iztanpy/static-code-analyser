@@ -24,7 +24,7 @@ class FollowsStore {
 
     // Follow methods
 
-    statementNumber getFollower(statementNumber statement);
+    statementNumber getAfter(statementNumber statement);
 
     bool isFollow(statementNumber statement1, statementNumber statement2);
 
@@ -34,7 +34,7 @@ class FollowsStore {
 
     bool isFollow(Wildcard wildcard, Wildcard wildcard2);
 
-    statementNumber getLeader(statementNumber statement);
+    statementNumber getBefore(statementNumber statement);
 
     // Follow* methods
 

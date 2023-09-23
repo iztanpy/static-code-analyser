@@ -4,7 +4,7 @@
 
 FollowsStore::FollowsStore() {
     std::unordered_map<statementNumber, statementNumber> FollowMap;
-    std::unordered_map<statementNumber, statementNumber> FollowsMapReverse;
+    std::unordered_map<statementNumber, statementNumber> FollowMapReverse;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMapReverse;
 }
@@ -13,6 +13,8 @@ void FollowsStore::storeFollows(std::unordered_map<statementNumber, statementNum
     this->FollowMap = map;
     for (auto const& x : map) {
         this->FollowMapReverse[x.second] = x.first;
+
+        std::cout << "Follows: " << x.first << " " << x.second << std::endl;
     }
 
     for (auto const& x : map) {
@@ -39,9 +41,9 @@ void FollowsStore::storeFollows(std::unordered_map<statementNumber, statementNum
         }
     }
 }
-FollowsStore::statementNumber FollowsStore::getFollower(statementNumber statement) {
-    statementNumber follower = this->FollowMap[statement];
-    return follower;
+FollowsStore::statementNumber FollowsStore::getAfter(statementNumber statement) {
+    statementNumber after = this->FollowMap[statement];
+    return after;
 }
 
 bool FollowsStore::isFollow(statementNumber statement1, statementNumber statement2) {
@@ -64,7 +66,7 @@ bool FollowsStore::isFollow(statementNumber statement1, Wildcard wildcard) {
 
 // true if statement1 follows any statement
 bool FollowsStore::isFollow(Wildcard wildcard, statementNumber statement1) {
-    if (this->getLeader(statement1)) {
+    if (this->getBefore(statement1)) {
         return true;
     }
     return false;
@@ -78,9 +80,9 @@ bool FollowsStore::isFollow(Wildcard wildcard, Wildcard wildcard2) {
     return false;
 }
 
-FollowsStore::statementNumber FollowsStore::getLeader(statementNumber statement) {
-    statementNumber leader = this->FollowMapReverse[statement];
-    return leader;
+FollowsStore::statementNumber FollowsStore::getBefore(statementNumber statement) {
+    statementNumber before = this->FollowMapReverse[statement];
+    return before;
 }
 
 

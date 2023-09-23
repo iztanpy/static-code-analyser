@@ -413,14 +413,16 @@ std::unordered_set<statementNumber> PKB::follows(Wildcard wildcard, StmtEntity t
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        result.insert(this->followsStore->getLeader(x));
+        if (this->followsStore->getBefore(x) != 0) {
+            result.insert(x);
+        }
     }
     return result;
 }
 
 std::unordered_set<statementNumber> PKB::follows(statementNumber num, StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-    statementNumber numResult = this->followsStore->getFollower(num);
+    statementNumber numResult = this->followsStore->getAfter(num);
     if (relevantStmts.count(numResult)) {
         if (numResult != 0) {
             return {numResult};
@@ -432,7 +434,7 @@ std::unordered_set<statementNumber> PKB::follows(statementNumber num, StmtEntity
 
 std::unordered_set<statementNumber> PKB::follows(StmtEntity type, statementNumber num) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
-    statementNumber numResult = this->followsStore->getLeader(num);
+    statementNumber numResult = this->followsStore->getBefore(num);
     if (relevantStmts.count(numResult)) {
         if (numResult != 0) {
             return { numResult };
@@ -446,7 +448,7 @@ std::unordered_set<statementNumber> PKB::follows(StmtEntity type, Wildcard wildc
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        if (this->followsStore->getFollower(x) != 0) {
+        if (this->followsStore->getAfter(x) != 0) {
             result.insert(x);
         }
     }
@@ -462,9 +464,9 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>  PKB::
         if (x == 0) {
             continue;
         }
-        if (relevantStmts2.count(this->followsStore->getFollower(x))) {
-            if (this->followsStore->getFollower(x) != 0) {
-                result.insert(std::make_pair(x, this->followsStore->getFollower(x)));
+        if (relevantStmts2.count(this->followsStore->getAfter(x))) {
+            if (this->followsStore->getAfter(x) != 0) {
+                result.insert(std::make_pair(x, this->followsStore->getAfter(x)));
             }
         }
     }
