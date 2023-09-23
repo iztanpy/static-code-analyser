@@ -279,9 +279,6 @@ TEST_CASE("Selecting Assign statements") {
   sourceProcessor.processSource(simpleProgram);
   REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({"1", "3"}));
 }
-
-
-
 //
 //TEST_CASE("Procedure with missing name should not cause the program to stop.") {
 //    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();

@@ -185,7 +185,7 @@ TEST_CASE("Test Parent Stores 2") {
 
     // Test StmtEntity num
     REQUIRE(pkb.parentStar(StmtEntity::kIf, 2) == std::unordered_set<statementNumber> {1});
-//    REQUIRE(pkb.parentStar(StmtEntity::kIf, 4) == std::unordered_set<statementNumber> {1, 2});
+    REQUIRE(pkb.parentStar(StmtEntity::kIf, 4) == std::unordered_set<statementNumber> {1, 2});
 //    for (auto value: pkb.parentStar(StmtEntity::kIf, 5)) {
 //        std::cout << "val: " << value << std::endl;
 //        REQUIRE((value == 1 || value == 2));

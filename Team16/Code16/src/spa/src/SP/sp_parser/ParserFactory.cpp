@@ -11,7 +11,8 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
-                    throw InvalidSyntaxError();
+                  throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+//                  throw InvalidSyntaxError();
                 } else {
                     lineNumber++;
                     curr_index = next_index;
@@ -23,14 +24,16 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
             int next_index = readParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
-                throw InvalidSyntaxError();
+              throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+//              throw InvalidSyntaxError();
             } else {
                 lineNumber++;
                 curr_index = next_index;
                 return std::make_pair(curr_index, "Read");
             }
         } else {
-            throw InvalidSyntaxError();
+            throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+//            throw InvalidSyntaxError();
         }
     }
 }

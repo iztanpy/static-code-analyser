@@ -19,7 +19,7 @@
 class ConditionParser : public Parser {
  public:
     explicit ConditionParser(ASTVisitor* visitor) : visitor(visitor) {}
-    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens, int curr_index) override;
     std::vector<Token> getConditionTokens(const std::vector<Token>& tokens, int curr_index);
     int evaluateCondition(const std::vector<Token>& tokens, int curr_index);
     int parseRelationalExpression(const std::vector<Token>& tokens, int curr_index);

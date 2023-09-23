@@ -3,7 +3,7 @@
 /*
 * ConditionParser returns -1 if the conditional parsing is not ok and returns 0 if the parsing is ok
 */
-int ConditionParser::parse(const std::vector<Token>& tokens, int curr_index) {
+int ConditionParser::parse(std::vector<Token>& tokens, int curr_index) {
     // just need to verify if the condition is valid or not
     return evaluateCondition(tokens, 0) == -1 ? -1 : 0;
 }
@@ -30,12 +30,14 @@ std::vector<Token> ConditionParser::getConditionTokens(const std::vector<Token>&
 
         if (openParenCount > 0) {
             // Implies that there is a missing closing parenthesis somewhere
-            throw InvalidSyntaxError();
+//            throw InvalidSyntaxError();
+          throw std::runtime_error("Syntactic error! We don't support anything and everything.");
         }
         curr_index = closeParenIndex;  // Modify curr_index to the new position
     } else {
         // Implies that there is a missing open parenthesis somewhere
-        throw InvalidSyntaxError();
+//        throw InvalidSyntaxError();
+      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
     }
     return conditionTokens;
 }

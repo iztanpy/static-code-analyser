@@ -17,6 +17,9 @@ void StatementStore::addStatements(std::unordered_map<statementNumber, StmtEntit
 }
 
 std::unordered_set<statementNumber> StatementStore::getStatements(StmtEntity type) {
+    if (type == StmtEntity::kStmt) {
+        return this->getAllStatements();
+    }
     std::unordered_set<statementNumber> statements;
     for (auto const& x : this->statementMap) {
         if (x.second == type) {

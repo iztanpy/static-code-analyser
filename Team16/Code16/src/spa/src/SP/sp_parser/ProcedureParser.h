@@ -27,7 +27,7 @@
 class ProcedureParser : public Parser {
  public:
     explicit ProcedureParser(ASTVisitor* visitor) : visitor(visitor) {}
-    int parse(const std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens, int curr_index) override;
     ASTVisitor* visitor;
 };
 

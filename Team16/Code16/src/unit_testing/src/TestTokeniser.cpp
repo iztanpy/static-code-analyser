@@ -17,7 +17,7 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[2].tokenType == TokenType::kLiteralInteger);
     REQUIRE(tokens_simple[3].tokenType == TokenType::kSepSemicolon);
 
-    REQUIRE(tokens_simple[4].tokenType == TokenType::kEntityWhile);
+    REQUIRE(tokens_simple[4].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[5].tokenType == TokenType::kSepOpenParen);
     REQUIRE(tokens_simple[6].tokenType == TokenType::kSepOpenParen);
     REQUIRE(tokens_simple[7].tokenType == TokenType::kLiteralName);
@@ -32,7 +32,7 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[16].tokenType == TokenType::kSepCloseParen);
     REQUIRE(tokens_simple[17].tokenType == TokenType::kSepCloseParen);
     REQUIRE(tokens_simple[18].tokenType == TokenType::kSepOpenBrace);
-    REQUIRE(tokens_simple[19].tokenType == TokenType::kEntityCall);
+    REQUIRE(tokens_simple[19].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[20].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
 
@@ -120,17 +120,6 @@ TEST_CASE("Test Regex") {
     REQUIRE(tokens_normal[5].value == ";");
     REQUIRE(end(tokens_normal) - begin(tokens_normal) == 6);
  
-    // Entities
-    std::vector<struct Token> tokens_entity = tokeniser.tokenise("if while else read procedure print call;");
-    REQUIRE(tokens_entity[0].tokenType == TokenType::kEntityIf);
-    REQUIRE(tokens_entity[1].tokenType == TokenType::kEntityWhile);
-    REQUIRE(tokens_entity[2].tokenType == TokenType::kEntityElse);
-    REQUIRE(tokens_entity[3].tokenType == TokenType::kEntityRead);
-    REQUIRE(tokens_entity[4].tokenType == TokenType::kEntityProcedure);
-    REQUIRE(tokens_entity[5].tokenType == TokenType::kEntityPrint);
-    REQUIRE(tokens_entity[6].tokenType == TokenType::kEntityCall);
-    REQUIRE(end(tokens_entity) - begin(tokens_entity) == 8);
-
 
     // Operators
     std::vector<struct Token> tokens_operators = tokeniser.tokenise("+ - * / % == != < <= > >= && || !");
@@ -175,7 +164,7 @@ TEST_CASE(("Test procedure")) {
     std::vector<struct Token> tokens_simple = tokeniser.tokenise(simpleProgram);
 
     // check type
-    REQUIRE(tokens_simple[0].tokenType == TokenType::kEntityProcedure);
+    REQUIRE(tokens_simple[0].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[1].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[2].tokenType == TokenType::kSepOpenBrace);
 
@@ -195,12 +184,12 @@ TEST_CASE(("Test procedure")) {
     REQUIRE(tokens_simple[15].tokenType == TokenType::kSepCloseBrace);
 
  
-    REQUIRE(tokens_simple[16].tokenType == TokenType::kEntityProcedure);
+    REQUIRE(tokens_simple[16].tokenType == TokenType::kLiteralName);
 
     REQUIRE(tokens_simple[17].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[18].tokenType == TokenType::kSepOpenBrace);
 
-    REQUIRE(tokens_simple[19].tokenType == TokenType::kEntityRead);
+    REQUIRE(tokens_simple[19].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[20].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
     REQUIRE(tokens_simple[22].tokenType == TokenType::kSepCloseBrace);
