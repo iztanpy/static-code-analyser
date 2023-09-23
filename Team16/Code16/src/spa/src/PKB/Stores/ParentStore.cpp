@@ -42,8 +42,6 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
             }
         }
     }
-
-    //populate parentmapReverse
     for (const auto& [node, children] : ParentStarMap) {
         for (int child : children) {
             ParentStarMapReverse[child].insert(node);
