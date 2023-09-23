@@ -606,8 +606,7 @@ TEST_CASE(("Test SP Statement type storage")) {
   sourceProcessor.processSource(simpleProgram);
 
   std::unordered_map<int, StmtEntity> statementTypesMap = std::unordered_map<int, StmtEntity>(
-      {{0, StmtEntity::kProcedure},
-       {1, StmtEntity::kWhile},
+      {{1, StmtEntity::kWhile},
        {2, StmtEntity::kIf},
        {3, StmtEntity::kRead},
        {4, StmtEntity::kPrint},
