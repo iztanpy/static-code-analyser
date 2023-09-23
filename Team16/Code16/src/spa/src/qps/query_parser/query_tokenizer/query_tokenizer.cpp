@@ -18,8 +18,6 @@ QueryStructure::QueryStructure(std::vector<std::string> declaration_statements, 
 
 QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
   std::vector<std::string> statements = string_util::SplitStringBy(';', sanitized_query);
-  std::set < std::string > stringDesignEntities = Entity::getStringDesignEntities();
-
   std::vector<std::string> declaration_statements;
   std::string select_statement;
   // indicator to ensure we only have 1 select statement and nothing else at the back
@@ -262,24 +260,21 @@ std::pair<std::vector<QueryToken>,
     return {such_that_tokens, pattern_tokens};
   }
   std::vector<size_t> clause_beginning_indexes = getClauseIndexes(remaining_statement);
+  clause_beginning_indexes.push_back(remaining_statement.length());  // push back to avoid out of range error
   std::string prev_clause;
   std::string curr_clause;
   std::string processed_clause;
   size_t start_index = 0;
 
-  for (int i = 0; i <= clause_beginning_indexes.size() - 1; i++) {
-    size_t next_index;
-    if (clause_beginning_indexes.size() == 1) {
-      next_index = remaining_statement.length();
-    } else {
-      next_index = clause_beginning_indexes[i + 1];
-    }
+  for (int i = 0; i < clause_beginning_indexes.size() - 1; i++) {
+    size_t next_index = clause_beginning_indexes[i + 1];
     curr_clause = string_util::Trim(remaining_statement.substr(start_index, next_index - start_index));
     start_index = next_index;
+
     if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
       std::string clause_with_such_that_removed = string_util::RemoveFirstWord(curr_clause);
       clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
-      std::string rel_ref = string_util::GetFirstWord(clause_with_such_that_removed);
+      std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
 
       if (QueryUtil::IsRelRef(rel_ref)) {
         such_that_tokens.push_back({rel_ref, PQLTokenType::RELREF});
@@ -287,20 +282,20 @@ std::pair<std::vector<QueryToken>,
         throw QpsSyntaxError("Invalid relation reference type");
       }
 
-      std::string rel_ref_syn_pair = string_util::RemoveFirstWord(clause_with_such_that_removed);
+      std::string rel_ref_syn_pair = string_util::RemoveFirstWordFromArgs(clause_with_such_that_removed);
       std::pair<QueryToken, QueryToken> rel_ref_args = getRelRefArgs(rel_ref_syn_pair, declarations);
       such_that_tokens.push_back(rel_ref_args.first);
       such_that_tokens.push_back(rel_ref_args.second);
     } else if (clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
       std::string clause_with_pattern_removed = string_util::RemoveFirstWord(curr_clause);
-      std::string syn_assign = string_util::GetFirstWord(clause_with_pattern_removed);
+      std::string syn_assign = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
       if (QueryUtil::IsSynonym(syn_assign)) {
         pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
       } else {
         throw QpsSemanticError("Synonym assign is not declared");
       }
 
-      std::string pattern_arg_pair = string_util::RemoveFirstWord(clause_with_pattern_removed);
+      std::string pattern_arg_pair = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
       std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg_pair, declarations);
       pattern_tokens.push_back(pattern_args.first);
       pattern_tokens.push_back(pattern_args.second);

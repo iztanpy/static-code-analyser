@@ -48,6 +48,20 @@ std::vector<std::string> SplitStringBy(const char & delimiter, std::string & str
 std::string GetFirstWord(std::string & str);
 
 /*!
+ * Return the first word from an argument e.g. Uses(a, v)
+ * @param str specified string
+ * @return first word of the argument e.g. Uses
+ */
+std::string GetFirstWordFromArgs(std::string & str);
+
+/*!
+ * Removes the first word from an argument e.g. Uses(a, v)
+ * @param str specified string
+ * @return the remaining string e.g., (a, v)
+ */
+std::string RemoveFirstWordFromArgs(std::string & str);
+
+/*!
  * Removes the first word of the specified string
  * @param str specified string
  * @return the remainder of the string
