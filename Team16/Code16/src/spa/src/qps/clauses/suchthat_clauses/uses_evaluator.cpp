@@ -12,12 +12,15 @@ bool UsesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader) {
   return pkb_reader.isUses(lhs, rhs);
 }
 
-BinaryConstraint UsesEvaluator::Handle(Declaration& lhs,
-                                       Declaration& rhs,
-                                       ReadFacade& pkb_reader) {
+Constraint UsesEvaluator::Handle(Declaration& lhs,
+                                 Declaration& rhs,
+                                 ReadFacade& pkb_reader) {
+  if (lhs.equals(rhs)) {
+    return false;
+  }
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
       = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity));
-  return {{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+  return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
