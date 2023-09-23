@@ -48,6 +48,24 @@ std::string string_util::GetFirstWord(std::string& str) {
   return firstWord;
 }
 
+std::string string_util::GetFirstWordFromArgs(std::string& str) {
+  std::vector<std::string> split_args = string_util::SplitStringBy('(', str);
+  return string_util::RemoveWhiteSpaces(split_args[0]);
+}
+
+std::string string_util::RemoveFirstWordFromArgs(std::string& str) {
+  // Find the position of the first ( character
+  size_t pos = str.find('(');
+
+  if (pos != std::string::npos) {
+    // Use substring to extract the portion of the string after the first space
+    return str.substr(pos);
+  }
+
+  // If there's no space, return an empty string
+  return "";
+}
+
 std::string string_util::RemoveFirstWord(std::string& str) {
   // Find the position of the first space character
   size_t pos = str.find(' ');

@@ -1,34 +1,37 @@
 #include "qps/clauses/suchthat_clauses/uses_evaluator.h"
 
 UnaryConstraint UsesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  std::unordered_set<std::string> result = pkb_reader.uses(lhs);
-  return UnaryConstraint{rhs.synonym, result};
+  return {rhs.synonym, pkb_reader.uses(lhs)};
 }
 
 bool UsesEvaluator::Handle(int lhs, Wildcard& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not implemented");
+  return pkb_reader.isUses(lhs, rhs);
 }
 
 bool UsesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not implemented");
+  return pkb_reader.isUses(lhs, rhs);
 }
 
 BinaryConstraint UsesEvaluator::Handle(Declaration& lhs,
                                        Declaration& rhs,
                                        ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not implemented");
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
+      = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity));
+  return {{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
                                       Wildcard& rhs,
                                       ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not implemented");
+  std::unordered_set<statementNumber> results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
+  return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
                                       std::string& rhs,
                                       ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not implemented");
+  std::unordered_set<statementNumber> results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
+  return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Wildcard& lhs,

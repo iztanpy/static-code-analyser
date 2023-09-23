@@ -116,9 +116,9 @@ TEST_CASE("Test extract select tokens") {
 }
 
 TEST_CASE("Test get clause index") {
-  std::string sample_statement = "such that Uses (a, b) pattern a (c, d)";
+  std::string sample_statement = "such that Uses(a, b) pattern a(c, d)";
   std::vector<size_t> indexes = QueryTokenizer::getClauseIndexes(sample_statement);
-  std::vector<size_t> expected_indexes = {0, 22};
+  std::vector<size_t> expected_indexes = {0, 21};
   REQUIRE(indexes.size() == 2);
   REQUIRE(indexes == expected_indexes);
 
@@ -126,14 +126,14 @@ TEST_CASE("Test get clause index") {
   QpsSyntaxError unexpected_clause_error = QpsSyntaxError("Unexpected clause expression");
 
   try {
-    std::string wrong_clause = "such That Uses (a, b)";
+    std::string wrong_clause = "such That Uses(a, b)";
     std::vector<size_t> wrong_clause_indexes = QueryTokenizer::getClauseIndexes(wrong_clause);
   } catch (const QpsError & e) {
     REQUIRE(strcmp(e.what(), wrong_clause_error.what()) == 0);
   }
 
   try {
-    std::string unexpected_clause = "something such that Uses (a, b)";
+    std::string unexpected_clause = "something such that Uses(a, b)";
     std::vector<size_t> unexpected_clause_indexes = QueryTokenizer::getClauseIndexes(unexpected_clause);
   } catch (const QpsError & e) {
     REQUIRE(strcmp(e.what(), unexpected_clause_error.what()) == 0);
@@ -279,7 +279,7 @@ TEST_CASE("Test get pattern arguments") {
 }
 
 TEST_CASE("Test extract clause tokens") {
-  std::string select_statement = "Select v such that Uses (a, v)";
+  std::string select_statement = "Select v such that Uses(a, v)";
   std::vector<Declaration> declarations = {
       {"v", DesignEntity::VARIABLE},
       {"a", DesignEntity::ASSIGN}
@@ -355,8 +355,42 @@ TEST_CASE("Test extract clause tokens") {
 
 }
 
-TEST_CASE("Dummy") {
-  std::string str = "such that Uses(a, v)";
-  bool test = std::regex_search(str, qps_constants::kSuchThatClauseRegex);
-  REQUIRE(test == true);
+TEST_CASE("Test extract one select and on pattern") {
+  std::string select_statement = "Select v such that Uses(a, v) pattern a(v, _)";
+  std::vector<Declaration> declarations = {
+      {"v", DesignEntity::VARIABLE},
+      {"a", DesignEntity::ASSIGN}
+  };
+  std::vector<QueryToken> such_that_tokens = {
+      {"Uses", PQLTokenType::RELREF},
+      {"a", PQLTokenType::SYNONYM},
+      {"v", PQLTokenType::SYNONYM}
+  };
+  std::vector<QueryToken> pattern_tokens = {
+      {"a", PQLTokenType::SYNONYM},
+      {"v", PQLTokenType::SYNONYM},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results = QueryTokenizer::extractClauseTokens(select_statement, declarations);
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>> expected = {
+      {such_that_tokens},
+      {pattern_tokens}
+  };
+
+  REQUIRE(results.first[0].text == expected.first[0].text);
+  REQUIRE(results.first[0].type == expected.first[0].type);
+  REQUIRE(results.first[1].text == expected.first[1].text);
+  REQUIRE(results.first[1].type == expected.first[1].type);
+  REQUIRE(results.first[2].text == expected.first[2].text);
+  REQUIRE(results.first[2].type == expected.first[2].type);
+
+  REQUIRE(results.second[0].text == expected.second[0].text);
+  REQUIRE(results.second[0].type == expected.second[0].type);
+  REQUIRE(results.second[1].text == expected.second[1].text);
+  REQUIRE(results.second[1].type == expected.second[1].type);
+  REQUIRE(results.second[2].text == expected.second[2].text);
+  REQUIRE(results.second[2].type == expected.second[2].type);
 }

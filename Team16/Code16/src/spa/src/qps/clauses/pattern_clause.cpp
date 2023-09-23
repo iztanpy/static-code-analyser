@@ -1,9 +1,9 @@
-#include <string>
-#include <utility>
 #include "qps/clauses/pattern_clause.h"
 
 Constraint WildCardPattern::Evaluate(ReadFacade& pkb_reader) {
-  throw QpsSemanticError("WildCardPattern::Evaluate not implemented");
+  return std::visit([this, &pkb_reader](auto&& lhs_arg) {
+    return Constraint{AssignPatternEvaluator::Handle(this->syn_assignment.synonym, lhs_arg, this->rhs, pkb_reader)};
+  }, this->lhs);
 }
 
 void WildCardPattern::Validate() {
@@ -11,7 +11,7 @@ void WildCardPattern::Validate() {
 }
 
 Constraint ExactPattern::Evaluate(ReadFacade& pkb_reader) {
-  throw QpsSemanticError("ExactPattern::Evaluate not implemented");
+  throw QpsSemanticError("[AssignPattern] ExactPattern not required in Milestone1");
 }
 
 void ExactPattern::Validate() {
@@ -19,7 +19,9 @@ void ExactPattern::Validate() {
 }
 
 Constraint PartialPattern::Evaluate(ReadFacade& pkb_reader) {
-  throw QpsSemanticError("PartialPattern::Evaluate not implemented");
+  return std::visit([this, &pkb_reader](auto&& lhs_arg) {
+    return Constraint{AssignPatternEvaluator::Handle(this->syn_assignment.synonym, lhs_arg, this->rhs, pkb_reader)};
+  }, this->lhs);
 }
 
 void PartialPattern::Validate() {
