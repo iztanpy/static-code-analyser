@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdio.h>
 #include <string>
 #include <iostream>
 #include <stdexcept>
@@ -9,6 +8,4 @@
 class QpsSyntaxError : public QpsError {
  public:
   explicit QpsSyntaxError(const std::string& message) : QpsError(message) {}
-
-//  const char* what() const noexcept override;
 };

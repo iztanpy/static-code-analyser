@@ -164,11 +164,11 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
 
   std::vector<std::string> lhs = string_util::SplitStringBy('(', synonyms[0]);
   if (lhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 open brackets");
+    throw QpsSyntaxError("More than 2 open brackets or missing arguments");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
   if (rhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 close brackets");
+    throw QpsSyntaxError("More than 2 close brackets or missing arguments");
   }
 
   QueryToken right_token;
@@ -285,8 +285,10 @@ std::pair<std::vector<QueryToken>,
   if (remaining_statement.empty()) {
     return {such_that_tokens, pattern_tokens};
   }
+
   std::vector<size_t> clause_beginning_indexes = getClauseIndexes(remaining_statement);
   clause_beginning_indexes.push_back(remaining_statement.length());  // push back to avoid out of range error
+
   std::string prev_clause;
   std::string curr_clause;
   std::string processed_clause;
@@ -300,11 +302,12 @@ std::pair<std::vector<QueryToken>,
     if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
       std::string clause_with_such_that_removed = string_util::RemoveFirstWord(curr_clause);
       clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
+
       if (clause_with_such_that_removed.empty()) {
         throw QpsSyntaxError("Missing input after such that");
       }
-      std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
 
+      std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
       if (QueryUtil::IsRelRef(rel_ref)) {
         such_that_tokens.push_back({rel_ref, PQLTokenType::RELREF});
       } else {
@@ -320,6 +323,7 @@ std::pair<std::vector<QueryToken>,
       if (clause_with_pattern_removed.empty()) {
         throw QpsSyntaxError("Missing input after pattern");
       }
+
       std::string syn_assign = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
       if (QueryUtil::IsSynonym(syn_assign)) {
         pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
@@ -343,11 +347,14 @@ TokenisedQuery QueryTokenizer::tokenize(const std::string & query) {
   std::vector<QueryToken> tokens;
   std::string sanitized_query = string_util::RemoveWhiteSpaces(query);
   QueryStructure statements = QueryTokenizer::splitQuery(sanitized_query);
-  std::vector<Declaration> declarations = QueryTokenizer::extractDeclarations(statements.declaration_statements);
+
+  std::vector<Declaration>
+      declarations = QueryTokenizer::extractDeclarations(statements.declaration_statements);
   std::vector<QueryToken>
       select_tokens = QueryTokenizer::extractSelectToken(statements.select_statement, declarations);
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
       clause_tokens = QueryTokenizer::extractClauseTokens(statements.select_statement, declarations);
+
   std::vector<QueryToken> such_that_tokens = clause_tokens.first;
   std::vector<QueryToken> pattern_tokens = clause_tokens.second;
 
