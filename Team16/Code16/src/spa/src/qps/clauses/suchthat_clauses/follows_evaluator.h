@@ -18,7 +18,7 @@ struct FollowsEvaluator {
 
   static UnaryConstraint Handle(Declaration& lhs, int rhs, ReadFacade& pkb_reader, bool is_FollowT);
 
-  static BinaryConstraint Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_FollowT);
+  static Constraint Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_FollowT);
 
   static UnaryConstraint Handle(Declaration& lhs, Wildcard& rhs, ReadFacade& pkb_reader, bool is_FollowT);
 
