@@ -637,8 +637,53 @@ TEST_CASE(("Test SP Procedures storage")) {
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
-      "procedure p { if (i != 0) then { x = x + 1 + r; }} procedure k { read r; } procedure kay { print k; a = 1 + w; }";
+      "procedure p { if (i != 0) then { x = x + 1 + r; }} procedure k { read r; } procedure kay { print k; a = w; }";
   sourceProcessor.processSource(simpleProgram);
   std::set<std::string> procedures = std::set<std::string>({"p","k","kay"});
   REQUIRE(sourceProcessor.getProcedureLabels() == procedures);
+}
+
+TEST_CASE(("Test SP valid SIMPLE1")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram =
+      "procedure p { if (i != 0) then { else = else + 1; } } ";
+  sourceProcessor.processSource(simpleProgram);
+}
+// Invalid testcases - uncomment to test for errors
+//TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//  std::string simpleProgram =
+//      "procedure p { if (i != 0) then { else; }} ";
+//  sourceProcessor.processSource(simpleProgram);
+//}
+//
+//TEST_CASE(("Test SP invalid SIMPLE - else after closing bracket but not any statement type")) {
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//  std::string simpleProgram =
+//      "procedure p { if (i != 0) then { a = 1; } else; } ";
+//  sourceProcessor.processSource(simpleProgram);
+//}
+//TEST_CASE(("Test SP invalid SIMPLE - else without if")) {
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//  std::string simpleProgram =
+//      "procedure p { if (i != 0) then { else {} } } ";
+//  sourceProcessor.processSource(simpleProgram);
+//}
+
+// To be fixed, should throw error!
+TEST_CASE(("Test SP invalid SIMPLE3")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram =
+      "procedure p { if (i == 0) then {} else {} } ";
+  sourceProcessor.processSource(simpleProgram);
 }
