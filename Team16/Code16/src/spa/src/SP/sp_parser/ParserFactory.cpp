@@ -32,7 +32,8 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
                 return std::make_pair(curr_index, "Read");
             }
         } else {
-            throw InvalidSyntaxError();
+            throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+//            throw InvalidSyntaxError();
         }
     }
 }
