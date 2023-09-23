@@ -97,5 +97,4 @@ class AssignStore {
     * @return An unordered set of statement numbers representing assignment statements matching the specified patterns.
     */
     std::unordered_set<statementNumber> getAssigns(partialMatch lhs, Wildcard rhs);
-
 };
