@@ -43,8 +43,8 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
 }
 
 std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<std::string> & declaration_statements) {
-  std::set < std::string > stringDesignEntities = Entity::getStringDesignEntities();
   std::vector<Declaration> declarations;
+  std::set < std::string > processed_synonyms;
   for (std::string statement : declaration_statements) {
     std::string entity = string_util::GetFirstWord(statement);
 
@@ -59,7 +59,6 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
       throw QpsSyntaxError("Missing synonyms for design entity");
     }
 
-    std::set < std::string > processed_synonyms;
     std::vector<std::string> synonyms = string_util::SplitStringBy(',', statement);
     for (const std::string & synonym : synonyms) {
       // synonym must be IDENT
