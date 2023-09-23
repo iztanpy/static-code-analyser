@@ -36,7 +36,7 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     {TokenType::kWhiteSpace, std::regex("^(\\s+)")},
 
     // literals
-    {TokenType::kLiteralInteger, std::regex("^(\\b[+-]?\\d+\\b)")},
+    {TokenType::kLiteralInteger, std::regex("^(0|[1-9][0-9]*)$")},
     {TokenType::kLiteralName, std::regex("^(\\b[0-9a-zA-Z]+\\b)")},
 
 
