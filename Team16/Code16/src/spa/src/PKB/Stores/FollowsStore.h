@@ -24,7 +24,7 @@ class FollowsStore {
 
     // Follow methods
 
-    statementNumber getFollower(statementNumber statement);
+    statementNumber getAfter(statementNumber statement);
 
     bool isFollow(statementNumber statement1, statementNumber statement2);
 
@@ -34,7 +34,7 @@ class FollowsStore {
 
     bool isFollow(Wildcard wildcard, Wildcard wildcard2);
 
-    statementNumber getLeader(statementNumber statement);
+    statementNumber getBefore(statementNumber statement);
 
     // Follow* methods
 
@@ -46,7 +46,7 @@ class FollowsStore {
 
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
-    std::unordered_set<statementNumber> getFollowers(statementNumber statement);
+    std::unordered_set<statementNumber> getAfters(statementNumber statement);
 
-    std::unordered_set<statementNumber> getLeaders(statementNumber statement);
+    std::unordered_set<statementNumber> getBefores(statementNumber statement);
 };
