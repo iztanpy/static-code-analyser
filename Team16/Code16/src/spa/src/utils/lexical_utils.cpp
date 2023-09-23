@@ -1,5 +1,6 @@
 #include <utility>
 #include "utils/lexical_utils.h"
+#include "utils/string_utils.h"
 
 bool lexical_utils::IsLetter(char c) {
   return isalpha(c);
@@ -16,6 +17,7 @@ bool lexical_utils::IsNzDigit(char c) {
 // ai-gen end
 
 bool lexical_utils::IsIdent(std::string str) {
+  str = string_util::Trim(str);
   bool starts_with_letter = IsLetter(str[0]);
   if (!starts_with_letter) {
     return false;
@@ -48,10 +50,12 @@ bool lexical_utils::IsIdent(std::string str) {
 //}
 
 bool lexical_utils::IsName(std::string str) {
+  str = string_util::Trim(str);
   return lexical_utils::IsIdent(std::move(str));  // they share the same rules
 }
 
 bool lexical_utils::IsInteger(std::string str) {
+  str = string_util::Trim(str);
   if (str == "0") {
     return true;
   }
