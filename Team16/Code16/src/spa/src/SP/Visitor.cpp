@@ -1,7 +1,6 @@
 #include "Visitor.h"
 
 void ASTVisitor::visit(const ProcedureTNode* node, std::string& key) {
-    statementTypesMap.insert({0, StmtEntity::kProcedure});
     std::set<std::string> procedureLabels = getProcedureLabels();
     auto existingLabel = procedureLabels.find(node->getContent());
     if (existingLabel != procedureLabels.end()) {
