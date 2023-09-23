@@ -194,5 +194,8 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
 
         if (matchedType == TokenType::kSepSemicolon || matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
     }
+    if (!braceStack.empty()) {
+        throw std::runtime_error("Syntactic error: Unmatched opening brace");
+    }
     return tokens;
 }
