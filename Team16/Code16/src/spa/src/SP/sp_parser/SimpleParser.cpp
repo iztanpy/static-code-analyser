@@ -133,6 +133,8 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             if (!controlStructureStack.empty() && controlStructureStack.top() != "if")  throw std::runtime_error("Syntactic error! We don't support anything and everything.");//throw InvalidSyntaxError();
             if (curr_index + 1 < tokens.size()
                 && tokens[curr_index + 1].tokenType != TokenType::kSepOpenBrace) throw std::runtime_error("Syntactic error! We don't support anything and everything.");//throw InvalidSyntaxError();
+            if (curr_index - 1 > 0
+                && tokens[curr_index - 1].tokenType != TokenType::kSepCloseBrace) throw std::runtime_error("Syntactic error! We don't support anything and everything.");//throw InvalidSyntaxError();
             std::set<int> elseFollowsSet;
             followsStatementStack.push(elseFollowsSet);
             curr_index += 2;  // skip over the next open brace
