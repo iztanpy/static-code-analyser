@@ -16,8 +16,28 @@
 QueryStructure::QueryStructure(std::vector<std::string> declaration_statements, std::string select_statement)
     : declaration_statements(std::move(declaration_statements)), select_statement(std::move(select_statement)) {}
 
+bool QueryTokenizer::checkQueryExtraCharacters(const std::vector<std::string> & statements) {
+  if (statements.empty()) {
+    // no statements being parsed which should not be the case
+    throw QpsSyntaxError("Empty query");
+  } else {
+    // Check if the last element is empty or contains only whitespace
+    const std::string & lastStatement = statements.back();
+    if (string_util::IsWhiteSpace(lastStatement)) {
+      // this indicates that there's an extra semicolon at the end
+      return false;
+    }
+  }
+  return true;
+}
+
 QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
   std::vector<std::string> statements = string_util::SplitStringBy(qps_constants::kSemicolon, sanitized_query);
+
+  if (!QueryTokenizer::checkQueryExtraCharacters(statements)) {
+    throw QpsSyntaxError("Extra character at the end of query");
+  }
+
   std::vector<std::string> declaration_statements;
   std::string select_statement;
   // indicator to ensure we only have 1 select statement and nothing else at the back
@@ -83,6 +103,22 @@ std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_
   std::vector<QueryToken> select_tokens;
   // remove the Select keyword (guaranteed to exist since we already checked)
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
+
+  if (remaining_statement.empty()) {
+    throw QpsSyntaxError("Missing select statement");
+  }
+
+  // remove the synonym and check if it can still be a such that / pattern clause
+  std::string synonym_removed_statement = string_util::RemoveFirstWord(remaining_statement);
+  bool statement_can_match_clause =
+      QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kSuchThatClauseRegex) ||
+      QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kPatternClauseRegex);
+
+  if (!synonym_removed_statement.empty() && !statement_can_match_clause) {
+    // it is syntactically invalid
+    throw QpsSyntaxError("Missing select synonym");
+  }
+
   // then extract the first word after 'Select'
   std::string first_word = string_util::GetFirstWord(remaining_statement);
   if (!QueryUtil::IsInDeclarations(first_word, declarations)) {
@@ -128,7 +164,7 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
   return indexes;
 }
 
-bool clauseMatch(std::string & clause, const std::regex & regexPattern) {
+bool QueryTokenizer::clauseMatch(std::string & clause, const std::regex & regexPattern) {
   return std::regex_search(clause, regexPattern);
 }
 
@@ -144,7 +180,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     throw QpsSyntaxError("More than 2 open brackets");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
-  if (rhs.size() != 1) {
+  if (rhs.size() != 2) {
     throw QpsSyntaxError("More than 2 close brackets");
   }
 
@@ -203,7 +239,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     throw QpsSyntaxError("More than 2 open brackets or missing arguments");
   }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', arguments[1]);
-  if (rhs.size() != 1) {
+  if (rhs.size() != 2) {
     throw QpsSyntaxError("More than 2 close brackets or missing arguments");
   }
 
