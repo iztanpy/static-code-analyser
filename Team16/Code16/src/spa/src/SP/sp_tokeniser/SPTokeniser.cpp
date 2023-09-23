@@ -178,7 +178,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             }
         } else if (matchedType == TokenType::kLiteralName) {
             if (std::isdigit(matchedValue[0])) {
-                throw std::runtime_error("Invalid Token: Name cannot start with a digit");
+                throw std::runtime_error("Invalid Token.");
             } else {
                 Token token{matchedType, matchedValue, lineNumber, linePosition};
                 tokens.push_back(token);
