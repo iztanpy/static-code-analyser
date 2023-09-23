@@ -42,18 +42,14 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
             }
         }
     }
-
-    for (const auto& [child, parent] : ParentMapReverse) {
-        // Add the immediate parent as an ancestor
-        ParentStarMapReverse[child].insert(parent);
-
-        // Add the ancestors of the parent
-        if (ParentStarMapReverse.find(parent) != ParentStarMapReverse.end()) {
-            for (int ancestor : ParentStarMapReverse[parent]) {
-                ParentStarMapReverse[child].insert(ancestor);
-            }
+    for (const auto& [node, children] : ParentStarMap) {
+        for (int child : children) {
+            ParentStarMapReverse[child].insert(node);
         }
     }
+
+
+
     // ai-gen end
 }
 
