@@ -46,7 +46,7 @@ class FollowsStore {
 
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
-    std::unordered_set<statementNumber> getFollowers(statementNumber statement);
+    std::unordered_set<statementNumber> getAfters(statementNumber statement);
 
-    std::unordered_set<statementNumber> getLeaders(statementNumber statement);
+    std::unordered_set<statementNumber> getBefores(statementNumber statement);
 };

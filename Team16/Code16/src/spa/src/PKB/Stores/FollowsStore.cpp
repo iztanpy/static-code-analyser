@@ -13,8 +13,6 @@ void FollowsStore::storeFollows(std::unordered_map<statementNumber, statementNum
     this->FollowMap = map;
     for (auto const& x : map) {
         this->FollowMapReverse[x.second] = x.first;
-
-        std::cout << "Follows: " << x.first << " " << x.second << std::endl;
     }
 
     for (auto const& x : map) {
@@ -57,7 +55,7 @@ bool FollowsStore::isFollow(statementNumber statement1, statementNumber statemen
 
 // true if statement1 has any follower
 bool FollowsStore::isFollow(statementNumber statement1, Wildcard wildcard) {
-    if (this->getFollowers(statement1).size() > 0) {
+    if (this->getAfters(statement1).size() > 0) {
         return true;
     }
     return false;
@@ -117,10 +115,10 @@ bool FollowsStore::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
 }
 
 
-std::unordered_set<FollowsStore::statementNumber> FollowsStore::getFollowers(statementNumber statement) {
+std::unordered_set<FollowsStore::statementNumber> FollowsStore::getAfters(statementNumber statement) {
     return this->FollowStarMap[statement];
 }
 
-std::unordered_set<FollowsStore::statementNumber> FollowsStore::getLeaders(statementNumber statement) {
+std::unordered_set<FollowsStore::statementNumber> FollowsStore::getBefores(statementNumber statement) {
     return this->FollowStarMapReverse[statement];
 }

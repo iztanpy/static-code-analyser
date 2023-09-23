@@ -513,7 +513,7 @@ std::unordered_set<statementNumber> PKB::followStar(Wildcard wildcard, StmtEntit
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        if (this->followsStore->getLeaders(x).size() > 0) {
+        if (this->followsStore->getBefores(x).size() > 0) {
             result.insert(x);
         }
     }
@@ -525,7 +525,7 @@ std::unordered_set<statementNumber> PKB::followStar(statementNumber num, StmtEnt
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        if (this->followsStore->getLeaders(x).count(num)) {
+        if (this->followsStore->getBefores(x).count(num)) {
             result.insert(x);
         }
     }
@@ -537,7 +537,7 @@ std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, statementNu
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        if (this->followsStore->getFollowers(x).count(num)) {
+        if (this->followsStore->getAfters(x).count(num)) {
             result.insert(x);
         }
     }
@@ -549,7 +549,7 @@ std::unordered_set<statementNumber> PKB::followStar(StmtEntity type, Wildcard wi
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const &x : relevantStmts) {
-        if (this->followsStore->getFollowers(x).size() > 0) {
+        if (this->followsStore->getAfters(x).size() > 0) {
             result.insert(x);
         }
     }
