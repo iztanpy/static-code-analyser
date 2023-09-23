@@ -260,20 +260,17 @@ std::pair<std::vector<QueryToken>,
     return {such_that_tokens, pattern_tokens};
   }
   std::vector<size_t> clause_beginning_indexes = getClauseIndexes(remaining_statement);
+  clause_beginning_indexes.push_back(remaining_statement.length());  // push back to avoid out of range error
   std::string prev_clause;
   std::string curr_clause;
   std::string processed_clause;
   size_t start_index = 0;
 
-  for (int i = 0; i <= clause_beginning_indexes.size() - 1; i++) {
-    size_t next_index;
-    if (clause_beginning_indexes.size() == 1) {
-      next_index = remaining_statement.length();
-    } else {
-      next_index = clause_beginning_indexes[i + 1];
-    }
+  for (int i = 0; i < clause_beginning_indexes.size() - 1; i++) {
+    size_t next_index = clause_beginning_indexes[i + 1];
     curr_clause = string_util::Trim(remaining_statement.substr(start_index, next_index - start_index));
     start_index = next_index;
+
     if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
       std::string clause_with_such_that_removed = string_util::RemoveFirstWord(curr_clause);
       clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
