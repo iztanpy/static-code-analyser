@@ -80,7 +80,8 @@ std::shared_ptr<TNode> ParseUtils::parseFactor(const std::vector<Token>& tokens)
     incrementIndex();
     node = parseExpression(tokens);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw InvalidSyntaxError();
+//      throw InvalidSyntaxError();
+      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
     }
     incrementIndex();
     return node;
@@ -92,7 +93,8 @@ std::shared_ptr<TNode> ParseUtils::parseFactor(const std::vector<Token>& tokens)
   }
 
   if (node == nullptr) {
-    throw InvalidSyntaxError();
+//    throw InvalidSyntaxError();
+    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
   }
 
   return node;
@@ -113,7 +115,8 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
     // lhs conditional expression
     tree = parseCondExpression(tokens);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw InvalidSyntaxError();
+//      throw InvalidSyntaxError();
+      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
     }
     incrementIndex();
 
@@ -158,7 +161,8 @@ std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& toke
   }
 
   if (node == nullptr) {
-    throw InvalidSyntaxError();
+//    throw InvalidSyntaxError();
+    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
   }
 
   return node;

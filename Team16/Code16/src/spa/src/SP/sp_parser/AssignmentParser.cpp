@@ -38,7 +38,8 @@ std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& t
     incrementIndex();
     node = parseExpression(tokens);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw InvalidSyntaxError();
+//      throw InvalidSyntaxError();
+      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
     }
     incrementIndex();
     return node;
@@ -50,7 +51,8 @@ std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& t
   }
 
   if (node == nullptr) {
-    throw InvalidSyntaxError();
+//    throw InvalidSyntaxError();
+    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
   }
 
   return node;
