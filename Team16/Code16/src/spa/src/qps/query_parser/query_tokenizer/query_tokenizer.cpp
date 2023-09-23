@@ -114,21 +114,25 @@ std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_
 
 std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaining_statement) {
   std::vector<size_t> indexes;
-  size_t startPos = 0;
 
-  while (startPos < remaining_statement.size()) {
-    size_t suchThatPos = remaining_statement.find("such that", startPos);
-    size_t patternPos = remaining_statement.find("pattern", startPos);
+  std::vector<std::regex> rgxVector = {
+      qps_constants::kSuchThatClauseRegex,
+      qps_constants::kPatternClauseRegex,
+      qps_constants::kOnlySuchThat,
+      qps_constants::kOnlyPattern
+  };
 
-    // Find the position of "such that" and "pattern" clauses
-    if (suchThatPos != std::string::npos) {
-      indexes.push_back(suchThatPos);  // "such that" has 9 characters
-      startPos = suchThatPos + 9;  // Move the starting position past "such that"
-    } else if (patternPos != std::string::npos) {
-      indexes.push_back(patternPos);  // "pattern" has 7 characters
-      startPos = patternPos + 7;  // Move the starting position past "pattern"
-    } else {
-      break;  // No more "such that" or "pattern" clauses found
+  for (const auto& rgx : rgxVector) {
+    // Create an iterator that will search for matches in the input string
+    std::sregex_iterator it(remaining_statement.begin(), remaining_statement.end(), rgx);
+    std::sregex_iterator end;
+
+    // Iterate over matches and store their starting positions
+    while (it != end) {
+      if (std::find(indexes.begin(), indexes.end(), it ->position()) == indexes.end()) {
+        indexes.push_back(it->position());
+      }
+      ++it;
     }
   }
 
@@ -169,41 +173,43 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
 
   QueryToken right_token;
   QueryToken left_token;
+  std::string right_hand_side = string_util::Trim(rhs[0]);
+  std::string left_hand_side = string_util::Trim(lhs[1]);
   // check if lhs and rhs is a stmtRef or entRef
-  if (!QueryUtil::IsStmtRef(lhs[1]) && !QueryUtil::IsEntRef(lhs[1])) {
+  if (!QueryUtil::IsStmtRef(left_hand_side) && !QueryUtil::IsEntRef(left_hand_side)) {
     throw QpsSyntaxError("Invalid argument for relationship reference");
   }
-  if (!QueryUtil::IsStmtRef(rhs[0]) && !QueryUtil::IsEntRef(rhs[0])) {
+  if (!QueryUtil::IsStmtRef(right_hand_side) && !QueryUtil::IsEntRef(right_hand_side)) {
     throw QpsSyntaxError("Invalid argument for relationship reference");
   }
 
   // Set the different types of tokens
-  if (QueryUtil::IsWildcard(lhs[1])) {
-    left_token = {lhs[1], PQLTokenType::WILDCARD};
-  } else if (lexical_utils::IsInteger(lhs[1])) {
-    left_token = {lhs[1], PQLTokenType::INTEGER};
-  } else if (QueryUtil::IsIdentWithDoubleQuotes(lhs[1])) {
-    std::string remove_quotations = QueryUtil::RemoveQuotations(lhs[1]);
+  if (QueryUtil::IsWildcard(left_hand_side)) {
+    left_token = {left_hand_side, PQLTokenType::WILDCARD};
+  } else if (lexical_utils::IsInteger(left_hand_side)) {
+    left_token = {left_hand_side, PQLTokenType::INTEGER};
+  } else if (QueryUtil::IsIdentWithDoubleQuotes(left_hand_side)) {
+    std::string remove_quotations = QueryUtil::RemoveQuotations(left_hand_side);
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    if (!QueryUtil::IsInDeclarations(lhs[1], declarations)) {
+    if (!QueryUtil::IsInDeclarations(left_hand_side, declarations)) {
       throw QpsSemanticError("LHS synonym not declared");
     }
-    left_token = {lhs[1], PQLTokenType::SYNONYM};
+    left_token = {left_hand_side, PQLTokenType::SYNONYM};
   }
 
-  if (QueryUtil::IsWildcard(rhs[0])) {
-    right_token = {rhs[0], PQLTokenType::WILDCARD};
-  } else if (lexical_utils::IsInteger(rhs[0])) {
-    right_token = {rhs[0], PQLTokenType::INTEGER};
-  } else if (QueryUtil::IsIdentWithDoubleQuotes(rhs[0])) {
-    std::string remove_quotations = QueryUtil::RemoveQuotations(rhs[0]);
+  if (QueryUtil::IsWildcard(right_hand_side)) {
+    right_token = {right_hand_side, PQLTokenType::WILDCARD};
+  } else if (lexical_utils::IsInteger(right_hand_side)) {
+    right_token = {right_hand_side, PQLTokenType::INTEGER};
+  } else if (QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)) {
+    std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
     right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    if (!QueryUtil::IsInDeclarations(rhs[0], declarations)) {
+    if (!QueryUtil::IsInDeclarations(right_hand_side, declarations)) {
       throw QpsSemanticError("RHS synonym not declared");
     }
-    right_token = {rhs[0], PQLTokenType::SYNONYM};
+    right_token = {right_hand_side, PQLTokenType::SYNONYM};
   }
 
   std::pair<QueryToken, QueryToken> syn_pair = {left_token, right_token};
@@ -228,35 +234,37 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
 
   QueryToken right_token;
   QueryToken left_token;
+  std::string right_hand_side = string_util::Trim(rhs[0]);
+  std::string left_hand_side = string_util::Trim(lhs[1]);
   // check if lhs is a entRef and lhs is an expr or a partial expr
-  if (!QueryUtil::IsEntRef(lhs[1])) {
+  if (!QueryUtil::IsEntRef(left_hand_side)) {
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
-  if (!QueryUtil::IsPartialMatchExpressionSpecification(rhs[0]) && !QueryUtil::IsIdentWithDoubleQuotes(rhs[0])
-      && !QueryUtil::IsWildcard(rhs[0])) {
+  if (!QueryUtil::IsPartialMatchExpressionSpecification(right_hand_side) && !QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)
+      && !QueryUtil::IsWildcard(right_hand_side)) {
     throw QpsSyntaxError("Invalid argument for RHS of pattern clause");
   }
 
   // Set the different types of tokens
-  if (QueryUtil::IsWildcard(lhs[1])) {
-    left_token = {lhs[1], PQLTokenType::WILDCARD};
-  } else if (QueryUtil::IsIdentWithDoubleQuotes(lhs[1])) {
-    std::string remove_quotations = QueryUtil::RemoveQuotations(lhs[1]);
+  if (QueryUtil::IsWildcard(left_hand_side)) {
+    left_token = {left_hand_side, PQLTokenType::WILDCARD};
+  } else if (QueryUtil::IsIdentWithDoubleQuotes(left_hand_side)) {
+    std::string remove_quotations = QueryUtil::RemoveQuotations(left_hand_side);
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    if (!QueryUtil::IsInDeclarations(lhs[1], declarations)) {
+    if (!QueryUtil::IsInDeclarations(left_hand_side, declarations)) {
       throw QpsSemanticError("LHS synonym not declared");
     }
-    left_token = {lhs[1], PQLTokenType::SYNONYM};
+    left_token = {left_hand_side, PQLTokenType::SYNONYM};
   }
 
-  if (QueryUtil::IsWildcard(rhs[0])) {
-    right_token = {rhs[0], PQLTokenType::WILDCARD};
-  } else if (QueryUtil::IsIdentWithDoubleQuotes(rhs[0])) {
-    std::string remove_quotations = QueryUtil::RemoveQuotations(rhs[0]);
+  if (QueryUtil::IsWildcard(right_hand_side)) {
+    right_token = {right_hand_side, PQLTokenType::WILDCARD};
+  } else if (QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)) {
+    std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
     right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    std::string remove_wildcard = string_util::Trim(rhs[0].substr(1, rhs[0].length() - 2));
+    std::string remove_wildcard = string_util::Trim(right_hand_side.substr(1, right_hand_side.length() - 2));
     std::string remove_quotations = QueryUtil::RemoveQuotations(remove_wildcard);
     right_token = {remove_quotations, PQLTokenType::PARTIALEXPR};
   }
