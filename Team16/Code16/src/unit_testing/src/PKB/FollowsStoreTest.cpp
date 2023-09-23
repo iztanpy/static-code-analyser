@@ -64,16 +64,16 @@ TEST_CASE("Test Follows Store Reverse") {
 TEST_CASE("Test Follows Store Get Followers") {
     auto followsStore = FollowsStore();
     followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
-    std::unordered_set<statementNumber> followers = followsStore.getFollowers(1);
+    std::unordered_set<statementNumber> followers = followsStore.getAfters(1);
     REQUIRE(followers.size() == 3);
     REQUIRE(followers.find(2) != followers.end());
-    followers = followsStore.getFollowers(2);
+    followers = followsStore.getAfters(2);
     REQUIRE(followers.size() == 2);
     REQUIRE(followers.find(3) != followers.end());
-    followers = followsStore.getFollowers(3);
+    followers = followsStore.getAfters(3);
     REQUIRE(followers.size() == 1);
     REQUIRE(followers.find(4) != followers.end());
-    followers = followsStore.getFollowers(4);
+    followers = followsStore.getAfters(4);
     REQUIRE(followers.size() == 0);
 }
 
