@@ -242,7 +242,7 @@ TEST_CASE(("Test multiple while while nested retrieval")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram2 = "procedure p {  while (number > 0) { while (x > 0) { while (a > b) {x = x + 1; } } }";
+    std::string simpleProgram2 = "procedure p {  while (number > 0) { while (x > 0) { while (a > b) {x = x + 1; } } }}";
     sourceProcessor.processSource(simpleProgram2);
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
         {1, {2}},
