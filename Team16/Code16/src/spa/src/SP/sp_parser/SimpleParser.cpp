@@ -3,7 +3,7 @@
 #include "SimpleParser.h"
 
 SimpleParser::SimpleParser(WriteFacade* writeFacadePtr, ASTVisitor* astVisitorPtr) : writeFacade(writeFacadePtr),
-visitor(astVisitorPtr), currWhileDepth(0), currIfDepth(0) {}
+visitor(astVisitorPtr), currWhileDepth(0), currIfDepth(0), isParsingProcedure(false) {}
 
 int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
@@ -50,12 +50,14 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
                 tokens[curr_index] = newToken;  // Remove 'const' keyword and the 'new' keyword
             }
         } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
+            if (isParsingProcedure) throw std::runtime_error("Syntactic error!");
             int next_index = procedureParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
                 throw std::runtime_error("Syntactic error! We don't support anything and everything.");
 //                throw InvalidSyntaxError();
             } else {
+                isParsingProcedure = true;
                 curr_index = next_index;
             }
             std::set<int> procedureFollowsSet;
@@ -171,6 +173,8 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             if (!controlStructureStack.empty() && currWhileDepth > 0) {
                 currWhileDepth--;  // Decrease the depth
                 currIfDepth--;  // Decrease the depth
+            } else {
+                isParsingProcedure = false;
             }
           }
           curr_index += 1;
