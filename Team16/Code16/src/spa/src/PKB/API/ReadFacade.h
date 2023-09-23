@@ -524,7 +524,8 @@ class ReadFacade {
     * @param entity2 The type of the second statement in the follows relationship.
     * @return An unordered set of pairs representing follows relationships between statements of the specified types.
     */
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> follows(StmtEntity entity1, StmtEntity entity2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+    follows(StmtEntity entity1, StmtEntity entity2);
 
     /**
     * @brief Checks if one statement follows another statement.
@@ -670,5 +671,4 @@ class ReadFacade {
     * @return true if matching statements are in a follow* relationship with each other, false otherwise.
     */
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
-
 };
