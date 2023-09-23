@@ -17,7 +17,11 @@ class ConstraintTable {
 
   void Solve(Constraint& constraint);
 
-  bool HasNoValidValues();
+  // To check if Constraints supplied so far are valid
+  // With valid being: No False Constraint, or All True Constraint
+  // Or Unary/Binary Constraint result in at least 1 valid assignments
+  // for all synonym
+  bool IsValid();
 
   // Header field is the first column of the table, else assert will fail
   std::unordered_set<std::string> Select(const ColName& col_name);
@@ -36,7 +40,10 @@ class ConstraintTable {
 
   // Check if ConstraintTable has been given a Constraint that evaluates
   // to false before. This is useful for HasNoValidValues() function
-  bool has_false_constraint;
+  bool has_at_least_one_false_constraint;
+
+  // Check if ConstraintTable has only been given True Constraint
+  bool has_only_true_constraint;
 
   // Mock table for unit test
   explicit ConstraintTable(const Table& mock_table) : table(mock_table) {}

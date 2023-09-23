@@ -37,18 +37,26 @@ std::vector<T> SelectByIndex(const std::vector<T>& vec, const std::vector<std::s
 
 ConstraintTable::ConstraintTable() {
   table = {};
-  has_false_constraint = false;
+  has_at_least_one_false_constraint = false;
+  has_only_true_constraint = true;
 }
 
 Table ConstraintTable::GetTableForTesting() {
   return table;
 }
 
-bool ConstraintTable::HasNoValidValues() {
-  return (table.empty() || table.begin()->second.empty() || has_false_constraint);
+bool ConstraintTable::IsValid() {
+  if (has_only_true_constraint) {
+    return true;
+  }
+  if (has_at_least_one_false_constraint) {
+    return false;
+  }
+  return !table.empty() && !table.begin()->second.empty();
 }
 
 void ConstraintTable::Solve(const UnaryConstraint& constraint) {
+  has_only_true_constraint = false;
   ColName col_name = constraint.col_name;
   if (table.find(col_name) == table.end()) {
     // Add new ColName to the table
@@ -58,6 +66,7 @@ void ConstraintTable::Solve(const UnaryConstraint& constraint) {
 }
 
 void ConstraintTable::Solve(const BinaryConstraint& constraint) {
+  has_only_true_constraint = false;
   ColName col_name1 = constraint.pair_col_names.first;
   ColName col_name2 = constraint.pair_col_names.second;
 
@@ -75,9 +84,8 @@ void ConstraintTable::Solve(const BinaryConstraint& constraint) {
 }
 
 void ConstraintTable::Solve(const bool constraint) {
-  if (!has_false_constraint) {
-    has_false_constraint = !constraint;
-  }
+  has_only_true_constraint = has_only_true_constraint && constraint;
+  has_at_least_one_false_constraint = has_at_least_one_false_constraint || !constraint;
 }
 
 void ConstraintTable::Solve(Constraint& constraint) {
