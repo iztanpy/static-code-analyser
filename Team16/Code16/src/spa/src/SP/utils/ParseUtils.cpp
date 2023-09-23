@@ -194,6 +194,7 @@ TokenType ParseUtils::convertLiteralToEntity(std::string value) {
     } else if (value == "call") {
         return TokenType::kEntityCall;
     } else {
+      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
         return TokenType::kLiteralName;
     }
 }
