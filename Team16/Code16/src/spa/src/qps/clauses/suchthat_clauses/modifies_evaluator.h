@@ -16,9 +16,9 @@ struct ModifiesEvaluator {
 
   static bool Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader);
 
-  static BinaryConstraint Handle(Declaration& lhs,
-                                 Declaration& rhs,
-                                 ReadFacade& pkb_reader);
+  static Constraint Handle(Declaration& lhs,
+                           Declaration& rhs,
+                           ReadFacade& pkb_reader);
 
   static UnaryConstraint Handle(Declaration& lhs,
                                 Wildcard& rhs,

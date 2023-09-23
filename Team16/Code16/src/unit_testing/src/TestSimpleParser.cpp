@@ -642,12 +642,12 @@ TEST_CASE(("Test SP Procedures storage")) {
   REQUIRE(sourceProcessor.getProcedureLabels() == procedures);
 }
 
-TEST_CASE(("Test SP valid SIMPLE1")) {
+TEST_CASE(("Test SP valid SIMPLE - keywords as names")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
-      "procedure p { if (i != 0) then { else = else + 1; } } ";
+      "procedure p { if (i != 0) then { else = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
   sourceProcessor.processSource(simpleProgram);
 }
 // Invalid testcases - uncomment to test for errors
@@ -675,22 +675,27 @@ TEST_CASE(("Test SP valid SIMPLE1")) {
 //      "procedure p { if (i != 0) then { else {} } } ";
 //  sourceProcessor.processSource(simpleProgram);
 //}
-
-// To be fixed, should throw error!
-TEST_CASE(("Test SP invalid SIMPLE - empty statement lists")) {
-  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
-  SourceProcessor sourceProcessor(&writeFacade);
-  std::string simpleProgram =
-      "procedure p { if (i == 0) then {} else {} } ";
-  sourceProcessor.processSource(simpleProgram);
-}
-// To be fixed, should throw error!
-TEST_CASE(("Test SP invalid SIMPLE - only ';' in statement lists")) {
-  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
-  SourceProcessor sourceProcessor(&writeFacade);
-  std::string simpleProgram =
-      "procedure p { if (i == 0) then {;} else {;;;;;} } ";
-  sourceProcessor.processSource(simpleProgram);
-}
+//TEST_CASE(("Test SP invalid SIMPLE - only ';' in statement lists")) {
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//  std::string simpleProgram =
+//      "procedure p { if (i == 0) then {;} else {;;;;;} } ";
+//  sourceProcessor.processSource(simpleProgram);
+//}
+//TEST_CASE(("Test SP invalid SIMPLE - empty statement lists")) {
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//  std::string simpleProgram =
+//      "procedure p { if (i == 0) then {} else {} } ";
+//  sourceProcessor.processSource(simpleProgram);
+//}
+//TEST_CASE(("Test SP invalid - integers on left of assignment statements")) {
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//  std::string simpleProgram =
+//      "procedure p { if (i != 0) then { else = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
+//  sourceProcessor.processSource(simpleProgram);
+//}
