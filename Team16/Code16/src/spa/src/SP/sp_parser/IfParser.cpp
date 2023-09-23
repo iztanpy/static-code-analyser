@@ -30,7 +30,7 @@ int IfParser::parse(std::vector<Token>& tokens, int curr_index) {
   index++;
 
   // Validate 'then' keyword
-  if (tokens[index].tokenType != TokenType::kEntityThen) {
+  if (tokens[index].getValue() != "then") {
       throw std::runtime_error("Syntactic error! We don't support anything and everything.");
   }
   index++;
