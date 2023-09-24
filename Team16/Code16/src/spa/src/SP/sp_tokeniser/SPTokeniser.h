@@ -6,6 +6,7 @@
 #include <sstream>
 #include "TokenTypes.h"
 #include "Token.h"
+#include "utils/Error.h"
 #include <regex>
 #include <set>
 #include <utility>

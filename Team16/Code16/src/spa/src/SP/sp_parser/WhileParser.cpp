@@ -13,7 +13,7 @@ int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
 
     // Validate open parenthesis
     if (tokens[index].tokenType != TokenType::kSepOpenParen) {
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+        throw InvalidSyntaxError();
     }
     index++;
 
@@ -24,13 +24,13 @@ int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
 
     // Validate close parenthesis
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+        throw InvalidSyntaxError();
     }
     index++;
 
     // Validate open braces
     if (tokens[index].tokenType != TokenType::kSepOpenBrace) {
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+        throw InvalidSyntaxError();
     }
     index++;
 

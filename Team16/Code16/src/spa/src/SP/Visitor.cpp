@@ -4,9 +4,7 @@ void ASTVisitor::visit(const ProcedureTNode* node, std::string& key) {
     std::set<std::string> procedureLabels = getProcedureLabels();
     auto existingLabel = procedureLabels.find(node->getContent());
     if (existingLabel != procedureLabels.end()) {
-        std::cout << node->getContent() << std::endl;
-        throw std::runtime_error("Semantic error! We don't support anything and everything.");
-        // throw InvalidSemanticError();
+        throw InvalidSemanticError();
     } else {
         insertProcedureLabel(node->getContent());
     }
