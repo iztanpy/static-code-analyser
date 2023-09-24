@@ -1,0 +1,80 @@
+1 - Basic combination
+stmt s; assign a; variable v;
+Select s such that Uses(s, "x") pattern a(v, _)
+12, 3, 16, 11, 10, 4, 5, 19
+5000
+2 - Shared variable between two clauses
+stmt s; assign a; variable v;
+Select a such that Uses(a, v) pattern a(v, _)
+11, 7, 8, 13
+5000
+3 - Using specific number in Uses, with underscore pattern
+assign a; variable v;
+Select a such that Uses(3, "y") pattern a(_, _"1"_)
+17, 18, 7, 11
+5000
+4 - Complex synonym interaction
+assign a; read r; variable v;
+Select a such that Uses(r, "y") pattern a(v, _)
+
+5000
+5 - Using wildcard for both Uses and pattern
+print p; assign a; variable v;
+Select a such that Uses(a, _) pattern a(v, _)
+3, 15, 13, 8, 5, 7, 14, 11, 9
+5000
+6 - Synonyms in both arguments of Uses
+stmt s; assign a; variable v;
+Select s such that Uses(s, v) pattern a("x", _)
+8, 5, 19, 11, 6, 9, 21, 14, 16, 7, 12, 13, 4, 10, 15, 3, 20
+5000
+7 - Using variable synonym in Uses and pattern
+if ifSyn; assign a; variable v;
+Select ifSyn such that Uses(ifSyn, v) pattern a(v, _)
+4, 16, 6
+5000
+8 - Using integer and string in Uses, with mixed pattern
+while w; assign a; variable v;
+Select w such that Uses(12, "y") pattern a(v, _"i"_)
+
+5000
+9 - Nested use of synonyms
+assign outer, inner; variable v;
+Select outer such that Uses(outer, "x") pattern inner(v, _)
+3, 11, 5
+5000
+10 - Using the same synonym in Uses and pattern
+stmt s; assign a; variable v;
+Select s such that Uses(s, "x") pattern a("y", _)
+12, 3, 16, 11, 10, 4, 5, 19
+5000
+11 - Underscore with specific variable in pattern
+stmt s; assign a; variable v;
+Select s such that Uses(s, "z") pattern a("z", _)
+21
+5000
+12 - Using specific number and wildcard in Uses with specific pattern
+stmt s; assign a; variable v;
+Select s such that Uses(5, _) pattern a(_, _"2"_)
+20, 18, 17, 16, 15, 13, 12, 19, 11, 21, 2, 14, 9, 6, 5, 1, 7, 10, 8, 4, 3
+5000
+13 - Complex mixed usage with underscore
+assign a1, a2; variable v;
+Select a1 such that Uses(a2, _) pattern a2(v, _"3"_)
+18, 14, 11, 9, 7, 5, 8, 13, 17, 15, 3
+5000
+14 - Repeated synonyms with different pattern
+assign repeat1, repeat2; variable v;
+Select repeat1 such that Uses(repeat1, "y") pattern repeat2(v, _"4"_)
+7, 3, 8, 13, 9
+5000
+15 - Multiple variables in Uses and pattern
+stmt s; assign a; variable v1, v2;
+Select s such that Uses(s, v1) pattern a(v2, _)
+8, 5, 19, 11, 6, 9, 21, 14, 16, 7, 12, 13, 4, 10, 15, 3, 20
+5000
+16 - LHS is Read synonym
+read r; assign a; variable v1, v2;
+Select r such that Uses(r, v1) pattern a(v2, _)
+
+5000

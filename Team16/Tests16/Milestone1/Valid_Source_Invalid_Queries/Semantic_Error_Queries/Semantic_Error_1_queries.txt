@@ -1,0 +1,175 @@
+1 - undeclared synonym
+assign a;
+Select variable such that Uses(a, variable)
+SemanticError
+5000
+2 - undeclared synonym with spacing
+read s;
+Select     a    such that Uses( s  ,   a)
+SemanticError
+5000
+3 - undeclared synonym with spacing
+stmt s;
+Select     a    such that Uses( s  ,   a)
+SemanticError
+5000
+4 - repeated synonym
+stmt a, a;
+Select a such that Follows( a , a )
+SemanticError
+5000
+5 - wrong entity in such that clause
+constant const;
+Select const such that Parent(const, 3)
+SemanticError
+5000
+6 - arg_1 for Modifies is WILDCARD with spaces
+stmt   s;
+Select s   such that Modifies(  _   , "var")
+SemanticError
+5000
+7 - reserved word as synonym in pattern
+assign such;
+Select such pattern such(that, _)
+SemanticError
+5000
+8 - arg_2 for Modifies is reserved word
+stmt t;
+Select t such that Modifies(3, t)
+SemanticError
+5000
+9 - undeclared synonym alphanumeric
+assign alpha1;
+Select num1 such that Uses(alpha1, "var")
+SemanticError
+5000
+10 - repeated synonym in mixed entities
+stmt s2; read s2;
+Select s2 such that Follows*(s2, 4)
+SemanticError
+5000
+11 - alphanumeric synonym in pattern
+assign alphaNum;
+Select alphaNum pattern alphaNum1("var", _)
+SemanticError
+5000
+12 - repeated synonym in mixed entities with space
+stmt s3; print s3 ;
+Select s3 such that Parent( s3 , 2 )
+SemanticError
+5000
+13 - arg_2 for Modifies is not variable synonym with space
+read rd ;
+Select rd such that Modifies(2, rd )
+SemanticError
+5000
+14 - mixed declaration ordering
+assign a; variable a;
+Select a such that Uses(a, a)
+SemanticError
+5000
+15 - alphanumeric synonym for reserved keyword
+assign a2b;
+Select variable such that Uses(a2b, variable)
+SemanticError
+5000
+16 - repeated synonym with different entity types
+variable v; stmt v;
+Select v such that Uses(v, "x")
+SemanticError
+5000
+17 - wrong entity type for pattern clause
+read r;
+Select r pattern r(_, _)
+SemanticError
+5000
+18 - mixed synonym name in declaration and selection
+stmt s4;
+Select s5 such that Follows(s4, s5)
+SemanticError
+5000
+19 - arg_2 for Follows* with alphanumeric synonym
+stmt s5; variable var1a;
+Select s5 such that Follows*(s5, var1a)
+SemanticError
+5000
+20 - undeclared synonym with mixed case
+stmt Stmt1;
+Select Stmt2 such that Parent(Stmt1, Stmt2)
+SemanticError
+5000
+21 - wrong entity type for Uses clause
+constant c;
+Select c such that Uses(c, "x")
+SemanticError
+5000
+22 - repeated synonym with different case
+stmt stmtA; read stmtA;
+Select stmtA such that Follows(stmtA, 3)
+SemanticError
+5000
+23 - invalid entity in pattern clause with spaces
+print p;
+Select p pattern p ( "v" , _ )
+SemanticError
+5000
+24 - arg_2 for Parent* is a reserved keyword
+stmt s;
+Select s such that Parent*(s, stmt)
+SemanticError
+5000
+25 - wrong entity type in pattern clause with mixed case
+stmt S;
+Select S pattern S("v", _)
+SemanticError
+5000
+26 - arg_2 for Uses is stmt synonym
+stmt s; variable v;
+Select v such that Uses(2, s)
+SemanticError
+5000
+27 - undeclared synonym with numbers
+assign a10;
+Select a11 such that Modifies(a10, a11)
+SemanticError
+5000
+28 - wrong entity type for arg1 of Modifies
+constant a10; variable a11;
+Select a10 such that Modifies(a10, a11)
+SemanticError
+5000
+29 - wrong entity type for arg1 of Modifies
+variable a10; variable a11;
+Select a10 such that Modifies(a10, a11)
+SemanticError
+5000
+30 - wrong entity type for arg1 of Uses
+variable a10; variable a11;
+Select a10 such that Uses(a10, a11)
+SemanticError
+5000
+31 - wrong entity type for arg1 of Uses
+constant a10; variable a11;
+Select a10 such that Uses(a10, a11)
+SemanticError
+5000
+32 - wrong type for arg1 of Uses
+constant a10; variable a11;
+Select a10 such that Uses(_, a11)
+SemanticError
+5000
+33 - wrong type for arg1 of Modifies
+constant a10; variable a11;
+Select a10 such that Uses(_, a11)
+SemanticError
+5000
+34 - wrong type for arg2 of Modifies
+procedure a10; variable a11;
+Select a10 such that Uses(a11, a10)
+SemanticError
+5000
+35 - wrong type for arg2 of Modifies
+constant a10; variable a11;
+Select a10 such that Uses(a11, a10)
+SemanticError
+5000
