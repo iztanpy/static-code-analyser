@@ -7,7 +7,7 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
             Token next_token = tokens.at(curr_index + 1);
 
             if (next_token.tokenType == TokenType::kEntityAssign) {
-                assignmentParser->lineNumber = lineNumber;
+                assignmentParser->setLineNumber(lineNumber);
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
@@ -19,7 +19,7 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
                 }
             }
         } else if (curr_token.tokenType == TokenType::kEntityRead) {
-            readParser->lineNumber = lineNumber;
+            readParser->setLineNumber(lineNumber);
             int next_index = readParser->parse(tokens, curr_index);
 
             if (next_index == -1) {

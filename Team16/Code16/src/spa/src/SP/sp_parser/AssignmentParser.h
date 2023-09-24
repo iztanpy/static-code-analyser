@@ -26,6 +26,11 @@
  * assignment statements. It also contains methods for accessing information related to the parsed assignments.
  */
 class AssignmentParser : public Parser {
+ private:
+    ASTVisitor* visitor;  // Initialize to nullptr in the constructor
+    int lineNumber = 0;
+    int index = 0;
+
  public:
     /**
      * @brief Constructor for the AssignmentParser class.
@@ -78,9 +83,25 @@ class AssignmentParser : public Parser {
      * It is typically used after successfully parsing a token or a portion of the input.
      */
     void incrementIndex();
-
-    ASTVisitor* visitor;  // Initialize to nullptr in the constructor
-    int lineNumber = 0;
-    int index = 0;
+    /**
+     * @brief Retrieves the current line number.
+     * @return The current line number.
+    */
+    int getLineNumber();
+    /**
+     * @brief Sets the line number to the specified value.
+     * @param newLineNumber The new line number to set.
+     */
+    void setLineNumber(int newLineNumber);
+    /**
+    * @brief Retrieves the current index.
+    * @return The current index.
+    */
+    int getIndex();
+    /**
+     * @brief Sets the index to the specified value.
+     * @param newIndex The new index to set.
+     */
+    void setIndex(int newIndex);
 };
 

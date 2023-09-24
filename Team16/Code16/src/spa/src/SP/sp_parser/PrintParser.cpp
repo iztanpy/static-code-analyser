@@ -44,4 +44,11 @@ int PrintParser::parse(std::vector<Token>& tokens, int curr_index) {
     designExtractor->extractDesign(root, visitor);
     return curr_index;
 }
+int PrintParser::getLineNumber() {
+    return lineNumber;
+}
+void PrintParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+
 

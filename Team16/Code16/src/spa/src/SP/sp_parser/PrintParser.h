@@ -25,6 +25,10 @@ class SimpleParser;
  * and handling print statements.
  */
 class PrintParser : public Parser {
+ private:
+  ASTVisitor* visitor;
+  int lineNumber = 0;
+
  public:
   /**
     * @brief Constructs a PrintParser object with an associated ASTVisitor.
@@ -43,7 +47,15 @@ class PrintParser : public Parser {
      * @return The index in the token vector after parsing the print statement.
      */
   int parse(std::vector<Token>& tokens, int curr_index) override;
-  ASTVisitor* visitor;
-  int lineNumber = 0;
+  /**
+  * @brief Retrieves the current line number.
+  * @return The current line number.
+  */
+  int getLineNumber();
+  /**
+   * @brief Sets the line number to the specified value.
+   * @param newLineNumber The new line number to set.
+   */
+  void setLineNumber(int newLineNumber);
 };
 

@@ -81,3 +81,16 @@ int AssignmentParser::parse(std::vector<Token>& tokens, int curr_index) {
     return index;
 }
 
+int AssignmentParser::getLineNumber() {
+    return lineNumber;
+}
+void AssignmentParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+int AssignmentParser::getIndex() {
+    return index;
+}
+void AssignmentParser::setIndex(int newIndex) {
+    index = newIndex;
+}
+
