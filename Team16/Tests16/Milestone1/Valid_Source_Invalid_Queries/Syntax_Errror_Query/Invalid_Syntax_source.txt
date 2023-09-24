@@ -1,0 +1,12 @@
+procedure main {
+  x = 1;
+  y = 2;
+  z = 3; }
+
+procedure printResults {
+  cenX = 10;
+  cenY = 15;
+  cenZ = x + y;
+  print x;
+  print y;
+  print z; }
