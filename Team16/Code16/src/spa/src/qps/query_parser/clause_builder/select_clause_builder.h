@@ -9,17 +9,13 @@ class SelectClauseBuilder : public ClauseBuilder {
   SelectClauseBuilder();
   SelectClause selectClause;
 
-  /*!
-   * Setts the design entity of the select clause
-   * @param entity Design entity of the variable
-   */
   void setEntity(DesignEntity entity);
 
   /*!
-   * Sets the synonym of the select clause
-   * @param synonym is the string synonym
+   * Setts the Declaration synonym of the select clause
+   * @param declaration Declaration of the variable
    */
-  void setSynonym(std::string synonym);
+  void setDeclaration(Declaration declaration);
 
   /*!
    * Returns the select clause

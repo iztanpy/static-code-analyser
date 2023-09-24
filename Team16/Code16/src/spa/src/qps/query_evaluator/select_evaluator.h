@@ -12,12 +12,6 @@
 #include "evaluator_util.h"
 
 // Evaluates the Select clause of a query
-class SelectEvaluator {
- private:
-  ReadFacade& pkb_reader;
-  const SelectClause select_clause;
-
- public:
-  SelectEvaluator(ReadFacade& pkb_reader, const SelectClause select_clause);
-  UnaryConstraint Evaluate();
+struct SelectEvaluator {
+  static UnaryConstraint Evaluate(Declaration& declaration, ReadFacade& pkb_reader);
 };
