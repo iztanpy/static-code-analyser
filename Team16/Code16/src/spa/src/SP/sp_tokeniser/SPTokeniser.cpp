@@ -125,7 +125,6 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     std::stack<char> braceStack;
 
     for (const std::string& line : lines) {
-
         TokenType matchedType = TokenType::kUnknownTokenType;
         std::string matchedValue;
         for (const auto& regex_rule : regex_rules) {
@@ -176,7 +175,6 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             Token token{matchedType, matchedValue};
             tokens.push_back(token);
         }
-
     }
     if (!braceStack.empty()) {
         throw std::runtime_error("Syntactic error: Unmatched opening brace");
