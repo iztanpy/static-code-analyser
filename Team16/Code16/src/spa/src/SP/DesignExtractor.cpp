@@ -5,7 +5,3 @@ int DesignExtractor::extractDesign(std::shared_ptr<TNode> root, ASTVisitor* visi
     root->accept(visitor, key);
     return 0;
 }
-
-int DesignExtractor::populatePKB() {
-    return 0;
-}
