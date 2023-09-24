@@ -10,8 +10,8 @@ TEST_CASE("Query Parser can extract select clause") {
   std::vector<Declaration> declarations = tokenised_query.declarations;
   std::vector<SelectClause> selectClause = QueryParser::ExtractSelectClauses(selectTokens, declarations);
   REQUIRE(selectClause.size() == 1);
-  REQUIRE(selectClause[0].design_entity == DesignEntity::VARIABLE);
-  REQUIRE(selectClause[0].synonym == "v");
+  REQUIRE(selectClause[0].declaration.design_entity == DesignEntity::VARIABLE);
+  REQUIRE(selectClause[0].declaration.synonym == "v");
 }
 
 TEST_CASE(
@@ -62,8 +62,7 @@ TEST_CASE("Query Parser can return a parsed query") {
   };
 
   SelectClause expected;
-  expected.synonym = "v";
-  expected.design_entity = DesignEntity::VARIABLE;
+  expected.declaration = {"v", DesignEntity::VARIABLE};
 
   EntRef expected_lhs = EntRef(declarations[0]);
   EntRef expected_rhs = EntRef(Wildcard::Value);

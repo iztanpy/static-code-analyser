@@ -6,9 +6,13 @@
 #include <utility>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
-#include "qps/clauses/evaluator_util.h"
-#include "utils/StmtEntity.h"
+#include "qps/query_evaluator/evaluator_util.h"
+#include "utils/entity_types.h"
 
+/*!
+ * A visitor that handles the evaluation of Parent/ParentT clauses
+ * It contains handling function for all combinations of Parent/ParentT clauses parameters
+ */
 struct ParentEvaluator {
   static bool Handle(int lhs, int rhs, ReadFacade& pkb_reader, bool is_ParentT);
 

@@ -1,4 +1,4 @@
-#include "qps/clauses/evaluator_util.h"
+#include "qps/query_evaluator/evaluator_util.h"
 
 StringPairSet EvaluatorUtil::ToStringPairSet(IntStringPairSet& original) {
   StringPairSet converted;

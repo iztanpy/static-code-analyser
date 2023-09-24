@@ -5,10 +5,14 @@
 #include <cassert>
 #include <utility>
 
-#include "utils/StmtEntity.h"
-#include "qps/clauses/evaluator_util.h"
+#include "utils/entity_types.h"
+#include "qps/query_evaluator/evaluator_util.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
+/*!
+ * A visitor that handles the evaluation of ModifiesS/ModifiesP clauses
+ * It contains handling function for all combinations of ModifiesS/ModifiesP clauses parameters
+ */
 struct ModifiesEvaluator {
   static UnaryConstraint Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader);
 

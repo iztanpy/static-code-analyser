@@ -2,8 +2,10 @@
 
 #include <utility>
 
+/*!
+ * A hash function for pairs
+ */
 // ai-gen start (gpt 3.5, 0)
-// Custom hash for pair
 struct PairHash {
   template<typename T1, typename T2>
   std::size_t operator()(const std::pair<T1, T2>& p) const {

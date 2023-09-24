@@ -1,9 +1,4 @@
-#include <utility>
-#include <vector>
-#include <memory>
-#include <string>
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
-#include "qps/qps_errors/qps_syntax_error.h"
 
 void PatternClauseBuilder::setSynAssignment(Declaration declaration) {
   syn_assignment = std::move(declaration);

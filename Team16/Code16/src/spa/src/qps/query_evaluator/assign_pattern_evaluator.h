@@ -3,15 +3,18 @@
 #include <string>
 #include <unordered_set>
 
-#include "qps/query_evaluator/constraint.h"
+#include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/declaration.h"
 #include "PKB/API/ReadFacade.h"
-#include "qps/clauses/evaluator_util.h"
+#include "qps/query_evaluator/evaluator_util.h"
 #include "utils/clauses_types.h"
+#include "utils/entity_types.h"
 
+/*!
+ * A visitor that handles the evaluation of assign pattern clauses
+ * It contains handling function for all combinations of assign pattern clauses parameters
+ */
 struct AssignPatternEvaluator {
-  // TODO(phuccuongngo99): Please mint this to a separate type please
-  // like the partial match part
   static BinaryConstraint Handle(std::string& assign_synonym,
                                  Declaration& lhs,
                                  std::string& partial_match,

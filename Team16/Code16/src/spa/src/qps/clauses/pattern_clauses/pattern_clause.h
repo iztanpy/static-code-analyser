@@ -3,19 +3,19 @@
 #include <string>
 #include <variant>
 
-#include "qps/query_evaluator/constraint.h"
+#include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/clauses/clause.h"
-#include "qps/clauses/pattern_validator.h"
-#include "qps/clauses/assign_pattern_evaluator.h"
+#include "qps/clauses/pattern_clauses/pattern_validator.h"
+#include "qps/query_evaluator/assign_pattern_evaluator.h"
 #include "PKB/API/ReadFacade.h"
 #include "utils/clauses_types.h"
+#include "utils/entity_types.h"
 
+/*!
+ * Represents a pattern clause in a query
+ */
 class PatternClause : public Clause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
-  ExprSpec rhs;
-
   /*!
    * Checks if two expression-specs are equal
    * @param expr_1 first expression-spec
@@ -24,14 +24,32 @@ class PatternClause : public Clause {
    */
   static bool are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2);
 
-  // TODO(phuccuongngo99): Can we put this virtual method within
+  /*!
+   * Evaluate this clause given info from PKB
+   * @param pkb_reader
+   * @return Constraint that contains all possible valid values for this clause
+   */
   virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
   ~PatternClause() override = default;
 
  private:
+  /*!
+   * Validates the pattern clause semantically
+   * Will throw QpsSemanticError if the clause is initialized with invalid arguments
+   */
   virtual void Validate() = 0;
+
+  /*!
+   * Pattern clause are in the format syn_assignment(lhs, rhs)
+   */
+  Declaration syn_assignment;
+  EntRef lhs;
+  ExprSpec rhs;
 };
 
+/*!
+ * Represents a pattern clause in the format syn_assignment(lhs, rhs) where rhs is a wildcard
+ */
 class WildCardPattern : public PatternClause {
  public:
   Declaration syn_assignment;
@@ -49,6 +67,9 @@ class WildCardPattern : public PatternClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a pattern clause in the format syn_assignment(lhs, rhs) where rhs is an exact pattern
+ */
 class ExactPattern : public PatternClause {
  public:
   Declaration syn_assignment;
@@ -66,6 +87,9 @@ class ExactPattern : public PatternClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a pattern clause in the format syn_assignment(lhs, rhs) where rhs is an partial pattern
+ */
 class PartialPattern : public PatternClause {
  public:
   Declaration syn_assignment;

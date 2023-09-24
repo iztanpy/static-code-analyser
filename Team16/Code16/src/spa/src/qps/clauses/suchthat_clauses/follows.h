@@ -4,8 +4,11 @@
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
-#include "qps/clauses/suchthat_clauses/follows_evaluator.h"
+#include "qps/query_evaluator/follows_evaluator.h"
 
+/*!
+ * Represents a Follows clause in a query according to PQL grammar
+ */
 class Follows : public SuchThatClause {
  public:
   StmtRef lhs;
@@ -22,6 +25,9 @@ class Follows : public SuchThatClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a FollowsT clause in a query in PQL grammar
+ */
 class FollowsT : public SuchThatClause {
  public:
   StmtRef lhs;

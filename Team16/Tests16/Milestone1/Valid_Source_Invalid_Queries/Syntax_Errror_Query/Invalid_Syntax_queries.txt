@@ -1,0 +1,160 @@
+1 - Pattern clause with missing arguments
+assign a;
+Select a pattern a(,)
+SyntaxError
+5000
+2 - Pattern clause with missing input
+assign a;
+Select a such that Uses(a,"x") pattern
+SyntaxError
+5000
+3 - Pattern clause with invalid format
+assign a;
+Select a such that Uses(a,"x") patterna("cenX", _)
+SyntaxError
+5000
+4 - Pattern clause with invalid expression spec
+assign a;
+Select a pattern a("cenX","_y_")
+SyntaxError
+5000
+5 - Pattern clause with invalid expression spec
+assign a;
+Select a pattern a("cenX","y_")
+SyntaxError
+5000
+6 - Such that clause with invalid syntax
+variable v; assign a;
+Select a suchthat Uses(a,v)
+SyntaxError
+5000
+7 - Such That clause with bad formatting
+assign a;
+Select a suchthatModifies(a,"cenX") pattern a("cenX", _)
+SyntaxError
+5000
+8 - Incomplete such that clause is present
+assign a;
+Select a such that Modifies(a,"cenX") such that pattern a("cenX", _)
+SyntaxError
+5000
+9 - Extra brackets in the relationship reference
+assign a;
+Select a such that Uses((a,"cenX");
+SyntaxError
+5000
+10 - Extra brackets in the relationship reference
+assign a;
+Select a such that Uses(a,"cenX"));
+SyntaxError
+5000
+11 - Extra characters in the relationship reference
+assign a;
+Select a such that Uses(a,,"cenX");
+SyntaxError
+5000
+12 - Invalid characters in the relationship reference
+assign a;
+Select a such that Uses(a;"cenX");
+SyntaxError
+5000
+13 - Extra invalid characters at end of clause
+assign a;
+Select a pattern a(_, _) such that
+SyntaxError
+5000
+14 - Extra invalid character at end of clause
+assign a;
+Select a pattern a(_, _);
+SyntaxError
+5000
+15 - Invalid relationship reference
+assign a;
+Select a such that Follo(1,3)
+SyntaxError
+5000
+16 - Extra arguments in relationship reference
+assign a;
+Select a such that Follows(1,3,5)
+SyntaxError
+5000
+17 - Extra characters at start of select clause
+assign a; variable v;
+such that Select a such that Uses(a,v)
+SyntaxError
+5000
+18 - Extra characters at start of declaration
+as assign a; variable v;
+Select v
+SyntaxError
+5000
+19 - Use of IDENT in stmt reference
+assign a;
+Select a such that Follows("abc", 1)
+SyntaxError
+5000
+20 - Use of IDENT in stmt reference
+assign a;
+Select a such that Follows*("abc", 1)
+SyntaxError
+5000
+21 - Use of IDENT in stmt reference
+assign a;
+Select a such that Parent("abc", 1)
+SyntaxError
+5000
+22 - Use of IDENT in stmt reference
+assign a;
+Select a such that Parent*("abc", 1)
+SyntaxError
+5000
+23 - Multiple invalid clauses
+assign a;
+Select a such thatParent*(1, 3) patterna("cenX", _)
+SyntaxError
+5000
+24 - Missing select statement
+assign a;
+
+SyntaxError
+5000
+25 - Missing select synonym
+assign a;
+Select
+SyntaxError
+5000
+26 -- Missing synonym in declaration
+assign a; variable;
+Select a
+SyntaxError
+5000
+27 -- Missing comma in declaration
+variable v v1;
+Select v
+SyntaxError
+5000
+28 - Design entity not declared
+variables v;
+Select a
+SyntaxError
+5000
+29 - No select keyword
+assign a; variable v;
+a such that Uses(a,v)
+SyntaxError
+5000
+30 - Invalid synonym
+assign 0a; variable v;
+Select 0a such that Modifies(0a,v)
+SyntaxError
+5000
+31 - Invalid synonym
+assign 123; variable v;
+Select v such that Modifies(123,v)
+SyntaxError
+5000
+32 -- Invalid IDENT
+assign a;
+Select a such that Modifies(a, "1")
+SyntaxError
+5000

@@ -1,4 +1,4 @@
-#include "qps/clauses/assign_pattern_evaluator.h"
+#include "qps/query_evaluator/assign_pattern_evaluator.h"
 
 BinaryConstraint AssignPatternEvaluator::Handle(std::string& assign_synonym,
                                                 Declaration& lhs,

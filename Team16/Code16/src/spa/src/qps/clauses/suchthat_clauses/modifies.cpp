@@ -7,7 +7,7 @@ Constraint ModifiesP::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void ModifiesP::Validate() {
-  SuchThatValidator::ValidateModifies(lhs, rhs);
+  SuchThatValidator::ValidateUsesModifies(lhs, rhs);
 }
 
 Constraint ModifiesS::Evaluate(ReadFacade& pkb_reader) {
@@ -17,5 +17,5 @@ Constraint ModifiesS::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void ModifiesS::Validate() {
-  SuchThatValidator::ValidateModifies(lhs, rhs);
+  SuchThatValidator::ValidateUsesModifies(lhs, rhs);
 }

@@ -3,11 +3,10 @@
 
 TEST_CASE("Select Clause Builder successfully sets attributes of clause") {
   SelectClauseBuilder builder;
-  builder.setEntity(DesignEntity::VARIABLE);
-  builder.setSynonym("v");
+  Declaration declaration = {"v", DesignEntity::VARIABLE};
+  builder.setDeclaration(declaration);
   SelectClause select_clause = builder.getClause();
-  REQUIRE(select_clause.synonym == "v");
-  REQUIRE(select_clause.design_entity == DesignEntity::VARIABLE);
+  REQUIRE(select_clause.declaration.equals(declaration));
 }
 
 TEST_CASE("Clause Director can create select clause") {
@@ -15,10 +14,10 @@ TEST_CASE("Clause Director can create select clause") {
   QueryToken token = {"v", PQLTokenType::SYNONYM};
 
   std::vector<Declaration> declarations;
-  declarations.push_back({"v", DesignEntity::VARIABLE});
+  Declaration declaration = {"v", DesignEntity::VARIABLE};
+  declarations.push_back(declaration);
   SelectClause selectClause = ClauseDirector::makeSelectClause(builder, token, declarations);
-  REQUIRE(selectClause.synonym == "v");
-  REQUIRE(selectClause.design_entity == DesignEntity::VARIABLE);
+  REQUIRE(selectClause.declaration.equals(declaration));
 }
 
 TEST_CASE("Such that Clause Builder successfully sets attributes of parent relation") {
