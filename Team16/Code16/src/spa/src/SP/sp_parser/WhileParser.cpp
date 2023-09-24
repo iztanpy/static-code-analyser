@@ -38,3 +38,16 @@ int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
 
     return index;
 }
+
+int WhileParser::getLineNumber() {
+    return lineNumber;
+}
+void WhileParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+int WhileParser::getIndex() {
+    return index;
+}
+void WhileParser::setIndex(int newIndex) {
+    index = newIndex;
+}

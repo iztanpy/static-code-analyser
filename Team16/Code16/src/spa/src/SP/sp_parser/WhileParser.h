@@ -25,6 +25,11 @@
  * It extends the base `Parser` class and provides methods for parsing and handling while statements.
  */
 class WhileParser : public Parser {
+ private:
+    ASTVisitor* visitor;
+    int lineNumber = 0;
+    int index = 0;
+
  public:
      /**
      * @brief Constructs a WhileParser object with an associated ASTVisitor.
@@ -42,8 +47,25 @@ class WhileParser : public Parser {
     * @return The index in the token vector after parsing the while statement.
     */
     int parse(std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor;
-    int lineNumber = 0;
-    int index = 0;
+    /**
+     * @brief Retrieves the current line number.
+     * @return The current line number.
+    */
+    int getLineNumber();
+    /**
+     * @brief Sets the line number to the specified value.
+     * @param newLineNumber The new line number to set.
+     */
+    void setLineNumber(int newLineNumber);
+    /**
+    * @brief Retrieves the current index.
+    * @return The current index.
+    */
+    int getIndex();
+    /**
+     * @brief Sets the index to the specified value.
+     * @param newIndex The new index to set.
+     */
+    void setIndex(int newIndex);
 };
 

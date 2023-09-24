@@ -43,3 +43,16 @@ int IfParser::parse(std::vector<Token>& tokens, int curr_index) {
 
   return index;
 }
+
+int IfParser::getLineNumber() {
+    return lineNumber;
+}
+void IfParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+int IfParser::getIndex() {
+    return index;
+}
+void IfParser::setIndex(int newIndex) {
+    index = newIndex;
+}

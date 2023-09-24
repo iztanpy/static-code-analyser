@@ -26,6 +26,10 @@ class SimpleParser;
  * and handling read statements.
  */
 class ReadParser : public Parser {
+ private:
+    ASTVisitor* visitor;
+    int lineNumber = 0;
+
  public:
     /**
      * @brief Constructs a ReadParser object with an associated ASTVisitor.
@@ -43,8 +47,15 @@ class ReadParser : public Parser {
     * @return The index in the token vector after parsing the read statement.
     */
     int parse(std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor;
-    int lineNumber = 0;
-    /*std::unordered_map<std::string, std::unordered_set<std::string>> getModifiesVarHashmap();*/
+    /**
+    * @brief Retrieves the current line number.
+    * @return The current line number.
+    */
+    int getLineNumber();
+    /**
+     * @brief Sets the line number to the specified value.
+     * @param newLineNumber The new line number to set.
+     */
+    void setLineNumber(int newLineNumber);
 };
 

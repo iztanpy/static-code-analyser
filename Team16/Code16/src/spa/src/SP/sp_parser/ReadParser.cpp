@@ -45,3 +45,10 @@ int ReadParser::parse(std::vector<Token>& tokens, int curr_index) {
     designExtractor->extractDesign(root, visitor);
     return curr_index;
 }
+int ReadParser::getLineNumber() {
+    return lineNumber;
+}
+void ReadParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+

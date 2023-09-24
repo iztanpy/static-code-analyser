@@ -25,6 +25,10 @@ class SimpleParser;
  * and handling function call statements.
  */
 class CallParser : public Parser {
+ private:
+    ASTVisitor* visitor;
+    int lineNumber = 0;
+
  public:
     /**
      * @brief Constructs a CallParser object with an associated ASTVisitor.
@@ -42,7 +46,5 @@ class CallParser : public Parser {
      * @return The index in the token vector after parsing the function call statement.
      */
     int parse(std::vector<Token>& tokens, int curr_index) override;
-    ASTVisitor* visitor;
-    int lineNumber = 0;
 };
 

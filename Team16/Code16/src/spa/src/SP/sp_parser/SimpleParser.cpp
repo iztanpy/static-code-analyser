@@ -30,8 +30,8 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             Token next_token = tokens.at(curr_index + 1);
 
             if (next_token.tokenType == TokenType::kEntityAssign) {
-                assignmentParser->lineNumber = lineNumber;
-                assignmentParser->index = curr_index;
+                assignmentParser->setLineNumber(lineNumber);
+                assignmentParser->setIndex(curr_index);
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
@@ -60,7 +60,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             std::set<int> procedureFollowsSet;
             followsStatementStack.push(procedureFollowsSet);
         } else if (curr_token.tokenType == TokenType::kEntityRead) {
-            readParser->lineNumber = lineNumber;
+            readParser->setLineNumber(lineNumber);
             int next_index = readParser->parse(tokens, curr_index);
             if (next_index == -1) {
                 throw InvalidSyntaxError();
@@ -70,7 +70,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityPrint) {
-            printParser->lineNumber = lineNumber;
+            printParser->setLineNumber(lineNumber);
             int next_index = printParser->parse(tokens, curr_index);
             if (next_index == -1) {
               throw InvalidSyntaxError();
@@ -82,8 +82,8 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
         } else if (curr_token.tokenType == TokenType::kEntityWhile) {
             controlStructureStack.push("while");
             parentStatementStack.push(lineNumber);
-            whileParser->lineNumber = lineNumber;
-            whileParser->index = curr_index;
+            whileParser->setLineNumber(lineNumber);
+            whileParser->setIndex(curr_index);
             int next_index = whileParser->parse(tokens, curr_index);
             currWhileDepth++;
 
@@ -107,8 +107,8 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
         } else if (curr_token.tokenType == TokenType::kEntityIf) {
             controlStructureStack.push("if");
             parentStatementStack.push(lineNumber);
-            ifParser->lineNumber = lineNumber;
-            ifParser->index = curr_index;
+            ifParser->setLineNumber(lineNumber);
+            ifParser->setIndex(curr_index);
             int next_index = ifParser->parse(tokens, curr_index);
             currIfDepth++;
 
