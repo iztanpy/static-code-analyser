@@ -1,4 +1,4 @@
-#include "follows_evaluator.h"
+#include "qps/query_evaluator/follows_evaluator.h"
 
 bool FollowsEvaluator::Handle(int lhs, int rhs, ReadFacade& pkb_reader, bool is_FollowT) {
   if (is_FollowT) {

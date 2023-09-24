@@ -9,7 +9,7 @@
 #include "PKB/API/ReadFacade.h"
 #include "utils/hash_utils.h"
 #include "utils/entity_types.h"
-#include "evaluator_util.h"
+#include "qps/query_evaluator/evaluator_util.h"
 
 /*!
  * A visitor that handles the evaluation of Select clauses

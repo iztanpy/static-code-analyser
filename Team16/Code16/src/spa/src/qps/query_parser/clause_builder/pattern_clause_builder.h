@@ -2,6 +2,9 @@
 
 #include <vector>
 #include <memory>
+#include <utility>
+#include <string>
+
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/declaration.h"
 #include "qps/clauses/pattern_clauses/pattern_clause.h"

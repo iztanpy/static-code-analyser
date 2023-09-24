@@ -6,9 +6,8 @@
 #include <utility>
 
 #include "utils/entity_types.h"
-#include "evaluator_util.h"
+#include "qps/query_evaluator/evaluator_util.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
-#include "utils/entity_types.h"
 
 /*!
  * A visitor that handles the evaluation of ModifiesS/ModifiesP clauses

@@ -6,8 +6,7 @@
 #include <utility>
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
-#include "evaluator_util.h"
-#include "utils/entity_types.h"
+#include "qps/query_evaluator/evaluator_util.h"
 #include "utils/entity_types.h"
 
 /*!
