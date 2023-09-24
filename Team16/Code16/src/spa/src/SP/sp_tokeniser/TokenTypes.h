@@ -2,6 +2,10 @@
 
 /**
  * @brief Enumeration representing different token types used in the Simple Programming Language (SPL).
+ *
+ * The `TokenType` enum defines various token types that are used to classify and categorize elements
+ * in the Simple Programming Language (SPL). These token types include keywords, literals, operators,
+ * separators, and an unknown error type for unmatched tokens.
  */
 enum class TokenType {
   // Keywords

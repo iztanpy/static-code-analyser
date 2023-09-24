@@ -2,8 +2,6 @@
 
 int ProcedureParser::parse(std::vector<Token>& tokens, int curr_index) {
     // validate procedure declaration: procedure (already validated), name, open brace
-    // validations will be refactored into a (syntactic/semantic)evaluator in the future
-    // validate size of procedure declaration
     if (curr_index + 2 > tokens.size()) {
         return -1;
     }

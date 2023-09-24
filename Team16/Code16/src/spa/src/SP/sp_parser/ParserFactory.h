@@ -24,16 +24,25 @@
 
 #include "utils/Error.h"
 
+
+/**
+ * @class ParserFactory
+ * @brief A factory class for creating and managing parsers for different statement types.
+ *
+ * The `ParserFactory` class is responsible for creating and managing various parsers used to
+ * parse different types of statements represented as vectors of tokens. It provides methods to
+ * parse statements and retrieve parsed results.
+ */
 class ParserFactory {
  private:
     ASTVisitor* visitor;
     int lineNumber = 1;
-    AssignmentParser* assignmentParser;  // Move these declarations inside the constructor
+    AssignmentParser* assignmentParser;
     ReadParser* readParser;
 
  public:
     // Constructor for the factory class
-    ParserFactory() : assignmentParser(nullptr), readParser(nullptr) {}  // potential error here
+    ParserFactory() : assignmentParser(nullptr), readParser(nullptr) {}
 
     /**
      * Parses a list of tokens and returns a vector of integers and strings.
