@@ -1,4 +1,4 @@
-#include "qps/clauses/pattern_clause.h"
+#include "pattern_clause.h"
 
 Constraint WildCardPattern::Evaluate(ReadFacade& pkb_reader) {
   return std::visit([this, &pkb_reader](auto&& lhs_arg) {

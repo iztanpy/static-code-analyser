@@ -116,8 +116,8 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ParserFactory.cpp
         src/SP/sp_parser/CallParser.cpp
         src/SP/sp_parser/CallParser.h
-        src/qps/clauses/pattern_clause.cpp
-        src/qps/clauses/pattern_clause.h
+        src/qps/clauses/pattern_clauses/pattern_clause.cpp
+        src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
         src/qps/query_parser/clause_builder/pattern_clause_builder.h
         src/utils/string_utils.cpp
@@ -149,14 +149,14 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/follows_evaluator.h
         src/qps/clauses/suchthat_clauses/parent_evaluator.cpp
         src/qps/clauses/suchthat_clauses/parent_evaluator.h
-        src/qps/clauses/pattern_validator.cpp
-        src/qps/clauses/pattern_validator.h
+        src/qps/clauses/pattern_clauses/pattern_validator.cpp
+        src/qps/clauses/pattern_clauses/pattern_validator.h
         src/PKB/Stores/ProcedureStore.cpp
         src/PKB/Stores/ProcedureStore.cpp
         src/qps/clauses/evaluator_util.cpp
         src/qps/clauses/evaluator_util.h
-        src/qps/clauses/assign_pattern_evaluator.cpp
-        src/qps/clauses/assign_pattern_evaluator.h
+        src/qps/clauses/pattern_clauses/assign_pattern_evaluator.cpp
+        src/qps/clauses/pattern_clauses/assign_pattern_evaluator.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

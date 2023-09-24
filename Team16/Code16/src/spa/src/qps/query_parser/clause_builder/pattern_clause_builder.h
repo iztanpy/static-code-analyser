@@ -5,7 +5,7 @@
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/declaration.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
-#include "qps/clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/pattern_clause.h"
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 
 class PatternClauseBuilder : public ClauseBuilder {

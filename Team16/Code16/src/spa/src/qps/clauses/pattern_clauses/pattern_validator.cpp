@@ -1,4 +1,4 @@
-#include "qps/clauses/pattern_validator.h"
+#include "pattern_validator.h"
 
 void PatternValidator::Validate(Declaration& leading, EntRef& lhs) {
   if (kValidLeading.find(leading.design_entity) == kValidLeading.end()) {

@@ -5,8 +5,8 @@
 
 #include "qps/query_evaluator/constraint.h"
 #include "qps/clauses/clause.h"
-#include "qps/clauses/pattern_validator.h"
-#include "qps/clauses/assign_pattern_evaluator.h"
+#include "pattern_validator.h"
+#include "qps/clauses/pattern_clauses/assign_pattern_evaluator.h"
 #include "PKB/API/ReadFacade.h"
 #include "utils/clauses_types.h"
 

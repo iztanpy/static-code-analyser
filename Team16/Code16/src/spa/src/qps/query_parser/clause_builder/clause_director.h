@@ -8,7 +8,7 @@
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/declaration.h"
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
-#include "qps/clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/pattern_clause.h"
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 
 class ClauseDirector {
@@ -21,7 +21,7 @@ class ClauseDirector {
    * @return a Select clause
    */
   static SelectClause makeSelectClause(
-      SelectClauseBuilder builder, const QueryToken & token, const std::vector<Declaration> & declarations);
+      SelectClauseBuilder builder, const QueryToken& token, const std::vector<Declaration>& declarations);
 
   /*!
    * Builds a Such that clause
@@ -32,8 +32,8 @@ class ClauseDirector {
    */
   static std::unique_ptr<SuchThatClause> makeSuchThatClause(
       SuchThatClauseBuilder builder,
-      const std::vector<QueryToken> & tokens,
-      const std::vector<Declaration> & declarations);
+      const std::vector<QueryToken>& tokens,
+      const std::vector<Declaration>& declarations);
 
   /*!
    * Builds a Patter clause
@@ -44,6 +44,6 @@ class ClauseDirector {
    */
   static std::unique_ptr<PatternClause> makePatternClause(
       PatternClauseBuilder builder,
-      const std::vector<QueryToken> & tokens,
-      const std::vector<Declaration> & declarations);
+      const std::vector<QueryToken>& tokens,
+      const std::vector<Declaration>& declarations);
 };
