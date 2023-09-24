@@ -122,13 +122,9 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
 std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     std::vector<Token> tokens;
     std::vector<std::string> lines = splitLines(input);
-    int lineNumber = 1;
     std::stack<char> braceStack;
 
     for (const std::string& line : lines) {
-        int linePositionWithWhiteSpace = 0;
-        int linePosition = 0;
-
         TokenType matchedType = TokenType::kUnknownTokenType;
         std::string matchedValue;
         for (const auto& regex_rule : regex_rules) {
@@ -150,7 +146,6 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
         }
 
         if (matchedType == TokenType::kWhiteSpace) {
-            linePositionWithWhiteSpace++;
         } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
             if (braceStack.empty()) {
                 throw InvalidSyntaxError();
@@ -158,15 +153,13 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                 char top = braceStack.top();
                 if (matchedValue[0] == '}' && top == '{') {
                     braceStack.pop();
-                    Token token{ matchedType, matchedValue, lineNumber, linePosition };
+                    Token token{ matchedType, matchedValue };
                     tokens.push_back(token);
                 } else if (matchedValue[0] == ')' && top == '(') {
                     braceStack.pop();
                     // insert ')' as a token
-                    Token token{matchedType, matchedValue, lineNumber, linePosition};
+                    Token token{matchedType, matchedValue};
                     tokens.push_back(token);
-                    linePosition += 1;
-                    linePositionWithWhiteSpace += 1;
                 } else {
                     throw InvalidSyntaxError();
                 }
@@ -175,19 +168,13 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             if (std::isdigit(matchedValue[0])) {
                 throw InvalidTokenTypeError();
             } else {
-                Token token{matchedType, matchedValue, lineNumber, linePosition};
+                Token token{matchedType, matchedValue};
                 tokens.push_back(token);
-                linePositionWithWhiteSpace += matchedValue.length();
-                linePosition += matchedValue.length();
             }
         } else {
-            Token token{matchedType, matchedValue, lineNumber, linePosition};
+            Token token{matchedType, matchedValue};
             tokens.push_back(token);
-            linePosition += 1;
-            linePositionWithWhiteSpace += 1;
         }
-
-        if (matchedType == TokenType::kSepSemicolon || matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
     }
     if (!braceStack.empty()) {
         throw InvalidSyntaxError();

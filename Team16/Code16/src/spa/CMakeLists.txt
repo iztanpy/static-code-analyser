@@ -100,8 +100,6 @@ add_library(spa ${srcs} ${headers}
         src/SP/SourceProcessor.cpp
         src/SP/sp_parser/WhileParser.cpp
         src/SP/sp_parser/WhileParser.h
-        src/SP/sp_parser/ConditionParser.h
-        src/SP/sp_parser/ConditionParser.cpp
         src/SP/sp_parser/PrintParser.cpp
         src/SP/sp_parser/PrintParser.h
         src/SP/sp_parser/IfParser.h
