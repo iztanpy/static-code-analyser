@@ -33,6 +33,13 @@ std::string Trim(const std::string & str);
 std::string RemoveWhiteSpaces(const std::string & str);
 
 /*!
+ * Checks if the string is a white space
+ * @param str is the specified string
+ * @return true if the string is a white space, else false
+ */
+bool IsWhiteSpace(const std::string & str);
+
+/*!
  * Splits string into a vector of strings wrt to a delimiter
  * @param delimiter where the string should split
  * @param str the string to split

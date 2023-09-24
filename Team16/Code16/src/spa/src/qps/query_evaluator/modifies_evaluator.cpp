@@ -1,4 +1,4 @@
-#include "qps/clauses/suchthat_clauses/modifies_evaluator.h"
+#include "qps/query_evaluator/modifies_evaluator.h"
 
 UnaryConstraint ModifiesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
   return {rhs.synonym, pkb_reader.modifies(lhs)};

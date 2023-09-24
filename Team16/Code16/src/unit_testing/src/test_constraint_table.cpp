@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "qps/query_evaluator/constraint_table.h"
+#include "qps/query_evaluator/constraint_solver/constraint_table.h"
 
 /*
  * Since the implementation of ConstraintTable makes heavy use of std::unordered_set

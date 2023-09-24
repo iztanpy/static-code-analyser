@@ -21,7 +21,6 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 
 
     // entity
-    {TokenType::kEntityThen, std::regex("^(\\bthen\\b)")},
     {TokenType::kEntityAssign, std::regex("^(=)")},
 
     // separators
@@ -36,7 +35,7 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     {TokenType::kWhiteSpace, std::regex("^(\\s+)")},
 
     // literals
-    {TokenType::kLiteralInteger, std::regex("^(\\b[+-]?\\d+\\b)")},
+    {TokenType::kLiteralInteger, std::regex("^(0|[1-9][0-9]*)$")},
     {TokenType::kLiteralName, std::regex("^(\\b[0-9a-zA-Z]+\\b)")},
 
 
@@ -178,7 +177,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             }
         } else if (matchedType == TokenType::kLiteralName) {
             if (std::isdigit(matchedValue[0])) {
-                throw std::runtime_error("Invalid Token: Name cannot start with a digit");
+                throw std::runtime_error("Invalid Token.");
             } else {
                 Token token{matchedType, matchedValue, lineNumber, linePosition};
                 tokens.push_back(token);

@@ -10,6 +10,8 @@ const char kCloseBracket = ')';
 const char kComma = ',';
 const char kEqual = '=';
 const char kSemicolon = ';';
+const char kWildcard = '_';
+
 const std::vector<char> kSpecialTokens = {
     kOpenBracket,
     kCloseBracket,
@@ -18,8 +20,8 @@ const std::vector<char> kSpecialTokens = {
     kSemicolon
 };
 
-const char kWildcard = '_';
-
-const std::regex kSuchThatClauseRegex("\\b(such that)\\b");
-const std::regex kPatternClauseRegex("\\b(pattern)\\b");
+const std::regex kSuchThatClauseRegex("such that [A-Za-z]");
+const std::regex kPatternClauseRegex("pattern [A-Za-z]");
+const std::regex kOnlySuchThat("such that$");
+const std::regex kOnlyPattern("pattern$");
 }  // namespace qps_constants
