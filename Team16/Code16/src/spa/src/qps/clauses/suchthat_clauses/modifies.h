@@ -4,8 +4,11 @@
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
-#include "qps/clauses/suchthat_clauses/modifies_evaluator.h"
+#include "qps/query_evaluator/modifies_evaluator.h"
 
+/*!
+ * Represents a ModifiesP clause in a query according to PQL grammar
+ */
 class ModifiesP : public SuchThatClause {
  public:
   EntRef lhs;
@@ -22,6 +25,9 @@ class ModifiesP : public SuchThatClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a ModifiesS clause in a query according to PQL grammar
+ */
 class ModifiesS : public SuchThatClause {
  public:
   StmtRef lhs;

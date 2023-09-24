@@ -1,7 +1,5 @@
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 
-#include <utility>
-
 // Checks if both RefParam are of type StmtRef
 bool SuchThatClause::are_stmt_ref(const RefParam& param_1, const RefParam& param_2) {
   return std::holds_alternative<StmtRef>(param_1) && std::holds_alternative<StmtRef>(param_2);

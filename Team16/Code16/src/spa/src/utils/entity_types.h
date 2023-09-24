@@ -1,9 +1,14 @@
 #pragma once
 
 #include <stdio.h>
+#include <variant>
+#include <string>
 
 #include "qps/qps_errors/qps_semantic_error.h"
 
+/*!
+ * An enum class that represents the different types of statements
+ */
 enum class StmtEntity {
   kStmt,
   kRead,
@@ -15,10 +20,25 @@ enum class StmtEntity {
   kProcedure
 };
 
+/*!
+ * An enum class that represents the different types of design entities
+ */
 enum class DesignEntity {
   STMT, READ, PRINT, CALL, WHILE_LOOP, IF_STMT, ASSIGN, VARIABLE, CONSTANT, PROCEDURE
 };
 
+/*!
+ * An enum class that represents "_"
+ */
+enum class Wildcard {
+  Value,
+};
+
+/*!
+ * Converts a DesignEntity to a StmtEntity
+ * @param entity The DesignEntity to convert
+ * @return The converted StmtEntity
+ */
 static StmtEntity ConvertToStmtEntity(DesignEntity entity) {
   switch (entity) {
     case DesignEntity::STMT: return StmtEntity::kStmt;

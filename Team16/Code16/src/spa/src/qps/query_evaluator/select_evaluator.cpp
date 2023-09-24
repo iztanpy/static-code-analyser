@@ -1,18 +1,15 @@
 #include "qps/query_evaluator/select_evaluator.h"
 
-SelectEvaluator::SelectEvaluator(ReadFacade& pkb_reader, const SelectClause select_clause)
-    : pkb_reader(pkb_reader), select_clause(select_clause) {}
-
-UnaryConstraint SelectEvaluator::Evaluate() {
+UnaryConstraint SelectEvaluator::Evaluate(Declaration& declaration, ReadFacade& pkb_reader) {
   auto values = [&]() -> std::unordered_set<std::string> {
-    switch (select_clause.design_entity) {
+    switch (declaration.design_entity) {
       case DesignEntity::STMT:
       case DesignEntity::READ:
       case DesignEntity::PRINT:
       case DesignEntity::CALL:
       case DesignEntity::WHILE_LOOP:
       case DesignEntity::IF_STMT: {
-        std::unordered_set<int> result = pkb_reader.getStatements(ConvertToStmtEntity(select_clause.design_entity));
+        std::unordered_set<int> result = pkb_reader.getStatements(ConvertToStmtEntity(declaration.design_entity));
         return EvaluatorUtil::ToStringSet(result);
       }
       case DesignEntity::ASSIGN: {
@@ -26,7 +23,7 @@ UnaryConstraint SelectEvaluator::Evaluate() {
   }();
 
   return UnaryConstraint{
-      select_clause.synonym,
+      declaration.synonym,
       values
   };
 }

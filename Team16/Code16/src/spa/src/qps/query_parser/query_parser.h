@@ -7,7 +7,7 @@
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/clauses/select_clause.h"
 #include "qps/declaration.h"
-#include "qps/clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/pattern_clause.h"
 
 class QueryParser {
  public:
@@ -16,7 +16,7 @@ class QueryParser {
    * @param query is the query string to be parsed
    * @return a ParsedQuery object
    */
-  static ParsedQuery ParseTokenizedQuery(std::string & query);
+  static ParsedQuery ParseTokenizedQuery(std::string& query);
 
   /*!
    * Creates select clauses given tokens and declarations
@@ -25,7 +25,7 @@ class QueryParser {
    * @return a vector of select clauses
    */
   static std::vector<SelectClause>
-  ExtractSelectClauses(const std::vector<QueryToken> & selectTokens, const std::vector<Declaration> & declarations);
+  ExtractSelectClauses(const std::vector<QueryToken>& selectTokens, const std::vector<Declaration>& declarations);
 
   /*!
    * Create such that clauses given tokens and declarations
@@ -34,7 +34,7 @@ class QueryParser {
    * @return a vector of pointers to such that clauses
    */
   static std::vector<std::unique_ptr<SuchThatClause>>
-  ExtractSuchThatClauses(const std::vector<QueryToken> & suchThatTokens, const std::vector<Declaration> & declarations);
+  ExtractSuchThatClauses(const std::vector<QueryToken>& suchThatTokens, const std::vector<Declaration>& declarations);
 
   /*!
    * Creates pattern clauses given tokens and declarations
@@ -43,5 +43,5 @@ class QueryParser {
    * @return a vector of pointers to pattern clauses
    */
   static std::vector<std::unique_ptr<PatternClause>>
-  ExtractPatternClauses(const std::vector<QueryToken> & patternTokens, const std::vector<Declaration> & declarations);
+  ExtractPatternClauses(const std::vector<QueryToken>& patternTokens, const std::vector<Declaration>& declarations);
 };

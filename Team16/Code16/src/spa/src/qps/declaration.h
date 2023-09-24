@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "utils/entity_types.h"
 #include "qps/design_entity.h"
 
 struct Declaration {
@@ -13,5 +14,5 @@ struct Declaration {
    * @param other declaration to compare
    * @return true if the declarations are equal, else false
    */
-  bool equals(Declaration & other) const;
+  bool equals(Declaration other) const;
 };
