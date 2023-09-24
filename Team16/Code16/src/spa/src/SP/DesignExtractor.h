@@ -44,13 +44,4 @@ class DesignExtractor {
       * @return An integer status code indicating the success or failure of the extraction process.
     */
     int extractDesign(std::shared_ptr<TNode> root, ASTVisitor* visitor);
-    /**
-     * @brief Populates the Program Knowledge Base (PKB) with extracted design information.
-     *
-     * This method is responsible for populating the Program Knowledge Base (PKB) with the design information
-     * extracted from the abstract syntax tree (AST). It updates the PKB with relevant data for program analysis.
-     *
-     * @return An integer status code indicating the success or failure of the PKB population process.
-    */
-    int populatePKB();
 };

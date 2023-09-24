@@ -35,57 +35,10 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[19].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[20].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
-
-    REQUIRE(tokens_simple[0].lineNumber == 1);
-    REQUIRE(tokens_simple[1].lineNumber == 1);
-    REQUIRE(tokens_simple[2].lineNumber == 1);
-    REQUIRE(tokens_simple[3].lineNumber == 1);
-
-    REQUIRE(tokens_simple[4].lineNumber == 2);
-    REQUIRE(tokens_simple[5].lineNumber == 2);
-    REQUIRE(tokens_simple[6].lineNumber == 2);
-    REQUIRE(tokens_simple[7].lineNumber == 2);
-    REQUIRE(tokens_simple[8].lineNumber == 2);
-    REQUIRE(tokens_simple[9].lineNumber == 2);
-    REQUIRE(tokens_simple[10].lineNumber == 2);
-    REQUIRE(tokens_simple[11].lineNumber == 2);
-    REQUIRE(tokens_simple[12].lineNumber == 2);
-    REQUIRE(tokens_simple[13].lineNumber == 2);
-    REQUIRE(tokens_simple[14].lineNumber == 2);
-    REQUIRE(tokens_simple[15].lineNumber == 2);
-    REQUIRE(tokens_simple[16].lineNumber == 2);
-    REQUIRE(tokens_simple[17].lineNumber == 2);
-    REQUIRE(tokens_simple[18].lineNumber == 2);
-
-    REQUIRE(tokens_simple[19].lineNumber == 3);
-    REQUIRE(tokens_simple[20].lineNumber == 3);
-    REQUIRE(tokens_simple[21].lineNumber == 3);
-
 }
 
 
 
-TEST_CASE("Test Line Numbers") {
-    SPtokeniser tokeniser;
-    std::vector<struct Token> tokens = tokeniser.tokenise("cenX; cenY; cenA;");
-    REQUIRE(tokens[0].value == "cenX");
-    REQUIRE(tokens[2].value == "cenY");
-    REQUIRE(tokens[4].value == "cenA");
-
-    REQUIRE(tokens[0].lineNumber == 1);
-    REQUIRE(tokens[2].lineNumber == 2);
-    REQUIRE(tokens[4].lineNumber == 3);
-
-    REQUIRE(tokens[0].linePosition == 0);
-    REQUIRE(tokens[2].linePosition == 0);
-    REQUIRE(tokens[4].linePosition == 0);
-
-
-    std::vector<struct Token> tokens_q = tokeniser.tokenise("cenX = a + b;");
-    REQUIRE(tokens_q[0].lineNumber == 1);
-    REQUIRE(tokens_q[2].lineNumber == 1);
-    REQUIRE(tokens_q[4].lineNumber == 1);
-}
 
 
 TEST_CASE("Test Delimiters") {
@@ -96,8 +49,6 @@ TEST_CASE("Test Delimiters") {
     REQUIRE(tokens[1].tokenType == TokenType::kSepSemicolon);
     REQUIRE(tokens[0].value == "cenX");
     REQUIRE(tokens[1].value == ";");
-    REQUIRE(tokens[0].lineNumber == 1);
-    REQUIRE(tokens[1].lineNumber == 1);
 }
 
 
@@ -193,35 +144,7 @@ TEST_CASE(("Test procedure")) {
     REQUIRE(tokens_simple[20].tokenType == TokenType::kLiteralName);
     REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
     REQUIRE(tokens_simple[22].tokenType == TokenType::kSepCloseBrace);
-
-
-    REQUIRE(tokens_simple[0].lineNumber == 1);
-    REQUIRE(tokens_simple[1].lineNumber == 1);
-    REQUIRE(tokens_simple[2].lineNumber == 1);
-
-    REQUIRE(tokens_simple[3].lineNumber == 2);
-    REQUIRE(tokens_simple[5].lineNumber == 2);
-    REQUIRE(tokens_simple[6].lineNumber == 2);
-
-    REQUIRE(tokens_simple[7].lineNumber == 3);
-    REQUIRE(tokens_simple[8].lineNumber == 3);
-    REQUIRE(tokens_simple[9].lineNumber == 3);
-    REQUIRE(tokens_simple[10].lineNumber == 3);
-    REQUIRE(tokens_simple[11].lineNumber == 3);
-    REQUIRE(tokens_simple[12].lineNumber == 3);
-    REQUIRE(tokens_simple[13].lineNumber == 3);
-    REQUIRE(tokens_simple[14].lineNumber == 3);
-
-    REQUIRE(tokens_simple[16].lineNumber == 4);
-    REQUIRE(tokens_simple[17].lineNumber == 4);
-    REQUIRE(tokens_simple[18].lineNumber == 4);
-
-    REQUIRE(tokens_simple[19].lineNumber == 5);
-    REQUIRE(tokens_simple[20].lineNumber == 5);
-    REQUIRE(tokens_simple[21].lineNumber == 5);
-
     REQUIRE(tokens_simple.size() == 23);
-
 }
 
 TEST_CASE("Test split lines") {

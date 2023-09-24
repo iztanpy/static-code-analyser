@@ -44,7 +44,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             } else {
                 TokenType newTokenType = ParseUtils::convertLiteralToEntity(curr_token.getValue());
                 std::string newValue = curr_token.getValue();
-                Token newToken{ newTokenType, newValue, curr_token.lineNumber, curr_token.linePosition };
+                Token newToken{ newTokenType, newValue };
                 tokens[curr_index] = newToken;  // Remove 'const' keyword and the 'new' keyword
             }
         } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
