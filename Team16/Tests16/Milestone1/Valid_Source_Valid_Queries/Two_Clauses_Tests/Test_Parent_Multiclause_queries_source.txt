@@ -1,0 +1,29 @@
+procedure procedure {
+  then = 2;
+    if = else + while;
+    procedure = procedure % procedure;
+    read while;
+    while ((i == 0) || (k >= 9)) {
+        i = i + 1;
+        k = k - 1;
+    }
+    print print;
+    while ( !(while == while)) {
+        if (if == if) then {
+            print = print + print;
+            procedure = procedure + procedure * procedure / procedure;
+            read = read + read + print % then;
+        } else {
+            read = read + read + print % then;
+        }
+        procedure = procedure + procedure * procedure / procedure;
+        procedure = 1 + 5 % then;
+        while ((i == 0) || (k >= 9)) {
+            procedures = i + 2;
+            procedure = k - 2;
+        }
+        procedures = i + 1;
+        procedure = k - 1;
+    }
+    read r;
+}
