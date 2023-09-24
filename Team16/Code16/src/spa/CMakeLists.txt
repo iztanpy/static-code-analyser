@@ -18,9 +18,9 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/query_parser.h
         src/qps/clauses/clause.h
         src/qps/clauses/select_clause.cpp
-        src/qps/query_evaluator/constraint_solver.cpp
-        src/qps/query_evaluator/constraint_solver.h
-        src/qps/query_evaluator/constraint.h
+        src/qps/query_evaluator/constraint_solver/constraint_solver.cpp
+        src/qps/query_evaluator/constraint_solver/constraint_solver.h
+        src/qps/query_evaluator/constraint_solver/constraint.h
         src/qps/query_evaluator/select_evaluator.cpp
         src/qps/query_evaluator/select_evaluator.h
         src/PKB/PKB.h
@@ -49,8 +49,8 @@ add_library(spa ${srcs} ${headers}
         src/PKB/PKB.cpp
         src/qps/qps.cpp
         src/qps/qps.h
-        src/qps/query_evaluator/constraint_table.cpp
-        src/qps/query_evaluator/constraint_table.h
+        src/qps/query_evaluator/constraint_solver/constraint_table.cpp
+        src/qps/query_evaluator/constraint_solver/constraint_table.h
         src/utils/Error.cpp
         src/utils/Error.h
         src/qps/qps_errors/qps_error.h
@@ -141,22 +141,22 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/follows.h
         src/qps/clauses/suchthat_clauses/suchthat_validator.cpp
         src/qps/clauses/suchthat_clauses/suchthat_validator.h
-        src/qps/clauses/suchthat_clauses/uses_evaluator.cpp
-        src/qps/clauses/suchthat_clauses/uses_evaluator.h
-        src/qps/clauses/suchthat_clauses/modifies_evaluator.cpp
-        src/qps/clauses/suchthat_clauses/modifies_evaluator.h
-        src/qps/clauses/suchthat_clauses/follows_evaluator.cpp
-        src/qps/clauses/suchthat_clauses/follows_evaluator.h
-        src/qps/clauses/suchthat_clauses/parent_evaluator.cpp
-        src/qps/clauses/suchthat_clauses/parent_evaluator.h
+        src/qps/query_evaluator/uses_evaluator.cpp
+        src/qps/query_evaluator/uses_evaluator.h
+        src/qps/query_evaluator/modifies_evaluator.cpp
+        src/qps/query_evaluator/modifies_evaluator.h
+        src/qps/query_evaluator/follows_evaluator.cpp
+        src/qps/query_evaluator/follows_evaluator.h
+        src/qps/query_evaluator/parent_evaluator.cpp
+        src/qps/query_evaluator/parent_evaluator.h
         src/qps/clauses/pattern_clauses/pattern_validator.cpp
         src/qps/clauses/pattern_clauses/pattern_validator.h
         src/PKB/Stores/ProcedureStore.cpp
         src/PKB/Stores/ProcedureStore.cpp
-        src/qps/clauses/evaluator_util.cpp
-        src/qps/clauses/evaluator_util.h
-        src/qps/clauses/pattern_clauses/assign_pattern_evaluator.cpp
-        src/qps/clauses/pattern_clauses/assign_pattern_evaluator.h
+        src/qps/query_evaluator/evaluator_util.cpp
+        src/qps/query_evaluator/evaluator_util.h
+        src/qps/query_evaluator/assign_pattern_evaluator.cpp
+        src/qps/query_evaluator/assign_pattern_evaluator.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

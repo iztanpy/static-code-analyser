@@ -1,4 +1,4 @@
-#include "qps/query_evaluator/constraint_table.h"
+#include "constraint_table.h"
 
 // TODO(phuccuongngo99): Convert these function to template and throw them into Util
 // {1, 2, 3}, 2 -> {1, 1, 2, 2, 3, 3}

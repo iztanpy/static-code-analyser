@@ -4,7 +4,7 @@
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
-#include "qps/clauses/suchthat_clauses/follows_evaluator.h"
+#include "qps/query_evaluator/follows_evaluator.h"
 
 class Follows : public SuchThatClause {
  public:

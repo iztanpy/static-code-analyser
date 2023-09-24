@@ -8,8 +8,8 @@
 #include <cassert>
 #include <utility>
 
-#include "qps/query_evaluator/constraint.h"
-#include "qps/query_evaluator/constraint_table.h"
+#include "constraint.h"
+#include "constraint_table.h"
 
 class ConstraintTable {
  public:

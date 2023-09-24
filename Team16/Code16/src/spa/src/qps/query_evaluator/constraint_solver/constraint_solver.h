@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_set>
 
-#include "qps/query_evaluator/constraint.h"
+#include "constraint.h"
 #include "qps/clauses/select_clause.h"
 
 // WIP: This will accept a list of constraint, it will solve them and allow
@@ -12,5 +12,5 @@
 // will be housed within here
 class ConstraintSolver {
  public:
-  std::vector<std::string> Solve(const SelectClause & select_clause, const std::vector<Constraint> & constraints);
+  std::vector<std::string> Solve(const SelectClause& select_clause, const std::vector<Constraint>& constraints);
 };

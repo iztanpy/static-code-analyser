@@ -8,7 +8,7 @@
 #include "qps/declaration.h"
 #include "qps/clauses/clause.h"
 #include "qps/rel_ref.h"
-#include "qps/query_evaluator/constraint.h"
+#include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/clauses_types.h"
 #include "PKB/API/ReadFacade.h"

@@ -6,7 +6,7 @@
 #include <cassert>
 
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
-#include "qps/clauses/suchthat_clauses/uses_evaluator.h"
+#include "qps/query_evaluator/uses_evaluator.h"
 
 class UsesS : public SuchThatClause {
  public:

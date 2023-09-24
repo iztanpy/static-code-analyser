@@ -3,10 +3,10 @@
 #include <string>
 #include <unordered_set>
 
-#include "qps/query_evaluator/constraint.h"
+#include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/declaration.h"
 #include "PKB/API/ReadFacade.h"
-#include "qps/clauses/evaluator_util.h"
+#include "evaluator_util.h"
 #include "utils/clauses_types.h"
 
 struct AssignPatternEvaluator {

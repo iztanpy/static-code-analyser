@@ -1,4 +1,4 @@
-#include "qps/clauses/suchthat_clauses/uses_evaluator.h"
+#include "uses_evaluator.h"
 
 UnaryConstraint UsesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
   return {rhs.synonym, pkb_reader.uses(lhs)};
