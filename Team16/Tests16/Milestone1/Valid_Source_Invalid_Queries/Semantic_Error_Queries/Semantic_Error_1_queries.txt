@@ -18,7 +18,7 @@ stmt a, a;
 Select a such that Follows( a , a )
 SemanticError
 5000
-5 - wrong entity in such that clause
+5 - wrong lhs entity for Parent
 constant const;
 Select const such that Parent(const, 3)
 SemanticError
@@ -28,17 +28,17 @@ stmt   s;
 Select s   such that Modifies(  _   , "var")
 SemanticError
 5000
-7 - reserved word as synonym in pattern
+7 - undeclared synonym
 assign such;
 Select such pattern such(that, _)
 SemanticError
 5000
-8 - arg_2 for Modifies is reserved word
+8 - wrong lhs entity for Modifies
 stmt t;
 Select t such that Modifies(3, t)
 SemanticError
 5000
-9 - undeclared synonym alphanumeric
+9 - undeclared select synonym
 assign alpha1;
 Select num1 such that Uses(alpha1, "var")
 SemanticError
@@ -48,7 +48,7 @@ stmt s2; read s2;
 Select s2 such that Follows*(s2, 4)
 SemanticError
 5000
-11 - alphanumeric synonym in pattern
+11 - undeclared assign pattern synonym
 assign alphaNum;
 Select alphaNum pattern alphaNum1("var", _)
 SemanticError
@@ -68,7 +68,7 @@ assign a; variable a;
 Select a such that Uses(a, a)
 SemanticError
 5000
-15 - alphanumeric synonym for reserved keyword
+15 - undeclared rhs synonym for Uses
 assign a2b;
 Select variable such that Uses(a2b, variable)
 SemanticError
@@ -88,7 +88,7 @@ stmt s4;
 Select s5 such that Follows(s4, s5)
 SemanticError
 5000
-19 - arg_2 for Follows* with alphanumeric synonym
+19 - wrong lhs entity for Follows*
 stmt s5; variable var1a;
 Select s5 such that Follows*(s5, var1a)
 SemanticError
@@ -98,7 +98,7 @@ stmt Stmt1;
 Select Stmt2 such that Parent(Stmt1, Stmt2)
 SemanticError
 5000
-21 - wrong entity type for Uses clause
+21 - wrong lhs entity type for Uses clause
 constant c;
 Select c such that Uses(c, "x")
 SemanticError
@@ -113,12 +113,12 @@ print p;
 Select p pattern p ( "v" , _ )
 SemanticError
 5000
-24 - arg_2 for Parent* is a reserved keyword
+24 - undeclared synonym
 stmt s;
 Select s such that Parent*(s, stmt)
 SemanticError
 5000
-25 - wrong entity type in pattern clause with mixed case
+25 - wrong entity type in pattern clause
 stmt S;
 Select S pattern S("v", _)
 SemanticError
