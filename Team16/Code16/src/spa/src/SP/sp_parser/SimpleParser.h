@@ -28,14 +28,13 @@ class DesignExtractor;  // Forward declaration
 class AssignmentParser;
 class WhileParser;
 
-/**
- * @class SimpleParser
- * @brief A concrete subclass of Parser for a simplified parsing task.
- *
- * The `SimpleParser` class inherits from the `Parser` class and provides an implementation for a simplified
- * parsing task. It includes an instance of `AssignmentParser` for parsing assignment statements and other parsers
- * for different statement types.
- */
+ /**
+  * @class SimpleParser
+  * @brief A concrete subclass of Parser for a simplified parsing task.
+  *
+  * The `SimpleParser` class inherits from the `Parser` class and provides an implementation for a simplified
+  * parsing task. It includes an instance of `AssignmentParser` for parsing assignment statements.
+  */
 class SimpleParser : public Parser {
  private:
     WriteFacade* writeFacade;
@@ -45,27 +44,9 @@ class SimpleParser : public Parser {
     int currWhileDepth;
     int currIfDepth;
     bool isParsingProcedure;
+
  public:
-     /**
-     * @brief Constructs a SimpleParser object with an associated WriteFacade and ASTVisitor.
-     *
-     * The constructor initializes the parser with a WriteFacade for writing analysis results
-     * and an ASTVisitor for visiting nodes in the abstract syntax tree.
-     *
-     * @param writeFacade A pointer to the WriteFacade used for writing analysis results.
-     * @param visitor A pointer to the ASTVisitor used for visiting nodes in the abstract syntax tree.
-     */
     explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
-    /**
-    * @brief Parses a list of tokens representing code starting from the given index.
-    *
-    * This method is responsible for parsing a list of tokens representing code starting at the specified index.
-    * It processes different types of statements using the associated parsers.
-    *
-    * @param tokens The vector of tokens representing the input code.
-    * @param curr_index The current index in the token vector where parsing should start.
-    * @return The index in the token vector after parsing the code.
-    */
     int parse(std::vector<Token>& tokens, int curr_index) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
     AssignmentParser* assignmentParser = new AssignmentParser(visitor);
@@ -75,14 +56,6 @@ class SimpleParser : public Parser {
     PrintParser* printParser = new PrintParser(visitor);
     IfParser* ifParser = new IfParser(visitor);
     CallParser* callParser = new CallParser(visitor);
-    /**
-     * @brief Inserts a set of follow relationship data into the appropriate data structure.
-     *
-     * This method inserts a set of follow relationship data into the appropriate data structure
-     * for further analysis and processing.
-     *
-     * @param followsSet A set of integers representing follow relationship data.
-     */
     void insertFollowsHashMap(std::set<int> followsSet);
 };
 

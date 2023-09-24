@@ -240,7 +240,8 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
   if (!QueryUtil::IsEntRef(left_hand_side)) {
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
-  if (!QueryUtil::IsPartialMatchExpressionSpecification(right_hand_side) && !QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)
+  if (!QueryUtil::IsPartialMatchExpressionSpecification(right_hand_side)
+      && !QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)
       && !QueryUtil::IsWildcard(right_hand_side)) {
     throw QpsSyntaxError("Invalid argument for RHS of pattern clause");
   }

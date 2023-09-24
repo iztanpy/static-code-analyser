@@ -31,7 +31,7 @@ class PrintParser : public Parser {
     * @param visitor A pointer to an ASTVisitor used for visiting nodes in the abstract syntax tree.
     */
   explicit PrintParser(ASTVisitor* visitor) : visitor(visitor) {}
-  
+
   /**
      * @brief Parses a print statement starting from the given index in the token vector.
      *

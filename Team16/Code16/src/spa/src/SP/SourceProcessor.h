@@ -30,6 +30,7 @@ class SourceProcessor {
     SPtokeniser tokeniser;
     SimpleParser simpleParser;
     ASTVisitor visitor;
+
  public:
     /**
      * @brief Constructs a SourceProcessor object with a WriteFacade for writing analysis results.
