@@ -9,6 +9,10 @@
 #include "evaluator_util.h"
 #include "utils/StmtEntity.h"
 
+/*!
+ * A visitor that handles the evaluation of Follows/FollowsT clauses
+ * It contains handling function for all combinations of Follows/FollowsT clauses parameters
+ */
 struct FollowsEvaluator {
   static bool Handle(int lhs, int rhs, ReadFacade& pkb_reader, bool is_FollowT);
 

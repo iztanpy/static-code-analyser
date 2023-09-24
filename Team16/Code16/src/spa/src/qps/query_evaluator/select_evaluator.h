@@ -11,7 +11,9 @@
 #include "utils/StmtEntity.h"
 #include "evaluator_util.h"
 
-// Evaluates the Select clause of a query
+/*!
+ * A visitor that handles the evaluation of Select clauses
+ */
 struct SelectEvaluator {
   static UnaryConstraint Evaluate(Declaration& declaration, ReadFacade& pkb_reader);
 };

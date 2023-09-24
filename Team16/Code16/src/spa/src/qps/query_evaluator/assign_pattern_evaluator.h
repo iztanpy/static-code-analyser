@@ -9,9 +9,11 @@
 #include "evaluator_util.h"
 #include "utils/clauses_types.h"
 
+/*!
+ * A visitor that handles the evaluation of assign pattern clauses
+ * It contains handling function for all combinations of assign pattern clauses parameters
+ */
 struct AssignPatternEvaluator {
-  // TODO(phuccuongngo99): Please mint this to a separate type please
-  // like the partial match part
   static BinaryConstraint Handle(std::string& assign_synonym,
                                  Declaration& lhs,
                                  std::string& partial_match,

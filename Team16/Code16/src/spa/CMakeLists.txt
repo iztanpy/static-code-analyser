@@ -18,8 +18,6 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/query_parser.h
         src/qps/clauses/clause.h
         src/qps/clauses/select_clause.cpp
-        src/qps/query_evaluator/constraint_solver/constraint_solver.cpp
-        src/qps/query_evaluator/constraint_solver/constraint_solver.h
         src/qps/query_evaluator/constraint_solver/constraint.h
         src/qps/query_evaluator/select_evaluator.cpp
         src/qps/query_evaluator/select_evaluator.h

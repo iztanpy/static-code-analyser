@@ -8,6 +8,10 @@
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "evaluator_util.h"
 
+/*!
+ * A visitor that handles the evaluation of UsesS/UsesP clauses
+ * It contains handling function for all combinations of UsesS/UsesP clauses parameters
+ */
 struct UsesEvaluator {
   static UnaryConstraint Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader);
 
