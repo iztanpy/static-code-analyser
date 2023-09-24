@@ -9,6 +9,7 @@
 #include "qps/query_evaluator/assign_pattern_evaluator.h"
 #include "PKB/API/ReadFacade.h"
 #include "utils/clauses_types.h"
+#include "utils/entity_types.h"
 
 /*!
  * Represents a pattern clause in a query

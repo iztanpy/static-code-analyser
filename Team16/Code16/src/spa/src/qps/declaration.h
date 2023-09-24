@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "utils/entity_types.h"
 #include "qps/design_entity.h"
 
 struct Declaration {

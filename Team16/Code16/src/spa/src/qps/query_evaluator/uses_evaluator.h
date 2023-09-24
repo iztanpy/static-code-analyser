@@ -7,6 +7,7 @@
 
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "evaluator_util.h"
+#include "utils/entity_types.h"
 
 /*!
  * A visitor that handles the evaluation of UsesS/UsesP clauses

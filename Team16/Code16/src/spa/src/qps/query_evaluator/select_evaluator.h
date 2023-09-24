@@ -8,7 +8,7 @@
 #include "qps/clauses/select_clause.h"
 #include "PKB/API/ReadFacade.h"
 #include "utils/hash_utils.h"
-#include "utils/StmtEntity.h"
+#include "utils/entity_types.h"
 #include "evaluator_util.h"
 
 /*!

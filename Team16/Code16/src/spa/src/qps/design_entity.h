@@ -2,7 +2,7 @@
 
 #include <string>
 #include <set>
-#include "utils/StmtEntity.h"
+#include "utils/entity_types.h"
 
 class Entity {
  public:

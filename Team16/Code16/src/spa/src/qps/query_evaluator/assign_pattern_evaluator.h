@@ -8,6 +8,7 @@
 #include "PKB/API/ReadFacade.h"
 #include "evaluator_util.h"
 #include "utils/clauses_types.h"
+#include "utils/entity_types.h"
 
 /*!
  * A visitor that handles the evaluation of assign pattern clauses

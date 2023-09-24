@@ -71,7 +71,6 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/StatementStore.cpp
         src/PKB/Stores/StatementStore.h
         src/PKB/Stores/AssignStore.cpp
-        src/utils/statementTypes.h
         src/PKB/Stores/ModifiesStore.cpp
         src/PKB/Stores/ModifiesStore.h
         src/PKB/Stores/FollowsStore.cpp
@@ -89,8 +88,7 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_parser/clause_builder/suchthat_clause_builder.h
         src/PKB/Stores/ParentStore.cpp
         src/PKB/Stores/ParentStore.h
-        src/utils/StmtEntity.h
-        src/PKB/Helper/Wildcard.h
+        src/utils/entity_types.h
         src/SP/sp_parser/AssignmentParser.cpp
         src/SP/sp_parser/AssignmentParser.h
         src/SP/sp_parser/ReadParser.cpp

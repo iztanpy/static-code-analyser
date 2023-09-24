@@ -5,13 +5,22 @@
 
 #include "qps/declaration.h"
 
-// TODO(phuccuongngo99): Please use the shared class within the project, or
-// put all the types in a central place
-enum class Wildcard {
-  Value
-};
-
+/*!
+ * Represents StmtRef in PQL grammar
+ */
 using StmtRef = std::variant<Declaration, Wildcard, int>;
+
+/*!
+ * Represents EntRef in PQL grammar
+ */
 using EntRef = std::variant<Declaration, Wildcard, std::string>;
+
+/*!
+ * Represents a type that clauses can take in
+ */
 using RefParam = std::variant<StmtRef, EntRef>;
+
+/*!
+ * Represents a type that a pattern expressions can take in PQL grammar
+ */
 using ExprSpec = std::variant<std::string, Wildcard>;
