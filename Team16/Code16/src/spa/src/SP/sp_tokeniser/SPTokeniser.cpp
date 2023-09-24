@@ -37,10 +37,6 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
     // literals
     {TokenType::kLiteralInteger, std::regex("^(0|[1-9][0-9]*)$")},
     {TokenType::kLiteralName, std::regex("^(\\b[0-9a-zA-Z]+\\b)")},
-
-
-    //{ kLiteralLetter, std::regex("^([A-Za-z])")},
-    //{ kLiteralDigit, std::regex("^([0-9])")},
 };
 
 /**

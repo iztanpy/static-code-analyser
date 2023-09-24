@@ -44,6 +44,7 @@ class SimpleParser : public Parser {
     int currWhileDepth;
     int currIfDepth;
     bool isParsingProcedure;
+
  public:
     explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
     int parse(std::vector<Token>& tokens, int curr_index) override;

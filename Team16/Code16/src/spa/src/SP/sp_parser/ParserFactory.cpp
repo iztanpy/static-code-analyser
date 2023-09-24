@@ -12,7 +12,6 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
 
                 if (next_index == -1) {
                   throw std::runtime_error("Syntactic error! We don't support anything and everything.");
-//                  throw InvalidSyntaxError();
                 } else {
                     lineNumber++;
                     curr_index = next_index;
@@ -25,7 +24,6 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
 
             if (next_index == -1) {
               throw std::runtime_error("Syntactic error! We don't support anything and everything.");
-//              throw InvalidSyntaxError();
             } else {
                 lineNumber++;
                 curr_index = next_index;
@@ -33,7 +31,6 @@ std::pair<int, std::string> ParserFactory::parseStatements(std::vector<Token> to
             }
         } else {
             throw std::runtime_error("Syntactic error! We don't support anything and everything.");
-//            throw InvalidSyntaxError();
         }
     }
 }

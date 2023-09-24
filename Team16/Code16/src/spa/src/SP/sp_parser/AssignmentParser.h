@@ -27,11 +27,56 @@
  */
 class AssignmentParser : public Parser {
  public:
+    /**
+     * @brief Constructor for the AssignmentParser class.
+     *
+     * @param visitor A pointer to an ASTVisitor instance used for parsing and visiting the abstract syntax tree (AST).
+    */
     explicit AssignmentParser(ASTVisitor* visitor) : visitor(visitor) {}
+    /**
+     * @brief Parse assignment statements from a vector of tokens.
+     *
+     * This method parses assignment statements from a vector of tokens starting from the specified `curr_index`.
+     * It updates the `curr_index` to point to the next token after parsing assignments.
+     *
+     * @param tokens A vector of tokens to parse.
+     * @param curr_index The current index in the vector of tokens to start parsing from.
+     * @return The index of the next token to be parsed after the assignment statements.
+     */
     int parse(std::vector<Token>& tokens, int curr_index) override;
+    /**
+     * @brief Parse an expression from a vector of tokens.
+     *
+     * This method parses an expression from a vector of tokens and returns the corresponding abstract syntax tree (AST) node.
+     *
+     * @param tokens A vector of tokens representing the expression to be parsed.
+     * @return A shared pointer to the root AST node of the parsed expression.
+     */
     std::shared_ptr<TNode> parseExpression(const std::vector<Token>& tokens);
+    /**
+     * @brief Parse a term from a vector of tokens.
+     *
+     * This method parses a term from a vector of tokens and returns the corresponding abstract syntax tree (AST) node.
+     *
+     * @param tokens A vector of tokens representing the term to be parsed.
+     * @return A shared pointer to the root AST node of the parsed term.
+     */
     std::shared_ptr<TNode> parseTerm(const std::vector<Token>& tokens);
+    /**
+     * @brief Parse a factor from a vector of tokens.
+     *
+     * This method parses a factor from a vector of tokens and returns the corresponding abstract syntax tree (AST) node.
+     *
+     * @param tokens A vector of tokens representing the factor to be parsed.
+     * @return A shared pointer to the root AST node of the parsed factor.
+     */
     std::shared_ptr<TNode> parseFactor(const std::vector<Token>& tokens);
+    /**
+     * @brief Increment the index used for token parsing.
+     *
+     * This method increments the index used for token parsing within the vector of tokens.
+     * It is typically used after successfully parsing a token or a portion of the input.
+     */
     void incrementIndex();
 
     ASTVisitor* visitor;  // Initialize to nullptr in the constructor
