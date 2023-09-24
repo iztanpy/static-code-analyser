@@ -1,0 +1,25 @@
+1 - multiclause parent with pattern
+assign a; stmt s; variable v;
+Select a such that Parent(s, a) pattern a("i   ",_"1"_)
+6
+5000
+2 - multiclause parent with pattern swapped order
+assign a; stmt s; variable v; if ifs;
+Select a pattern a ("procedure", _) such that Parent (ifs, a)
+12
+5000
+3 - multiclause two parent with pattern
+assign a; stmt s; variable v; if ifs; while w;
+Select a pattern a ("procedure", _) such that Parent*(w, a) such that Follows (ifs, a)
+15
+5000
+4 - multiclause follows, pattern and then parent
+assign a, a2; stmt s; variable v; if ifs; while w;
+Select a such that Follows* (a, w) pattern a ("procedure", _) such that Parent (w, a2)
+3, 15, 16
+5000
+5 - multiclause follows and parent
+assign a; read a2; stmt s; variable v; if ifs; while w; print p;
+Select a such that Follows* (s, w) such that Parent (w, a) such that Follows (s, p)
+15, 16, 20, 21
+5000
