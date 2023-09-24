@@ -1,0 +1,21 @@
+procedure p {
+  read x;
+  read y;
+  read z;
+  print x;
+  if (x<0) then {
+    while (i>0) {
+      x = z * 3;
+      y = y - 1; }
+    z = x + z;
+    if (y>z) then {
+      z = 1 + y;
+      print z;
+    } else {
+      z = z + x + i;
+      print y;
+    }
+    x = 1 + x;}
+  else {
+    z = 1 + y; }
+  y = z * x; }
