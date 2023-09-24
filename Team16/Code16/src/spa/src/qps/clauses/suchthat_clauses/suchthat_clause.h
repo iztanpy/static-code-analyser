@@ -24,6 +24,12 @@ class SuchThatClause : public Clause {
   RefParam lhs;
   RefParam rhs;
 
+  /*!
+   * Checks if two RefParams are equal
+   * @param param_1
+   * @param param_2
+   * @return true if they are equal, else false
+   */
   static bool are_stmt_ref_equal(const RefParam& param_1, const RefParam& param_2);
   static bool are_ent_ref_equal(const RefParam& param_1, const RefParam& param_2);
   static bool are_stmt_ref(const RefParam& param_1, const RefParam& param_2);
@@ -33,10 +39,19 @@ class SuchThatClause : public Clause {
   static bool are_stmt_wildcard(const StmtRef& param_1, const StmtRef& param_2);
   static bool are_ent_wildcard(const EntRef& param_1, const EntRef& param_2);
 
+  /*!
+   * Evaluate this clause given info from PKB
+   * @param pkb_reader
+   * @return Constraint that contains all possible valid values for this clause
+   */
   virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
   ~SuchThatClause() override = default;
 
  private:
+  /*!
+   * Validates the pattern clause semantically
+   * Will throw QpsSemanticError if the clause is initialized with invalid arguments
+   */
   virtual void Validate() = 0;
 };
 

@@ -16,5 +16,10 @@ class SelectClause : public Clause {
    */
   bool equals(const SelectClause& other) const;
 
+  /*!
+   * Evaluates this Select clause
+   * @param pkb_reader is the PKB ReadFacade
+   * @return a UnaryConstraint that contains all possible values of this synonym
+   */
   UnaryConstraint Evaluate(ReadFacade& pkb_reader);
 };

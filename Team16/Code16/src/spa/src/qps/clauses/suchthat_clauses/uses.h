@@ -8,6 +8,9 @@
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
 #include "qps/query_evaluator/uses_evaluator.h"
 
+/*!
+ * Represents a UsesS clause in a query according to PQL grammar
+ */
 class UsesS : public SuchThatClause {
  public:
   StmtRef lhs;
@@ -24,6 +27,9 @@ class UsesS : public SuchThatClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a UsesP clause in a query according to PQL grammar
+ */
 class UsesP : public SuchThatClause {
  public:
   EntRef lhs;
