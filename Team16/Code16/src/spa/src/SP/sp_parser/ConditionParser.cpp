@@ -30,14 +30,12 @@ std::vector<Token> ConditionParser::getConditionTokens(const std::vector<Token>&
 
         if (openParenCount > 0) {
             // Implies that there is a missing closing parenthesis somewhere
-//            throw InvalidSyntaxError();
-          throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+            throw InvalidSyntaxError();
         }
         curr_index = closeParenIndex;  // Modify curr_index to the new position
     } else {
         // Implies that there is a missing open parenthesis somewhere
-//        throw InvalidSyntaxError();
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+        throw InvalidSyntaxError();
     }
     return conditionTokens;
 }

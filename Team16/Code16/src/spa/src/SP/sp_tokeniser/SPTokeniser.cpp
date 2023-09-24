@@ -143,7 +143,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             }
         }
 
-        if (matchedType == TokenType::kUnknownTokenType) { throw std::runtime_error("Invalid Token Type"); }
+        if (matchedType == TokenType::kUnknownTokenType) { throw InvalidTokenTypeError(); }
 
         if (matchedType == TokenType::kSepOpenBrace || matchedType == TokenType::kSepOpenParen) {
             braceStack.push(matchedValue[0]);
@@ -153,7 +153,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
             linePositionWithWhiteSpace++;
         } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
             if (braceStack.empty()) {
-                throw std::runtime_error("Syntactic error: Unmatched closing brace");
+                throw InvalidSyntaxError();
             } else {
                 char top = braceStack.top();
                 if (matchedValue[0] == '}' && top == '{') {
@@ -168,12 +168,12 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
                     linePosition += 1;
                     linePositionWithWhiteSpace += 1;
                 } else {
-                    throw std::runtime_error("Syntactic error: Unmatched closing parenthesis");
+                    throw InvalidSyntaxError();
                 }
             }
         } else if (matchedType == TokenType::kLiteralName) {
             if (std::isdigit(matchedValue[0])) {
-                throw std::runtime_error("Invalid Token.");
+                throw InvalidTokenTypeError();
             } else {
                 Token token{matchedType, matchedValue, lineNumber, linePosition};
                 tokens.push_back(token);
@@ -190,7 +190,7 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
         if (matchedType == TokenType::kSepSemicolon || matchedType == TokenType::kSepOpenBrace) { lineNumber++; }
     }
     if (!braceStack.empty()) {
-        throw std::runtime_error("Syntactic error: Unmatched opening brace");
+        throw InvalidSyntaxError();
     }
     return tokens;
 }

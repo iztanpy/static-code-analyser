@@ -23,7 +23,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
         }
 
         if (followsStatementStack.empty() && tokens[curr_index].getValue() != "procedure") {
-            throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+            throw InvalidSyntaxError();
         }
 
         if (curr_token.tokenType == TokenType::kLiteralName) {
@@ -35,7 +35,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
                 int next_index = assignmentParser->parse(tokens, curr_index);
 
                 if (next_index == -1) {
-                    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                    throw InvalidSyntaxError();
                 } else {
                     followsStatementStack.top().insert(lineNumber);
                     lineNumber++;
@@ -48,11 +48,11 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
                 tokens[curr_index] = newToken;  // Remove 'const' keyword and the 'new' keyword
             }
         } else if (curr_token.tokenType == TokenType::kEntityProcedure) {
-            if (isParsingProcedure) throw std::runtime_error("Syntactic error!");
+            if (isParsingProcedure) throw InvalidSyntaxError();
             int next_index = procedureParser->parse(tokens, curr_index);
 
             if (next_index == -1) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             } else {
                 isParsingProcedure = true;
                 curr_index = next_index;
@@ -63,7 +63,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             readParser->lineNumber = lineNumber;
             int next_index = readParser->parse(tokens, curr_index);
             if (next_index == -1) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             } else {
                 followsStatementStack.top().insert(lineNumber);
                 lineNumber++;
@@ -73,7 +73,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             printParser->lineNumber = lineNumber;
             int next_index = printParser->parse(tokens, curr_index);
             if (next_index == -1) {
-              throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+              throw InvalidSyntaxError();
             } else {
                 followsStatementStack.top().insert(lineNumber);
                 lineNumber++;
@@ -88,7 +88,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             currWhileDepth++;
 
             if (next_index == -1) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             } else {
                 followsStatementStack.top().insert(lineNumber);
                 std::set<int> whileFollowsSet;
@@ -99,7 +99,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
         } else if (curr_token.tokenType == TokenType::kEntityCall) {
             int next_index = callParser->parse(tokens, curr_index);
             if (next_index == -1) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             } else {
                 lineNumber++;
                 curr_index = next_index;
@@ -113,7 +113,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             currIfDepth++;
 
             if (next_index == -1) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             } else {
                 followsStatementStack.top().insert(lineNumber);
                 std::set<int> ifFollowsSet;
@@ -124,22 +124,22 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             }
         } else if (curr_token.tokenType == TokenType::kEntityElse) {
             if (!controlStructureStack.empty() && controlStructureStack.top() != "if") {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             }
             if (curr_index + 1 < tokens.size()
                 && tokens[curr_index + 1].tokenType != TokenType::kSepOpenBrace) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             }
             if (curr_index - 1 > 0
                 && tokens[curr_index - 1].tokenType != TokenType::kSepCloseBrace) {
-                throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+                throw InvalidSyntaxError();
             }
             std::set<int> elseFollowsSet;
             followsStatementStack.push(elseFollowsSet);
             curr_index += 2;  // skip over the next open brace
         } else if (curr_token.tokenType == TokenType::kSepCloseBrace) {
           if (curr_index - 1 > 0 && tokens[curr_index - 1].tokenType == TokenType::kSepOpenBrace) {
-              throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+              throw InvalidSyntaxError();
           }
           std::set<int> top_set = followsStatementStack.top();
           insertFollowsHashMap(top_set);
@@ -173,7 +173,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
           }
           curr_index += 1;
         }  else {
-            throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+            throw InvalidSyntaxError();
         }
     }
     // Store Parent <line, set<line>>

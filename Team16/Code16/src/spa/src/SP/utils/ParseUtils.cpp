@@ -80,8 +80,7 @@ std::shared_ptr<TNode> ParseUtils::parseFactor(const std::vector<Token>& tokens)
     incrementIndex();
     node = parseExpression(tokens);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-//      throw InvalidSyntaxError();
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+      throw InvalidSyntaxError();
     }
     incrementIndex();
     return node;
@@ -93,8 +92,7 @@ std::shared_ptr<TNode> ParseUtils::parseFactor(const std::vector<Token>& tokens)
   }
 
   if (node == nullptr) {
-//    throw InvalidSyntaxError();
-    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+    throw InvalidSyntaxError();
   }
 
   return node;
@@ -115,8 +113,7 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
     // lhs conditional expression
     tree = parseCondExpression(tokens);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-//      throw InvalidSyntaxError();
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+      throw InvalidSyntaxError();
     }
     incrementIndex();
 
@@ -161,8 +158,7 @@ std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& toke
   }
 
   if (node == nullptr) {
-//    throw InvalidSyntaxError();
-    throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+    throw InvalidSyntaxError();
   }
 
   return node;
@@ -201,7 +197,7 @@ TokenType ParseUtils::convertLiteralToEntity(std::string value) {
     } else if (value == "call") {
         return TokenType::kEntityCall;
     } else {
-      throw std::runtime_error("Syntactic error! We don't support anything and everything.");
+        throw InvalidSyntaxError();
         return TokenType::kLiteralName;
     }
 }
