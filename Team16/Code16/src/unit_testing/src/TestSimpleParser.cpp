@@ -324,9 +324,16 @@ TEST_CASE(("Test Conditional Tokens Retrieval")) {
     sourceProcessor.processSource(simpleProgram3);
     std::string simpleProgram4 = "procedure r { while (!(x == 1)) { read x; } }";
     sourceProcessor.processSource(simpleProgram4);
-    std::string simpleProgram5 = "procedure s { while ((!x) || (x == y)) { read x; } }";
+    std::string simpleProgram5 = "procedure a { while ((!(x)) || (x == y)) { read x; } }";
     sourceProcessor.processSource(simpleProgram5);
-  
+    std::string simpleProgram6 = "procedure b {   while (1>= 1%((0-1))) { read x; } }";
+    sourceProcessor.processSource(simpleProgram6);
+    std::string simpleProgram7 = "procedure s { while (1>= 1%((1)) ) { read x; } }";
+    sourceProcessor.processSource(simpleProgram7);
+    std::string simpleProgram8 = "procedure z { while (! ((1==0) && (1==0))) { read x; } }";
+    sourceProcessor.processSource(simpleProgram8);
+    std::string simpleProgram9 = "procedure v { while (x>=(0+0)) { read x; } }";
+    sourceProcessor.processSource(simpleProgram9);
     REQUIRE(1 == 1);
 }
 

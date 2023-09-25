@@ -105,9 +105,19 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
   if (tokens[index].tokenType == TokenType::kOperatorLogicalNot) {
     std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
     incrementIndex();
-    std::shared_ptr<TNode> child = parseCondExpression(tokens);
-    operatorNode->addChild(child);
-    tree = operatorNode;
+
+    if (tokens[index].tokenType == TokenType::kSepOpenParen) {
+      incrementIndex();
+      std::shared_ptr<TNode> child = parseCondExpression(tokens);
+      operatorNode->addChild(child);
+      tree = operatorNode;
+      if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+        throw InvalidSyntaxError();
+      }
+      incrementIndex();
+    } else {
+      throw InvalidSyntaxError();
+    }
   } else if (tokens[index].tokenType == TokenType::kSepOpenParen) {
     incrementIndex();
     // lhs conditional expression
@@ -122,9 +132,20 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
       std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
       operatorNode->addChild(tree);
       incrementIndex();
-      std::shared_ptr<TNode> rhs = parseCondExpression(tokens);
-      operatorNode->addChild(rhs);
-      tree = operatorNode;
+
+      if (tokens[index].tokenType == TokenType::kSepOpenParen) {
+        incrementIndex();
+        // rhs conditional expression
+        std::shared_ptr<TNode> rhs = parseCondExpression(tokens);
+        operatorNode->addChild(rhs);
+        tree = operatorNode;
+        if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+          throw InvalidSyntaxError();
+        }
+        incrementIndex();
+      } else {
+        throw InvalidSyntaxError();
+      }
     }
   } else {
     tree = parseRelExpression(tokens);
@@ -149,13 +170,7 @@ std::shared_ptr<TNode> ParseUtils::parseRelExpression(const std::vector<Token>& 
 
 std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> node = nullptr;
-  if (ParseUtils::isVarOrConst(tokens[index])) {
-    node = TNodeFactory::createNode(tokens[index], lineNumber);
-    incrementIndex();
-  } else {
-    node = parseExpression(tokens);
-    return node;
-  }
+  node = parseExpression(tokens);
 
   if (node == nullptr) {
     throw InvalidSyntaxError();
@@ -176,9 +191,6 @@ std::vector<TokenType> unconfirmed_entities = {
     TokenType::kEntityCall,
 };
 
-
-
-
 TokenType ParseUtils::convertLiteralToEntity(std::string value) {
     if (value == "if") {
       return TokenType::kEntityIf;
@@ -198,7 +210,6 @@ TokenType ParseUtils::convertLiteralToEntity(std::string value) {
         return TokenType::kEntityCall;
     } else {
         throw InvalidSyntaxError();
-        return TokenType::kLiteralName;
     }
 }
 
