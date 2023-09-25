@@ -149,12 +149,16 @@ std::shared_ptr<TNode> ParseUtils::parseRelExpression(const std::vector<Token>& 
 
 std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> node = nullptr;
-  if (ParseUtils::isVarOrConst(tokens[index])) {
-    node = TNodeFactory::createNode(tokens[index], lineNumber);
-    incrementIndex();
-  } else {
+  if (index + 1 < tokens.size()
+      && (ParseUtils::isMultiplyDivideOrModulo(tokens[index + 1])
+      || ParseUtils::isPlusOrMinus(tokens[index + 1]))) {
     node = parseExpression(tokens);
     return node;
+  } else {
+    if (ParseUtils::isVarOrConst(tokens[index])) {
+      node = TNodeFactory::createNode(tokens[index], lineNumber);
+      incrementIndex();
+    }
   }
 
   if (node == nullptr) {
