@@ -122,9 +122,20 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
       std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
       operatorNode->addChild(tree);
       incrementIndex();
-      std::shared_ptr<TNode> rhs = parseCondExpression(tokens);
-      operatorNode->addChild(rhs);
-      tree = operatorNode;
+
+      if (tokens[index].tokenType == TokenType::kSepOpenParen) {
+        incrementIndex();
+        // rhs conditional expression
+        std::shared_ptr<TNode> rhs = parseCondExpression(tokens);
+        operatorNode->addChild(rhs);
+        tree = operatorNode;
+        if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+          throw InvalidSyntaxError();
+        }
+        incrementIndex();
+      } else {
+        throw InvalidSyntaxError();
+      }
     }
   } else {
     tree = parseRelExpression(tokens);
@@ -149,17 +160,17 @@ std::shared_ptr<TNode> ParseUtils::parseRelExpression(const std::vector<Token>& 
 
 std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> node = nullptr;
-  if (index + 1 < tokens.size()
-      && (ParseUtils::isMultiplyDivideOrModulo(tokens[index + 1])
-      || ParseUtils::isPlusOrMinus(tokens[index + 1]))) {
+//  if (ParseUtils::isVarOrConst(tokens[index]))
+//  if (index + 1 < tokens.size() && tokens[index + 1].tokenType != TokenType::kSepCloseParen) {
     node = parseExpression(tokens);
-    return node;
-  } else {
-    if (ParseUtils::isVarOrConst(tokens[index])) {
-      node = TNodeFactory::createNode(tokens[index], lineNumber);
-      incrementIndex();
-    }
-  }
+//    incrementIndex();
+//    return node;
+//  } else {
+//    if (ParseUtils::isVarOrConst(tokens[index])) {
+//      node = TNodeFactory::createNode(tokens[index], lineNumber);
+//      incrementIndex();
+//    }
+//  }
 
   if (node == nullptr) {
     throw InvalidSyntaxError();
