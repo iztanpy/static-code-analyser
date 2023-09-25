@@ -160,17 +160,7 @@ std::shared_ptr<TNode> ParseUtils::parseRelExpression(const std::vector<Token>& 
 
 std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> node = nullptr;
-//  if (ParseUtils::isVarOrConst(tokens[index]))
-//  if (index + 1 < tokens.size() && tokens[index + 1].tokenType != TokenType::kSepCloseParen) {
-    node = parseExpression(tokens);
-//    incrementIndex();
-//    return node;
-//  } else {
-//    if (ParseUtils::isVarOrConst(tokens[index])) {
-//      node = TNodeFactory::createNode(tokens[index], lineNumber);
-//      incrementIndex();
-//    }
-//  }
+  node = parseExpression(tokens);
 
   if (node == nullptr) {
     throw InvalidSyntaxError();
@@ -191,9 +181,6 @@ std::vector<TokenType> unconfirmed_entities = {
     TokenType::kEntityCall,
 };
 
-
-
-
 TokenType ParseUtils::convertLiteralToEntity(std::string value) {
     if (value == "if") {
       return TokenType::kEntityIf;
@@ -213,7 +200,6 @@ TokenType ParseUtils::convertLiteralToEntity(std::string value) {
         return TokenType::kEntityCall;
     } else {
         throw InvalidSyntaxError();
-        return TokenType::kLiteralName;
     }
 }
 
