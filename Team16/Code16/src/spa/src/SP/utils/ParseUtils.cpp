@@ -105,9 +105,19 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
   if (tokens[index].tokenType == TokenType::kOperatorLogicalNot) {
     std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
     incrementIndex();
-    std::shared_ptr<TNode> child = parseCondExpression(tokens);
-    operatorNode->addChild(child);
-    tree = operatorNode;
+
+    if (tokens[index].tokenType == TokenType::kSepOpenParen) {
+      incrementIndex();
+      std::shared_ptr<TNode> child = parseCondExpression(tokens);
+      operatorNode->addChild(child);
+      tree = operatorNode;
+      if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+        throw InvalidSyntaxError();
+      }
+      incrementIndex();
+    } else {
+      throw InvalidSyntaxError();
+    }
   } else if (tokens[index].tokenType == TokenType::kSepOpenParen) {
     incrementIndex();
     // lhs conditional expression
