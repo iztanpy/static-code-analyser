@@ -60,7 +60,7 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
     std::string line;
 
     std::unordered_set<char> delimiters = {';', '{', '}', '+', '-', '=', '(', ')', '*', '/', '%', '<', '>', '&', '|',
-                                           '!', ' '};
+                                           '!', ' ', '\t', '\r', '\v', '\f'};
 
     // Iterate through each character in the line
     while (std::getline(iss, line)) {
