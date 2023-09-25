@@ -1,0 +1,52 @@
+1 - testcase 1
+assign a1, a2; variable v;
+Select a1 such that Follows(a1, a2) pattern a1(v,_"x"_)
+6, 7
+5000
+2 - testcase 2
+assign a1, a2; variable v;
+Select a2 such that Follows(a1, a2) pattern a2(v,_"3"_)
+3
+5000
+3 - testcase 3
+assign a1; assign a2;
+Select a1 such that Follows(a1, a2) pattern a1("x", _)
+1, 6, 12
+5000
+4 - testcase 4;
+assign a; stmt s;
+Select a such that Follows(a, s) pattern a(_, _)
+1, 2, 3, 6, 7, 8, 12
+5000
+5 - testcase 5
+assign a; variable v;
+Select a such that Follows(2, a) pattern a(v, _"x"_)
+3
+5000
+6 - testcase 6
+assign a; variable v;
+Select a such that Follows(1, 2) pattern a(v, _"y"_)
+7, 8, 12, 13, 14
+5000
+7 - testcase 7
+assign a; variable v;
+Select a such that Follows(1, 3) pattern a(v, _"y"_)
+none
+5000
+8 - testcase 8
+assign a; variable v;
+Select a such that Follows (a, _) pattern a(v, _"1"_)
+1, 6
+5000
+9 - testcase 9
+assign a; variable v;
+Select a such that Follows(14, _) pattern a(v, _"z"_)
+none
+5000
+10 - testcase 10
+assign a; variable v;
+Select a such that Follows(14, _) pattern a(v, _"a"_)
+none
+5000
+
+
