@@ -1,0 +1,12 @@
+procedure follow {
+  read x;
+  while(x < 20) {
+    if(x == 2) then {
+      print x;
+      z = x + 2;
+    } else {
+      x = x - 2;
+    }
+  }
+  a = a + 1;
+}

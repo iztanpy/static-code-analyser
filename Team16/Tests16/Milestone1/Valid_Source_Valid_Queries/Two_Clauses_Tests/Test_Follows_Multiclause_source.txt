@@ -1,0 +1,19 @@
+procedure Megatron {
+  x = 1;
+  y = 2;
+  z = 3 + x;
+  print x;
+  while ((x != 0)) {
+      x = x + 1;
+      y = y + x;
+      z = z + y;
+      print z;
+  }
+  if (count == 0) then {
+      flag = 1;
+    } else {
+      x = y / z;
+      z = y / x;
+    }
+  x = x + y + 3 + z;
+}

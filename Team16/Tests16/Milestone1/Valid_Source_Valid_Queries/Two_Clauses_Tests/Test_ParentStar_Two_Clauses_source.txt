@@ -1,0 +1,23 @@
+procedure while {
+ read read; 
+ print print; 
+ while (while == 0) {
+   procedure = procedure / 10; 
+   if (random == procedure) then {
+      while (random > 10) {
+         if = if + 1; 
+      }
+   } else {
+     apple = orange + raspberry; 
+     blueberry = 10;
+     else = else + 1; 
+     if (else == blueberry) then {
+        else = else - 1; 
+     } else {
+       else = else % 10 + 10;     
+     }
+    }
+   }
+   print orange; 
+ }
+

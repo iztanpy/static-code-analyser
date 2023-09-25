@@ -13,19 +13,39 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
+  this->pkb_ptr = std::make_unique<PKB>();
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
-  // ...rest of your code...
+  std::ifstream file(filename);
+  std::string file_contents;
+
+  if (!file.is_open()) {
+    std::cerr << "Error: Unable to open file " << filename << std::endl;
+  }
+
+  std::string input;
+  std::string line;
+  while (std::getline(file, line)) {
+    /*    std::cout << "TEST" << std::endl;*/
+    input += line;
+  }
+  WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  sourceProcessor.processSource(input);
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-// call your evaluator to evaluate the query here
-  // ...code to evaluate query...
+void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
+  ReadFacade readFacade = ReadFacade(*this->pkb_ptr);
+  QPS qps(readFacade);
 
-  // store the answers to the query in the results list (it is initially empty)
-  // each result must be a string.
+  std::unordered_set<std::string> raw_results = qps.Evaluate(query);
+
+  // If raw_result is an empty set, we won't even be pushing to results
+  // which is expected
+  for (const std::string& result : raw_results) {
+    results.push_back(result);
+  }
 }

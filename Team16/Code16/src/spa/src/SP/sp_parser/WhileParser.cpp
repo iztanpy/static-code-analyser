@@ -1,0 +1,53 @@
+// ai-gen start (gpt3, 2)
+#include "WhileParser.h"
+
+int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
+    // Validate that statement has at least 6 tokens (min: while ( a ) { })
+    if (tokens.size() - index < 5) {
+      return -1;
+    }
+
+    // Create a new while node
+    std::shared_ptr<TNode> whileNode = TNodeFactory::createNode(tokens[index], lineNumber);
+    index++;
+
+    // Validate open parenthesis
+    if (tokens[index].tokenType != TokenType::kSepOpenParen) {
+        throw InvalidSyntaxError();
+    }
+    index++;
+
+    ParseUtils::setValues(index, lineNumber);
+    std::shared_ptr<TNode> whileCondNode = ParseUtils::parseCondExpression(tokens);
+    index = ParseUtils::getIndex();
+    whileNode->addChild(whileCondNode);
+
+    // Validate close parenthesis
+    if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+        throw InvalidSyntaxError();
+    }
+    index++;
+
+    // Validate open braces
+    if (tokens[index].tokenType != TokenType::kSepOpenBrace) {
+        throw InvalidSyntaxError();
+    }
+    index++;
+
+    designExtractor->extractDesign(whileNode, visitor);
+
+    return index;
+}
+
+int WhileParser::getLineNumber() {
+    return lineNumber;
+}
+void WhileParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+int WhileParser::getIndex() {
+    return index;
+}
+void WhileParser::setIndex(int newIndex) {
+    index = newIndex;
+}

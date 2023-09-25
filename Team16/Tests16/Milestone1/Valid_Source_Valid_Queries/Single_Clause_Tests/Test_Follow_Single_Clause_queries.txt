@@ -1,0 +1,45 @@
+1 - testcase 1
+print p; 
+Select p such that Follows(_,_)
+4
+5000
+2 - testcase 2
+print p;
+Select p such that Follows(_,4)
+none
+5000
+3 - testcase 3
+print p;
+Select p such that Follows(_,1)
+none
+5000
+4 - testcase 4
+assign a;
+Select a such that Follows(_,a)
+5, 7
+5000
+5 - testcase 5
+assign a1, a2;
+Select a1 such that Follows(a1, a2)
+none
+5000
+6 - testcase 6
+print p; stmt s;
+Select s such that Follows(p, s)
+5
+5000
+7 - testcase 7
+read r;
+Select r such that Follows(r, _)
+1
+5000
+8 - testcase 8
+read r;
+Select r such that Follows(1,2)
+1
+5000
+9 - testcase 9
+stmt s;
+Select s such that Follows(2, s)
+7
+5000

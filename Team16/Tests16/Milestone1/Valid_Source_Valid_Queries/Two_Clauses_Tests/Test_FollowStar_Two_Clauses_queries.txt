@@ -1,0 +1,100 @@
+1 - Both clauses return true values
+assign aAssign; variable v;
+Select aAssign such that Follows*(1, 3) pattern aAssign(v, _"1"_)
+17, 18, 7, 11
+5000
+2 - Follows* false, pattern true
+assign asg; variable varSyn1;
+Select asg such that Follows*(8, 3) pattern asg(varSyn1, _)
+
+5000
+3 - Follows* true, pattern no results
+assign aSyn; variable vSynonym;
+Select aSyn such that Follows*(aSyn, _) pattern aSyn("y", _)
+14, 15, 13
+5000
+4 - Follows* false, but pattern true
+assign aSyn2; variable vSyn2;
+Select aSyn2 such that Follows*(aSyn2, 2) pattern aSyn2("x", _"i"_)
+
+5000
+5 - Using underscore wildcard in both clauses
+assign wild1, wild2; variable wildVar;
+Select wild1 such that Follows*(wild1, _) pattern wild2(wildVar, _)
+11, 15, 3, 13, 5, 14
+5000
+6 - arg1 as declared synonym, arg2 as number
+assign a5; variable v4;
+Select a5 such that Follows*(a5, 5) pattern a5(v4, _)
+
+5000
+7 - arg1 as declared synonym, arg2 as declared synonym
+assign a6, a7; variable v5;
+Select a6 such that Follows*(a6, a7) pattern a7(v5, _"3"_)
+
+5000
+8 - arg1 as declared synonym, arg2 as underscore
+assign a8; variable v6;
+Select a8 such that Follows*(a8, _) pattern a8(v6, _)
+11, 15, 3, 13, 5, 14
+5000
+9 - arg1 as underscore, arg2 as number
+assign a9; variable v7;
+Select a9 such that Follows*(_, 4) pattern a9(v7, _"4"_)
+13
+5000
+10 - arg1 as underscore, arg2 as declared synonym
+assign a10, a11; variable v8;
+Select a10 such that Follows*(_, a11) pattern a11(v8, _)
+18, 14, 11, 9, 7, 5, 8, 13, 17, 15, 3
+5000
+11 - arg1 as underscore, arg2 as underscore
+assign a12; variable v9;
+Select a12 such that Follows*(_, _) pattern a12(v9, _)
+7, 5, 13, 8, 11, 9, 3, 17, 15, 14, 18
+5000
+12 - arg1 as number, arg2 as declared synonym
+assign a13, a14; variable v10;
+Select a13 such that Follows*(6, a14) pattern a14(v10, _)
+
+5000
+13 - arg1 as number, arg2 as number
+assign a15; variable v11;
+Select a15 such that Follows*(9, 15) pattern a15(v11, _)
+
+5000
+14 - arg1 as number, arg2 as underscore
+assign a16; variable v12;
+Select a16 such that Follows*(11, _) pattern a16(v12, _)
+7, 5, 13, 8, 11, 9, 3, 17, 15, 14, 18
+5000
+15 - Repeated synonyms
+assign a17, a17; variable v13;
+Select a17 such that Follows*(a17, a17) pattern a17(v13, _"6"_)
+SemanticError
+5000
+16 - Complex mixed usage
+assign complex1, complex2; variable complexVar;
+Select complex1 such that Follows*(complex2, 9) pattern complex2(complexVar, _)
+
+5000
+17 - Using same synonym in pattern but not in Follows*
+assign diff1, diff2; variable diffVar;
+Select diff1 such that Follows*(4, diff2) pattern diff1(diffVar, _"7"_)
+
+5000
+18 - Using same variable in pattern and Follows*
+assign same1; variable sameVar;
+Select same1 such that Follows*(sameVar, 5) pattern same1(sameVar, _)
+SemanticError
+5000
+19 - Nested usage of synonyms
+assign nest1, nest2, nest3; variable nestVar;
+Select nest1 such that Follows*(nest2, nest3) pattern nest3(nestVar, _)
+18, 14, 11, 9, 7, 5, 8, 13, 17, 15, 3
+5000
+20 - Complex mix with underscore
+assign mix1, mix2; variable mixVar;
+Select mix1 such that Follows*(mix2, 6) pattern mix2(mixVar, _"8"_)
+
+5000
