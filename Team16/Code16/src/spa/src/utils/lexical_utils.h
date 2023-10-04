@@ -31,6 +31,13 @@ bool IsNzDigit(char c);
  */
 bool IsIdent(std::string str);
 
+/*!
+ * Checks if a character is a Synonym
+ * @param c is the specified character
+ * @return true if the character is a Synonym, else false
+ */
+bool IsSynonym(std::string str);
+
 // bool IsExpr(std::string str);
 // bool IsTerm(std::string str);
 // bool IsFactor(std::string str);

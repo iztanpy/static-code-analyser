@@ -104,6 +104,9 @@ std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_
 
   // then extract the first word after 'Select'
   std::string first_word = string_util::GetFirstWord(remaining_statement);
+  if (!lexical_utils::IsSynonym(first_word)) {
+    throw QpsSyntaxError("Synonym does not follow lexical rules");
+  }
   if (!QueryUtil::IsInDeclarations(first_word, declarations)) {
     throw QpsSemanticError("Select synonym has not been declared");
   }

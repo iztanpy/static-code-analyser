@@ -2,6 +2,7 @@
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/query_parser/query_parser.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
+#include "qps/qps_errors/qps_syntax_error.h"
 
 TEST_CASE("Query Parser can extract select clause") {
   std::string sample_query = "variable v; Select v";
@@ -77,5 +78,9 @@ TEST_CASE("Query Parser can return a parsed query") {
   REQUIRE(clause->syn_assignment.equals(declarations[1]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(clause->rhs == Wildcard::Value);
+}
 
+TEST_CASE("Query Parser throws syntax error") {
+  std::string sample_query_pattern = "Select 1v";
+  REQUIRE_THROWS_AS(QueryParser::ParseTokenizedQuery(sample_query_pattern), QpsSyntaxError);
 }
