@@ -52,7 +52,10 @@ jobs:
           cd .\Team16\Code16\build\src\
           .\integration_testing\Release\integration_testing.exe
           cd ..\..\..\..
-      
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
       - name: Run System Tests
         shell: powershell
         run: |
@@ -92,6 +95,9 @@ jobs:
           ./integration_testing/integration_testing
           cd ../../../..
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
       - name: Run System Tests
         run: |
           cd ./Team16/Tests16/
