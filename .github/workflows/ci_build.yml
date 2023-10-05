@@ -83,14 +83,14 @@ jobs:
       - name: Run Unit Tests
         run: |
           cd ./Team16/Code16/build/src/
-          ./unit_testing/Release/unit_testing
-          cd ../../..
+          ./unit_testing/unit_testing
+          cd ../../../..
 
       - name: Run Integration Tests
         run: |
           cd ./Team16/Code16/build/src/
-          ./integration_testing/Release/integration_testing
-          cd ../../..
+          ./integration_testing/integration_testing
+          cd ../../../..
 
       - name: Run System Tests
         run: |
