@@ -44,9 +44,22 @@ int CallParser::parse(std::vector<Token>& tokens, int curr_index) {
         throw InvalidSemanticError();
     }
     visitor->setCallerCalleeMap(currentProcedureName, call.value);
+    visitor->setCallStatementNumberEntityHashmap(lineNumber, call.value);
     // Update the current index and create the AST node
     curr_index = curr_index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(call, lineNumber);
     return curr_index;
 }
 
+int CallParser::getLineNumber() {
+    return lineNumber;
+}
+void CallParser::setLineNumber(int newLineNumber) {
+    lineNumber = newLineNumber;
+}
+int CallParser::getIndex() {
+    return index;
+}
+void CallParser::setIndex(int newIndex) {
+    index = newIndex;
+}

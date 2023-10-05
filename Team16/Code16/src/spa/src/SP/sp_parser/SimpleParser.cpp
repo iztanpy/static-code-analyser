@@ -98,6 +98,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
                 curr_index = next_index;
             }
         } else if (curr_token.tokenType == TokenType::kEntityCall) {
+            callParser->setLineNumber(lineNumber);
             int next_index = callParser->parse(tokens, curr_index);
             if (next_index == -1) {
                 throw InvalidSyntaxError();
