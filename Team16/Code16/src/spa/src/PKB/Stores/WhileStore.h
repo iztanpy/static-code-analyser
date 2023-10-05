@@ -8,13 +8,13 @@
 #include "utils/hash_utils.h"
 
 class WhileStore {
-private:
+ private:
     typedef std::string variable;
     typedef int statementNumber;
     std::unordered_map<statementNumber, variable> variableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> reverseVariableMap;
 
-public:
+ public:
     WhileStore();
 
     void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);

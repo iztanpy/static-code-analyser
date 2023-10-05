@@ -9,17 +9,17 @@
 
 
 class IfStore {
-private:
+ private:
     typedef std::string variable;
     typedef int statementNumber;
     std::unordered_map<statementNumber, variable> variableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> reverseVariableMap;
 
-public:
+ public:
     IfStore();
 
     void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);
     std::unordered_set<statementNumber> getIf(Wildcard wc);
     std::unordered_set<statementNumber> getIf(variable v);
-}
+};
 
