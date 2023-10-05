@@ -48,8 +48,9 @@ class Runner:
         return executable_path
 
     def make_result_directory(self):
-        if not os.path.exists(self.PASS_DIRECTORY): os.makedirs(self.PASS_DIRECTORY)
-        if not os.path.exists(self.FAIL_DIRECTORY): os.makedirs(self.FAIL_DIRECTORY)
+        for path in [self.PASS_DIRECTORY, self.FAIL_DIRECTORY]:
+            shutil.rmtree(path, ignore_errors=True)
+            os.makedirs(path)
 
     def get_autotester_parameters(self, folder_to_test_in):
         current_directory = os.getcwd()
