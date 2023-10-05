@@ -30,6 +30,9 @@ class AssignStore {
 
   void storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> relations);
 
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(fullRHS full);
+
 
     /**
     * @brief Adds a mapping of statement numbers to partial match sets for right-hand sides (RHS) of assignments.
