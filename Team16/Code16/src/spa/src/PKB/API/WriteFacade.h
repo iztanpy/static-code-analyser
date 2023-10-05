@@ -101,4 +101,8 @@ class WriteFacade {
     * @param map An unordered map of statement numbers to their follower statement numbers.
     */
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
+
+    void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
+
+    void storeIf(std::unordered_map<statementNumber, variable> variableMap);
 };
