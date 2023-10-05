@@ -10,7 +10,7 @@
 class AssignStore {
  private:
   typedef std::string variable;
-  typedef std::string fullRHS;
+  typedef std::string full;
   typedef std::string partialMatch;
   typedef int statementNumber;
   std::unordered_map<statementNumber, std::unordered_set<partialMatch>> numRHSMap;
@@ -18,20 +18,20 @@ class AssignStore {
   std::unordered_map<variable, std::unordered_set<statementNumber>> reverseNumLHSMap;
   std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reverseNumRHSMap;
 
-  std::unordered_map<statementNumber, std::unordered_set<fullRHS>> fullRHSMap;
-  std::unordered_map<fullRHS, std::unordered_set<statementNumber>> reverseFullRHSMap;
+  std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap;
+  std::unordered_map<full, std::unordered_set<statementNumber>> reverseFullRHSMap;
   std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap;
   std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reversePartialRHSMap;
 
  public:
   AssignStore();
 
-  void storeFullPatternAssign(std::unordered_map<statementNumber, std::unordered_set<fullRHS>> relations);
+  void storeFullPatternAssign(std::unordered_map<statementNumber, std::unordered_set<full>> relations);
 
   void storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> relations);
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(fullRHS full);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
 
 
     /**

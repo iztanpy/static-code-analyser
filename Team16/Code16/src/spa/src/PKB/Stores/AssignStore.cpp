@@ -10,8 +10,8 @@ AssignStore::AssignStore() {
   this->reverseNumLHSMap = std::unordered_map<variable, std::unordered_set<statementNumber>>();
   this->reverseNumRHSMap = std::unordered_map<partialMatch, std::unordered_set<statementNumber>>();
 
-  this->fullRHSMap = std::unordered_map<statementNumber, std::unordered_set<fullRHS>>();
-  this->reverseFullRHSMap = std::unordered_map<fullRHS, std::unordered_set<statementNumber>>();
+  this->fullRHSMap = std::unordered_map<statementNumber, std::unordered_set<full>>();
+  this->reverseFullRHSMap = std::unordered_map<full, std::unordered_set<statementNumber>>();
   this->partialRHSMap = std::unordered_map<statementNumber, std::unordered_set<partialMatch>>();
   this->reversePartialRHSMap = std::unordered_map<partialMatch, std::unordered_set<statementNumber>>();
 }
@@ -34,7 +34,7 @@ void AssignStore::addNumLHSMap(std::unordered_map<statementNumber, variable> num
 }
 
 void AssignStore::storeFullPatternAssign(std::unordered_map<statementNumber,
-                                         std::unordered_set<fullRHS>> relations) {
+                                         std::unordered_set<full>> relations) {
     this->fullRHSMap = relations;
     for (auto const& x : relations) {
         for (auto const& y : x.second) {
@@ -102,6 +102,21 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::
   }
   return results;
 }
+
+//std::unordered_set<statementNumber> AssignStore::getAssignsWcF(Wildcard lhs, full rhs) {
+//  return reverseFullRHSMap[rhs];
+//}
+//
+//std::unordered_set<statementNumber> AssignStore::getAssignsFF(full lhs, full rhs) {
+//    std::unordered_set<statementNumber> results;
+//    std::unordered_set<statementNumber> relevantStmt = reverseFullRHSMap[rhs];
+//    for (auto const& x : relevantStmt) {
+//        if (numLHSMap[x] == lhs) {
+//            results.insert(x);
+//        }
+//    }
+//    return results;
+//}
 
 std::unordered_set<statementNumber> AssignStore::getAssigns(Wildcard lhs, partialMatch rhs) {
   return reverseNumRHSMap[rhs];

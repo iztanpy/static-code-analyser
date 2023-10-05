@@ -23,7 +23,7 @@
 
 typedef std::string variable;
 typedef int statementNumber;
-typedef std::string possibleCombinations;
+typedef std::string full;
 typedef std::string constant;
 typedef std::string statementType;
 typedef std::string partialMatch;
@@ -55,8 +55,12 @@ class PKB {
   * @param numRHSMap An unordered map of statement numbers to sets of possible combinations for the right-hand side of assignments.
   * @param numLHSMap An unordered map of statement numbers to variables for the left-hand side of assignments.
   */
-  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap,
+  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
                       std::unordered_map<statementNumber, variable> numLHSMap);
+
+  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
+                        std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap,
+                        std::unordered_map<statementNumber, variable> numLHSMap);
 
   /**
   * @brief Retrieves all assignment statement numbers in the program.
