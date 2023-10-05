@@ -17,6 +17,8 @@
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
 #include "Stores/ProcedureStore.h"
+#include "Stores/IfStore.h"
+#include "Stores/WhileStore.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
@@ -40,6 +42,8 @@ class PKB {
   std::unique_ptr<FollowsStore> followsStore;
   std::unique_ptr<ModifiesStore> modifiesStore;
   std::unique_ptr<ProcedureStore> procedureStore;
+  std::unique_ptr<WhileStore> whileStore;
+  std::unique_ptr<IfStore> ifStore;
 
  public:
   PKB();
@@ -872,6 +876,18 @@ class PKB {
   * @return true if matching preceding statements are followed by matching following statements in the follow-star relationship, false otherwise.
   */
   bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
+
+  void storeIf(std::unordered_map<statementNumber, variable> variableMap);
+
+  std::unordered_set<statementNumber> getIf(Wildcard wc);
+
+  std::unordered_set<statementNumber> getIf(variable v);
+
+  void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
+
+  std::unordered_set<statementNumber> getWhile(Wildcard wc);
+
+  std::unordered_set<statementNumber> getWhile(variable v);
 
   PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;
