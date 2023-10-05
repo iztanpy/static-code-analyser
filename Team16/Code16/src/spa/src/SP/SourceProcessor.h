@@ -97,6 +97,9 @@ class SourceProcessor {
      * @return A set containing procedure labels defined in the program.
     */
     std::set<std::string> getProcedureLabels();
+    std::unordered_map<std::string, std::unordered_set<int>> getProcedureLineNumberHashmap();
+    std::unordered_map<std::string, std::string> getCallerCalleeHashmap();
+    std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap();
 };
 
 
