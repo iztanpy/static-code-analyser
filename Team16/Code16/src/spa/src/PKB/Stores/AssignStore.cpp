@@ -9,6 +9,11 @@ AssignStore::AssignStore() {
   this->numRHSMap = std::unordered_map<statementNumber, std::unordered_set<partialMatch>>();
   this->reverseNumLHSMap = std::unordered_map<variable, std::unordered_set<statementNumber>>();
   this->reverseNumRHSMap = std::unordered_map<partialMatch, std::unordered_set<statementNumber>>();
+
+  this->fullRHSMap = std::unordered_map<statementNumber, std::unordered_set<fullRHS>>();
+  this->reverseFullRHSMap = std::unordered_map<fullRHS, std::unordered_set<statementNumber>>();
+  this->partialRHSMap = std::unordered_map<statementNumber, std::unordered_set<partialMatch>>();
+  this->reversePartialRHSMap = std::unordered_map<partialMatch, std::unordered_set<statementNumber>>();
 }
 
 void AssignStore::addNumRHSMap(std::unordered_map<statementNumber,
@@ -26,6 +31,26 @@ void AssignStore::addNumLHSMap(std::unordered_map<statementNumber, variable> num
   for (auto const& x : numLHSMap) {
     reverseNumLHSMap[x.second].insert(x.first);
   }
+}
+
+void AssignStore::storeFullPatternAssign(std::unordered_map<statementNumber,
+                                         std::unordered_set<fullRHS>> relations) {
+    this->fullRHSMap = relations;
+    for (auto const& x : relations) {
+        for (auto const& y : x.second) {
+            reverseFullRHSMap[y].insert(x.first);
+        }
+    }
+}
+
+void AssignStore::storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber,
+                                                     std::unordered_set<partialMatch>> relations) {
+    this->partialRHSMap = relations;
+    for (auto const& x : relations) {
+        for (auto const& y : x.second) {
+            reversePartialRHSMap[y].insert(x.first);
+        }
+    }
 }
 
 // get all Assign statements
