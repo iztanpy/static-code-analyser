@@ -10,6 +10,7 @@
 class AssignStore {
  private:
   typedef std::string variable;
+  typedef std::string fullRHS;
   typedef std::string partialMatch;
   typedef int statementNumber;
   std::unordered_map<statementNumber, std::unordered_set<partialMatch>> numRHSMap;
@@ -17,17 +18,27 @@ class AssignStore {
   std::unordered_map<variable, std::unordered_set<statementNumber>> reverseNumLHSMap;
   std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reverseNumRHSMap;
 
+  std::unordered_map<statementNumber, std::unordered_set<fullRHS>> fullRHSMap;
+  std::unordered_map<fullRHS, std::unordered_set<statementNumber>> reverseFullRHSMap;
+  std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap;
+  std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reversePartialRHSMap;
+
  public:
   AssignStore();
 
-  /**
-  * @brief Adds a mapping of statement numbers to partial match sets for right-hand sides (RHS) of assignments.
-  *
-  * This method adds a mapping of statement numbers to sets of partial matches representing the right-hand sides (RHS)
-  * of assignments. The mapping allows for efficient retrieval of RHS information for assignments.
-  *
-  * @param numRHSMap An unordered map of statement numbers to sets of partial matches for RHS.
-  */
+  void storeFullPatternAssign(std::unordered_map<statementNumber, std::unordered_set<fullRHS>> relations);
+
+  void storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> relations);
+
+
+    /**
+    * @brief Adds a mapping of statement numbers to partial match sets for right-hand sides (RHS) of assignments.
+    *
+    * This method adds a mapping of statement numbers to sets of partial matches representing the right-hand sides (RHS)
+    * of assignments. The mapping allows for efficient retrieval of RHS information for assignments.
+    *
+    * @param numRHSMap An unordered map of statement numbers to sets of partial matches for RHS.
+    */
   void addNumRHSMap(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> numRHSMap);
 
   /**
