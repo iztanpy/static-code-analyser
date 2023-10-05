@@ -29,6 +29,23 @@ void PKB::setAssignments(std::unordered_map<statementNumber, std::unordered_set<
     assignStore->storeFullPatternAssign(fullRHSMap);
 }
 
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPairPartial(partialMatch partial) {
+    return assignStore->getAssignPairPartial(partial);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPairFull(full full) {
+    return assignStore->getAssignPairFull(full);
+}
+
+std::unordered_set<statementNumber> PKB::getAssignsWcF(Wildcard lhs, full rhs) {
+    return assignStore->getAssignsWcF(lhs, rhs);
+}
+
+std::unordered_set<statementNumber> PKB::getAssignsFF(full lhs, full rhs) {
+    return assignStore->getAssignsFF(lhs, rhs);
+}
+
+
 std::unordered_set<statementNumber> PKB::getAllAssigns() {
   return assignStore->getAllAssigns();
 }

@@ -62,6 +62,11 @@ class PKB {
                         std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap,
                         std::unordered_map<statementNumber, variable> numLHSMap);
 
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
+    std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
+    std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
+
   /**
   * @brief Retrieves all assignment statement numbers in the program.
   *

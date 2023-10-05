@@ -5,6 +5,22 @@
 
 ReadFacade::ReadFacade(PKB& pkb) : pkb(pkb) {}
 
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAssignPairPartial(partialMatch partial) {
+    return pkb.getAssignPairPartial(partial);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAssignPairFull(full full) {
+    return pkb.getAssignPairFull(full);
+}
+
+std::unordered_set<statementNumber> ReadFacade::getAssignsWcF(Wildcard lhs, full rhs) {
+    return pkb.getAssignsWcF(lhs, rhs);
+}
+
+std::unordered_set<statementNumber> ReadFacade::getAssignsFF(full lhs, full rhs) {
+    return pkb.getAssignsFF(lhs, rhs);
+}
+
 std::unordered_set<statementNumber> ReadFacade::getAllAssigns() {
   return pkb.getAllAssigns();
 }
