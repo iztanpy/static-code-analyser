@@ -8,7 +8,6 @@
 #include "utils/hash_utils.h"
 
 
-
 class IfStore {
 private:
     typedef std::string variable;
@@ -20,5 +19,7 @@ public:
     IfStore();
 
     void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);
+    std::unordered_set<statementNumber> getIf(Wildcard wc);
+    std::unordered_set<statementNumber> getIf(variable v);
 }
 

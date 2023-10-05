@@ -18,4 +18,7 @@ public:
     WhileStore();
 
     void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);
+
+    std::unordered_set<statementNumber> getWhile(Wildcard wc);
+    std::unordered_set<statementNumber> getWhile(variable v);
 };
