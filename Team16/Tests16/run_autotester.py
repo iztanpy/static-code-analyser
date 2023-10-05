@@ -1,0 +1,138 @@
+import os
+import glob
+import time
+import shutil
+from collections import Counter
+
+
+class Runner:
+    WINDOWS_OS_NAME = 'nt'
+    MAC_OS_NAME = 'posix'
+    SUCCESS_EXIT_CODE = 0
+    FAILURE_CLOSING_TAG = '</failed>'
+    SUCCESS_TAG = '<passed/>'
+    PASS_DIRECTORY = os.path.join(os.getcwd(), "Pass")
+    FAIL_DIRECTORY = os.path.join(os.getcwd(), "Fail")
+    TEMP_XML_FILENAME = "temp.xml"
+    LOG_FILE = "log.txt"
+
+    def __init__(self):
+        self.TOTAL_TESTS = 0
+        self.TOTAL_PASSED_TESTS = 0
+        self.TOTAL_FAILED_TESTS = 0
+
+    @staticmethod
+    def make_path_suitable(command):
+        return os.path.normpath(command)
+
+    def find_autotester_executable(self):
+        file_name = 'autotester.exe' if os.name == self.WINDOWS_OS_NAME else 'autotester'
+
+        # Our Team16 directory is the parent directory of the current working directory
+        team_code_dir = os.path.dirname(os.getcwd())
+
+        executable_path = None
+
+        for root, dirs, files in os.walk(team_code_dir):
+            for file in files:
+                if file == file_name:
+                    executable_path = os.path.join(root, file)
+
+        if executable_path is None:
+            raise Exception(f"Unable to find {file_name} in {team_code_dir} folder")
+
+        return executable_path
+
+    def make_result_directory(self):
+        if not os.path.exists(self.PASS_DIRECTORY): os.makedirs(self.PASS_DIRECTORY)
+        if not os.path.exists(self.FAIL_DIRECTORY): os.makedirs(self.FAIL_DIRECTORY)
+
+    def get_autotester_parameters(self, folder_to_test_in):
+        current_directory = os.getcwd()
+        test_name_list = glob.glob(os.path.join(current_directory, folder_to_test_in, "**", "*.txt"), recursive=True)
+
+        source_tests = [name for name in test_name_list if name.endswith("source.txt")]
+        query_tests = [name for name in test_name_list if name.endswith("queries.txt")]
+
+        assert len(source_tests) == len(query_tests), "Mismatch between source and query files"
+
+        parameters = []
+        for source, query in zip(sorted(source_tests), sorted(query_tests)):
+            base_source = os.path.basename(source)[:-10]
+            base_query = os.path.basename(query)[:-11]
+
+            assert base_source == base_query, f"Source: {base_source}, Query: {base_query}"
+
+            test_name = os.path.basename(source)[:-10]
+            parameters.append([source, query, test_name])
+
+        return parameters
+
+    def check_output_xml(self, output_xml, test_name):
+        if not os.path.exists(output_xml):
+            return "\n"
+
+        with open(output_xml) as f:
+            output = f.read()
+            counts = Counter(output.split())
+            passed_tests = counts[self.SUCCESS_TAG]
+            failed_tests = counts[self.FAILURE_CLOSING_TAG]
+
+        self.TOTAL_TESTS += (passed_tests + failed_tests)
+        self.TOTAL_PASSED_TESTS += passed_tests
+        self.TOTAL_FAILED_TESTS += failed_tests
+
+        if failed_tests > 0:
+            shutil.move(output_xml, os.path.join(self.FAIL_DIRECTORY, f"{test_name}out.xml"))
+        else:
+            shutil.move(output_xml, os.path.join(self.PASS_DIRECTORY, f"{test_name}out.xml"))
+
+        return f"\nTest passed: {passed_tests}\nTest failed: {failed_tests}\n"
+
+    def execute_autotester(self, autotester_filepath, parameters, redirect_output):
+        source, query, test_name = parameters
+
+        command = [autotester_filepath, source, query, self.TEMP_XML_FILENAME]
+        command = self.make_path_suitable(" ".join(command))
+
+        if redirect_output:
+            exit_code = os.system(command + f" > {self.LOG_FILE}")
+        else:
+            exit_code = os.system(command)
+
+        if exit_code != self.SUCCESS_EXIT_CODE:
+            return f"Execution failed for {test_name} with exit code: {exit_code}"
+
+        return f"Execution completed for {test_name} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name)}"
+
+    def execute(self, folder_to_test_in, redirect_output=True):
+        autotester_filepath = self.find_autotester_executable()
+        parameters = self.get_autotester_parameters(folder_to_test_in)
+
+        self.make_result_directory()
+
+        test_report = ""
+        for param in parameters:
+            test_report += "\n" + self.execute_autotester(autotester_filepath, param, redirect_output)
+
+        print(test_report)
+
+        shutil.copy("analysis.xsl", self.PASS_DIRECTORY)
+        shutil.copy("analysis.xsl", self.FAIL_DIRECTORY)
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    runner = Runner()
+    runner.execute("Milestone1")
+    # runner.execute("Milestone2")
+
+    print(f"Test statistics:")
+    print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")
+    print(f"Total failed tests: {runner.TOTAL_FAILED_TESTS}")
+    print(f"Total tests: {runner.TOTAL_TESTS}")
+
+    print(f"Total time taken: {time.time() - start_time:.4f} seconds")
+
+    if runner.TOTAL_FAILED_TESTS > 0:
+        raise Exception("Some tests failed!")
