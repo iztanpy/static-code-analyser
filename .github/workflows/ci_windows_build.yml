@@ -18,8 +18,9 @@ env:
     BUILD_TYPE: Release
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: true
 
@@ -52,9 +53,47 @@ jobs:
           .\integration_testing\Release\integration_testing.exe
           cd ..\..\..\..
       
-      - name: Run Autotester
+      - name: Run System Tests
         shell: powershell
         run: |
-          cd .\Team16\Code16\
-          .\build\src\autotester\Release\autotester.exe .\tests\Sample_source.txt .\tests\Sample_queries.txt .\tests\out.xml
+          cd .\Team16\Tests16\
+          python run_autotester.py
           cd ..\..
+
+  build-macos:
+    runs-on: macOS-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Project
+        run: |
+          cd ./Team16/Code16/
+          mkdir build
+          cd ./build/
+          cmake ..
+          cmake --build . --target unit_testing --config Release
+          cmake --build . --target integration_testing --config Release
+          cmake --build . --target autotester --config Release
+          cd ../../
+
+      - name: Run Unit Tests
+        run: |
+          cd ./Team16/Code16/build/src/
+          ./unit_testing/Release/unit_testing
+          cd ../../..
+
+      - name: Run Integration Tests
+        run: |
+          cd ./Team16/Code16/build/src/
+          ./integration_testing/Release/integration_testing
+          cd ../../..
+
+      - name: Run System Tests
+        run: |
+          cd ./Team16/Tests16/
+          python run_autotester.py
+          cd ../..
