@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <set>
+#include <utility>
 
 #include "SP/TNode.h"
 #include "utils/entity_types.h"
@@ -202,7 +203,7 @@ class Visitor {
   std::unordered_map<int, StmtEntity> statementTypesMap;
   std::unordered_set<std::string> variables;
   std::unordered_set<std::string> constants;
-  std::unordered_map<std::string, std::unordered_set<int>> procedureLineNumberHashmap;
+  std::unordered_map<std::string, std::pair<int, int>> procedureLineNumberHashmap;
 
 
 
@@ -217,12 +218,16 @@ class Visitor {
     *
     * @return An unordered map where keys are procedure names, and values are a tuple of statement numbers.
     */
-    std::unordered_map<std::string, std::unordered_set<int>> getProcedureLineNumberHashmap() const {
+    std::unordered_map<std::string, std::pair<int, int>> getProcedureLineNumberHashmap() const {
       return procedureLineNumberHashmap;
     }
 
     void setProcedureLineNumberMap(std::string procedureName, int statementNumber) {
-        procedureLineNumberHashmap[procedureName].insert(statementNumber);
+        if (procedureLineNumberHashmap[procedureName].first) {
+            procedureLineNumberHashmap[procedureName].second = statementNumber;
+        } else {
+            procedureLineNumberHashmap[procedureName].first = statementNumber;
+        }
     }
 
     std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap() const {
