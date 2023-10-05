@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <utility>
 #include <set>
 #include <string>
 #include <memory>
@@ -14,6 +15,7 @@
 #include "PKB/API/WriteFacade.h"
 #include "SP/sp_tokeniser/SPTokeniser.h"
 #include "utils/Error.h"
+
 
 
 /**
@@ -97,6 +99,9 @@ class SourceProcessor {
      * @return A set containing procedure labels defined in the program.
     */
     std::set<std::string> getProcedureLabels();
+    std::unordered_map<std::string, std::pair<int, int>> getProcedureLineNumberHashmap();
+    std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap();
+    std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap();
 };
 
 

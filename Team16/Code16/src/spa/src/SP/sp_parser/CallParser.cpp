@@ -39,6 +39,11 @@ int CallParser::parse(std::vector<Token>& tokens, int curr_index) {
     Token call = tokens[curr_index];
     call.value = callNameToken.value;
 
+    std::string currentProcedureName = ParseUtils::getProcedureName();
+    if (currentProcedureName == call.value) {  // procedure should not be able to call itself
+        throw InvalidSemanticError();
+    }
+    visitor->setCallerCalleeMap(currentProcedureName, call.value);
     // Update the current index and create the AST node
     curr_index = curr_index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(call, lineNumber);

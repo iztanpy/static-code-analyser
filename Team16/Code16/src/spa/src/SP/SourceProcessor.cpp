@@ -59,3 +59,14 @@ std::set<std::string> SourceProcessor::getProcedureLabels() {
   return visitor.getProcedureLabels();
 }
 
+std::unordered_map<std::string, std::pair<int, int>> SourceProcessor::getProcedureLineNumberHashmap() {
+    return visitor.getProcedureLineNumberHashmap();
+}
+
+std::unordered_map<std::string, std::unordered_set<std::string>> SourceProcessor::getCallerCalleeHashmap() {
+    return visitor.getCallerCalleeHashmap();
+}
+
+std::unordered_map<int, std::string> SourceProcessor::getCallStatementNumberEntityHashmap() {
+    return visitor.getCallStatementNumberEntityHashmap();
+}
