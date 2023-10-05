@@ -151,6 +151,23 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/evaluator_util.h
         src/qps/query_evaluator/assign_pattern_evaluator.cpp
         src/qps/query_evaluator/assign_pattern_evaluator.h
+        src/qps/qps_validator/qps_validator_handler.h
+        src/qps/qps_validator/qps_validator.cpp
+        src/qps/qps_validator/qps_validator.h
+        src/qps/qps_validator/statement_syntax_handler.cpp
+        src/qps/qps_validator/statement_syntax_handler.h
+        src/qps/qps_validator/declaration_statement_syntax_handler.cpp
+        src/qps/qps_validator/declaration_statement_syntax_handler.h
+        src/qps/qps_validator/declaration_synonym_syntax_handler.cpp
+        src/qps/qps_validator/declaration_synonym_syntax_handler.h
+        src/qps/qps_validator/declaration_synonym_semantic_handler.cpp
+        src/qps/qps_validator/declaration_synonym_semantic_handler.h
+        src/qps/qps_validator/select_statement_syntax_handler.cpp
+        src/qps/qps_validator/select_statement_syntax_handler.h
+        src/qps/qps_validator/select_synonym_syntax_handler.cpp
+        src/qps/qps_validator/select_synonym_syntax_handler.h
+        src/qps/qps_validator/select_synonym_semantic_handler.cpp
+        src/qps/qps_validator/select_synonym_semantic_handler.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

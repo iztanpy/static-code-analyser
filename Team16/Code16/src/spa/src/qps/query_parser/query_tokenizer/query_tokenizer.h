@@ -68,7 +68,7 @@ class QueryTokenizer {
    * @return a vector of QueryTokens relevant to Select clause
    */
   static std::vector<QueryToken> extractSelectToken(std::string & select_statement,
-                                                    const std::vector<Declaration> & declarations);
+                                                    std::vector<Declaration> & declarations);
 
   /*!
    * Returns the starting indexes of clauses
