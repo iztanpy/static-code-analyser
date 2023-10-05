@@ -103,20 +103,20 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::
   return results;
 }
 
-//std::unordered_set<statementNumber> AssignStore::getAssignsWcF(Wildcard lhs, full rhs) {
-//  return reverseFullRHSMap[rhs];
-//}
-//
-//std::unordered_set<statementNumber> AssignStore::getAssignsFF(full lhs, full rhs) {
-//    std::unordered_set<statementNumber> results;
-//    std::unordered_set<statementNumber> relevantStmt = reverseFullRHSMap[rhs];
-//    for (auto const& x : relevantStmt) {
-//        if (numLHSMap[x] == lhs) {
-//            results.insert(x);
-//        }
-//    }
-//    return results;
-//}
+std::unordered_set<statementNumber> AssignStore::getAssignsWcF(Wildcard lhs, full rhs) {
+  return reverseFullRHSMap[rhs];
+}
+
+std::unordered_set<statementNumber> AssignStore::getAssignsFF(full lhs, full rhs) {
+    std::unordered_set<statementNumber> results;
+    std::unordered_set<statementNumber> relevantStmt = reverseFullRHSMap[rhs];
+    for (auto const& x : relevantStmt) {
+        if (numLHSMap[x] == lhs) {
+            results.insert(x);
+        }
+    }
+    return results;
+}
 
 std::unordered_set<statementNumber> AssignStore::getAssigns(Wildcard lhs, partialMatch rhs) {
   return reverseNumRHSMap[rhs];

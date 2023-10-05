@@ -32,6 +32,9 @@ class AssignStore {
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
+    std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
+    std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
+
 
 
     /**
