@@ -31,6 +31,87 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+
+TEST_CASE("Test call sn rs.") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+      call b;
+      call c;
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, std::string> callerCalleeHashmap = {
+       {1, "b"},
+       {2, "c"},
+    };
+
+
+    std::unordered_map<int, std::string> res = sourceProcessor.getCallStatementNumberEntityHashmap();
+
+    for (const auto& pair : res) {
+        int key = pair.first;
+        std::string value = pair.second;
+
+        std::cout << key << "key";
+        std::cout << value << "val";
+        std::cout << std::endl;
+    }
+    REQUIRE(res == callerCalleeHashmap);
+}
+
+TEST_CASE("Test caller callee rs.") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+      call b;
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap = {
+       {"p", {"b"}},
+    };
+    std::unordered_map<std::string, std::unordered_set<std::string>> res = sourceProcessor.getCallerCalleeHashmap();
+    for (const auto& pair : res) {
+        std::string key = pair.first;
+        const std::unordered_set<std::string>& values = pair.second;
+
+        std::cout << key << "key";
+
+        for (const std::string& value : values) {
+            std::cout << value << "val";
+        }
+
+        std::cout << std::endl;
+    }
+
+    REQUIRE(res == callerCalleeHashmap);
+}
+
+
+TEST_CASE("Test storing of procedure line numbers.") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+      x = 1; 
+      x = 2;
+      x = 3;
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<std::string, std::pair<int,int>> procedureStatementNumberHashmap = {
+       {"p", {1,3}},
+    };
+    std::unordered_map<std::string, std::pair<int, int>> res = sourceProcessor.getProcedureLineNumberHashmap();
+    REQUIRE(res == procedureStatementNumberHashmap);
+}
+
 TEST_CASE("Test invalid else statement at the end.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
@@ -46,7 +127,6 @@ TEST_CASE("Test invalid else statement at the end.") {
     sourceProcessor.processSource(simpleProgram3);
     REQUIRE(1 == 1);
 }
-
 
 TEST_CASE("Test follows relation one level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();

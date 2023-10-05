@@ -29,6 +29,7 @@ class CallParser : public Parser {
  private:
     ASTVisitor* visitor;
     int lineNumber = 0;
+    int index = 0;
 
  public:
     /**
@@ -47,5 +48,25 @@ class CallParser : public Parser {
      * @return The index in the token vector after parsing the function call statement.
      */
     int parse(std::vector<Token>& tokens, int curr_index) override;
+    /**
+    * @brief Retrieves the current line number.
+    * @return The current line number.
+    */
+    int getLineNumber();
+    /**
+     * @brief Sets the line number to the specified value.
+     * @param newLineNumber The new line number to set.
+     */
+    void setLineNumber(int newLineNumber);
+    /**
+     * @brief Retrieves the current index.
+     * @return The current index.
+    */
+    int getIndex();
+    /**
+     * @brief Sets the index to the specified value.
+     * @param newIndex The new index to set.
+     */
+    void setIndex(int newIndex);
 };
 
