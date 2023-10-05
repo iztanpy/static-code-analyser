@@ -28,7 +28,8 @@ class AssignStore {
 
   void storeFullPatternAssign(std::unordered_map<statementNumber, std::unordered_set<full>> relations);
 
-  void storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> relations);
+  void storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber,
+                                          std::unordered_set<partialMatch>> relations);
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);

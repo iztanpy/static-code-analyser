@@ -54,7 +54,8 @@ void AssignStore::storeAllPossibleCombinationsAssign(std::unordered_map<statemen
 }
 
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::getAssignPairPartial(partialMatch partial) {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+        AssignStore::getAssignPairPartial(partialMatch partial) {
     auto results = std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
     std::unordered_set<statementNumber> relevantStmt = reversePartialRHSMap[partial];
     for (auto const& x : relevantStmt) {
@@ -64,7 +65,8 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::
     return results;
 }
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> AssignStore::getAssignPairFull(partialMatch partial) {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+        AssignStore::getAssignPairFull(partialMatch partial) {
     auto results = std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
     std::unordered_set<statementNumber> relevantStmt = reverseFullRHSMap[partial];
     for (auto const& x : relevantStmt) {

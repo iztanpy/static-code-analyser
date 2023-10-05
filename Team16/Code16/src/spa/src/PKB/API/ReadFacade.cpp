@@ -5,7 +5,8 @@
 
 ReadFacade::ReadFacade(PKB& pkb) : pkb(pkb) {}
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAssignPairPartial(partialMatch partial) {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+        ReadFacade::getAssignPairPartial(partialMatch partial) {
     return pkb.getAssignPairPartial(partial);
 }
 
