@@ -98,7 +98,7 @@ class SourceProcessor {
     */
     std::set<std::string> getProcedureLabels();
     std::unordered_map<std::string, std::unordered_set<int>> getProcedureLineNumberHashmap();
-    std::unordered_map<std::string, std::string> getCallerCalleeHashmap();
+    std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap();
     std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap();
 };
 

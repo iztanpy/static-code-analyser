@@ -168,7 +168,8 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             if (!controlStructureStack.empty() && currWhileDepth > 0) {
                 currWhileDepth--;  // Decrease the depth
                 currIfDepth--;  // Decrease the depth
-            } else {
+            } else {  // end of procedure
+                visitor->setProcedureLineNumberMap(ParseUtils::getProcedureName(), lineNumber - 1);
                 isParsingProcedure = false;
             }
           }

@@ -63,7 +63,7 @@ std::unordered_map<std::string, std::unordered_set<int>> SourceProcessor::getPro
     return visitor.getProcedureLineNumberHashmap();
 }
 
-std::unordered_map<std::string, std::string> SourceProcessor::getCallerCalleeHashmap() {
+std::unordered_map<std::string, std::unordered_set<std::string>> SourceProcessor::getCallerCalleeHashmap() {
     return visitor.getCallerCalleeHashmap();
 }
 

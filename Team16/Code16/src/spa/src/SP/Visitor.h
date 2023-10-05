@@ -195,7 +195,7 @@ class Visitor {
   std::unordered_map<int, int> followStatementNumberHashmap;
 
   // Calls
-  std::unordered_map<std::string, std::string> callerCalleeHashmap;
+  std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap;
   std::unordered_map<int, std::string> callStatementNumberEntityHashmap;
 
   // Other
@@ -225,8 +225,12 @@ class Visitor {
         procedureLineNumberHashmap[procedureName].insert(statementNumber);
     }
 
-    std::unordered_map<std::string, std::string> getCallerCalleeHashmap() const {
+    std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap() const {
       return callerCalleeHashmap;
+    }
+
+    void setCallerCalleeMap(std::string caller, std::string callee) {
+        callerCalleeHashmap[caller].insert(callee);
     }
 
     std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap() const {

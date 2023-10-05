@@ -11,7 +11,6 @@
 #include "SP/sp_tokeniser/TokenTypes.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
-#include "SP/utils/ParseUtils.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -30,7 +29,7 @@ class ParseUtils {
  private:
   static int index;
   static int lineNumber;
-  static std::string procedureName;
+  inline static std::string procedureName;
 
  public:
  /**

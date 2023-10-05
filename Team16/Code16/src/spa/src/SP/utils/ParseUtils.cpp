@@ -30,8 +30,10 @@ bool ParseUtils::isRelFactorOperator(const Token& token) {
       token.tokenType == TokenType::kOperatorEqual;
 }
 
+// Initialize variables
 int ParseUtils::index = 0;
 int ParseUtils::lineNumber = 0;
+static std::string* procedureName;
 
 void ParseUtils::incrementIndex() {
   index++;
@@ -42,8 +44,9 @@ int ParseUtils::getIndex() {
 }
 
 std::string ParseUtils::getProcedureName() {
-  return procedureName;
+    return procedureName;
 }
+
 
 void ParseUtils::setValues(int index, int lineNumber) {
   ParseUtils::index = index;
