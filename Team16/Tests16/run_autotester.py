@@ -1,3 +1,7 @@
+"""
+Reference with modifications from https://github.com/s7manth/cs3203-spa/blob/master/Team02/Tests02/RunTests.py
+"""
+
 import os
 import glob
 import time
