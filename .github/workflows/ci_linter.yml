@@ -4,8 +4,8 @@ jobs:
   cpplint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
       - run: pip install cpplint
       - run: |
           cd Team16/Code16/src/spa
