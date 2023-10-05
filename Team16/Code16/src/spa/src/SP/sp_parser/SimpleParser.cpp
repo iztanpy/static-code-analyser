@@ -54,6 +54,7 @@ int SimpleParser::parse(std::vector<Token>& tokens, int curr_index) {
             if (next_index == -1) {
                 throw InvalidSyntaxError();
             } else {
+                visitor->setProcedureLineNumberMap(ParseUtils::getProcedureName(), lineNumber);
                 isParsingProcedure = true;
                 curr_index = next_index;
             }

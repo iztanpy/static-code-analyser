@@ -221,6 +221,10 @@ class Visitor {
       return procedureLineNumberHashmap;
     }
 
+    void setProcedureLineNumberMap(std::string procedureName, int statementNumber) {
+        procedureLineNumberHashmap[procedureName].insert(statementNumber);
+    }
+
     std::unordered_map<std::string, std::string> getCallerCalleeHashmap() const {
       return callerCalleeHashmap;
     }

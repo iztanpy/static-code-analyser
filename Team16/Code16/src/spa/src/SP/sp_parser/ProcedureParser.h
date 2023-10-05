@@ -12,6 +12,7 @@
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
+#include "SP/utils/ParseUtils.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"

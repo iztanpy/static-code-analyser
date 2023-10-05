@@ -41,9 +41,17 @@ int ParseUtils::getIndex() {
   return index;
 }
 
+std::string ParseUtils::getProcedureName() {
+  return procedureName;
+}
+
 void ParseUtils::setValues(int index, int lineNumber) {
   ParseUtils::index = index;
   ParseUtils::lineNumber = lineNumber;
+}
+
+void ParseUtils::setProcedureName(std::string procedureName) {
+  ParseUtils::procedureName = procedureName;
 }
 
 std::shared_ptr<TNode> ParseUtils::parseExpression(const std::vector<Token>& tokens) {

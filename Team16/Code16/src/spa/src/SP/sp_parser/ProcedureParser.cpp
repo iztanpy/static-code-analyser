@@ -33,6 +33,8 @@ int ProcedureParser::parse(std::vector<Token>& tokens, int curr_index) {
     // build procedure ast
     Token procedure = tokens[curr_index];
     procedure.value = procedureNameToken.value;
+    // set current procedure name
+    ParseUtils::setProcedureName(procedure.value);
     std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, 0);
 
     // set root node
