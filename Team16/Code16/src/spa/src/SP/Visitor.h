@@ -194,13 +194,40 @@ class Visitor {
   // Follows
   std::unordered_map<int, int> followStatementNumberHashmap;
 
+  // Calls
+  std::unordered_map<std::string, std::string> callerCalleeHashmap;
+  std::unordered_map<int, std::string> callStatementNumberEntityHashmap;
+
   // Other
   std::unordered_map<int, StmtEntity> statementTypesMap;
   std::unordered_set<std::string> variables;
   std::unordered_set<std::string> constants;
+  std::unordered_map<std::string, std::unordered_set<int>> procedureLineNumberHashmap;
+
+
 
   std::set<std::string> procedureLabels;
   std::string currKey;
+
+
+   /**
+    * @brief Get the starting to ending line numbers of a particular procedure. 
+    *
+    * This method returns an unordered map that associates procedure names with its starting to ending line numbers.
+    *
+    * @return An unordered map where keys are procedure names, and values are a tuple of statement numbers.
+    */
+    std::unordered_map<std::string, std::unordered_set<int>> getProcedureLineNumberHashmap() const {
+      return procedureLineNumberHashmap;
+    }
+
+    std::unordered_map<std::string, std::string> getCallerCalleeHashmap() const {
+      return callerCalleeHashmap;
+    }
+
+    std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap() const {
+        return callStatementNumberEntityHashmap;
+    }
 
     /**
      * @brief Get the mapping of procedure names to the statement numbers where they are defined.
