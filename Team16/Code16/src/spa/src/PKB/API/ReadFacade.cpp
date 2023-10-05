@@ -9,7 +9,7 @@ std::unordered_set<statementNumber> ReadFacade::getAllAssigns() {
   return pkb.getAllAssigns();
 }
 
-std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, possibleCombinations RHS) {
+std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, partialMatch RHS) {
   return pkb.getAssigns(LHS, RHS);
 }
 
@@ -17,7 +17,7 @@ std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, Wildcar
   return pkb.getAssigns(LHS, RHS);
 }
 
-std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard LHS, possibleCombinations RHS) {
+std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard LHS, partialMatch RHS) {
   return pkb.getAssigns(LHS, RHS);
 }
 

@@ -15,10 +15,18 @@ PKB::PKB() {
 // AssignStore methods
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
-                                            std::unordered_set<possibleCombinations>> numRHSMap,
+                                            std::unordered_set<partialMatch>> numRHSMap,
                          std::unordered_map<statementNumber, variable> numLHSMap) {
   assignStore->addNumLHSMap(numLHSMap);
   assignStore->addNumRHSMap(numRHSMap);
+}
+
+void PKB::setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
+                    std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap,
+                    std::unordered_map<statementNumber, variable> numLHSMap) {
+    assignStore->addNumLHSMap(numLHSMap);
+    assignStore->storeAllPossibleCombinationsAssign(partialRHSMap);
+    assignStore->storeFullPatternAssign(fullRHSMap);
 }
 
 std::unordered_set<statementNumber> PKB::getAllAssigns() {
@@ -29,11 +37,11 @@ std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, Wildcard wildc
   return assignStore->getAssigns(LHS, wildcard);
 }
 
-std::unordered_set<statementNumber> PKB::getAssigns(Wildcard wildcard, possibleCombinations RHS) {
+std::unordered_set<statementNumber> PKB::getAssigns(Wildcard wildcard, partialMatch RHS) {
   return assignStore->getAssigns(wildcard, RHS);
 }
 
-std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, possibleCombinations RHS) {
+std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, partialMatch RHS) {
   return assignStore->getAssigns(LHS, RHS);
 }
 
