@@ -11,9 +11,11 @@ std::unordered_set<std::string> QPS::Evaluate(std::string& query) {
     }
     return results;
   } catch (const QpsSyntaxError& e) {
-    return {"SyntaxError"};
+//    return {"SyntaxError"};
+    return {"Hello"};
   } catch (const QpsSemanticError& e) {
-    return {"SemanticError"};
+//    return {"SemanticError"};
+    return {"World"};
   } catch (...) {
     return {"SemanticError"};
   }
