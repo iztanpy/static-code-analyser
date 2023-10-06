@@ -108,32 +108,18 @@ bool QueryTokenizer::clauseMatch(std::string & clause, const std::regex & regexP
 }
 
 std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & clause,
-                                                                const std::vector<Declaration> & declarations) {
+                                                                std::vector<Declaration> & declarations) {
+  qps_validator::ValidateClauseArgs(clause);
   std::vector<std::string> synonyms = string_util::SplitStringBy(',', clause);
-  if (synonyms.size() != 2) {
-    throw QpsSyntaxError("More than 2 synonyms in relation reference");
-  }
-
   std::vector<std::string> lhs = string_util::SplitStringBy('(', synonyms[0]);
-  if (lhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 open brackets or missing arguments");
-  }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
-  if (rhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 close brackets or missing arguments");
-  }
 
   QueryToken right_token;
   QueryToken left_token;
   std::string right_hand_side = string_util::Trim(rhs[0]);
   std::string left_hand_side = string_util::Trim(lhs[1]);
   // check if lhs and rhs is a stmtRef or entRef
-  if (!QueryUtil::IsStmtRef(left_hand_side) && !QueryUtil::IsEntRef(left_hand_side)) {
-    throw QpsSyntaxError("Invalid argument for relationship reference");
-  }
-  if (!QueryUtil::IsStmtRef(right_hand_side) && !QueryUtil::IsEntRef(right_hand_side)) {
-    throw QpsSyntaxError("Invalid argument for relationship reference");
-  }
+  qps_validator::ValidateClauseArgs(left_hand_side, right_hand_side);
 
   // Set the different types of tokens
   if (QueryUtil::IsWildcard(left_hand_side)) {
@@ -144,9 +130,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     std::string remove_quotations = QueryUtil::RemoveQuotations(left_hand_side);
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    if (!QueryUtil::IsInDeclarations(left_hand_side, declarations)) {
-      throw QpsSemanticError("LHS synonym not declared");
-    }
+    qps_validator::ValidateClauseSynonym(left_hand_side, declarations);
     left_token = {left_hand_side, PQLTokenType::SYNONYM};
   }
 
@@ -158,9 +142,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
     std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
     right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    if (!QueryUtil::IsInDeclarations(right_hand_side, declarations)) {
-      throw QpsSemanticError("RHS synonym not declared");
-    }
+    qps_validator::ValidateClauseSynonym(right_hand_side, declarations);
     right_token = {right_hand_side, PQLTokenType::SYNONYM};
   }
 
@@ -169,34 +151,18 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
 }
 
 std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & clause,
-                                                                 const std::vector<Declaration> & declarations) {
+                                                                 std::vector<Declaration> & declarations) {
+  qps_validator::ValidateClauseArgs(clause);
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause);
-  if (arguments.size() != 2) {
-    throw QpsSyntaxError("More than 2 arguments in pattern clause");
-  }
-
   std::vector<std::string> lhs = string_util::SplitStringBy('(', arguments[0]);
-  if (lhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 open brackets or missing arguments");
-  }
   std::vector<std::string> rhs = string_util::SplitStringBy(')', arguments[1]);
-  if (rhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 close brackets or missing arguments");
-  }
 
   QueryToken right_token;
   QueryToken left_token;
   std::string right_hand_side = string_util::Trim(rhs[0]);
   std::string left_hand_side = string_util::Trim(lhs[1]);
   // check if lhs is a entRef and lhs is an expr or a partial expr
-  if (!QueryUtil::IsEntRef(left_hand_side)) {
-    throw QpsSyntaxError("Invalid argument for LHS pattern clause");
-  }
-  if (!QueryUtil::IsPartialMatchExpressionSpecification(right_hand_side)
-      && !QueryUtil::IsExactExpressionSpecification(right_hand_side)
-      && !QueryUtil::IsWildcard(right_hand_side)) {
-    throw QpsSyntaxError("Invalid argument for RHS of pattern clause");
-  }
+  qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side);
 
   // Set the different types of tokens
   if (QueryUtil::IsWildcard(left_hand_side)) {
@@ -205,9 +171,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     std::string remove_quotations = QueryUtil::RemoveQuotations(left_hand_side);
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    if (!QueryUtil::IsInDeclarations(left_hand_side, declarations)) {
-      throw QpsSemanticError("LHS synonym not declared");
-    }
+    qps_validator::ValidateClauseSynonym(left_hand_side, declarations);
     left_token = {left_hand_side, PQLTokenType::SYNONYM};
   }
 
@@ -228,7 +192,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
 
 std::pair<std::vector<QueryToken>,
           std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::string select_statement,
-                                                                       const std::vector<Declaration> & declarations) {
+                                                                       std::vector<Declaration> & declarations) {
   std::vector<QueryToken> such_that_tokens;
   std::vector<QueryToken> pattern_tokens;
   // remove the Select keyword (guaranteed to exist since we already checked)
@@ -255,17 +219,10 @@ std::pair<std::vector<QueryToken>,
     if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
       std::string clause_with_such_that_removed = string_util::RemoveFirstWord(curr_clause);
       clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
-
-      if (clause_with_such_that_removed.empty()) {
-        throw QpsSyntaxError("Missing input after such that");
-      }
-
+      qps_validator::ValidateNonEmptyClause(clause_with_such_that_removed);
       std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
-      if (QueryUtil::IsRelRef(rel_ref)) {
-        such_that_tokens.push_back({rel_ref, PQLTokenType::RELREF});
-      } else {
-        throw QpsSyntaxError("Invalid relation reference type");
-      }
+      qps_validator::ValidateRelRef(rel_ref);
+      such_that_tokens.push_back({rel_ref, PQLTokenType::RELREF});
 
       std::string rel_ref_syn_pair = string_util::RemoveFirstWordFromArgs(clause_with_such_that_removed);
       std::pair<QueryToken, QueryToken> rel_ref_args = getRelRefArgs(rel_ref_syn_pair, declarations);
@@ -273,16 +230,10 @@ std::pair<std::vector<QueryToken>,
       such_that_tokens.push_back(rel_ref_args.second);
     } else if (clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
       std::string clause_with_pattern_removed = string_util::RemoveFirstWord(curr_clause);
-      if (clause_with_pattern_removed.empty()) {
-        throw QpsSyntaxError("Missing input after pattern");
-      }
-
+      qps_validator::ValidateNonEmptyClause(clause_with_pattern_removed);
       std::string syn_assign = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
-      if (QueryUtil::IsSynonym(syn_assign)) {
-        pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
-      } else {
-        throw QpsSemanticError("Synonym assign is not declared");
-      }
+      qps_validator::ValidateClauseSynonym(syn_assign, declarations);
+      pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
 
       std::string pattern_arg_pair = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
       std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg_pair, declarations);
@@ -292,7 +243,6 @@ std::pair<std::vector<QueryToken>,
       throw QpsSyntaxError("Unrecognized clause");
     }
   }
-
   return {such_that_tokens, pattern_tokens};
 }
 

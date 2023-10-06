@@ -91,7 +91,7 @@ class QueryTokenizer {
    * @return the LHS and RHS as a pair
    */
   static std::pair<QueryToken, QueryToken> getRelRefArgs(std::string & clause,
-                                                         const std::vector<Declaration> & declarations);
+                                                         std::vector<Declaration> & declarations);
 
   /*!
    * Returns the LHS and RHS of pattern clause
@@ -100,7 +100,7 @@ class QueryTokenizer {
    * @return the LHS and RHS as a pair
    */
   static std::pair<QueryToken, QueryToken> getPatternArgs(std::string & clause,
-                                                          const std::vector<Declaration> & declarations);
+                                                          std::vector<Declaration> & declarations);
 
   /*!
    * Returns the query tokens of such that and pattern clauses
@@ -110,5 +110,5 @@ class QueryTokenizer {
    */
   static std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
   extractClauseTokens(std::string select_statement,
-                      const std::vector<Declaration> & declarations);
+                      std::vector<Declaration> & declarations);
 };
