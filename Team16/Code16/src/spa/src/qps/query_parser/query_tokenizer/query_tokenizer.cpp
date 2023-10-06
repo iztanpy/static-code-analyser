@@ -12,6 +12,7 @@
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "qps/constants.h"
 #include "qps/query_parser/QueryUtil.h"
+#include "qps/qps_validator/qps_validator.h"
 
 QueryStructure::QueryStructure(std::vector<std::string> declaration_statements, std::string select_statement)
     : declaration_statements(std::move(declaration_statements)), select_statement(std::move(select_statement)) {}
@@ -24,24 +25,17 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
   bool is_select_statement_processed = false;
 
   for (std::string statement : statements) {
-    if (is_select_statement_processed) {
-      if (statement.empty()) {
-        throw QpsSyntaxError("Extra character at the end of query");
-      }
-      throw QpsSyntaxError("Statements after select statement are invalid");
-    }
+    qps_validator::ValidateStatement(statement, is_select_statement_processed);
     std::string first_word = string_util::GetFirstWord(statement);
-    if (first_word == "Select") {
+    if (first_word == qps_constants::kSelectKeyword) {
       select_statement = statement;
       is_select_statement_processed = true;
     } else {
       declaration_statements.push_back(statement);
     }
   }
+  qps_validator::ValidateSelectExists(select_statement);
 
-  if (select_statement.empty()) {
-    throw QpsSyntaxError("No select statement");
-  }
   return {declaration_statements, select_statement};
 }
 
@@ -49,72 +43,39 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
   std::vector<Declaration> declarations;
   std::set < std::string > processed_synonyms;
   for (std::string statement : declaration_statements) {
+    qps_validator::ValidateDeclarationStatement(statement);
+
     std::string entity = string_util::GetFirstWord(statement);
-
-    if (!QueryUtil::IsDesignEntity(entity)) {
-      throw QpsSyntaxError("Design entity is not valid");
-    }
-
     DesignEntity design_entity = Entity::fromString(entity);
-    // We can ignore the entity already
     statement = string_util::RemoveFirstWord(statement);
-    if (statement.empty()) {
-      throw QpsSyntaxError("Missing synonyms for design entity");
-    }
-
     std::vector<std::string> synonyms = string_util::SplitStringBy(',', statement);
+
     for (const std::string & synonym : synonyms) {
-      // synonym must be IDENT
-      if (!lexical_utils::IsIdent(synonym)) {
-        throw QpsSyntaxError("Synonym does not follow lexical rules");
-      }
-      if (processed_synonyms.find(synonym) != processed_synonyms.end()) {
-        throw QpsSemanticError("Repeated synonym declaration");
-      } else {
-        processed_synonyms.insert(synonym);
-      }
+      qps_validator::ValidateDeclarationSynonym(synonym, processed_synonyms);
+      processed_synonyms.insert(synonym);
       // insert each synonym into declarations
       declarations.push_back({synonym, design_entity});
     }
   }
+
   return declarations;
 }
 
-// TODO(Su Mian): This may not need to be a vector depending on how we parse
 std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_statement,
-                                                           const std::vector<Declaration> & declarations) {
+                                                           std::vector<Declaration> & declarations) {
   std::vector<QueryToken> select_tokens;
-  // remove the Select keyword (guaranteed to exist since we already checked)
+  qps_validator::ValidateSelectStatement(select_statement);
+  // remove the Select keyword
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
-
-  if (remaining_statement.empty()) {
-    throw QpsSyntaxError("Missing select statement");
-  }
-
-  // remove the synonym and check if it can still be a such that / pattern clause
-  std::string synonym_removed_statement = string_util::RemoveFirstWord(remaining_statement);
-  bool statement_can_match_clause =
-      QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kSuchThatClauseRegex) ||
-      QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kPatternClauseRegex);
-
-  if (!synonym_removed_statement.empty() && !statement_can_match_clause) {
-    // it is syntactically invalid
-    throw QpsSyntaxError("Missing select synonym");
-  }
-
-  // then extract the first word after 'Select'
-  std::string first_word = string_util::GetFirstWord(remaining_statement);
-  if (!QueryUtil::IsInDeclarations(first_word, declarations)) {
-    throw QpsSemanticError("Select synonym has not been declared");
-  }
-  // and if it has been declared, then the synonym should be syntactically correct already
-  select_tokens.push_back({first_word, PQLTokenType::SYNONYM});
+  // then extract the synonym after 'Select'
+  std::string select_synonym = string_util::GetFirstWord(remaining_statement);
+  qps_validator::ValidateSelectSynonym(select_synonym, declarations);
+  select_tokens.push_back({select_synonym, PQLTokenType::SYNONYM});
   return select_tokens;
 }
 
 std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaining_statement) {
   std::vector<size_t> indexes;
-
   std::vector<std::regex> rgxVector = {
       qps_constants::kSuchThatClauseRegex,
       qps_constants::kPatternClauseRegex,
@@ -137,16 +98,7 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
   }
 
   sort(indexes.begin(), indexes.end());
-
-  if (indexes.empty()) {
-    // the clauses are wrong syntactically
-    throw QpsSyntaxError("Invalid clause expressions");
-  }
-
-  if (indexes[0] > 0) {
-    // clause does not start immediately after Select clause e.g., Select v ____ such that _____
-    throw QpsSyntaxError("Unexpected clause expression");
-  }
+  qps_validator::ValidateClauseIndexes(indexes);
 
   return indexes;
 }
