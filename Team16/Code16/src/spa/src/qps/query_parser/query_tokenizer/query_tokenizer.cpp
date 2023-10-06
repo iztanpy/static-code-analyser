@@ -193,8 +193,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
   if (!QueryUtil::IsPartialMatchExpressionSpecification(right_hand_side)
-      && !QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)
-      && !QueryUtil::IsWildcard(right_hand_side)) {
+      && !QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
     throw QpsSyntaxError("Invalid argument for RHS of pattern clause");
   }
 
@@ -213,7 +212,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
 
   if (QueryUtil::IsWildcard(right_hand_side)) {
     right_token = {right_hand_side, PQLTokenType::WILDCARD};
-  } else if (QueryUtil::IsIdentWithDoubleQuotes(right_hand_side)) {
+  } else if (QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
     std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
     right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {

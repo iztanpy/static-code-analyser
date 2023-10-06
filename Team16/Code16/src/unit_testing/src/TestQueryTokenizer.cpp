@@ -392,3 +392,51 @@ TEST_CASE("Test extract one select and on pattern") {
   REQUIRE(results.second[2].text == expected.second[2].text);
   REQUIRE(results.second[2].type == expected.second[2].type);
 }
+
+TEST_CASE("Tokenizer and tokenise pattern expressions") {
+  std::string sample_query_1 = "Select a1 pattern a1(_, _\"abc + cde % fgh\"_)";
+  std::vector<Declaration> declarations = {
+      {"a1", DesignEntity::ASSIGN}
+  };
+  std::vector<QueryToken> pattern_tokens = {
+      {"a1", PQLTokenType::SYNONYM},
+      {"_", PQLTokenType::WILDCARD},
+      {"abc + cde % fgh", PQLTokenType::PARTIALEXPR}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results = QueryTokenizer::extractClauseTokens(sample_query_1, declarations);
+
+  REQUIRE(results.second.size() == 3);
+  REQUIRE(results.second[0].type == pattern_tokens[0].type);
+  REQUIRE(results.second[0].text == pattern_tokens[0].text);
+  REQUIRE(results.second[1].type == pattern_tokens[1].type);
+  REQUIRE(results.second[1].text == pattern_tokens[1].text);
+  REQUIRE(results.second[2].type == pattern_tokens[2].type);
+  REQUIRE(results.second[2].text == pattern_tokens[2].text);
+
+  std::string sample_query_2 = "Select a1 pattern a1(v, \"abc + cde % fgh\")";
+  std::vector<Declaration> declarations_2 = {
+      {"a1", DesignEntity::ASSIGN},
+      {"v", DesignEntity::VARIABLE}
+  };
+  std::vector<QueryToken> pattern_tokens_2 = {
+      {"a1", PQLTokenType::SYNONYM},
+      {"v", PQLTokenType::SYNONYM},
+      {"abc + cde % fgh", PQLTokenType::IDENT}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
+
+  REQUIRE(results_2.second.size() == 3);
+  REQUIRE(results_2.second[0].type == pattern_tokens_2[0].type);
+  REQUIRE(results_2.second[0].text == pattern_tokens_2[0].text);
+  REQUIRE(results_2.second[1].type == pattern_tokens_2[1].type);
+  REQUIRE(results_2.second[1].text == pattern_tokens_2[1].text);
+  REQUIRE(results_2.second[2].type == pattern_tokens_2[2].type);
+  REQUIRE(results_2.second[2].text == pattern_tokens_2[2].text);
+
+  std::string sample_query_3 = "Select a1 pattern a1(v, \"+ cde % fgh\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations), QpsSyntaxError);
+}
