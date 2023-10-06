@@ -17,8 +17,7 @@ class ProcedureStore {
  public:
     ProcedureStore();
 
-    void ProcedureStore::addProcedures
-        (std::unordered_map<procedure, std::pair<startStatement, endStatement>> procedures);
+    void addProcedures(std::unordered_map<procedure, std::pair<startStatement, endStatement>> procedures);
 
     /**
     * @brief Adds procedures to the procedure store.

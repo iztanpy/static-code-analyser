@@ -15,13 +15,13 @@ class CallStore {
  public:
     CallStore();
 
-    void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
+    void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 
-    std::unordered_set<procedure> CallStore::getCallChildren(procedure p);
+    std::unordered_set<procedure> getCallChildren(procedure p);
 
-    std::unordered_set<procedure> CallStore::getCallParents(procedure p);
+    std::unordered_set<procedure> getCallParents(procedure p);
 
-    std::unordered_set<procedure> CallStore::getCallStarChildren(procedure p);
+    std::unordered_set<procedure> getCallStarChildren(procedure p);
 
-    std::unordered_set<procedure> CallStore::getCallStarParents(procedure p);
+    std::unordered_set<procedure> getCallStarParents(procedure p);
 };
