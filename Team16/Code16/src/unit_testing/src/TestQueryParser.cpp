@@ -79,3 +79,11 @@ TEST_CASE("Query Parser can return a parsed query") {
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(clause->rhs == Wildcard::Value);
 }
+
+TEST_CASE("Query parser throws correct errors") {
+  std::string sample_query = "Select s";
+  REQUIRE_THROWS_AS(QueryParser::ParseTokenizedQuery(sample_query), QpsSemanticError);
+
+  std::string sample_query_2 = "Select 1v";
+  REQUIRE_THROWS_AS(QueryParser::ParseTokenizedQuery(sample_query_2), QpsSyntaxError);
+}
