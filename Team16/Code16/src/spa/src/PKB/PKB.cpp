@@ -10,6 +10,7 @@ PKB::PKB() {
   followsStore = std::make_unique<FollowsStore>();
   modifiesStore = std::make_unique<ModifiesStore>();
   procedureStore = std::make_unique<ProcedureStore>();
+  callStore = std::make_unique<CallStore>();
 }
 
 // AssignStore methods
@@ -55,11 +56,19 @@ void PKB::addProcedures(std::set<procedure> procedures) {
   return procedureStore->addProcedures(procedures);
 }
 
+void PKB::addProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures) {
+    return procedureStore->addProcedures(procedures);
+}
+
 std::unordered_set<procedure> PKB::getProcedures() {
   return procedureStore->getAllProcedures();
 }
 
 // VariableStore methods
+
+std::pair<int, int> PKB::getProcedureRange(procedure proc) {
+    return procedureStore->getProcedureRange(proc);
+}
 
 void PKB::addVariables(std::unordered_set<variable> variables) {
   variableStore->addVariables(variables);
@@ -503,6 +512,10 @@ bool PKB::isFollowStar(Wildcard wildcard, statementNumber statement1) {
 
 bool PKB::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
   return this->followsStore->isFollowStar(wildcard, wildcard2);
+}
+
+void PKB::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable) {
+  callStore->storeCalls(callTable);
 }
 
 // returns all statements that are of a specified StmtEntity type and follows* any statement

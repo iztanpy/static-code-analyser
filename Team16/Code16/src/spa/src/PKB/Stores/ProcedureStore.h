@@ -3,15 +3,22 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
+#include <utility>
 
 class ProcedureStore {
  private:
     typedef std::string procedure;
+    typedef int startStatement;
+    typedef int endStatement;
 
     std::unordered_set<procedure> procedureSet;
+    std::unordered_map<procedure, std::pair<startStatement, endStatement>> procedureMap;
 
  public:
     ProcedureStore();
+
+    void ProcedureStore::addProcedures
+        (std::unordered_map<procedure, std::pair<startStatement, endStatement>> procedures);
 
     /**
     * @brief Adds procedures to the procedure store.
@@ -30,4 +37,6 @@ class ProcedureStore {
     * @return An unordered set of all procedures stored in the procedure store.
     */
     std::unordered_set<procedure> getAllProcedures();
+
+    std::pair<startStatement, endStatement> getProcedureRange(procedure procedureName);
 };

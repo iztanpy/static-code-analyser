@@ -17,6 +17,7 @@
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
 #include "Stores/ProcedureStore.h"
+#include "Stores/CallStore.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
@@ -40,6 +41,7 @@ class PKB {
   std::unique_ptr<FollowsStore> followsStore;
   std::unique_ptr<ModifiesStore> modifiesStore;
   std::unique_ptr<ProcedureStore> procedureStore;
+  std::unique_ptr<CallStore> callStore;
 
  public:
   PKB();
@@ -150,6 +152,15 @@ class PKB {
   void addProcedures(std::set<procedure> procedures);
 
   /**
+  * @brief Adds procedures and thier respective start numbers and line numbers to the program's procedure store.
+  * 
+  * This method adds procedures and thier respective start numbers and line numbers to the program's procedure store.
+  * 
+  * @param procedures An unordered map of procedures to pairs of start numbers and line numbers.
+  */
+  void addProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures);
+
+  /**
   * @brief Retrieves all procedures stored in the program.
   *
   * This method returns an unordered set containing all procedures stored in the program's procedure store.
@@ -157,6 +168,17 @@ class PKB {
   * @return An unordered set of procedures stored in the program.
   */
   std::unordered_set<procedure> getProcedures();
+
+  /**
+  * @brief Retrieves the start number and end number for a specific procedure.
+  * 
+  * This method returns a pair of integers representing the start number and end number for the specified procedure.
+  * 
+  * @param proc The procedure for which to retrieve the start number and end number.
+  * 
+  * @return A pair of integers representing the start number and end number for the specified procedure.
+  */
+  std::pair<int, int> getProcedureRange(procedure proc);
 
   /**
   * @brief Adds a set of variables to the program's variable store.
@@ -872,6 +894,10 @@ class PKB {
   * @return true if matching preceding statements are followed by matching following statements in the follow-star relationship, false otherwise.
   */
   bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
+
+  // CallStore methods
+
+  void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 
   PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;
