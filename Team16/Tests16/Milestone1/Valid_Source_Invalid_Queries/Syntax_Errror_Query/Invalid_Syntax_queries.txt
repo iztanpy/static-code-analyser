@@ -153,8 +153,13 @@ assign 123; variable v;
 Select v such that Modifies(123,v)
 SyntaxError
 5000
-32 -- Invalid IDENT
+32 - Invalid IDENT
 assign a;
 Select a such that Modifies(a, "1")
+SyntaxError
+5000
+33 - Invalid synonym without declaration
+
+Select 1v
 SyntaxError
 5000

@@ -30,6 +30,10 @@ bool lexical_utils::IsIdent(std::string str) {
   }
   return true;
 }
+
+bool lexical_utils::IsSynonym(std::string str) {
+  return lexical_utils::IsIdent(str);
+}
 // TODO(Su Mian): need to check for complex expressions
 // bool lexical_utils::IsExpr(std::string str) {
 //  std::vector<std::string> split_by_plus = string_util::SplitStringBy('+', str);
