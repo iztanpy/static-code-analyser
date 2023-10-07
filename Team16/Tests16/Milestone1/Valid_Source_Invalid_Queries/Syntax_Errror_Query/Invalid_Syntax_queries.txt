@@ -163,3 +163,8 @@ SyntaxError
 Select 1v
 SyntaxError
 5000
+34 - Invalid pattern expression
+variable v; assign a;
+Select a pattern a(v, "+ y")
+SyntaxError
+5000

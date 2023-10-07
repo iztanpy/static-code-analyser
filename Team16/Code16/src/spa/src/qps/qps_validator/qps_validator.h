@@ -60,4 +60,49 @@ void ValidateSelectSynonym(std::string select_synonym, std::vector<Declaration> 
  * after Select clause e.g., Select v ____ such that _____
  */
 void ValidateClauseIndexes(std::vector<size_t>& indexes);
+
+/*!
+ * Validates the clause arguments
+ * @param clause to be validated
+ * @throws QpsSyntaxError if clause syntax is invalid
+ */
+void ValidateClauseArgs(std::string clause);
+
+/*!
+ * Validates the individual arguments of clause
+ * @param lhs left argument to be validated
+ * @param rhs right argument to be validated
+ * @throws QpsSyntaxError if either arguments have invalid syntax
+ */
+void ValidateClauseArgs(std::string lhs, std::string rhs);
+
+/*!
+ * Validates the clause synonyms
+ * @param synonym to be validated
+ * @param declarations set of declarations
+ * @throws QpsSemanticError if the synonym has not been declared
+ */
+void ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations);
+
+/*!
+ * Validates the individual arguments of pattern clause
+ * @param left_hand_side
+ * @param right_hand_side
+ * @throws QpsSyntaxError if either arguments have invalid syntax
+ */
+void ValidatePatternClauseArgs(const std::string& left_hand_side, const std::string& right_hand_side);
+
+/*!
+ * Validates the syntax of such that clause
+ * @param clause_with_keyword_removed
+ * @throws QpsSyntaxError if there is missing input
+ */
+void ValidateNonEmptyClause(const std::string & clause_with_keyword_removed);
+
+/*!
+ * Validates if string is a relation reference
+ * @param rel_ref
+ * @throws QpsSyntaxError if it is not a relation reference
+ */
+void ValidateRelRef(const std::string & rel_ref);
 }  // namespace qps_validator
