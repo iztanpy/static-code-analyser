@@ -8,14 +8,14 @@
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
-#include "SP/DesignExtractor.h"
-#include "SP/sp_parser/Parser.h"
+#include "Parser.h"
+#include "SP/utils/ParseUtils.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
-class SimpleParser;
+class DesignExtractor;
 /**
  * @class PrintParser
  * @brief A class for parsing and processing print statements in an abstract syntax tree.
@@ -27,7 +27,6 @@ class SimpleParser;
 class PrintParser : public Parser {
  private:
   ASTVisitor* visitor;
-  int lineNumber = 0;
 
  public:
   /**
@@ -46,16 +45,6 @@ class PrintParser : public Parser {
      * @param curr_index The current index in the token vector where parsing should start.
      * @return The index in the token vector after parsing the print statement.
      */
-  int parse(std::vector<Token>& tokens, int curr_index) override;
-  /**
-  * @brief Retrieves the current line number.
-  * @return The current line number.
-  */
-  int getLineNumber();
-  /**
-   * @brief Sets the line number to the specified value.
-   * @param newLineNumber The new line number to set.
-   */
-  void setLineNumber(int newLineNumber);
+  int parse(std::vector<Token>& tokens) override;
 };
 

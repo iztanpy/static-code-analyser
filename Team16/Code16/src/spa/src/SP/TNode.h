@@ -70,14 +70,18 @@ class TNode {
  * It inherits from the `TNode` base class and provides specialized functionality for procedure nodes.
  */
 class ProcedureTNode : public TNode {
+ private:
+  int startStatementNumber = -1;
+  int endStatementNumber = -1;
  public:
     /**
      * @brief Constructs a ProcedureTNode object with a procedure name.
      * @param procedureName The name of the procedure.
     */
-    explicit ProcedureTNode(const std::string& procedureName) : TNode(0) {
+    explicit ProcedureTNode(const std::string& procedureName, int startStatementNumber) : TNode(0) {
         type = TokenType::kEntityProcedure;
         content = procedureName;
+        this->startStatementNumber = startStatementNumber;
     }
     /**
      * @brief Accepts an ASTVisitor for visiting the node.
@@ -85,6 +89,16 @@ class ProcedureTNode : public TNode {
      * @param key A string key used for the visitation.
     */
     void accept(ASTVisitor* visitor, std::string& key) const override;
+    /**
+     * @brief Sets starting or ending statement number of procedure.
+     * @param statementNumber An int representing statement number.
+    */
+    void setEndStatementNumber(int statementNumber);
+    /**
+     * @brief Gets starting statement number of procedure.
+     * @return An int representing statement number.
+    */
+    int getStartStatementNumber() const;
 };
 
 /**
@@ -419,7 +433,7 @@ class TNodeFactory {
      static std::shared_ptr<TNode> createNode(const Token& token, int statementNumber) {
          switch (token.tokenType) {
          case TokenType::kEntityProcedure: {
-             return std::make_shared<ProcedureTNode>(token.value);
+             return std::make_shared<ProcedureTNode>(token.value, statementNumber);
          }
          case TokenType::kEntityWhile: {
              return std::make_shared<WhileTNode>(statementNumber);  // probably needs more information than this

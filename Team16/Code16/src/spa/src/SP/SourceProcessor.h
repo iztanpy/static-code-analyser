@@ -7,6 +7,7 @@
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
+#include "SP/sp_parser/Parser.h"
 #include "SP/sp_parser/SimpleParser.h"
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"

@@ -151,6 +151,11 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/evaluator_util.h
         src/qps/query_evaluator/assign_pattern_evaluator.cpp
         src/qps/query_evaluator/assign_pattern_evaluator.h
+        src/SP/sp_parser/Parser.cpp
+        src/SP/sp_parser/ElseParser.cpp
+        src/SP/sp_parser/ElseParser.h
+        src/SP/sp_parser/CloseBraceParser.cpp
+        src/SP/sp_parser/CloseBraceParser.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

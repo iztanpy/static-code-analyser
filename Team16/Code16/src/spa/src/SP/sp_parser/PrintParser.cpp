@@ -1,13 +1,13 @@
 #include "PrintParser.h"
 
-int PrintParser::parse(std::vector<Token>& tokens, int curr_index) {
+int PrintParser::parse(std::vector<Token>& tokens) {
     // Check if there are enough tokens for a valid print statement
-    if (curr_index + 3 > tokens.size()) {
+    if (index + 3 > tokens.size()) {
         return -1;
     }
 
-    Token printNameToken = tokens[curr_index + 1];
-    Token semicolonToken = tokens[curr_index + 2];
+    Token printNameToken = tokens[index + 1];
+    Token semicolonToken = tokens[index + 2];
 
     // Define the set of valid keyword token types
     std::unordered_set<TokenType> validKeywords = {
@@ -35,20 +35,15 @@ int PrintParser::parse(std::vector<Token>& tokens, int curr_index) {
     }
 
     // Update the value of the 'print' token to match the print name
-    Token print = tokens[curr_index];
+    Token print = tokens[index];
     print.value = printNameToken.value;
 
     // Update the current index and create the AST node
-    curr_index = curr_index + 3;
+    index = index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(print, lineNumber);
     designExtractor->extractDesign(root, visitor);
-    return curr_index;
-}
-int PrintParser::getLineNumber() {
-    return lineNumber;
-}
-void PrintParser::setLineNumber(int newLineNumber) {
-    lineNumber = newLineNumber;
-}
+    followsStatementStack.top().insert(lineNumber);
 
-
+    lineNumber++;
+    return index;
+}

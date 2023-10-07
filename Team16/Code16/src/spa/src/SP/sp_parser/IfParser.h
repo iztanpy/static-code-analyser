@@ -6,18 +6,16 @@
 #include <memory>
 
 // Headers from "SP" subdirectory
+#include "SP/utils/ParseUtils.h"
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
-#include "SP/sp_tokeniser/TokenTypes.h"
-#include "SP/DesignExtractor.h"
-#include "SP/sp_parser/Parser.h"
-#include "SP/utils/ParseUtils.h"
-
+#include "Parser.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
+class DesignExtractor;
 /**
  * @class IfParser
  * @brief A class for parsing "if" statements in the SIMPLE Program.
@@ -28,8 +26,6 @@
 class IfParser : public Parser {
  private:
   ASTVisitor* visitor;
-  int lineNumber = 0;
-  int index = 0;
 
  public:
   /**
@@ -47,26 +43,6 @@ class IfParser : public Parser {
     * @param curr_index The current index in the token vector where parsing should start.
     * @return The index in the token vector after parsing the "if" statement.
   */
-  int parse(std::vector<Token>& tokens, int curr_index) override;
-  /**
-   * @brief Retrieves the current line number.
-   * @return The current line number.
-   */
-  int getLineNumber();
-  /**
-   * @brief Sets the line number to the specified value.
-   * @param newLineNumber The new line number to set.
-   */
-  void setLineNumber(int newLineNumber);
-  /**
-  * @brief Retrieves the current index.
-  * @return The current index.
-  */
-  int getIndex();
-  /**
-   * @brief Sets the index to the specified value.
-   * @param newIndex The new index to set.
-   */
-  void setIndex(int newIndex);
+  int parse(std::vector<Token>& tokens) override;
 };
 
