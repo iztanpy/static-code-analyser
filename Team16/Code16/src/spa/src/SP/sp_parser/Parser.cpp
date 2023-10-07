@@ -27,4 +27,4 @@ void Parser::start_parse(std::vector<Token>& tokens, int curr_index) {
     throw InvalidSyntaxError();
   }
   index = next_index;
-};
+}

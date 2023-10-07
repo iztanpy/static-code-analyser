@@ -73,6 +73,7 @@ class ProcedureTNode : public TNode {
  private:
   int startStatementNumber = -1;
   int endStatementNumber = -1;
+
  public:
     /**
      * @brief Constructs a ProcedureTNode object with a procedure name.

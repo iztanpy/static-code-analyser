@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include <set>
 
 // Headers from "SP" subdirectory
 #include "SP/utils/ParseUtils.h"
@@ -40,4 +41,3 @@ class CloseBraceParser : public Parser {
   */
   int parse(std::vector<Token>& tokens) override;
 };
-

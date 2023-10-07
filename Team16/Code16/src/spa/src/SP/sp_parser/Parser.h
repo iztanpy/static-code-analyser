@@ -3,6 +3,9 @@
 #include <vector>
 #include <stack>
 #include <set>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
 
 // Headers from "SP" subdirectory
 #include "SP/sp_tokeniser/Token.h"
@@ -48,35 +51,35 @@ class Parser {
     */
     void incrementIndex() {
       index++;
-    };
+    }
     /**
      * @brief Retrieves the current line number.
      * @return The current line number.
     */
     int getLineNumber() {
       return lineNumber;
-    };
+    }
     /**
      * @brief Sets the line number to the specified value.
      * @param newLineNumber The new line number to set.
      */
     void setLineNumber(int newLineNumber) {
       lineNumber = newLineNumber;
-    };
+    }
     /**
     * @brief Retrieves the current index.
     * @return The current index.
     */
     int getIndex() {
       return index;
-    };
+    }
     /**
      * @brief Sets the index to the specified value.
      * @param newIndex The new index to set.
      */
     void setIndex(int newIndex) {
       index = newIndex;
-    };
+    }
 
     void reset() {
         index = 0;

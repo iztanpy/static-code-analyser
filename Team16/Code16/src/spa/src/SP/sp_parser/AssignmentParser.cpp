@@ -12,8 +12,8 @@ int AssignmentParser::parse(std::vector<Token>& tokens) {
       return index;
     }
 
-    // Validate that statement has at least 4 tokens (min: lhs = rhs ;)
-    if (tokens.size() - index < 3) { // check this again!
+    // Validate that statement has at least 4 tokens (min: read a; lhs = rhs ;)
+    if (tokens.size() - index < 4) {
         return -1;
     }
 

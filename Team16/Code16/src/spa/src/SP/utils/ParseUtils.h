@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
