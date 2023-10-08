@@ -65,6 +65,30 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::u
   return pkb.uses(type);
 }
 
+bool ReadFacade::isUses(procedure procedure, Wildcard wildcard) {
+    return pkb.isUses(procedure, wildcard);
+}
+
+std::unordered_set<variable> ReadFacade::uses(procedure procedure) {
+    return pkb.uses(procedure);
+}
+
+bool ReadFacade::isUses(procedure procedure, variable variableName) {
+    return pkb.isUses(procedure, variableName);
+}
+
+std::unordered_set<procedure> ReadFacade::usesProcedure(Wildcard wildcard) {
+    return pkb.usesProcedure(wildcard);
+}
+
+std::unordered_set<procedure> ReadFacade::usesProcedure(variable variableName) {
+    return pkb.usesProcedure(variableName);
+}
+
+std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::usesProcedure() {
+    return pkb.usesProcedure();
+}
+
 bool ReadFacade::isModifies(statementNumber lineNumber, variable variableName) {
   return pkb.isModifies(lineNumber, variableName);
 }
@@ -83,6 +107,30 @@ std::unordered_set<statementNumber> ReadFacade::modifies(StmtEntity type, variab
 
 std::unordered_set<statementNumber> ReadFacade::modifies(StmtEntity type, Wildcard wildcard) {
   return pkb.modifies(type, wildcard);
+}
+
+bool ReadFacade::isModifies(procedure procedure, Wildcard wildcard) {
+    return pkb.isModifies(procedure, wildcard);
+}
+
+std::unordered_set<variable> ReadFacade::modifies(procedure procedure) {
+    return pkb.modifies(procedure);
+}
+
+bool ReadFacade::isModifies(procedure procedure, variable variableName) {
+    return pkb.isModifies(procedure, variableName);
+}
+
+std::unordered_set<procedure> ReadFacade::modifiesProcedure(Wildcard wildcard) {
+    return pkb.modifiesProcedure(wildcard);
+}
+
+std::unordered_set<procedure> ReadFacade::modifiesProcedure(variable variableName) {
+    return pkb.modifiesProcedure(variableName);
+}
+
+std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::modifiesProcedure() {
+    return pkb.modifiesProcedure();
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::modifies(StmtEntity type) {

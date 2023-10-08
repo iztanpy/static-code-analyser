@@ -171,6 +171,18 @@ class ReadFacade {
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
+  bool isUses(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> uses(procedure procedure);
+
+  bool isUses(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> usesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> usesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedure();
+
 
   // ModifiesStore methods
 
@@ -236,6 +248,19 @@ class ReadFacade {
   * @param type The type of statement to search for.
   * @return An unordered set of pairs containing statement numbers and variables modified in the specified statement type.
   */
+
+  bool isModifies(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> modifies(procedure procedure);
+
+  bool isModifies(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> modifiesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
+
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
 
   // ConstantStore methods

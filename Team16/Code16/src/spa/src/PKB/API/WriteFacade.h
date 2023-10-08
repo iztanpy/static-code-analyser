@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
+#include <utility>
 #include "PKB/PKB.h"
 
 typedef std::string variable;
@@ -47,6 +48,8 @@ class WriteFacade {
     * @param procedures A set of procedure names to be stored.
     */
     void storeProcedures(std::set<std::string> procedures);
+
+    void storeProcedures(std::unordered_map <procedure, std::pair<int, int>> procedures);
 
     /**
     * @brief Stores uses information in the program.
@@ -101,4 +104,6 @@ class WriteFacade {
     * @param map An unordered map of statement numbers to their follower statement numbers.
     */
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
+
+    void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 };

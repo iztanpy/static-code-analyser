@@ -2,13 +2,21 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <utility>
+#include "utils/hash_utils.h"
 
 class ModifiesStore {
  private:
     typedef std::string variable;
+    typedef std::string procedure;
+
     typedef int statementNumber;
     std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesVariableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> ModifiesVariableMapReverse;
+
+    std::unordered_map<procedure, std::unordered_set<variable>> ModifiesProcedureMap;
+    std::unordered_map<variable, std::unordered_set<procedure>> ModifiesProcedureMapReverse;
+
 
  public:
     ModifiesStore();
@@ -22,6 +30,10 @@ class ModifiesStore {
     * @param relations An unordered map of statement numbers to sets of variables modified by each statement.
     */
     void storeModifies(std::unordered_map<statementNumber, std::unordered_set<variable>> relations);
+
+
+    void storeModifiesProcedures(std::unordered_map<procedure,
+        std::pair<int, int>> procedures, std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
     /**
     * @brief Checks if a specific statement modifies a particular variable.
@@ -53,6 +65,18 @@ class ModifiesStore {
     * @return An unordered set of variables modified by the specified statement.
     */
     std::unordered_set<variable> modifies(statementNumber statement);
+
+    bool isModifies(procedure procedure);
+
+    std::unordered_set<variable> modifiesProcedureProc(procedure procedure);
+
+    bool isModifies(procedure procedure, variable variable);
+
+    std::unordered_set<procedure> modifiesProcedure();
+
+    std::unordered_set<procedure> modifiesProcedure(variable variable);
+
+    std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedurePair();
 
     /**
     * @brief Retrieves the statements that modify a particular variable.
