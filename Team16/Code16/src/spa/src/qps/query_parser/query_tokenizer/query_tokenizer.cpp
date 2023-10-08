@@ -39,9 +39,9 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
   return {declaration_statements, select_statement};
 }
 
-std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<std::string> & declaration_statements) {
+std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<std::string>& declaration_statements) {
   std::vector<Declaration> declarations;
-  std::set < std::string > processed_synonyms;
+  std::set<std::string> processed_synonyms;
   for (std::string statement : declaration_statements) {
     qps_validator::ValidateDeclarationStatement(statement);
 
@@ -50,7 +50,7 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
     statement = string_util::RemoveFirstWord(statement);
     std::vector<std::string> synonyms = string_util::SplitStringBy(',', statement);
 
-    for (const std::string & synonym : synonyms) {
+    for (const std::string& synonym : synonyms) {
       qps_validator::ValidateDeclarationSynonym(synonym, processed_synonyms);
       processed_synonyms.insert(synonym);
       // insert each synonym into declarations
@@ -61,8 +61,8 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
   return declarations;
 }
 
-std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_statement,
-                                                           std::vector<Declaration> & declarations) {
+std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string& select_statement,
+                                                           std::vector<Declaration>& declarations) {
   std::vector<QueryToken> select_tokens;
   qps_validator::ValidateSelectStatement(select_statement);
   // remove the Select keyword
@@ -74,7 +74,7 @@ std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string & select_
   return select_tokens;
 }
 
-std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaining_statement) {
+std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string& remaining_statement) {
   std::vector<size_t> indexes;
   std::vector<std::regex> rgxVector = {
       qps_constants::kSuchThatClauseRegex,
@@ -90,7 +90,7 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
 
     // Iterate over matches and store their starting positions
     while (it != end) {
-      if (std::find(indexes.begin(), indexes.end(), it ->position()) == indexes.end()) {
+      if (std::find(indexes.begin(), indexes.end(), it->position()) == indexes.end()) {
         indexes.push_back(it->position());
       }
       ++it;
@@ -103,12 +103,12 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string & remaini
   return indexes;
 }
 
-bool QueryTokenizer::clauseMatch(std::string & clause, const std::regex & regexPattern) {
+bool QueryTokenizer::clauseMatch(std::string& clause, const std::regex& regexPattern) {
   return std::regex_search(clause, regexPattern);
 }
 
-std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & clause,
-                                                                std::vector<Declaration> & declarations) {
+std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string& clause,
+                                                                std::vector<Declaration>& declarations) {
   qps_validator::ValidateClauseArgs(clause);
   std::vector<std::string> synonyms = string_util::SplitStringBy(',', clause);
   std::vector<std::string> lhs = string_util::SplitStringBy('(', synonyms[0]);
@@ -150,8 +150,8 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string & cl
   return syn_pair;
 }
 
-std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & clause,
-                                                                 std::vector<Declaration> & declarations) {
+std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& clause,
+                                                                 std::vector<Declaration>& declarations) {
   qps_validator::ValidateClauseArgs(clause);
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause);
   std::vector<std::string> lhs = string_util::SplitStringBy('(', arguments[0]);
@@ -179,7 +179,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
     right_token = {right_hand_side, PQLTokenType::WILDCARD};
   } else if (QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
     std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
-    right_token = {remove_quotations, PQLTokenType::IDENT};
+    right_token = {remove_quotations, PQLTokenType::EXACTEXPR};
   } else {
     std::string remove_wildcard = string_util::Trim(right_hand_side.substr(1, right_hand_side.length() - 2));
     std::string remove_quotations = QueryUtil::RemoveQuotations(remove_wildcard);
@@ -192,7 +192,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string & c
 
 std::pair<std::vector<QueryToken>,
           std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::string select_statement,
-                                                                       std::vector<Declaration> & declarations) {
+                                                                       std::vector<Declaration>& declarations) {
   std::vector<QueryToken> such_that_tokens;
   std::vector<QueryToken> pattern_tokens;
   // remove the Select keyword (guaranteed to exist since we already checked)
@@ -246,7 +246,7 @@ std::pair<std::vector<QueryToken>,
   return {such_that_tokens, pattern_tokens};
 }
 
-TokenisedQuery QueryTokenizer::tokenize(const std::string & query) {
+TokenisedQuery QueryTokenizer::tokenize(const std::string& query) {
   std::vector<QueryToken> tokens;
   std::string sanitized_query = string_util::RemoveWhiteSpaces(query);
   QueryStructure statements = QueryTokenizer::splitQuery(sanitized_query);
