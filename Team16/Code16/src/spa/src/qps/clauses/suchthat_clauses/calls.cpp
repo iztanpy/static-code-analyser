@@ -1,7 +1,7 @@
 #include "qps/clauses/suchthat_clauses/calls.h"
 
 Constraint Calls::Evaluate(ReadFacade& pkb_reader) {
-  // TODO(Cuong): implement evaluate method call
+  return {};
 }
 
 void Calls::Validate() {
@@ -9,7 +9,7 @@ void Calls::Validate() {
 }
 
 Constraint CallsT::Evaluate(ReadFacade& pkb_reader) {
-  // TODO(Cuong): implement evaluate method call
+  return {};
 }
 
 void CallsT::Validate() {
