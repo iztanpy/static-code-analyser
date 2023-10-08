@@ -18,7 +18,7 @@ class AssignStore {
   std::unordered_map<variable, std::unordered_set<statementNumber>> reverseNumLHSMap;
   std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reverseNumRHSMap;
 
-  std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap;
+  std::unordered_map<statementNumber, full> fullRHSMap;
   std::unordered_map<full, std::unordered_set<statementNumber>> reverseFullRHSMap;
   std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap;
   std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reversePartialRHSMap;
@@ -26,7 +26,7 @@ class AssignStore {
  public:
   AssignStore();
 
-  void storeFullPatternAssign(std::unordered_map<statementNumber, std::unordered_set<full>> relations);
+  void storeFullPatternAssign(std::unordered_map<statementNumber, full> relations);
 
   void storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber,
                                           std::unordered_set<partialMatch>> relations);

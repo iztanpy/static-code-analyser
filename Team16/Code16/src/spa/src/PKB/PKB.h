@@ -59,7 +59,7 @@ class PKB {
                       std::unordered_map<statementNumber, variable> numLHSMap);
 
   void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
-                        std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap,
+                        std::unordered_map<statementNumber, full> fullRHSMap,
                         std::unordered_map<statementNumber, variable> numLHSMap);
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
