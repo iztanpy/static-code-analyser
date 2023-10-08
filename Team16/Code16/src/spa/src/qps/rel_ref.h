@@ -11,7 +11,12 @@ enum class RelRefType {
   USESS,
   USESP,
   MODIFIESS,
-  MODIFIESP
+  MODIFIESP,
+  CALLS,
+  CALLST,
+  NEXT,
+  NEXTT,
+  AFFECTS
 };
 
 class RelRef {
