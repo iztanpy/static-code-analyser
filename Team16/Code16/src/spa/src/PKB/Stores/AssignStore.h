@@ -20,8 +20,6 @@ class AssignStore {
 
   std::unordered_map<statementNumber, full> fullRHSMap;
   std::unordered_map<full, std::unordered_set<statementNumber>> reverseFullRHSMap;
-  std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap;
-  std::unordered_map<partialMatch, std::unordered_set<statementNumber>> reversePartialRHSMap;
 
  public:
   AssignStore();
