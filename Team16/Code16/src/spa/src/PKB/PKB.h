@@ -357,11 +357,11 @@ class PKB {
   std::unordered_set<variable> modifies(procedure procedure);
 
   bool isModifies(procedure procedure, variable variableName);
-  
+
   std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
-  
+
   std::unordered_set<procedure> modifiesProcedure(variable variableName);
-  
+
   std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
 
   // ConstantStore methods

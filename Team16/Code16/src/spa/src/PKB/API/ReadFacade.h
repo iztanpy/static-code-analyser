@@ -236,7 +236,7 @@ class ReadFacade {
   * @param type The type of statement to search for.
   * @return An unordered set of pairs containing statement numbers and variables modified in the specified statement type.
   */
-  
+
   bool isModifies(procedure procedure, Wildcard wildcard);
 
   std::unordered_set<variable> modifies(procedure procedure);
