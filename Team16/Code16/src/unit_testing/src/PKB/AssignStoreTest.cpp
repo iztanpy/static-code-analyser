@@ -15,7 +15,7 @@ TEST_CASE("Test") {
     auto assignStore = AssignStore();
     assignStore.addNumLHSMap({{1, "x"}, {2, "y"}, {3, "x"}});
     assignStore.storeFullPatternAssign({{1, "x"}, {2, "x + y"}, {3, "y"}});
-    assignStore.storeAllPossibleCombinationsAssign({{1, {"x"}}, {2, {"x + y", "x", "y"}}, {3, {"y"}}});
+    assignStore.addNumRHSMap({{1, {"x"}}, {2, {"x + y", "x", "y"}}, {3, {"y"}}});
     REQUIRE(assignStore.getAllAssigns().size() == 3);
     REQUIRE(assignStore.getAssignsFF("x", "y") == std::unordered_set<int>{3});
     REQUIRE(assignStore.getAssignsFF("x", "x") == std::unordered_set<int>{1});
