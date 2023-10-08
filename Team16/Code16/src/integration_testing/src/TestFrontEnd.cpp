@@ -50,6 +50,64 @@ TEST_CASE("One read statement 1") {
   REQUIRE(sourceProcessor.getVariables() == varSet);
 }
 
+TEST_CASE("TEST SP-PKB Connection 2") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+
+    writeFacade.storeCalls({{"main", {"p", "q"}}, {"p", {"q"}}, });
+
+    writeFacade.storeProcedures({"main", "p", "q"});
+
+    std::unordered_map <procedure, std::pair<int, int>> procedures = {{"main", {1, 4}}, {"p", {5, 8}}, {"q", {9, 10}}};
+
+    writeFacade.storeModifies({ {1, {"x"}}, {2, {"y"}}, {3, {"z"}}, {5, {"a"}}, {6, {"b"}}, {7, {"c"}}, {9, {"m"}} });
+
+    writeFacade.storeProcedures(procedures);
+
+    REQUIRE((readFacade.isModifies("main", "x")));
+    REQUIRE((readFacade.isModifies("main", "y")));
+    REQUIRE((readFacade.isModifies("main", "z")));
+    REQUIRE((readFacade.isModifies("main", "a")));
+    REQUIRE((readFacade.isModifies("main", "b")));
+    REQUIRE((readFacade.isModifies("main", "c")));
+    REQUIRE((readFacade.isModifies("main", "m")));
+
+    Wildcard w = Wildcard();
+
+    REQUIRE((readFacade.isModifies("main", w)));
+    REQUIRE((readFacade.isModifies("p", w)));
+    REQUIRE((readFacade.isModifies("q", w)));
+
+
+    REQUIRE((!readFacade.isModifies("p", "x")));
+    REQUIRE((!readFacade.isModifies("p", "y")));
+    REQUIRE((!readFacade.isModifies("p", "z")));
+    REQUIRE((readFacade.isModifies("p", "a")));
+    REQUIRE((readFacade.isModifies("p", "b")));
+    REQUIRE((readFacade.isModifies("p", "c")));
+    REQUIRE((readFacade.isModifies("p", "m")));
+    
+    REQUIRE((!readFacade.isModifies("q", "x")));
+    REQUIRE((!readFacade.isModifies("q", "y")));
+    REQUIRE((!readFacade.isModifies("q", "z")));
+    REQUIRE((!readFacade.isModifies("q", "a")));
+    REQUIRE((!readFacade.isModifies("q", "b")));
+    REQUIRE((!readFacade.isModifies("q", "c")));
+    REQUIRE((readFacade.isModifies("q", "m")));
+
+    REQUIRE((readFacade.modifies("main") == std::unordered_set<variable>({"x", "y", "z", "a", "b", "c", "m"})));
+    REQUIRE((readFacade.modifies("p") == std::unordered_set<variable>({"a", "b", "c", "m"})));
+    REQUIRE((readFacade.modifies("q") == std::unordered_set<variable>({"m"})));
+
+    REQUIRE((readFacade.modifiesProcedure(w) == std::unordered_set<procedure>({"main", "p", "q"})));
+
+    REQUIRE((readFacade.modifiesProcedure("x") == std::unordered_set<procedure>({"main"})));
+
+    REQUIRE((readFacade.modifiesProcedure("a") == std::unordered_set<procedure>({"main", "p"})));
+
+    REQUIRE((readFacade.modifiesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
+}
 
 TEST_CASE("Test SP-PKB connection") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();

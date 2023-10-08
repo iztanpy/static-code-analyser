@@ -17,6 +17,8 @@ class CallStore {
 
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 
+    std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
+
     std::unordered_set<procedure> getCallChildren(procedure p);
 
     std::unordered_set<procedure> getCallParents(procedure p);

@@ -285,6 +285,9 @@ class PKB {
   */
   void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
 
+  void storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+      std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
+
   /**
   * @brief Checks if a specific statement modifies a given variable.
   *
@@ -348,6 +351,18 @@ class PKB {
   * @return An unordered set of pairs representing modification relationships for statements of the specified type.
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
+
+  bool isModifies(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> modifies(procedure procedure);
+
+  bool isModifies(procedure procedure, variable variableName);
+  
+  std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
+  
+  std::unordered_set<procedure> modifiesProcedure(variable variableName);
+  
+  std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
 
   // ConstantStore methods
 
@@ -898,6 +913,8 @@ class PKB {
   // CallStore methods
 
   void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
+
+  std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
   PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;

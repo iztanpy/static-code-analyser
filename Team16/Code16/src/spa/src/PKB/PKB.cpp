@@ -156,6 +156,11 @@ void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifie
   modifiesStore->storeModifies(ModifiesMapWithCall);
 }
 
+void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+    std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
+    modifiesStore->storeModifiesProcedures(procedures, callTableStar);
+}
+
 bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
   return modifiesStore->isModifies(lineNumber, variableName);
 }
@@ -204,6 +209,30 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies
     }
   }
   return result;
+}
+
+bool PKB::isModifies(procedure procedure, Wildcard wildcard) {
+    return modifiesStore->isModifies(procedure);
+}
+
+std::unordered_set<variable> PKB::modifies(procedure procedure) {
+    return modifiesStore->modifiesProcedureProc(procedure);
+}
+
+bool PKB::isModifies(procedure procedure, variable variableName) {
+    return modifiesStore->isModifies(procedure, variableName);
+}
+
+std::unordered_set<procedure> PKB::modifiesProcedure(Wildcard wildcard) {
+    return modifiesStore->modifiesProcedure();
+}
+
+std::unordered_set<procedure> PKB::modifiesProcedure(variable variableName) {
+    return modifiesStore->modifiesProcedure(variableName);
+}
+
+std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::modifiesProcedure() {
+    return modifiesStore->modifiesProcedurePair();
 }
 
 // ConstantStore methods
@@ -516,6 +545,10 @@ bool PKB::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
 
 void PKB::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable) {
   callStore->storeCalls(callTable);
+}
+
+std::unordered_map<procedure, std::unordered_set<procedure>> PKB::getCallStar() {
+    return callStore->getCallStar();
 }
 
 // returns all statements that are of a specified StmtEntity type and follows* any statement

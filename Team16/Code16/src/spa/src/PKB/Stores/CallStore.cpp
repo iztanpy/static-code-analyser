@@ -64,6 +64,10 @@ std::unordered_set<procedure> CallStore::getCallChildren(procedure p) {
     return this -> callTable[p];
 }
 
+std::unordered_map<procedure, std::unordered_set<procedure>> CallStore::getCallStar() {
+    return this -> callTableStar;
+}
+
 std::unordered_set<procedure> CallStore::getCallParents(procedure p) {
     return this -> callTableReverse[p];
 }

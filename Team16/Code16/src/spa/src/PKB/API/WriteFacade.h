@@ -49,7 +49,7 @@ class WriteFacade {
     */
     void storeProcedures(std::set<std::string> procedures);
 
-    void storeProcedures(std::unordered_map < procedure, std::pair<int, int>> procedures);
+    void storeProcedures(std::unordered_map <procedure, std::pair<int, int>> procedures);
 
     /**
     * @brief Stores uses information in the program.
