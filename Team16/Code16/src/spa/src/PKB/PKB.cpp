@@ -25,7 +25,7 @@ void PKB::setAssignments(std::unordered_map<statementNumber, std::unordered_set<
                     std::unordered_map<statementNumber, full> fullRHSMap,
                     std::unordered_map<statementNumber, variable> numLHSMap) {
     assignStore->addNumLHSMap(numLHSMap);
-    assignStore->storeAllPossibleCombinationsAssign(partialRHSMap);
+    assignStore->addNumRHSMap(partialRHSMap);
     assignStore->storeFullPatternAssign(fullRHSMap);
 }
 

@@ -38,16 +38,6 @@ void AssignStore::storeFullPatternAssign(std::unordered_map<statementNumber, ful
     }
 }
 
-void AssignStore::storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber,
-                                                     std::unordered_set<partialMatch>> relations) {
-    this->numRHSMap = relations;
-    for (auto const& x : relations) {
-        for (auto const& y : x.second) {
-            reverseNumRHSMap[y].insert(x.first);
-        }
-    }
-}
-
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>
         AssignStore::getAssignPairPartial(partialMatch partial) {
