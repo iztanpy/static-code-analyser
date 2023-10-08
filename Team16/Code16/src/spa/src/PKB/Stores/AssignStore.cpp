@@ -36,7 +36,6 @@ void AssignStore::storeFullPatternAssign(std::unordered_map<statementNumber, ful
     for (auto const& x : relations) {
         reverseFullRHSMap[x.second].insert(x.first);
     }
-
 }
 
 void AssignStore::storeAllPossibleCombinationsAssign(std::unordered_map<statementNumber,
