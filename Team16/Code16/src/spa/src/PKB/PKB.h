@@ -210,6 +210,9 @@ class PKB {
   */
   void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
 
+  void storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+      std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
+
   /**
   * @brief Checks if a specific statement uses a given variable.
   *
@@ -273,6 +276,18 @@ class PKB {
   * @return An unordered set of pairs representing usage relationships for statements of the specified type.
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
+
+  bool isUses(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> uses(procedure procedure);
+
+  bool isUses(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> usesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> usesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedure();
 
   // ModifiesStore methods
 

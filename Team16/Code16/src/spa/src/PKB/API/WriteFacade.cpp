@@ -21,6 +21,7 @@ void WriteFacade::storeProcedures(std::set<std::string> procedures) {
 
 void WriteFacade::storeProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures) {
     pkb.addProcedures(procedures);
+    pkb.storeUsesProcedures(procedures, pkb.getCallStar());
     pkb.storeModifiesProcedures(procedures, pkb.getCallStar());
 }
 

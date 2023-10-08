@@ -2,19 +2,22 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <utility>
+#include "utils/hash_utils.h"
 #include "utils/clauses_types.h"
-
-
 
 class UsesStore {
  private:
     typedef std::string variable;
     typedef std::string constant;
     typedef int statementNumber;
+    typedef std::string procedure;
 
     std::unordered_map<statementNumber, std::unordered_set<variable>> UsesVariableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> UsesVariableMapReverse;
 
+    std::unordered_map<procedure, std::unordered_set<variable>> UsesProcedureMap;
+    std::unordered_map<variable, std::unordered_set<procedure>> UsesProcedureMapReverse;
 
  public:
     UsesStore();
@@ -28,6 +31,9 @@ class UsesStore {
     * @param statementUsesMap An unordered map of statement numbers to sets of variables used in each statement.
     */
     void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> statementUsesMap);
+
+    void storeUsesProcedures(std::unordered_map<procedure,
+        std::pair<int, int>> procedures, std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
     /**
     * @brief Checks if a specific statement uses a particular variable.
@@ -69,4 +75,16 @@ class UsesStore {
     * @return An unordered set of statement numbers of statements that use the specified variable.
     */
     std::unordered_set<statementNumber> uses(variable variableName);
+
+    bool isUses(procedure procedure);
+
+    std::unordered_set<variable> usesProcedureProc(procedure procedure);
+
+    bool isUses(procedure procedure, variable variable);
+
+    std::unordered_set<procedure> usesProcedure();
+
+    std::unordered_set<procedure> usesProcedure(variable variable);
+
+    std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedurePair();
 };

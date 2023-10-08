@@ -171,6 +171,18 @@ class ReadFacade {
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
+  bool isUses(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> uses(procedure procedure);
+
+  bool isUses(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> usesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> usesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedure();
+
 
   // ModifiesStore methods
 

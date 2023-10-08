@@ -95,6 +95,11 @@ void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<varia
   usesStore->storeUses(usesMapWithCall);
 }
 
+void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+    std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
+    usesStore->storeUsesProcedures(procedures, callTableStar);
+}
+
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
   return usesStore->isUses(lineNumber, variableName);
 }
@@ -117,6 +122,30 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(Stm
     }
   }
   return result;
+}
+
+bool PKB::isUses(procedure procedure, Wildcard wildcard) {
+    return usesStore->isUses(procedure);
+}
+
+std::unordered_set<variable> PKB::uses(procedure procedure) {
+    return usesStore->usesProcedureProc(procedure);
+}
+
+bool PKB::isUses(procedure procedure, variable variableName) {
+    return usesStore->isUses(procedure, variableName);
+}
+
+std::unordered_set<procedure> PKB::usesProcedure(Wildcard wildcard) {
+    return usesStore->usesProcedure();
+}
+
+std::unordered_set<procedure> PKB::usesProcedure(variable variableName) {
+    return usesStore->usesProcedure(variableName);
+}
+
+std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::usesProcedure() {
+    return usesStore->usesProcedurePair();
 }
 
 std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName) {
