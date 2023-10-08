@@ -27,8 +27,8 @@ std::unordered_map<int, StmtEntity> SourceProcessor::getStatementTypesMap() {
   return visitor.getStatementTypesMap();
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesLineRHSPatternMap() {
-  return visitor.getUsesLineRHSPatternMap();
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getAssignLinePartialRHSPatternMap() {
+  return visitor.getAssignLinePartialRHSPatternMap();
 }
 
 std::unordered_map<int, std::string> SourceProcessor::getUsesLineLHSMap() {
@@ -39,8 +39,8 @@ std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUse
   return visitor.getUsesLineRHSVarMap();
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getUsesStatementNumberHashmap() {
-  return visitor.getUsesStatementNumberHashmap();
+std::unordered_map<int, std::string> SourceProcessor::getAssignLineFullRHSMap() {
+  return visitor.getAssignLineFullRHSMap();
 }
 
 std::unordered_map<int, std::string> SourceProcessor::getModifiesMap() {

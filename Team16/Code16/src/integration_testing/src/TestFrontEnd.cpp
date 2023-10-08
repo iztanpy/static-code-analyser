@@ -144,12 +144,12 @@ TEST_CASE("One assign statement 1") {
       constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
       {{"x", constSet}});
   std::unordered_map<int, std::unordered_set<std::string>>
-      usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}}});
+      assignLinePartialRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}}});
   std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"}});
   std::unordered_map<int, std::unordered_set<std::string>>
       usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}}});
 
-  REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+  REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
   REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
   REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
   REQUIRE(sourceProcessor.getVariables() == varSet);

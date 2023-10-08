@@ -33,7 +33,10 @@ void SimpleParser::populatePKB() {
   // Store Parent <line, set<line>>
   writeFacade->storeParent(visitor->getParentStatementNumberMap());
   // Store Assignments: <line, RHS patterns>, <line, LHS var>
-  writeFacade->storeAssignments(visitor->getUsesLineRHSPatternMap(), visitor->getUsesLineLHSMap());
+  writeFacade->storeAssignments(visitor->getAssignLinePartialRHSPatternMap(), visitor->getUsesLineLHSMap());
+//  writeFacade->storeAssignments(visitor->getAssignLinePartialRHSPatternMap(),
+//                                visitor->getAssignLineFullRHSMap(),
+//                                visitor->getUsesLineLHSMap());
   // Store Uses: <all var in RHS>
   writeFacade->storeUses(visitor->getUsesLineRHSVarMap());
   // Store Modifies: <line, var>
