@@ -4,6 +4,8 @@
 
 #include "WhileStore.h"
 typedef int statementNumber;
+typedef std::string variable;
+
 
 WhileStore::WhileStore() {
     variableMap = std::unordered_map<statementNumber, variable>();
@@ -31,6 +33,14 @@ std::unordered_set<statementNumber> WhileStore::getWhile(variable v) {
         for (auto const& x : reverseVariableMap[v]) {
             result.insert(x);
         }
+    }
+    return result;
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> WhileStore::getAllWhile() {
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
+    for (auto const& [key, value] : variableMap) {
+        result.insert(std::make_pair(key, value));
     }
     return result;
 }

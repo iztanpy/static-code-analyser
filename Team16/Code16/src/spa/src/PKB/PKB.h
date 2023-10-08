@@ -883,12 +883,18 @@ class PKB {
 
   std::unordered_set<statementNumber> getIf(variable v);
 
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
+
+
   void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
 
   std::unordered_set<statementNumber> getWhile(Wildcard wc);
 
   std::unordered_set<statementNumber> getWhile(variable v);
 
-  PKB(const PKB&) = delete;
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
+
+
+    PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;
 };

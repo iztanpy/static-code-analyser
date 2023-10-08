@@ -674,7 +674,12 @@ class ReadFacade {
 
   std::unordered_set<statementNumber> getIf(variable v);
 
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
+
   std::unordered_set<statementNumber> getWhile(Wildcard wc);
 
   std::unordered_set<statementNumber> getWhile(variable v);
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
+
 };

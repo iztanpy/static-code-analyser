@@ -21,5 +21,7 @@ class IfStore {
     void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);
     std::unordered_set<statementNumber> getIf(Wildcard wc);
     std::unordered_set<statementNumber> getIf(variable v);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
+
 };
 

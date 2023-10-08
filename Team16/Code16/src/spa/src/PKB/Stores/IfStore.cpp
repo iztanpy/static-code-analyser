@@ -36,3 +36,12 @@ std::unordered_set<statementNumber> IfStore::getIf(variable v) {
     return result;
 }
 
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> IfStore::getAllIf() {
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
+    for (auto const& [key, value] : variableMap) {
+        result.insert(std::make_pair(key, value));
+    }
+    return result;
+}
+
+
