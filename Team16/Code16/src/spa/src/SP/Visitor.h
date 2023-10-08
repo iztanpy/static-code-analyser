@@ -242,6 +242,10 @@ class Visitor {
         return callStatementNumberEntityHashmap;
     }
 
+    void setCallStatementNumberEntityHashmap(int statementNumber, std::string entityName) {
+        callStatementNumberEntityHashmap[statementNumber] = entityName;
+    }
+
     /**
      * @brief Get the mapping of procedure names to the statement numbers where they are defined.
      *

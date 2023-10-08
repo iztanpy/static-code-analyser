@@ -5,7 +5,7 @@ SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) : simpleParser(wri
 void SourceProcessor::processSource(const std::string& simpleProgram) {
     std::vector<struct Token> tokens = tokeniser.tokenise(simpleProgram);
     try {
-        simpleParser.parse(tokens, 0);
+        simpleParser.parse(tokens);
     } catch (const InvalidSyntaxError& e) {
         e.log();
     } catch (const InvalidTokenTypeError& e) {

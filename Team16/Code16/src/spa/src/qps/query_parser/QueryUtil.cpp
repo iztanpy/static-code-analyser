@@ -35,6 +35,10 @@ bool QueryUtil::IsEnclosedInDoubleQuotes(const std::string& s) {
   return (s.size() >= 2 && s.front() == '\"' && s.back() == '\"');
 }
 
+bool QueryUtil::IsEnclosedInWildcard(const std::string& s) {
+  return (s.size() >= 2 && s.front() == '_' && s.back() == '_');
+}
+
 bool QueryUtil::IsRelRef(const std::string& s) {
   std::set<std::string> stringRelRef = RelRef::getStringRelRef();
   if (stringRelRef.find(s) != stringRelRef.end()) {
@@ -43,11 +47,31 @@ bool QueryUtil::IsRelRef(const std::string& s) {
   return false;
 }
 
+bool QueryUtil::IsExprSpec(const std::string & s) {
+  return IsPartialMatchExpressionSpecification(s) || IsExactExpressionSpecification(s) || IsWildcard(s);
+}
+
+bool QueryUtil::IsExactExpressionSpecification(const std::string & s) {
+  if (!IsEnclosedInDoubleQuotes(s)) {
+    return false;
+  }
+  std::string processed_s = RemoveQuotations(s);
+  return lexical_utils::IsExpr(processed_s);
+}
+
 bool QueryUtil::IsPartialMatchExpressionSpecification(const std::string& s) {
-  return (s.size() >= 2 && s.front() == '_' && s.back() == '_');
+  if (!IsEnclosedInWildcard(s)) {
+    return false;
+  }
+  std::string processed_s = RemovePartialMatch(s);
+  return IsExactExpressionSpecification(processed_s);
 }
 
 std::string QueryUtil::RemoveQuotations(const std::string& s) {
+  return string_util::Trim(s.substr(1, s.length() - 2));
+}
+
+std::string QueryUtil::RemovePartialMatch(const std::string& s) {
   return string_util::Trim(s.substr(1, s.length() - 2));
 }
 
