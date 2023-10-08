@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include <stdio.h>
 #include <unordered_set>
 #include <iostream>
 using namespace std;
@@ -29,11 +28,11 @@ TEST_CASE(" 1") {
 
   REQUIRE(readFacade.getAllAssigns().size() == 3);
 
-  for (int value : readFacade.getAssigns(Wildcard(), "1")) {
+  for (int value : readFacade.getAssigns(Wildcard(), ExactExpr{"1"})) {
     REQUIRE(value == 3);
   }
 
-  for (int value : readFacade.getAssigns("b", "y")) {
+  for (int value : readFacade.getAssigns("b", ExactExpr{"y"})) {
     REQUIRE(value == 2);
   }
 
@@ -86,11 +85,11 @@ TEST_CASE("test Facades for AssignStore") {
 
   REQUIRE(readFacade.getAssigns("b", Wildcard()).size() == 2);
 
-  REQUIRE(readFacade.getAssigns("b", "x").size() == 2);
+  REQUIRE(readFacade.getAssigns("b", PartialExpr{"x"}).size() == 2);
 
-  REQUIRE(readFacade.getAssigns("b", "1").size() == 1);
+  REQUIRE(readFacade.getAssigns("b", PartialExpr{"1"}).size() == 1);
 
-  REQUIRE(readFacade.getAssigns("b", "2").size() == 1);
+  REQUIRE(readFacade.getAssigns("b", PartialExpr{"2"}).size() == 1);
 
   writeFacade.storeVariables({"x", "y", "z", "a", "b"});
 

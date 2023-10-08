@@ -299,7 +299,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExp
   auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[1]);
-  ExprSpec expected_rhs = ExactExpr{"x+y"};
+  ExprSpec expected_rhs = PartialExpr{"x+y"};
   REQUIRE(clause->syn_assignment.equals(declarations[0]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
@@ -309,7 +309,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
   std::vector<QueryToken> tokens = {
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"x+y", PQLTokenType::IDENT}
+      {"x+y", PQLTokenType::PARTIALEXPR}
   };
 
   std::vector<Declaration> declarations = {
@@ -322,7 +322,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
   auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[1]);
-  ExprSpec expected_rhs = (ExactExpr{"x+y"});
+  ExprSpec expected_rhs = PartialExpr{"x+y"};
   REQUIRE(clause->syn_assignment.equals(declarations[0]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
@@ -332,7 +332,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
   std::vector<QueryToken> tokens = {
       {"a", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
-      {"x+y", PQLTokenType::IDENT}
+      {"x+y", PQLTokenType::PARTIALEXPR}
   };
 
   std::vector<Declaration> declarations = {
@@ -344,7 +344,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
   auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = Wildcard::Value;
-  ExprSpec expected_rhs = ExactExpr{"x+y"};
+  ExprSpec expected_rhs = PartialExpr{"x+y"};
   REQUIRE(clause->syn_assignment.equals(declarations[0]) == true);
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));

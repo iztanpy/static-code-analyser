@@ -1,9 +1,9 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
 Constraint AssignPattern::Evaluate(ReadFacade& pkb_reader) {
-//  return std::visit([this, &pkb_reader](auto&& lhs_arg) {
-//    return Constraint{AssignPatternEvaluator::Handle(this->syn_assignment.synonym, lhs_arg, this->rhs, pkb_reader)};
-//  }, this->lhs);
+  return std::visit([this, &pkb_reader](auto&& lhs_arg, auto&& rhs_arg) {
+    return Constraint{AssignPatternEvaluator::Handle(this->syn_assignment.synonym, lhs_arg, rhs_arg, pkb_reader)};
+  }, lhs, rhs);
 }
 
 void AssignPattern::Validate() {
