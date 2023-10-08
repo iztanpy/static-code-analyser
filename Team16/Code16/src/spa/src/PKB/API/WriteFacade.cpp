@@ -13,7 +13,7 @@ void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
 
 void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
                                    std::unordered_set<partialMatch>> partialRHSMap,
-                                   std::unordered_map<statementNumber, std::unordered_set<full>> fullRHSMap,
+                                   std::unordered_map<statementNumber, full> fullRHSMap,
                                    std::unordered_map<statementNumber, variable> numLHSMap) {
     pkb.setAssignments(partialRHSMap, fullRHSMap, numLHSMap);
 }
