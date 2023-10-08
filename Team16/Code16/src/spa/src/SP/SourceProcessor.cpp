@@ -5,7 +5,7 @@ SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) : simpleParser(wri
 void SourceProcessor::processSource(const std::string& simpleProgram) {
     std::vector<struct Token> tokens = tokeniser.tokenise(simpleProgram);
     try {
-        simpleParser.parse(tokens, 0);
+        simpleParser.parse(tokens);
     } catch (const InvalidSyntaxError& e) {
         e.log();
     } catch (const InvalidTokenTypeError& e) {
@@ -59,3 +59,14 @@ std::set<std::string> SourceProcessor::getProcedureLabels() {
   return visitor.getProcedureLabels();
 }
 
+std::unordered_map<std::string, std::pair<int, int>> SourceProcessor::getProcedureLineNumberHashmap() {
+    return visitor.getProcedureLineNumberHashmap();
+}
+
+std::unordered_map<std::string, std::unordered_set<std::string>> SourceProcessor::getCallerCalleeHashmap() {
+    return visitor.getCallerCalleeHashmap();
+}
+
+std::unordered_map<int, std::string> SourceProcessor::getCallStatementNumberEntityHashmap() {
+    return visitor.getCallStatementNumberEntityHashmap();
+}

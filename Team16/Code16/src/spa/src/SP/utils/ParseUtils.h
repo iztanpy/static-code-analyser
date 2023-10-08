@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
@@ -11,12 +12,12 @@
 #include "SP/sp_tokeniser/TokenTypes.h"
 #include "SP/DesignExtractor.h"
 #include "SP/sp_parser/Parser.h"
-#include "SP/utils/ParseUtils.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
+typedef std::unordered_map<std::string, TokenType> EntityMap;
 
 /**
  * @class ParseUtils
@@ -27,6 +28,13 @@
  * and conditional expressions, as well as converting literals to entity types.
  */
 class ParseUtils {
+ private:
+  static int index;
+  static int lineNumber;
+  inline static std::string procedureName;
+  static EntityMap entityMap;
+  static void setUpEntityMap();
+
  public:
  /**
   * @brief Checks if the token represents an addition or subtraction operator.
@@ -63,9 +71,13 @@ class ParseUtils {
     * @param value The literal entity to be converted.
     * @return The entity token type corresponding to the literal entity.
   */
-  static TokenType convertLiteralToEntity(std::string value);
-  static int index;
-  static int lineNumber;
+  static TokenType convertLiteralToEntity(const std::string& value);
+  /**
+  * @brief Set Procedure Name of the current procedure 
+  * @param procedureName Procedure Name of current procedure
+  */
+  static void setProcedureName(std::string procedureName);
+  static std::string getProcedureName();
   /**
    * @brief Increments the static index value.
   */

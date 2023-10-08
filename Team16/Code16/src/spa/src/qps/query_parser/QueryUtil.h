@@ -75,11 +75,32 @@ class QueryUtil {
   static bool IsIdentWithDoubleQuotes(const std::string & s);
 
   /*!
+ * Checks if a string is enclosed with wildcards
+ * @param s is the input string
+ * @return True if string is enclosed with wildcard, else false
+ */
+  static bool IsEnclosedInWildcard(const std::string & s);
+
+  /*!
    * Checks if a string is a relationship reference
    * @param s is the input string
    * @return True if string is a relationship reference, else false
    */
   static bool IsRelRef(const std::string & s);
+
+  /*!
+   * Checks if a string is an expression specification
+   * @param s is the input string
+   * @return True if the string is an expression specification, else false
+   */
+  static bool IsExprSpec(const std::string & s);
+
+  /*!
+   * Checks if a string is an an exact expression specification
+   * @param s is the input
+   * @return True if the string is an exact expression, else false
+   */
+  static bool IsExactExpressionSpecification(const std::string & s);
 
   /*!
    * Checks if an expression is partial match
@@ -90,9 +111,15 @@ class QueryUtil {
 
   /*!
    * Get the IDENT inside quotations.
-   *
    * @param quoted_ident Quoted IDENT
    * @return The ident with quotations removed.
    */
   static std::string RemoveQuotations(const std::string & quoted_ident);
+
+  /*!
+   * Get the expression between the wildcards
+   * @param partial_match_string
+   * @return The expression
+   */
+  static std::string RemovePartialMatch(const std::string & partial_match_string);
 };
