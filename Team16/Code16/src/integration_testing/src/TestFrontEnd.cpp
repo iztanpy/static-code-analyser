@@ -50,6 +50,21 @@ TEST_CASE("One read statement 1") {
   REQUIRE(sourceProcessor.getVariables() == varSet);
 }
 
+TEST_CASE("TEST SP-PKB-QPS UsesP ModifiesP") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+    std::string simpleProgram = "procedure poo { y = x + 1; read k; print l; }";
+    std::string query_1 =  "variable v; procedure p; Select v such that Uses(p, v)";
+    sourceProcessor.processSource(simpleProgram);
+    REQUIRE((readFacade.isUses("poo", "x")));
+    REQUIRE((readFacade.isUses("poo", "l")));
+    REQUIRE((readFacade.isModifies("poo", "y")));
+    REQUIRE((readFacade.isModifies("poo", "k")));
+}
+
 TEST_CASE("TEST SP-PKB Connection 2") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);

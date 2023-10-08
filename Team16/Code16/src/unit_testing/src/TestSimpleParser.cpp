@@ -82,10 +82,16 @@ TEST_CASE("Test storing of procedure line numbers.") {
       x = 2;
       x = 3;
     }
+    procedure q {
+      x = 1; 
+      x = 2; 
+      x = 3;
+    }
      )";
     sourceProcessor.processSource(simpleProgram3);
     std::unordered_map<std::string, std::pair<int,int>> procedureStatementNumberHashmap = {
        {"p", {1,3}},
+       {"q", {4,6}},
     };
     std::unordered_map<std::string, std::pair<int, int>> res = sourceProcessor.getProcedureLineNumberHashmap();
     REQUIRE(res == procedureStatementNumberHashmap);
