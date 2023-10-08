@@ -1,14 +1,14 @@
 #include "CallParser.h"
 
-int CallParser::parse(std::vector<Token>& tokens, int curr_index) {
+int CallParser::parse(std::vector<Token>& tokens) {
     // Check if there are enough tokens for a valid call statement
-    if (curr_index + 3 > tokens.size()) {
+    if (index + 3 > tokens.size()) {
         return -1;
     }
 
     // Validate call name
-    Token callNameToken = tokens[curr_index + 1];
-    Token semicolonToken = tokens[curr_index + 2];
+    Token callNameToken = tokens[index + 1];
+    Token semicolonToken = tokens[index + 2];
 
     // Define the set of valid keyword token types
     std::unordered_set<TokenType> validKeywords = {
@@ -36,7 +36,7 @@ int CallParser::parse(std::vector<Token>& tokens, int curr_index) {
     }
 
     // Update the value of the 'call' token to match the call name
-    Token call = tokens[curr_index];
+    Token call = tokens[index];
     call.value = callNameToken.value;
 
     std::string currentProcedureName = ParseUtils::getProcedureName();
@@ -44,9 +44,12 @@ int CallParser::parse(std::vector<Token>& tokens, int curr_index) {
         throw InvalidSemanticError();
     }
     visitor->setCallerCalleeMap(currentProcedureName, call.value);
+    visitor->setCallStatementNumberEntityHashmap(lineNumber, call.value);
     // Update the current index and create the AST node
-    curr_index = curr_index + 3;
+    index = index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(call, lineNumber);
-    return curr_index;
-}
 
+    lineNumber++;
+
+    return index;
+}

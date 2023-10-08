@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
@@ -16,6 +17,7 @@
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
+typedef std::unordered_map<std::string, TokenType> EntityMap;
 
 /**
  * @class ParseUtils
@@ -30,6 +32,8 @@ class ParseUtils {
   static int index;
   static int lineNumber;
   inline static std::string procedureName;
+  static EntityMap entityMap;
+  static void setUpEntityMap();
 
  public:
  /**
@@ -67,7 +71,7 @@ class ParseUtils {
     * @param value The literal entity to be converted.
     * @return The entity token type corresponding to the literal entity.
   */
-  static TokenType convertLiteralToEntity(std::string value);
+  static TokenType convertLiteralToEntity(const std::string& value);
   /**
   * @brief Set Procedure Name of the current procedure 
   * @param procedureName Procedure Name of current procedure

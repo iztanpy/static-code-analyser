@@ -110,6 +110,11 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ParserFactory.cpp
         src/SP/sp_parser/CallParser.cpp
         src/SP/sp_parser/CallParser.h
+        src/SP/sp_parser/Parser.cpp
+        src/SP/sp_parser/ElseParser.cpp
+        src/SP/sp_parser/ElseParser.h
+        src/SP/sp_parser/CloseBraceParser.cpp
+        src/SP/sp_parser/CloseBraceParser.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -155,6 +160,27 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/IfStore.h
         src/PKB/Stores/WhileStore.cpp
         src/PKB/Stores/WhileStore.h
+        src/qps/qps_validator/qps_validator_handler.h
+        src/qps/qps_validator/qps_validator.cpp
+        src/qps/qps_validator/qps_validator.h
+        src/qps/qps_validator/statement_syntax_handler.cpp
+        src/qps/qps_validator/statement_syntax_handler.h
+        src/qps/qps_validator/declaration_statement_syntax_handler.cpp
+        src/qps/qps_validator/declaration_statement_syntax_handler.h
+        src/qps/qps_validator/declaration_synonym_syntax_handler.cpp
+        src/qps/qps_validator/declaration_synonym_syntax_handler.h
+        src/qps/qps_validator/declaration_synonym_semantic_handler.cpp
+        src/qps/qps_validator/declaration_synonym_semantic_handler.h
+        src/qps/qps_validator/select_statement_syntax_handler.cpp
+        src/qps/qps_validator/select_statement_syntax_handler.h
+        src/qps/qps_validator/select_synonym_syntax_handler.cpp
+        src/qps/qps_validator/select_synonym_syntax_handler.h
+        src/qps/qps_validator/select_synonym_semantic_handler.cpp
+        src/qps/qps_validator/select_synonym_semantic_handler.h
+        src/qps/qps_validator/clause_args_syntax_handler.cpp
+        src/qps/qps_validator/clause_args_syntax_handler.h
+        src/qps/qps_validator/clause_synonym_semantic_handler.cpp
+        src/qps/qps_validator/clause_synonym_semantic_handler.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

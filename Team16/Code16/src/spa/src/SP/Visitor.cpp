@@ -8,6 +8,8 @@ void ASTVisitor::visit(const ProcedureTNode* node, std::string& key) {
     } else {
         insertProcedureLabel(node->getContent());
     }
+
+    procedureLineNumberHashmap[node->getContent()].first = node->getStartStatementNumber();
 }
 
 void ASTVisitor::visit(const AssignTNode* node, std::string& key) {

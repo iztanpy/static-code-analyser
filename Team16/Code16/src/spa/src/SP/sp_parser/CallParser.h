@@ -6,17 +6,16 @@
 #include <memory>
 
 // Headers from "SP" subdirectory
+#include "SP/utils/ParseUtils.h"
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
-#include "SP/DesignExtractor.h"
-#include "SP/sp_parser/Parser.h"
-#include "SP/utils/ParseUtils.h"
+#include "Parser.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
-class SimpleParser;
+class DesignExtractor;
 /**
  * @class CallParser
  * @brief A class for parsing and processing function call statements in the SIMPLE Program.
@@ -28,7 +27,6 @@ class SimpleParser;
 class CallParser : public Parser {
  private:
     ASTVisitor* visitor;
-    int lineNumber = 0;
 
  public:
     /**
@@ -46,6 +44,6 @@ class CallParser : public Parser {
      * @param curr_index The current index in the token vector where parsing should start.
      * @return The index in the token vector after parsing the function call statement.
      */
-    int parse(std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens) override;
 };
 
