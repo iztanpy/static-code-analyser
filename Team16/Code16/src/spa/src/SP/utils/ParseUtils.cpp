@@ -30,8 +30,10 @@ bool ParseUtils::isRelFactorOperator(const Token& token) {
       token.tokenType == TokenType::kOperatorEqual;
 }
 
+// Initialize variables
 int ParseUtils::index = 0;
 int ParseUtils::lineNumber = 0;
+static std::string* procedureName;
 
 void ParseUtils::incrementIndex() {
   index++;
@@ -41,9 +43,18 @@ int ParseUtils::getIndex() {
   return index;
 }
 
+std::string ParseUtils::getProcedureName() {
+    return procedureName;
+}
+
+
 void ParseUtils::setValues(int index, int lineNumber) {
   ParseUtils::index = index;
   ParseUtils::lineNumber = lineNumber;
+}
+
+void ParseUtils::setProcedureName(std::string procedureName) {
+  ParseUtils::procedureName = procedureName;
 }
 
 std::shared_ptr<TNode> ParseUtils::parseExpression(const std::vector<Token>& tokens) {
@@ -179,37 +190,28 @@ std::shared_ptr<TNode> ParseUtils::parseRelFactor(const std::vector<Token>& toke
   return node;
 }
 
+std::unordered_map<std::string, TokenType> ParseUtils::entityMap = std::unordered_map<std::string, TokenType>();
 
-std::vector<TokenType> unconfirmed_entities = {
-    TokenType::kEntityIf,
-    TokenType::kEntityElse,
-    TokenType::kEntityThen,
-    TokenType::kEntityWhile,
-    TokenType::kEntityRead,
-    TokenType::kEntityProcedure,
-    TokenType::kEntityPrint,
-    TokenType::kEntityCall,
-};
+void ParseUtils::setUpEntityMap() {
+  entityMap["if"] = TokenType::kEntityIf;
+  entityMap["then"] = TokenType::kEntityThen;
+  entityMap["while"] = TokenType::kEntityWhile;
+  entityMap["else"] = TokenType::kEntityElse;
+  entityMap["read"] = TokenType::kEntityRead;
+  entityMap["procedure"] = TokenType::kEntityProcedure;
+  entityMap["print"] = TokenType::kEntityPrint;
+  entityMap["call"] = TokenType::kEntityCall;
+}
 
-TokenType ParseUtils::convertLiteralToEntity(std::string value) {
-    if (value == "if") {
-      return TokenType::kEntityIf;
-    } else if (value == "then") {
-        return TokenType::kEntityThen;
-    } else if (value == "while") {
-        return TokenType::kEntityWhile;
-    } else if (value == "else") {
-        return TokenType::kEntityElse;
-    } else if (value == "read") {
-        return TokenType::kEntityRead;
-    } else if (value == "procedure") {
-        return TokenType::kEntityProcedure;
-    } else if (value == "print") {
-        return TokenType::kEntityPrint;
-    } else if (value == "call") {
-        return TokenType::kEntityCall;
-    } else {
-        throw InvalidSyntaxError();
-    }
+TokenType ParseUtils::convertLiteralToEntity(const std::string& value) {
+  if (entityMap.empty()) {
+    setUpEntityMap();
+  }
+  if (entityMap.find(value) != entityMap.end()) {
+    TokenType type = entityMap[value];
+    return type;
+  } else {
+    throw InvalidSyntaxError();
+  }
 }
 

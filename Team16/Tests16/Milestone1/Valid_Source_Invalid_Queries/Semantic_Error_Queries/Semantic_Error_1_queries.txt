@@ -173,3 +173,8 @@ constant a10; variable a11;
 Select a10 such that Uses(a11, a10)
 SemanticError
 5000
+36 - no declaration for query
+
+Select s
+SemanticError
+5000

@@ -198,13 +198,8 @@ TEST_CASE("Test get relationship reference arguments") {
     REQUIRE(strcmp(e.what(), more_than_2_error.what()) == 0);
   }
 
-  try {
-    std::string not_declared_arg = "(a, b)";
-    std::pair<QueryToken, QueryToken>
-        not_declared_error_args = QueryTokenizer::getRelRefArgs(not_declared_arg, error_declarations);
-  } catch (const QpsError & e) {
-    REQUIRE(strcmp(e.what(), not_declared_error.what()) == 0);
-  }
+  std::string not_declared_arg = "(a, b)";
+  REQUIRE_THROWS_AS(QueryTokenizer::getRelRefArgs(not_declared_arg, error_declarations), QpsSemanticError);
 }
 
 TEST_CASE("Test get pattern arguments") {
@@ -259,21 +254,11 @@ TEST_CASE("Test get pattern arguments") {
       {"s", DesignEntity::STMT}
   };
 
-  try {
-    std::string more_that_2_arg = "(s, b, c)";
-    std::pair<QueryToken, QueryToken>
-        more_than_2_error_args = QueryTokenizer::getPatternArgs(more_that_2_arg, error_declarations);
-  } catch (const QpsError & e) {
-    REQUIRE(strcmp(e.what(), more_than_2_error.what()) == 0);
-  }
+  std::string more_that_2_arg = "(s, b, c)";
+  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(more_that_2_arg, error_declarations), QpsSyntaxError);
 
-  try {
-    std::string not_declared_arg = "(a, _)";
-    std::pair<QueryToken, QueryToken>
-        more_than_2_error_args = QueryTokenizer::getPatternArgs(not_declared_arg, error_declarations);
-  } catch (const QpsError & e) {
-    REQUIRE(strcmp(e.what(), not_declared_error.what()) == 0);
-  }
+  std::string not_declared_arg = "(a, _)";
+  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(not_declared_arg, error_declarations), QpsSemanticError);
 }
 
 TEST_CASE("Test extract clause tokens") {
@@ -335,22 +320,12 @@ TEST_CASE("Test extract clause tokens") {
       {"v", DesignEntity::VARIABLE}
   };
 
-  try {
-    std::string unknown_clause_statement = "Select v something else (v, \"x\")";
-    std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
-        unknown_clause_result = QueryTokenizer::extractClauseTokens(unknown_clause_statement, error_declarations);
-  } catch (const QpsError & e) {
-    REQUIRE(strcmp(e.what(), unknown_clause_error.what()) == 0);
-  }
+  std::string unknown_clause_statement = "Select v something else (v, \"x\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(unknown_clause_statement, error_declarations), QpsSyntaxError);
 
-  try {
-    std::string undeclared_pattern_statement = "Select v pattern a (a, v)";
-    std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
-        unknown_clause_result = QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations);
-  } catch (const QpsError & e) {
-    REQUIRE(strcmp(e.what(), undeclared_pattern_error.what()) == 0);
-  }
-
+  std::string undeclared_pattern_statement = "Select v pattern a (a, v)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations),
+                    QpsSemanticError);
 }
 
 TEST_CASE("Test extract one select and on pattern") {
@@ -391,4 +366,52 @@ TEST_CASE("Test extract one select and on pattern") {
   REQUIRE(results.second[1].type == expected.second[1].type);
   REQUIRE(results.second[2].text == expected.second[2].text);
   REQUIRE(results.second[2].type == expected.second[2].type);
+}
+
+TEST_CASE("Tokenizer and tokenise pattern expressions") {
+  std::string sample_query_1 = "Select a1 pattern a1(_, _\"abc + cde % fgh\"_)";
+  std::vector<Declaration> declarations = {
+      {"a1", DesignEntity::ASSIGN}
+  };
+  std::vector<QueryToken> pattern_tokens = {
+      {"a1", PQLTokenType::SYNONYM},
+      {"_", PQLTokenType::WILDCARD},
+      {"abc + cde % fgh", PQLTokenType::PARTIALEXPR}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results = QueryTokenizer::extractClauseTokens(sample_query_1, declarations);
+
+  REQUIRE(results.second.size() == 3);
+  REQUIRE(results.second[0].type == pattern_tokens[0].type);
+  REQUIRE(results.second[0].text == pattern_tokens[0].text);
+  REQUIRE(results.second[1].type == pattern_tokens[1].type);
+  REQUIRE(results.second[1].text == pattern_tokens[1].text);
+  REQUIRE(results.second[2].type == pattern_tokens[2].type);
+  REQUIRE(results.second[2].text == pattern_tokens[2].text);
+
+  std::string sample_query_2 = "Select a1 pattern a1(v, \"abc + cde % fgh\")";
+  std::vector<Declaration> declarations_2 = {
+      {"a1", DesignEntity::ASSIGN},
+      {"v", DesignEntity::VARIABLE}
+  };
+  std::vector<QueryToken> pattern_tokens_2 = {
+      {"a1", PQLTokenType::SYNONYM},
+      {"v", PQLTokenType::SYNONYM},
+      {"abc + cde % fgh", PQLTokenType::IDENT}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
+
+  REQUIRE(results_2.second.size() == 3);
+  REQUIRE(results_2.second[0].type == pattern_tokens_2[0].type);
+  REQUIRE(results_2.second[0].text == pattern_tokens_2[0].text);
+  REQUIRE(results_2.second[1].type == pattern_tokens_2[1].type);
+  REQUIRE(results_2.second[1].text == pattern_tokens_2[1].text);
+  REQUIRE(results_2.second[2].type == pattern_tokens_2[2].type);
+  REQUIRE(results_2.second[2].text == pattern_tokens_2[2].text);
+
+  std::string sample_query_3 = "Select a1 pattern a1(v, \"+ cde % fgh\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations), QpsSyntaxError);
 }

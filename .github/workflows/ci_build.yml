@@ -1,4 +1,4 @@
-name: CI for Cmake Project - Windows
+name: CI for Cmake Project
 
 on:
   push:
@@ -18,13 +18,14 @@ env:
     BUILD_TYPE: Release
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Build Project
         shell: powershell
@@ -51,10 +52,54 @@ jobs:
           cd .\Team16\Code16\build\src\
           .\integration_testing\Release\integration_testing.exe
           cd ..\..\..\..
-      
-      - name: Run Autotester
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Run System Tests
         shell: powershell
         run: |
-          cd .\Team16\Code16\
-          .\build\src\autotester\Release\autotester.exe .\tests\Sample_source.txt .\tests\Sample_queries.txt .\tests\out.xml
+          cd .\Team16\Tests16\
+          python run_autotester.py
           cd ..\..
+
+  build-macos:
+    runs-on: macOS-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Project
+        run: |
+          cd ./Team16/Code16/
+          mkdir build
+          cd ./build/
+          cmake ..
+          cmake --build . --target unit_testing --config Release
+          cmake --build . --target integration_testing --config Release
+          cmake --build . --target autotester --config Release
+          cd ../../
+
+      - name: Run Unit Tests
+        run: |
+          cd ./Team16/Code16/build/src/
+          ./unit_testing/unit_testing
+          cd ../../../..
+
+      - name: Run Integration Tests
+        run: |
+          cd ./Team16/Code16/build/src/
+          ./integration_testing/integration_testing
+          cd ../../../..
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Run System Tests
+        run: |
+          cd ./Team16/Tests16/
+          python run_autotester.py
+          cd ../..

@@ -3,6 +3,16 @@
 
 TNode::TNode(int statementNumber) : statementNumber(statementNumber) {}
 
+void ProcedureTNode::setEndStatementNumber(int statementNumber) {
+  if (endStatementNumber == -1) {
+    endStatementNumber = statementNumber;
+  }
+}
+
+int ProcedureTNode::getStartStatementNumber() const {
+  return startStatementNumber;
+}
+
 void ProcedureTNode::accept(ASTVisitor *visitor, std::string& key) const {
     visitor->visit(this, key);
 }

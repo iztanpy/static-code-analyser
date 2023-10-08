@@ -31,6 +31,66 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+
+TEST_CASE("Test call sn rs.") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+      call b;
+      call c;
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, std::string> callerCalleeHashmap = {
+       {1, "b"},
+       {2, "c"},
+    };
+
+
+    std::unordered_map<int, std::string> res = sourceProcessor.getCallStatementNumberEntityHashmap();
+    REQUIRE(res == callerCalleeHashmap);
+}
+
+TEST_CASE("Test caller callee rs.") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+      call b;
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap = {
+       {"p", {"b"}},
+    };
+    std::unordered_map<std::string, std::unordered_set<std::string>> res = sourceProcessor.getCallerCalleeHashmap();
+
+    REQUIRE(res == callerCalleeHashmap);
+}
+
+
+TEST_CASE("Test storing of procedure line numbers.") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+    procedure p {
+      x = 1; 
+      x = 2;
+      x = 3;
+    }
+     )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<std::string, std::pair<int,int>> procedureStatementNumberHashmap = {
+       {"p", {1,3}},
+    };
+    std::unordered_map<std::string, std::pair<int, int>> res = sourceProcessor.getProcedureLineNumberHashmap();
+    REQUIRE(res == procedureStatementNumberHashmap);
+}
+
 TEST_CASE("Test invalid else statement at the end.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
@@ -46,7 +106,6 @@ TEST_CASE("Test invalid else statement at the end.") {
     sourceProcessor.processSource(simpleProgram3);
     REQUIRE(1 == 1);
 }
-
 
 TEST_CASE("Test follows relation one level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -74,24 +133,9 @@ TEST_CASE("Test follows relation one level nesting") {
 
     std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
 
-    for (const auto& pair : res) {
-        int key = pair.first;
-        const std::unordered_set<int>& values = pair.second;
-
-        std::cout << key << "key";
-
-        for (const int& value : values) {
-            std::cout << value << "val";
-        }
-
-        std::cout << std::endl;
-    }
-
     REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
     REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
-
-
 
 TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -99,7 +143,7 @@ TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     SimpleParser parser(&writeFacade, new ASTVisitor());
     std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
                                  tokenEnd, tokenCloseBrace};
-    REQUIRE(parser.parse(my_tokens, 0) == 10);
+    REQUIRE(parser.parse(my_tokens) == 10);
 }
 
 TEST_CASE("Test key and variable same name one level nesting") {
@@ -153,9 +197,6 @@ TEST_CASE("Test follows & parent relation two level nesting") {
     };
 
     std::unordered_map<int, int> res = sourceProcessor.getFollowStatementNumberMap();
-    for (auto it = res.begin(); it != res.end(); ++it) {
-        std::cout << it->first << " " << it->second << std::endl;
-    }
     REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
     REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
@@ -314,27 +355,76 @@ TEST_CASE(("Test 2 Nested While Loops Retrieval")) {
 }
 
 
-TEST_CASE(("Test Conditional Tokens Retrieval")) {
+TEST_CASE(("Test Conditional Tokens Retrieval1")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p { while ((x == 1) || (x==2))  { read x; } }";
     sourceProcessor.processSource(simpleProgram2);
-    std::string simpleProgram3 = "procedure q { while ((x != 1) || (y != 1)) { read x; } }";
-    sourceProcessor.processSource(simpleProgram3);
-    std::string simpleProgram4 = "procedure r { while (!(x == 1)) { read x; } }";
-    sourceProcessor.processSource(simpleProgram4);
-    std::string simpleProgram5 = "procedure a { while ((!(x)) || (x == y)) { read x; } }";
-    sourceProcessor.processSource(simpleProgram5);
-    std::string simpleProgram6 = "procedure b {   while (1>= 1%((0-1))) { read x; } }";
-    sourceProcessor.processSource(simpleProgram6);
-    std::string simpleProgram7 = "procedure s { while (1>= 1%((1)) ) { read x; } }";
-    sourceProcessor.processSource(simpleProgram7);
-    std::string simpleProgram8 = "procedure z { while (! ((1==0) && (1==0))) { read x; } }";
-    sourceProcessor.processSource(simpleProgram8);
-    std::string simpleProgram9 = "procedure v { while (x>=(0+0)) { read x; } }";
-    sourceProcessor.processSource(simpleProgram9);
     REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval2")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram3 = "procedure q { while ((x != 1) || (y != 1)) { read x; } }";
+  sourceProcessor.processSource(simpleProgram3);
+  REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval3")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram4 = "procedure r { while (!(x == 1)) { read x; } }";
+  sourceProcessor.processSource(simpleProgram4);
+  REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval4")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram5 = "procedure a { while ((!(x)) || (x == y)) { read x; } }";
+  sourceProcessor.processSource(simpleProgram5);
+  REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval5")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram6 = "procedure b {   while (1>= 1%((0-1))) { read x; } }";
+  sourceProcessor.processSource(simpleProgram6);
+  REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval6")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram7 = "procedure s { while (1>= 1%((1)) ) { read x; } }";
+  sourceProcessor.processSource(simpleProgram7);
+  REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval7")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram8 = "procedure z { while (! ((1==0) && (1==0))) { read x; } }";
+  sourceProcessor.processSource(simpleProgram8);
+  REQUIRE(1 == 1);
+}
+
+TEST_CASE(("Test Conditional Tokens Retrieval8")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram9 = "procedure v { while (x>=(0+0)) { read x; } }";
+  sourceProcessor.processSource(simpleProgram9);
+  REQUIRE(1 == 1);
 }
 
 TEST_CASE(("Test Print Parser")) {
@@ -499,8 +589,6 @@ TEST_CASE(("Test SP to PKB LineUsesVar")) {
     REQUIRE(res == usesLineRHSVarMap);
 }
 
-
-
 TEST_CASE(("Test SP storing of Uses: Print")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
@@ -580,7 +668,7 @@ TEST_CASE(("Test SP Modifies storage")) {
       {{2, "x"},
          {3, "k"},
          {4, "a"}});
-
+  std::unordered_map<int, std::string> modifiesMap2 =sourceProcessor.getModifiesMap();
   REQUIRE(sourceProcessor.getModifiesMap() == modifiesMap);
 }
 
@@ -649,7 +737,7 @@ TEST_CASE(("Test SP valid SIMPLE - keywords as names")) {
 //  auto writeFacade = WriteFacade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
-//      "procedure p { if (i != 0) then { else = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
+//      "procedure p { if (i != 0) then { 1 = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
 //  sourceProcessor.processSource(simpleProgram);
 //}
 //TEST_CASE("Test Multiple Procedures") {
