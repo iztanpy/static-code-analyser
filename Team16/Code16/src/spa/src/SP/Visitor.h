@@ -21,6 +21,7 @@ class ReadTNode;
 class CallTNode;
 class PrintTNode;
 class IfTNode;
+class ParenthesisTNode;
 
 
 /**
@@ -176,15 +177,24 @@ class Visitor {
      * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
      */
     virtual void visit(const CallTNode* node, std::string& key) = 0;
+    /**
+     * @brief Visits a ParenthesisTNode in the AST.
+     *
+     * This method is called when traversing a ParenthesisTNode in the Abstract Syntax Tree (AST).
+     *
+     * @param node Pointer to the ParenthesisTNode being visited.
+     * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
+     */
+    virtual void visit(const ParenthesisTNode* node, std::string& key) = 0;
 
   // Procedure
   std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
+
   // Uses
-  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap;
+  std::unordered_map<int, std::unordered_set<std::string>> assignLinePartialRHSPatternMap;
   std::unordered_map<int, std::string> usesLineLHSMap;
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
-  // to remove
-  std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
+  std::unordered_map<int, std::string> assignLineFullRHSMap;
 
   // Modifies
   std::unordered_map<int, std::string> modifiesMap;
@@ -258,17 +268,6 @@ class Visitor {
         return procedureStatementNumberHashmap;
     }
     /**
-     * @brief Get the mapping of statement numbers to the set of variables used in those statements.
-     *
-     * This method returns an unordered map that associates statement numbers with sets of variable names
-     * that are used in those statements.
-     *
-     * @return An unordered map where keys are statement numbers, and values are sets of variable names.
-     */
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
-        return usesStatementNumberHashmap;
-    }
-    /**
      * @brief Get the mapping of statement numbers to patterns of right-hand-side expressions used in those statements.
      *
      * This method returns an unordered map that associates statement numbers with sets of patterns representing
@@ -276,8 +275,19 @@ class Visitor {
      *
      * @return An unordered map where keys are statement numbers, and values are sets of right-hand-side patterns.
      */
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap() const {
-        return usesLineRHSPatternMap;
+    std::unordered_map<int, std::unordered_set<std::string>> getAssignLinePartialRHSPatternMap() const {
+        return assignLinePartialRHSPatternMap;
+    }
+    /**
+     * @brief Get the mapping of statement numbers to right-hand-side of assignment statements.
+     *
+     * This method returns an unordered map that associates statement numbers with the right-hand-side of assignment
+     * statements.
+     *
+     * @return An unordered map where keys are statement numbers, and values are the right-hand-side of the statement.
+     */
+    std::unordered_map<int, std::string> getAssignLineFullRHSMap() const {
+        return assignLineFullRHSMap;
     }
     /**
      * @brief Get the mapping of statement numbers to variables modified in those statements.
@@ -443,4 +453,5 @@ class ASTVisitor : public Visitor {
   void visit(const PrintTNode* node, std::string& key) override;
   void visit(const IfTNode* node, std::string& key) override;
   void visit(const CallTNode* node, std::string& key) override;
+  void visit(const ParenthesisTNode* node, std::string& key) override;
 };

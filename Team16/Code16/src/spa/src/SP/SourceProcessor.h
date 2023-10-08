@@ -69,17 +69,18 @@ class SourceProcessor {
      * @brief Retrieves a map of line numbers associated with the right-hand side (RHS) of USES relationships.
      * @return An unordered map where keys are line numbers, and values are sets of RHS patterns in USES relationships.
      */
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap();
+    std::unordered_map<int, std::unordered_set<std::string>> getAssignLinePartialRHSPatternMap();
     /**
      * @brief Retrieves a map of line numbers associated with the right-hand side (RHS) variables in USES relationships.
      * @return An unordered map where keys are line numbers, and values are sets of RHS variables in USES relationships.
      */
     std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSVarMap();
     /**
-     * @brief Retrieves a map of statement numbers associated with variables in USES relationships.
-     * @return An unordered map where keys are statement numbers, and values are sets of variables in USES relationships.
+     * @brief Retrieves a map of line numbers associated with the right-hand side (RHS) of ASSIGN relationships.
+     * @return An unordered map where keys are line numbers, and values are sets of the full RHS pattern in ASSIGN
+     * relationships.
      */
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap();
+    std::unordered_map<int, std::string> getAssignLineFullRHSMap();
     /**
      * @brief Retrieves a map of statement numbers associated with variables in MODIFIES relationships.
      * @return An unordered map where keys are statement numbers, and values are variables in MODIFIES relationships.

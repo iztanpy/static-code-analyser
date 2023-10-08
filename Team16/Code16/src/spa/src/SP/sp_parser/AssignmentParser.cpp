@@ -18,7 +18,9 @@ int AssignmentParser::parse(std::vector<Token>& tokens) {
     }
 
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[index], lineNumber);
-    std::shared_ptr<TNode> assignNode = TNodeFactory::createNode(tokens[index + 1], lineNumber);
+    std::shared_ptr<AssignTNode> assignNode =
+          std::dynamic_pointer_cast<AssignTNode>(TNodeFactory::createNode(tokens[index + 1], lineNumber));
+    int RHSStart = index + 2;
     assignNode->addChild(lhs);
     incrementIndex();
     incrementIndex();
@@ -30,6 +32,16 @@ int AssignmentParser::parse(std::vector<Token>& tokens) {
     if (tokens[index].tokenType != TokenType::kSepSemicolon) {
         return -1;
     }
+    int RHSEnd = index;
+    std::string fullRHS;
+    for (int i = RHSStart; i < RHSEnd; i++) {
+        fullRHS += tokens[i].value;
+        bool isNextTokenCloseParenthesis = i <= RHSEnd - 2 && tokens[i + 1].value == ")";
+        if (tokens[i].value != "(" && i != RHSEnd - 1 && !isNextTokenCloseParenthesis) {
+          fullRHS += " ";
+        }
+    }
+    assignNode->setFullRHS(fullRHS);
     index += 1;
     designExtractor->extractDesign(assignNode, visitor);
     followsStatementStack.top().insert(lineNumber);
