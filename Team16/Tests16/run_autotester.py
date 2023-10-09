@@ -24,6 +24,7 @@ class Runner:
         self.TOTAL_TESTS = 0
         self.TOTAL_PASSED_TESTS = 0
         self.TOTAL_FAILED_TESTS = 0
+        self.make_result_directory()
 
     @staticmethod
     def make_path_suitable(command):
@@ -123,8 +124,6 @@ class Runner:
     def execute(self, folder_to_test_in, redirect_output=True):
         autotester_filepath = self.find_autotester_executable()
         parameters = self.get_autotester_parameters(folder_to_test_in)
-
-        self.make_result_directory()
 
         test_report = ""
         for param in parameters:
