@@ -26,21 +26,20 @@ void PatternClauseBuilder::setRhs(const QueryToken& param, const std::vector<Dec
   rhs_type = param.type;
   switch (param.type) {
     // these 2 are cases for expression and partial expressions
-    case PQLTokenType::IDENT:
-    case PQLTokenType::PARTIALEXPR:rhs = param.text;  // e.g. "x + y" or _"x + y"
+
+    case PQLTokenType::EXACTEXPR:rhs = ExactExpr{param.text};
+    case PQLTokenType::PARTIALEXPR:rhs = PartialExpr{param.text};
       break;
     case PQLTokenType::WILDCARD:rhs = Wildcard::Value;
       break;
     default: throw QpsSyntaxError("Syntax error");
   }
 }
+
 std::unique_ptr<PatternClause> PatternClauseBuilder::getClause() const {
-  if (std::holds_alternative<Wildcard>(rhs) && rhs_type == PQLTokenType::WILDCARD) {
-    return std::make_unique<WildCardPattern>(syn_assignment, lhs, std::get<Wildcard>(rhs));
-  } else if (std::holds_alternative<std::string>(rhs) && rhs_type == PQLTokenType::IDENT) {
-    return std::make_unique<ExactPattern>(syn_assignment, lhs, std::get<std::string>(rhs));
-  } else if (std::holds_alternative<std::string>(rhs) && rhs_type == PQLTokenType::PARTIALEXPR) {
-    return std::make_unique<PartialPattern>(syn_assignment, lhs, std::get<std::string>(rhs));
+  if (rhs_type == PQLTokenType::WILDCARD || rhs_type == PQLTokenType::EXACTEXPR
+      || rhs_type == PQLTokenType::PARTIALEXPR) {
+    return std::make_unique<AssignPattern>(syn_assignment, lhs, rhs);
   } else {
     throw QpsSyntaxError("Syntax error");
   }

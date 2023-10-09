@@ -105,4 +105,3 @@ std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(state
 std::unordered_set<ParentStore::statementNumber> ParentStore::getParents(statementNumber statement) {
   return this->ParentStarMapReverse[statement];
 }
-

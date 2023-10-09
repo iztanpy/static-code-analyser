@@ -5,20 +5,37 @@
 
 ReadFacade::ReadFacade(PKB& pkb) : pkb(pkb) {}
 
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+ReadFacade::getAssignPair(PartialExpr rhs) {
+  return pkb.getAssignPairPartial(rhs.value);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAssignPair(ExactExpr rhs) {
+  return pkb.getAssignPairFull(rhs.value);
+}
+
+std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard lhs, ExactExpr rhs) {
+  return pkb.getAssignsWcF(lhs, rhs.value);
+}
+
+std::unordered_set<statementNumber> ReadFacade::getAssigns(variable lhs, ExactExpr rhs) {
+  return pkb.getAssignsFF(lhs, rhs.value);
+}
+
 std::unordered_set<statementNumber> ReadFacade::getAllAssigns() {
   return pkb.getAllAssigns();
 }
 
-std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, possibleCombinations RHS) {
-  return pkb.getAssigns(LHS, RHS);
+std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, PartialExpr RHS) {
+  return pkb.getAssigns(LHS, RHS.value);
 }
 
 std::unordered_set<statementNumber> ReadFacade::getAssigns(variable LHS, Wildcard RHS) {
   return pkb.getAssigns(LHS, RHS);
 }
 
-std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard LHS, possibleCombinations RHS) {
-  return pkb.getAssigns(LHS, RHS);
+std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard LHS, PartialExpr RHS) {
+  return pkb.getAssigns(LHS, RHS.value);
 }
 
 std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard LHS, Wildcard RHS) {
@@ -27,10 +44,6 @@ std::unordered_set<statementNumber> ReadFacade::getAssigns(Wildcard LHS, Wildcar
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAssignPair(Wildcard wildcard) {
   return pkb.getAssignPair(wildcard);
-}
-
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAssignPair(partialMatch partial) {
-  return pkb.getAssignPair(partial);
 }
 
 std::unordered_set<variable> ReadFacade::getVariables() {
