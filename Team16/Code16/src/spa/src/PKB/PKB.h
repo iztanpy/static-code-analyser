@@ -955,8 +955,6 @@ class PKB {
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
 
-
-    PKB(const PKB&) = delete;
   // CallStore methods
 
   void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
