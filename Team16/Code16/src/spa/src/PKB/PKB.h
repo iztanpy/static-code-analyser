@@ -17,6 +17,8 @@
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
 #include "Stores/ProcedureStore.h"
+#include "Stores/IfStore.h"
+#include "Stores/WhileStore.h"
 #include "Stores/CallStore.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
@@ -24,7 +26,7 @@
 
 typedef std::string variable;
 typedef int statementNumber;
-typedef std::string possibleCombinations;
+typedef std::string full;
 typedef std::string constant;
 typedef std::string statementType;
 typedef std::string partialMatch;
@@ -41,6 +43,8 @@ class PKB {
   std::unique_ptr<FollowsStore> followsStore;
   std::unique_ptr<ModifiesStore> modifiesStore;
   std::unique_ptr<ProcedureStore> procedureStore;
+  std::unique_ptr<WhileStore> whileStore;
+  std::unique_ptr<IfStore> ifStore;
   std::unique_ptr<CallStore> callStore;
 
  public:
@@ -57,8 +61,17 @@ class PKB {
   * @param numRHSMap An unordered map of statement numbers to sets of possible combinations for the right-hand side of assignments.
   * @param numLHSMap An unordered map of statement numbers to variables for the left-hand side of assignments.
   */
-  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap,
+  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
                       std::unordered_map<statementNumber, variable> numLHSMap);
+
+  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
+                        std::unordered_map<statementNumber, full> fullRHSMap,
+                        std::unordered_map<statementNumber, variable> numLHSMap);
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
+    std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
+    std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
 
   /**
   * @brief Retrieves all assignment statement numbers in the program.
@@ -924,6 +937,23 @@ class PKB {
   * @return true if matching preceding statements are followed by matching following statements in the follow-star relationship, false otherwise.
   */
   bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
+
+  void storeIf(std::unordered_map<statementNumber, variable> variableMap);
+
+  std::unordered_set<statementNumber> getIf(Wildcard wc);
+
+  std::unordered_set<statementNumber> getIf(variable v);
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
+
+
+  void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
+
+  std::unordered_set<statementNumber> getWhile(Wildcard wc);
+
+  std::unordered_set<statementNumber> getWhile(variable v);
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
 
   // CallStore methods
 

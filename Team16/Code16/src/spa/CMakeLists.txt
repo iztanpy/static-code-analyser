@@ -158,6 +158,10 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/evaluator_util.h
         src/qps/query_evaluator/assign_pattern_evaluator.cpp
         src/qps/query_evaluator/assign_pattern_evaluator.h
+        src/PKB/Stores/IfStore.cpp
+        src/PKB/Stores/IfStore.h
+        src/PKB/Stores/WhileStore.cpp
+        src/PKB/Stores/WhileStore.h
         src/qps/qps_validator/qps_validator_handler.h
         src/qps/qps_validator/qps_validator.cpp
         src/qps/qps_validator/qps_validator.h
@@ -179,6 +183,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/qps_validator/clause_args_syntax_handler.h
         src/qps/qps_validator/clause_synonym_semantic_handler.cpp
         src/qps/qps_validator/clause_synonym_semantic_handler.h
+        src/qps/clauses/suchthat_clauses/calls.cpp
+        src/qps/clauses/suchthat_clauses/calls.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

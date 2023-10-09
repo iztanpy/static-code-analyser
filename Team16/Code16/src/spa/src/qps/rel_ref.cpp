@@ -13,6 +13,11 @@ std::string RelRef::toString(RelRefType relRef) {
       {RelRefType::PARENT, "Parent*"},
       {RelRefType::USESS, "Uses"},
       {RelRefType::USESP, "Uses"},
+      {RelRefType::CALLS, "Calls"},
+      {RelRefType::CALLST, "Calls*"},
+      {RelRefType::NEXT, "Next"},
+      {RelRefType::NEXTT, "Next*"},
+      {RelRefType::AFFECTS, "Affects"}
   };
 
   return refRef_to_string.at(relRef);
@@ -29,11 +34,17 @@ RelRefType RelRef::fromString(const std::string& relRef_str) {
       {"Modifies", RelRefType::MODIFIESP},
       {"Uses", RelRefType::USESS},
       {"Uses", RelRefType::USESP},
+      {"Calls", RelRefType::CALLS},
+      {"Calls*", RelRefType::CALLST},
+      {"Next", RelRefType::NEXT},
+      {"Next*", RelRefType::NEXTT},
+      {"Affects", RelRefType::AFFECTS}
   };
 
   return string_to_relRef.at(relRef_str);
 }
 
 std::set<std::string> RelRef::getStringRelRef() {
-  return {"Follows", "Follows*", "Parent", "Parent*", "Modifies", "Uses"};
+  return {"Follows", "Follows*", "Parent", "Parent*", "Modifies", "Uses",
+          "Calls", "Calls*", "Next", "Next*", "Affects"};
 }

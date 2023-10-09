@@ -11,6 +11,13 @@ void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
     pkb.setAssignments(numRHSMap, numLHSMap);
 }
 
+void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
+                                   std::unordered_set<partialMatch>> partialRHSMap,
+                                   std::unordered_map<statementNumber, full> fullRHSMap,
+                                   std::unordered_map<statementNumber, variable> numLHSMap) {
+    pkb.setAssignments(partialRHSMap, fullRHSMap, numLHSMap);
+}
+
 void WriteFacade::storeVariables(std::unordered_set<std::string> variables) {
     pkb.addVariables(variables);
 }
@@ -53,4 +60,11 @@ void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> va
     pkb.storeModifies(varModifiesMap);
 }
 
+void WriteFacade::storeWhile(std::unordered_map<statementNumber, variable> variableMap) {
+    pkb.storeWhile(variableMap);
+}
+
+void WriteFacade::storeIf(std::unordered_map<statementNumber, variable> variableMap) {
+    pkb.storeIf(variableMap);
+}
 

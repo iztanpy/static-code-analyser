@@ -17,21 +17,36 @@
 struct AssignPatternEvaluator {
   static BinaryConstraint Handle(std::string& assign_synonym,
                                  Declaration& lhs,
-                                 std::string& partial_match,
+                                 ExactExpr& rhs,
+                                 ReadFacade& pkb_reader);
+
+  static BinaryConstraint Handle(std::string& assign_synonym,
+                                 Declaration& lhs,
+                                 PartialExpr& rhs,
                                  ReadFacade& pkb_reader);
 
   static BinaryConstraint Handle(std::string& assign_synonym, Declaration& lhs, Wildcard& rhs, ReadFacade& pkb_reader);
 
   static UnaryConstraint Handle(std::string& assign_synonym,
                                 Wildcard& lhs,
-                                std::string& partial_match,
+                                ExactExpr& rhs,
+                                ReadFacade& pkb_reader);
+
+  static UnaryConstraint Handle(std::string& assign_synonym,
+                                Wildcard& lhs,
+                                PartialExpr& rhs,
                                 ReadFacade& pkb_reader);
 
   static UnaryConstraint Handle(std::string& assign_synonym, Wildcard& lhs, Wildcard& rhs, ReadFacade& pkb_reader);
 
   static UnaryConstraint Handle(std::string& assign_synonym,
                                 std::string& lhs,
-                                std::string& partial_match,
+                                ExactExpr& rhs,
+                                ReadFacade& pkb_reader);
+
+  static UnaryConstraint Handle(std::string& assign_synonym,
+                                std::string& lhs,
+                                PartialExpr& rhs,
                                 ReadFacade& pkb_reader);
 
   static UnaryConstraint Handle(std::string& assign_synonym, std::string& lhs, Wildcard& rhs, ReadFacade& pkb_reader);

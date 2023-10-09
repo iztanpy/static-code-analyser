@@ -20,7 +20,16 @@ using EntRef = std::variant<Declaration, Wildcard, std::string>;
  */
 using RefParam = std::variant<StmtRef, EntRef>;
 
+struct PartialExpr {
+  std::string value;
+};
+
+struct ExactExpr {
+  std::string value;
+};
+
 /*!
  * Represents a type that a pattern expressions can take in PQL grammar
  */
-using ExprSpec = std::variant<std::string, Wildcard>;
+using ExprSpec = std::variant<PartialExpr, ExactExpr, Wildcard>;
+

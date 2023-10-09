@@ -31,6 +31,10 @@ class WriteFacade {
     void storeAssignments(std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap,
                           std::unordered_map<statementNumber, variable> numLHSMap);
 
+    void storeAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
+                        std::unordered_map<statementNumber, full> fullRHSMap,
+                        std::unordered_map<statementNumber, variable> numLHSMap);
+
     /**
     * @brief Stores variable information in the program.
     *
@@ -105,5 +109,8 @@ class WriteFacade {
     */
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 
+    void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
+
+    void storeIf(std::unordered_map<statementNumber, variable> variableMap);
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 };

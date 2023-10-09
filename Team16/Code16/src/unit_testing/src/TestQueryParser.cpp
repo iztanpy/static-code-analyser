@@ -3,6 +3,7 @@
 #include "qps/query_parser/query_parser.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
+#include "qps/clauses/suchthat_clauses/calls.h"
 
 TEST_CASE("Query Parser can extract select clause") {
   std::string sample_query = "variable v; Select v";
@@ -45,7 +46,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
   REQUIRE(pattern_clauses.size() == 1);
 
   std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto* clause = dynamic_cast<WildCardPattern*>(pattern_clause.get());
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = Wildcard::Value;
@@ -74,10 +75,48 @@ TEST_CASE("Query Parser can return a parsed query") {
   REQUIRE(parsed_pattern_query.select.equals(expected));
   REQUIRE(parsed_pattern_query.such_that_clauses.empty());
 
-  auto* clause = dynamic_cast<WildCardPattern*>(pattern_clause.get());
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
   REQUIRE(clause->syn_assignment.equals(declarations[1]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(clause->rhs == Wildcard::Value);
+  REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, Wildcard::Value));
+}
+
+TEST_CASE("Parser can parse Calls and Calls*") {
+  std::string sample_query_1 = "procedure p; Select p such that Calls(p, _)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"p", DesignEntity::PROCEDURE}
+  };
+
+  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses = std::move(parsed_query.such_that_clauses);
+
+  EntRef expected_lhs = EntRef(declarations[0]);
+  EntRef expected_rhs = EntRef(Wildcard::Value);
+
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
+  auto* clause = dynamic_cast<Calls*>(such_that_clause.get());
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->rhs, expected_rhs));
+
+  std::string sample_query_2 = "procedure p; Select p such that Calls*(p, \"Third\")";
+  ParsedQuery parsed_query_2 = QueryParser::ParseTokenizedQuery(sample_query_2);
+  std::vector<Declaration> declarations_2 = {
+      {"p", DesignEntity::PROCEDURE}
+  };
+
+  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses_2 = std::move(parsed_query_2.such_that_clauses);
+
+  EntRef expected_lhs_2 = EntRef(declarations_2[0]);
+  EntRef expected_rhs_2 = EntRef("Third");
+
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause_2 = std::move(such_that_clauses_2[0]);
+  auto* clause_2 = dynamic_cast<CallsT*>(such_that_clause_2.get());
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause_2->lhs, expected_lhs_2));
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause_2->rhs, expected_rhs_2));
 }
 
 TEST_CASE("Query parser throws correct errors") {

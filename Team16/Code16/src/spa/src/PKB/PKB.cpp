@@ -10,17 +10,44 @@ PKB::PKB() {
   followsStore = std::make_unique<FollowsStore>();
   modifiesStore = std::make_unique<ModifiesStore>();
   procedureStore = std::make_unique<ProcedureStore>();
+  ifStore = std::make_unique<IfStore>();
+  whileStore = std::make_unique<WhileStore>();
   callStore = std::make_unique<CallStore>();
 }
 
 // AssignStore methods
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
-                                            std::unordered_set<possibleCombinations>> numRHSMap,
+                                            std::unordered_set<partialMatch>> numRHSMap,
                          std::unordered_map<statementNumber, variable> numLHSMap) {
   assignStore->addNumLHSMap(numLHSMap);
   assignStore->addNumRHSMap(numRHSMap);
 }
+
+void PKB::setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
+                    std::unordered_map<statementNumber, full> fullRHSMap,
+                    std::unordered_map<statementNumber, variable> numLHSMap) {
+    assignStore->addNumLHSMap(numLHSMap);
+    assignStore->addNumRHSMap(partialRHSMap);
+    assignStore->storeFullPatternAssign(fullRHSMap);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPairPartial(partialMatch partial) {
+    return assignStore->getAssignPairPartial(partial);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPairFull(full full) {
+    return assignStore->getAssignPairFull(full);
+}
+
+std::unordered_set<statementNumber> PKB::getAssignsWcF(Wildcard lhs, full rhs) {
+    return assignStore->getAssignsWcF(lhs, rhs);
+}
+
+std::unordered_set<statementNumber> PKB::getAssignsFF(full lhs, full rhs) {
+    return assignStore->getAssignsFF(lhs, rhs);
+}
+
 
 std::unordered_set<statementNumber> PKB::getAllAssigns() {
   return assignStore->getAllAssigns();
@@ -30,11 +57,11 @@ std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, Wildcard wildc
   return assignStore->getAssigns(LHS, wildcard);
 }
 
-std::unordered_set<statementNumber> PKB::getAssigns(Wildcard wildcard, possibleCombinations RHS) {
+std::unordered_set<statementNumber> PKB::getAssigns(Wildcard wildcard, partialMatch RHS) {
   return assignStore->getAssigns(wildcard, RHS);
 }
 
-std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, possibleCombinations RHS) {
+std::unordered_set<statementNumber> PKB::getAssigns(variable LHS, partialMatch RHS) {
   return assignStore->getAssigns(LHS, RHS);
 }
 
@@ -719,4 +746,36 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::f
     }
   }
   return result;
+}
+
+void PKB::storeIf(std::unordered_map<statementNumber, variable> variableMap) {
+    ifStore->addVariableMap(variableMap);
+}
+
+std::unordered_set<statementNumber> PKB::getIf(Wildcard wc) {
+    return ifStore->getIf(wc);
+}
+
+std::unordered_set<statementNumber> PKB::getIf(variable v) {
+    return ifStore->getIf(v);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllIf() {
+    return ifStore->getAllIf();
+}
+
+void PKB::storeWhile(std::unordered_map<statementNumber, variable> variableMap) {
+    whileStore->addVariableMap(variableMap);
+}
+
+std::unordered_set<statementNumber> PKB::getWhile(Wildcard wc) {
+    return whileStore->getWhile(wc);
+}
+
+std::unordered_set<statementNumber> PKB::getWhile(variable v) {
+    return whileStore->getWhile(v);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllWhile() {
+    return whileStore->getAllWhile();
 }

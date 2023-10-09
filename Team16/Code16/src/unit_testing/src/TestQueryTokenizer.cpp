@@ -20,14 +20,14 @@ TEST_CASE("Test split query") {
   try {
     std::string sample_query_2 = "variable v;";
     QueryStructure statements_2 = QueryTokenizer::splitQuery(sample_query_2);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), no_select_error.what()) == 0);
   }
 
   try {
     std::string sample_query_3 = "variable v; Select v; assign v;";
     QueryStructure statements_3 = QueryTokenizer::splitQuery(sample_query_3);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), statement_after_select_error.what()) == 0);
   }
 }
@@ -55,7 +55,7 @@ TEST_CASE("Test extract declarations") {
     QueryStructure statements_2 = QueryTokenizer::splitQuery(sample_query_2);
     std::vector<std::string> declaration_statements_2 = statements_2.declaration_statements;
     std::vector<Declaration> declarations_2 = QueryTokenizer::extractDeclarations(declaration_statements_2);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), invalid_entity_error.what()) == 0);
   }
 
@@ -64,7 +64,7 @@ TEST_CASE("Test extract declarations") {
     QueryStructure statements_3 = QueryTokenizer::splitQuery(sample_query_3);
     std::vector<std::string> declaration_statements_3 = statements_3.declaration_statements;
     std::vector<Declaration> declarations_3 = QueryTokenizer::extractDeclarations(declaration_statements_3);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), missing_synonym_error.what()) == 0);
   }
 
@@ -73,7 +73,7 @@ TEST_CASE("Test extract declarations") {
     QueryStructure statements_4 = QueryTokenizer::splitQuery(sample_query_4);
     std::vector<std::string> declaration_statements_4 = statements_4.declaration_statements;
     std::vector<Declaration> declarations_4 = QueryTokenizer::extractDeclarations(declaration_statements_4);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), lexical_error.what()) == 0);
   }
 
@@ -82,7 +82,7 @@ TEST_CASE("Test extract declarations") {
     QueryStructure statements_5 = QueryTokenizer::splitQuery(sample_query_5);
     std::vector<std::string> declaration_statements_5 = statements_5.declaration_statements;
     std::vector<Declaration> declarations_5 = QueryTokenizer::extractDeclarations(declaration_statements_5);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), repeated_synonym_declaration_error.what()) == 0);
   }
 }
@@ -108,7 +108,7 @@ TEST_CASE("Test extract select tokens") {
     std::vector<Declaration> declarations_2 = QueryTokenizer::extractDeclarations(declaration_statements_2);
     std::vector<QueryToken>
         select_tokens_2 = QueryTokenizer::extractSelectToken(statements_2.select_statement, declarations_2);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), undeclared_error.what()) == 0);
   }
 }
@@ -126,14 +126,14 @@ TEST_CASE("Test get clause index") {
   try {
     std::string wrong_clause = "such That Uses(a, b)";
     std::vector<size_t> wrong_clause_indexes = QueryTokenizer::getClauseIndexes(wrong_clause);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), wrong_clause_error.what()) == 0);
   }
 
   try {
     std::string unexpected_clause = "something such that Uses(a, b)";
     std::vector<size_t> unexpected_clause_indexes = QueryTokenizer::getClauseIndexes(unexpected_clause);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), unexpected_clause_error.what()) == 0);
   }
 }
@@ -194,7 +194,7 @@ TEST_CASE("Test get relationship reference arguments") {
     std::string more_that_2_arg = "(a, b, c)";
     std::pair<QueryToken, QueryToken>
         more_than_2_error_args = QueryTokenizer::getRelRefArgs(more_that_2_arg, error_declarations);
-  } catch (const QpsError & e) {
+  } catch (const QpsError& e) {
     REQUIRE(strcmp(e.what(), more_than_2_error.what()) == 0);
   }
 
@@ -241,7 +241,7 @@ TEST_CASE("Test get pattern arguments") {
   std::pair<QueryToken, QueryToken> args_3 = QueryTokenizer::getPatternArgs(sample_arg_3, declarations_3);
   std::pair<QueryToken, QueryToken> expected_args_3 = {
       {"s", PQLTokenType::SYNONYM},
-      {"x", PQLTokenType::IDENT}
+      {"x", PQLTokenType::EXACTEXPR}
   };
   REQUIRE(args_3.first.type == expected_args_3.first.type);
   REQUIRE(args_3.first.text == expected_args_3.first.text);
@@ -297,7 +297,7 @@ TEST_CASE("Test extract clause tokens") {
   std::vector<QueryToken> pattern_tokens = {
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"x", PQLTokenType::IDENT}
+      {"x", PQLTokenType::EXACTEXPR}
   };
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
       results_2 = QueryTokenizer::extractClauseTokens(select_statement_2, declarations_2);
@@ -398,7 +398,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<QueryToken> pattern_tokens_2 = {
       {"a1", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"abc + cde % fgh", PQLTokenType::IDENT}
+      {"abc + cde % fgh", PQLTokenType::EXACTEXPR}
   };
 
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
@@ -414,4 +414,48 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
 
   std::string sample_query_3 = "Select a1 pattern a1(v, \"+ cde % fgh\")";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations), QpsSyntaxError);
+}
+
+TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
+  std::string sample_query_1 = "Select p such that Calls(p, _)";
+
+  std::vector<Declaration> declarations_1 = {
+      {"p", DesignEntity::PROCEDURE},
+  };
+
+  std::vector<QueryToken> such_that_tokens =  {
+      {"Calls", PQLTokenType::RELREF},
+      {"p", PQLTokenType::SYNONYM},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  REQUIRE(results_1.first.size() == 3);
+  REQUIRE(results_1.first[0].text == such_that_tokens[0].text);
+  REQUIRE(results_1.first[0].type == such_that_tokens[0].type);
+  REQUIRE(results_1.first[1].text == such_that_tokens[1].text);
+  REQUIRE(results_1.first[1].type == such_that_tokens[1].type);
+  REQUIRE(results_1.first[2].text == such_that_tokens[2].text);
+  REQUIRE(results_1.first[2].type == such_that_tokens[2].type);
+
+  std::string sample_query_2 = "Select p such that Calls*(p, \"Third\")";
+
+  std::vector<QueryToken> such_that_tokens_2 =  {
+      {"Calls*", PQLTokenType::RELREF},
+      {"p", PQLTokenType::SYNONYM},
+      {"Third", PQLTokenType::IDENT}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1);
+
+  REQUIRE(results_2.first.size() == 3);
+  REQUIRE(results_2.first[0].text == such_that_tokens_2[0].text);
+  REQUIRE(results_2.first[0].type == such_that_tokens_2[0].type);
+  REQUIRE(results_2.first[1].text == such_that_tokens_2[1].text);
+  REQUIRE(results_2.first[1].type == such_that_tokens_2[1].type);
+  REQUIRE(results_2.first[2].text == such_that_tokens_2[2].text);
+  REQUIRE(results_2.first[2].type == such_that_tokens_2[2].type);
 }

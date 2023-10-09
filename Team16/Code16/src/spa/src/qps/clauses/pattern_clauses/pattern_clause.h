@@ -47,59 +47,17 @@ class PatternClause : public Clause {
   ExprSpec rhs;
 };
 
-/*!
- * Represents a pattern clause in the format syn_assignment(lhs, rhs) where rhs is a wildcard
- */
-class WildCardPattern : public PatternClause {
+class AssignPattern : public PatternClause {
  public:
   Declaration syn_assignment;
   EntRef lhs;
-  Wildcard rhs;
+  ExprSpec rhs;
 
-  WildCardPattern(Declaration syn_assignment, EntRef lhs, Wildcard rhs)
+  AssignPattern(Declaration syn_assignment, EntRef lhs, ExprSpec rhs)
       : syn_assignment(syn_assignment), lhs(lhs), rhs(rhs) {
     Validate();
   }
 
-  Constraint Evaluate(ReadFacade& pkb_reader) override;
-
- private:
-  void Validate() override;
-};
-
-/*!
- * Represents a pattern clause in the format syn_assignment(lhs, rhs) where rhs is an exact pattern
- */
-class ExactPattern : public PatternClause {
- public:
-  Declaration syn_assignment;
-  EntRef lhs;
-  std::string rhs;
-
-  ExactPattern(Declaration syn_assignment, EntRef lhs, std::string rhs)
-      : syn_assignment(syn_assignment), lhs(lhs), rhs(rhs) {
-    Validate();
-  }
-
-  Constraint Evaluate(ReadFacade& pkb_reader) override;
-
- private:
-  void Validate() override;
-};
-
-/*!
- * Represents a pattern clause in the format syn_assignment(lhs, rhs) where rhs is an partial pattern
- */
-class PartialPattern : public PatternClause {
- public:
-  Declaration syn_assignment;
-  EntRef lhs;
-  std::string rhs;
-
-  PartialPattern(Declaration syn_assignment, EntRef lhs, std::string rhs)
-      : syn_assignment(syn_assignment), lhs(lhs), rhs(rhs) {
-    Validate();
-  }
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 
  private:
