@@ -5,7 +5,7 @@
 #include <set>
 #include <utility>
 #include "utils/hash_utils.h"
-#include <utils/entity_types.h>
+#include "utils/entity_types.h"
 
 class CallStore {
  private:
@@ -40,7 +40,21 @@ class CallStore {
 
     bool isCall(procedure p, procedure p2);
 
+    std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Dec declaration1, Dec declaration2);
+
+    std::unordered_set<procedure> callStar(Dec declaration, Wildcard wildcard);
+
+    std::unordered_set<procedure> callStar(Wildcard wildcard, Dec declaration);
+
     std::unordered_set<procedure> getCallStarChildren(procedure p);
 
     std::unordered_set<procedure> getCallStarParents(procedure p);
+
+    bool isCallStar(Wildcard wildcard, Wildcard wildcard2);
+
+    bool isCallStar(Wildcard wildcard, procedure p);
+
+    bool isCallStar(procedure p, Wildcard wildcard);
+
+    bool isCallStar(procedure p, procedure p2);
 };

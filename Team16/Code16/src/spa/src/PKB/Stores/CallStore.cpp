@@ -67,7 +67,7 @@ std::unordered_set<procedure> CallStore::getCallChildren(procedure p) {
 std::unordered_set<procedure> CallStore::call(Dec declaration, Wildcard wildcard) {
     std::unordered_set<procedure> result;
     for (auto const& x : callTable) {
-		result.insert(x.first);
+        result.insert(x.first);
     }
     return result;
 }
@@ -102,11 +102,11 @@ std::unordered_map<procedure, std::unordered_set<procedure>> CallStore::getCallS
 
 std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::call(Dec declaration1, Dec declaration2) {
     std::unordered_set<std::pair<procedure, procedure>, PairHash> pairs;
-    for (auto const& x: callTable) {
+    for (auto const& x : callTable) {
         for (auto const& second : x.second) {
-			pairs.insert(std::make_pair(x.first, second));
-		}
-	}
+            pairs.insert(std::make_pair(x.first, second));
+        }
+    }
     return pairs;
 }
 
@@ -115,10 +115,52 @@ std::unordered_set<procedure> CallStore::getCallParents(procedure p) {
     return this -> callTableReverse[p];
 }
 
+std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::callStar(Dec declaration1, Dec declaration2) {
+    std::unordered_set<std::pair<procedure, procedure>, PairHash> pairs;
+    for (auto const& x : callTableStar) {
+        for (auto const& second : x.second) {
+            pairs.insert(std::make_pair(x.first, second));
+        }
+    }
+    return pairs;
+}
+
+std::unordered_set<procedure> CallStore::callStar(Dec declaration, Wildcard wildcard) {
+    std::unordered_set<procedure> result;
+    for (auto const& x : callTableStar) {
+        result.insert(x.first);
+    }
+    return result;
+}
+
+std::unordered_set<procedure> CallStore::callStar(Wildcard wildcard, Dec declaration) {
+    std::unordered_set<procedure> result;
+    for (auto const& x : callTableStarReverse) {
+        result.insert(x.first);
+    }
+    return result;
+}
+
 std::unordered_set<procedure> CallStore::getCallStarChildren(procedure p) {
     return this -> callTableStar[p];
 }
 
 std::unordered_set<procedure> CallStore::getCallStarParents(procedure p) {
     return this -> callTableStarReverse[p];
+}
+
+bool CallStore::isCallStar(Wildcard wildcard, Wildcard wildcard2) {
+    return !callTableStar.empty();
+}
+
+bool CallStore::isCallStar(Wildcard wildcard, procedure p) {
+    return callTableStarReverse.find(p) != callTableStarReverse.end();
+}
+
+bool CallStore::isCallStar(procedure p, Wildcard wildcard) {
+    return callTableStar.find(p) != callTableStar.end();
+}
+
+bool CallStore::isCallStar(procedure p, procedure p2) {
+    return callTableStar[p].find(p2) != callTableStar[p].end();
 }
