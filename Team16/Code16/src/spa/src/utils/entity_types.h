@@ -35,6 +35,13 @@ enum class Wildcard {
 };
 
 /*!
+ * An enum class that represents a Procedure declaration
+ */
+enum class Dec {
+  Procedure,
+};
+
+/*!
  * Converts a DesignEntity to a StmtEntity
  * @param entity The DesignEntity to convert
  * @return The converted StmtEntity

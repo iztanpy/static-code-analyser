@@ -3,6 +3,9 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
+#include <utility>
+#include "utils/hash_utils.h"
+#include <utils/entity_types.h>
 
 class CallStore {
  private:
@@ -19,9 +22,23 @@ class CallStore {
 
     std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
+    std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Dec declaration1, Dec declaration2);
+
+    std::unordered_set<procedure> call(Dec declaration, Wildcard wildcard);
+
+    std::unordered_set<procedure> call(Wildcard wildcard, Dec declaration);
+
     std::unordered_set<procedure> getCallChildren(procedure p);
 
     std::unordered_set<procedure> getCallParents(procedure p);
+
+    bool isCall(Wildcard wildcard, Wildcard wildcard2);
+
+    bool isCall(Wildcard wildcard, procedure p);
+
+    bool isCall(procedure p, Wildcard wildcard);
+
+    bool isCall(procedure p, procedure p2);
 
     std::unordered_set<procedure> getCallStarChildren(procedure p);
 
