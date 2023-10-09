@@ -44,26 +44,34 @@ bool lexical_utils::IsFactor(std::string str) {
 }
 
 bool lexical_utils::IsTerm(std::string str) {
-  // Check if the string is a term (term '*' factor, term '/' factor, term '%' factor, or factor)
-  size_t pos = str.find_last_of("*/%");
-  if (pos != std::string::npos) {
-    std::string left = str.substr(0, pos);
-    std::string right = str.substr(pos + 1);
-    return IsTerm(left) && IsFactor(right);
+  if (IsFactor(str)) {
+    return true;
   } else {
-    return IsFactor(str);
+    // Check if the string is a term (term '*' factor, term '/' factor, term '%' factor, or factor)
+    size_t pos = str.find_last_of("*/%");
+    if (pos != std::string::npos) {
+      std::string left = str.substr(0, pos);
+      std::string right = str.substr(pos + 1);
+      return IsTerm(left) && IsFactor(right);
+    } else {
+      return IsFactor(str);
+    }
   }
 }
 
 bool lexical_utils::IsExpr(std::string str) {
-  // Check if the string is an expression (expr '+' term, expr '-' term, term)
-  size_t pos = str.find_last_of("+-");
-  if (pos != std::string::npos) {
-    std::string left = str.substr(0, pos);
-    std::string right = str.substr(pos + 1);
-    return IsExpr(left) && IsTerm(right);
+  if (IsTerm(str)) {
+    return true;
   } else {
-    return IsTerm(str);
+    // Check if the string is an expression (expr '+' term, expr '-' term, term)
+    size_t pos = str.find_last_of("+-");
+    if (pos != std::string::npos) {
+      std::string left = str.substr(0, pos);
+      std::string right = str.substr(pos + 1);
+      return IsExpr(left) && IsTerm(right);
+    } else {
+      return IsTerm(str);
+    }
   }
 }
 // ai-gen end

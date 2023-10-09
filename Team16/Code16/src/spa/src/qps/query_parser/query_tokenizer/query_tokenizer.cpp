@@ -153,14 +153,13 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string& cla
 std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& clause,
                                                                  std::vector<Declaration>& declarations) {
   qps_validator::ValidateClauseArgs(clause);
-  std::vector<std::string> arguments = string_util::SplitStringBy(',', clause);
-  std::vector<std::string> lhs = string_util::SplitStringBy('(', arguments[0]);
-  std::vector<std::string> rhs = string_util::SplitStringBy(')', arguments[1]);
+  std::string clause_with_brackets_removed = QueryUtil::RemoveBrackets(clause);
+  std::vector<std::string> arguments = string_util::SplitStringBy(',', clause_with_brackets_removed);
 
   QueryToken right_token;
   QueryToken left_token;
-  std::string right_hand_side = string_util::Trim(rhs[0]);
-  std::string left_hand_side = string_util::Trim(lhs[1]);
+  std::string left_hand_side = string_util::RemoveSpacesFromExpr(arguments[0]);
+  std::string right_hand_side = string_util::RemoveSpacesFromExpr(arguments[1]);
   // check if lhs is a entRef and lhs is an expr or a partial expr
   qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side);
 
