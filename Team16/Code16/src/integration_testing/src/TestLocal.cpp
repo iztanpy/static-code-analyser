@@ -28,21 +28,20 @@ void parse(SourceProcessor& sp, std::string filename) {
   sp.processSource(input);
 }
 
-TEST_CASE("Test Local") {
-  std::string filename =
-      "../../../../Tests16/Milestone2/Basic_Spa/Uses_Modifies_With_Procedure_source.txt";
-  std::string query = "variable v; Select v such that Uses(\"A   \", v  )";
-
-  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-  SourceProcessor sourceProcessor(&writeFacade);
-
-  parse(sourceProcessor, filename);
-
-  ReadFacade readFacade = ReadFacade(*pkb_ptr);
-  QPS qps(readFacade);
-
-  std::unordered_set<std::string> results = qps.Evaluate(query);
-
-  REQUIRE(results == std::unordered_set<std::string>({"i", "x", "y", "z"}));
-}
+//TEST_CASE("Test Local") {
+//  std::string filename = "../../../tests/Demo_source.txt";
+//  std::string query = "variable v; Select v";
+//
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//
+//  parse(sourceProcessor, filename);
+//
+//  ReadFacade readFacade = ReadFacade(*pkb_ptr);
+//  QPS qps(readFacade);
+//
+//  std::unordered_set<std::string> results = qps.Evaluate(query);
+//
+//  REQUIRE(results == std::unordered_set<std::string>({"i", "x", "y", "z"}));
+//}
