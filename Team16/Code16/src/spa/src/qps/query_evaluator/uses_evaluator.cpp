@@ -32,7 +32,6 @@ Constraint UsesEvaluator::Handle(Declaration& lhs,
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
                                       Wildcard& rhs,
                                       ReadFacade& pkb_reader) {
-
   if (lhs.design_entity == DesignEntity::PROCEDURE) {
     return {lhs.synonym, pkb_reader.usesProcedure(rhs)};
   }

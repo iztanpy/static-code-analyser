@@ -32,7 +32,6 @@ Constraint ModifiesEvaluator::Handle(Declaration& lhs,
 UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                           Wildcard& rhs,
                                           ReadFacade& pkb_reader) {
-
   if (lhs.design_entity == DesignEntity::PROCEDURE) {
     return {lhs.synonym, pkb_reader.modifiesProcedure(rhs)};
   }
@@ -44,7 +43,6 @@ UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
 UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
                                           std::string& rhs,
                                           ReadFacade& pkb_reader) {
-
   if (lhs.design_entity == DesignEntity::PROCEDURE) {
     return {lhs.synonym, pkb_reader.modifiesProcedure(rhs)};
   }
