@@ -22,4 +22,6 @@ TEST_CASE("Test") {
     REQUIRE(assignStore.getAssignsWcF(Wildcard(), "y") == std::unordered_set<int>{3});
     REQUIRE(assignStore.getAssigns(Wildcard(), "x") == std::unordered_set<int>{1, 2});
     REQUIRE(assignStore.getAssigns(Wildcard(), "y") == std::unordered_set<int>{2, 3});
+    REQUIRE(assignStore.getAssignPairPartial("x") == std::unordered_set<std::pair<int, std::string>, PairHash>{{1, "x"}, {2, "y"}});
+    REQUIRE(assignStore.getAssignPairFull("x") == std::unordered_set<std::pair<int, std::string>, PairHash>{{1, "x"}});
 }
