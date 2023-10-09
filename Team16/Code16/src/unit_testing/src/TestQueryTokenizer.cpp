@@ -415,3 +415,47 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::string sample_query_3 = "Select a1 pattern a1(v, \"+ cde % fgh\")";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations), QpsSyntaxError);
 }
+
+TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
+  std::string sample_query_1 = "Select p such that Calls(p, _)";
+
+  std::vector<Declaration> declarations_1 = {
+      {"p", DesignEntity::PROCEDURE},
+  };
+
+  std::vector<QueryToken> such_that_tokens =  {
+      {"Calls", PQLTokenType::RELREF},
+      {"p", PQLTokenType::SYNONYM},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  REQUIRE(results_1.first.size() == 3);
+  REQUIRE(results_1.first[0].text == such_that_tokens[0].text);
+  REQUIRE(results_1.first[0].type == such_that_tokens[0].type);
+  REQUIRE(results_1.first[1].text == such_that_tokens[1].text);
+  REQUIRE(results_1.first[1].type == such_that_tokens[1].type);
+  REQUIRE(results_1.first[2].text == such_that_tokens[2].text);
+  REQUIRE(results_1.first[2].type == such_that_tokens[2].type);
+
+  std::string sample_query_2 = "Select p such that Calls*(p, \"Third\")";
+
+  std::vector<QueryToken> such_that_tokens_2 =  {
+      {"Calls*", PQLTokenType::RELREF},
+      {"p", PQLTokenType::SYNONYM},
+      {"Third", PQLTokenType::IDENT}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1);
+
+  REQUIRE(results_2.first.size() == 3);
+  REQUIRE(results_2.first[0].text == such_that_tokens_2[0].text);
+  REQUIRE(results_2.first[0].type == such_that_tokens_2[0].type);
+  REQUIRE(results_2.first[1].text == such_that_tokens_2[1].text);
+  REQUIRE(results_2.first[1].type == such_that_tokens_2[1].type);
+  REQUIRE(results_2.first[2].text == such_that_tokens_2[2].text);
+  REQUIRE(results_2.first[2].type == such_that_tokens_2[2].type);
+}

@@ -1,4 +1,5 @@
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
+#include "qps/clauses/suchthat_clauses/calls.h"
 
 SuchThatClauseBuilder::SuchThatClauseBuilder() = default;
 
@@ -19,6 +20,9 @@ void SuchThatClauseBuilder::setLhs(const QueryToken& param, const std::vector<De
     case RelRefType::PARENT:
     case RelRefType::PARENTT:lhs = getStmtRef(param, declarations);
       break;
+    case RelRefType::CALLS:
+    case RelRefType::CALLST:lhs = getEntRef(param, declarations);
+      break;
     default:lhs = getBothStmtAndEntRef(param, declarations);
       break;
   }
@@ -36,6 +40,9 @@ void SuchThatClauseBuilder::setRhs(const QueryToken& param, const std::vector<De
     case RelRefType::FOLLOWST:
     case RelRefType::PARENT:
     case RelRefType::PARENTT:rhs = getStmtRef(param, declarations);
+      break;
+    case RelRefType::CALLS:
+    case RelRefType::CALLST:rhs = getEntRef(param, declarations);
       break;
     default:rhs = getEntRef(param, declarations);
       break;
@@ -135,21 +142,21 @@ std::unique_ptr<SuchThatClause> SuchThatClauseBuilder::getClause() const {
         throw QpsSyntaxError("Syntax error");
       }
     case RelRefType::FOLLOWST:
-      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(rhs)) {
         return std::make_unique<FollowsT>(std::get<StmtRef>(lhs),
                                           std::get<StmtRef>(rhs));
       } else {
         throw QpsSyntaxError("Syntax error");
       }
     case RelRefType::PARENT:
-      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(rhs)) {
         return std::make_unique<Parent>(std::get<StmtRef>(lhs),
                                         std::get<StmtRef>(rhs));
       } else {
         throw QpsSyntaxError("Syntax error");
       }
     case RelRefType::PARENTT:
-      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(lhs)) {
+      if (std::holds_alternative<StmtRef>(lhs) && std::holds_alternative<StmtRef>(rhs)) {
         return std::make_unique<ParentT>(std::get<StmtRef>(lhs),
                                          std::get<StmtRef>(rhs));
       } else {
@@ -165,5 +172,19 @@ std::unique_ptr<SuchThatClause> SuchThatClauseBuilder::getClause() const {
       } else {
         throw QpsSyntaxError("Syntax error");
       }
+    case RelRefType::CALLS:
+      if (std::holds_alternative<EntRef >(lhs) && std::holds_alternative<EntRef>(rhs)) {
+        return std::make_unique<Calls>(std::get<EntRef>(lhs), std::get<EntRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
+    case RelRefType::CALLST:
+      if (std::holds_alternative<EntRef >(lhs) && std::holds_alternative<EntRef>(rhs)) {
+        return std::make_unique<CallsT>(std::get<EntRef>(lhs), std::get<EntRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
+    default:
+      throw QpsSyntaxError("Unrecognised relation reference");
   }
 }
