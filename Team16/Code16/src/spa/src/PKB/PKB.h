@@ -931,6 +931,42 @@ class PKB {
 
   std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
+  std::unordered_set<procedure> call(Dec declaration, Wildcard wildcard);
+
+  std::unordered_set<procedure> call(Wildcard wildcard, Dec declaration);
+
+  std::unordered_set<procedure> call(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<procedure> call(Wildcard wildcard, procedure procedure);
+
+  bool isCall(procedure procedure, Wildcard wildcard);
+
+  bool isCall(Wildcard wildcard, procedure procedure);
+
+  bool isCall(procedure procedure, std::string procedure2);
+
+  bool isCall(Wildcard wildcard, Wildcard wildcard2);
+
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Dec declaration1, Dec declaration2);
+
+  std::unordered_set<procedure> callStar(Dec declaration, Wildcard wildcard);
+
+  std::unordered_set<procedure> callStar(Wildcard wildcard, Dec declaration);
+
+  std::unordered_set<procedure> callStar(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<procedure> callStar(Wildcard wildcard, procedure procedure);
+
+  bool isCallStar(procedure procedure, Wildcard wildcard);
+
+  bool isCallStar(Wildcard wildcard, procedure procedure);
+
+  bool isCallStar(procedure procedure, std::string procedure2);
+
+  bool isCallStar(Wildcard wildcard1, Wildcard wildcard2);
+
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Dec declaration1, Dec declaration2);
+
   PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;
 };

@@ -163,6 +163,65 @@ TEST_CASE("TEST SP-PKB Connection 2") {
     REQUIRE((readFacade.usesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
 }
 
+
+TEST_CASE("Calls and Callstar methods") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+
+    writeFacade.storeCalls({ {"main", {"p"}}, {"p", {"q"}}, });
+
+    writeFacade.storeProcedures({"main", "p", "q"});
+
+    REQUIRE(readFacade.isCall("main", "p"));
+    REQUIRE(!readFacade.isCall("main", "q"));
+    REQUIRE(readFacade.isCall("p", "q"));
+    REQUIRE(!readFacade.isCall("p", "main"));
+    REQUIRE(!readFacade.isCall("q", "main"));
+    REQUIRE(!readFacade.isCall("q", "p"));
+
+    Dec dec1 = Dec();
+    Dec dec2 = Dec();
+
+    Wildcard w = Wildcard();
+
+    REQUIRE(readFacade.isCall(w, w));
+    REQUIRE(readFacade.isCall("main", w));
+    REQUIRE(readFacade.isCall(w, "p"));
+    REQUIRE(readFacade.isCall("p", w));
+    REQUIRE(readFacade.isCall("main", "p"));
+    REQUIRE(!readFacade.isCall("q", w));
+    REQUIRE(readFacade.isCall(w, "q"));
+    REQUIRE(!readFacade.isCall(w, "main"));
+    REQUIRE(!readFacade.isCall("q", "p"));
+    REQUIRE(readFacade.isCall("p", "q"));
+
+    REQUIRE(readFacade.isCallStar(w, w));
+    REQUIRE(readFacade.isCallStar("main", w));
+    REQUIRE(readFacade.isCallStar(w, "p"));
+    REQUIRE(readFacade.isCallStar("p", w));
+    REQUIRE(readFacade.isCallStar("main", "p"));
+    REQUIRE(readFacade.isCallStar("main", "q"));
+    REQUIRE(readFacade.isCallStar("p", "q"));
+    REQUIRE(!readFacade.isCallStar("q", w));
+    REQUIRE(readFacade.isCallStar(w, "q"));
+    REQUIRE(!readFacade.isCallStar(w, "main"));
+    REQUIRE(!readFacade.isCallStar("q", "p"));
+
+    REQUIRE((readFacade.call(dec1, w) == std::unordered_set<procedure>({"p", "main"})));
+    REQUIRE((readFacade.callStar(dec1, w) == std::unordered_set<procedure>({ "p", "main" })));
+
+    REQUIRE((readFacade.call(w, dec1) == std::unordered_set<procedure>({ "p", "q" })));
+    REQUIRE((readFacade.callStar(w, dec1) == std::unordered_set<procedure>({ "p", "q" })));
+
+    REQUIRE((readFacade.call(dec1, dec2) == std::unordered_set<std::pair<procedure, procedure>, PairHash>({ {"main", "p"}, {"p", "q"} })));
+    REQUIRE((readFacade.callStar(dec1, dec2) == std::unordered_set<std::pair<procedure, procedure>, PairHash>({ {"main", "p"}, {"p", "q"}, {"main", "q"} })));
+
+    REQUIRE((readFacade.callStar("main", w) == std::unordered_set<procedure>({"p", "q"})));
+    REQUIRE((readFacade.callStar("p", w) == std::unordered_set<procedure>({"q"})));
+    REQUIRE((readFacade.callStar("q", w) == std::unordered_set<procedure>({})));
+}
+
 TEST_CASE("Test SP-PKB connection") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);

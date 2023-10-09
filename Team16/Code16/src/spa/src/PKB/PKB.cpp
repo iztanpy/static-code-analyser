@@ -580,6 +580,78 @@ std::unordered_map<procedure, std::unordered_set<procedure>> PKB::getCallStar() 
     return callStore->getCallStar();
 }
 
+std::unordered_set<procedure> PKB::call(Dec declaration, Wildcard wildcard) {
+    return callStore->call(declaration, wildcard);
+}
+
+std::unordered_set<procedure> PKB::call(Wildcard wildcard, Dec declaration) {
+    return callStore->call(wildcard, declaration);
+}
+
+std::unordered_set<procedure> PKB::call(procedure procedure, Wildcard wildcard) {
+    return callStore->getCallChildren(procedure);
+}
+
+std::unordered_set<procedure> PKB::call(Wildcard wildcard, procedure procedure) {
+    return callStore->getCallParents(procedure);
+}
+
+bool PKB::isCall(procedure procedure, Wildcard wildcard) {
+    return callStore->isCall(procedure, wildcard);
+}
+
+bool PKB::isCall(Wildcard wildcard, procedure procedure) {
+    return callStore->isCall(wildcard, procedure);
+}
+
+bool PKB::isCall(procedure procedure, std::string procedure2) {
+    return callStore->isCall(procedure, procedure2);
+}
+
+bool PKB::isCall(Wildcard wildcard1, Wildcard wildcard2) {
+    return callStore->isCall(wildcard1, wildcard2);
+}
+
+std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::call(Dec declaration1, Dec declaration2) {
+    return callStore->call(declaration1, declaration2);
+}
+
+std::unordered_set<procedure> PKB::callStar(Dec declaration, Wildcard wildcard) {
+    return callStore->callStar(declaration, wildcard);
+}
+
+std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, Dec declaration) {
+    return callStore->callStar(wildcard, declaration);
+}
+
+std::unordered_set<procedure> PKB::callStar(procedure procedure, Wildcard wildcard) {
+    return callStore->getCallStarChildren(procedure);
+}
+
+std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, procedure procedure) {
+    return callStore->getCallStarParents(procedure);
+}
+
+bool PKB::isCallStar(procedure procedure, Wildcard wildcard) {
+    return callStore->isCallStar(procedure, wildcard);
+}
+
+bool PKB::isCallStar(Wildcard wildcard, procedure procedure) {
+    return callStore->isCallStar(wildcard, procedure);
+}
+
+bool PKB::isCallStar(procedure procedure, std::string procedure2) {
+    return callStore->isCallStar(procedure, procedure2);
+}
+
+bool PKB::isCallStar(Wildcard wildcard1, Wildcard wildcard2) {
+    return callStore->isCallStar(wildcard1, wildcard2);
+}
+
+std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::callStar(Dec declaration1, Dec declaration2) {
+    return callStore->callStar(declaration1, declaration2);
+}
+
 // returns all statements that are of a specified StmtEntity type and follows* any statement
 std::unordered_set<statementNumber> PKB::followStar(Wildcard wildcard, StmtEntity type) {
   std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
