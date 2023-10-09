@@ -1,0 +1,61 @@
+procedure A {
+    read a;
+    print b;
+    while (c > d + 3) {
+        if (e == f - 2) then {
+            call B;
+        } else {
+            g = h + 4;
+        }
+    }
+    call C;
+    i = j * 2;
+}
+
+procedure B {
+    read k;
+    print l;
+    m = n / 2;
+    if (o > p) then {
+        print q;
+    } else {
+        call D;
+    }
+    r = s - 1;
+}
+
+procedure C {
+    print t;
+    u = v + 3;
+    while (w < x) {
+        if (y > z) then {
+            call E;
+        } else {
+            print aa;
+        }
+    }
+    bb = cc * 2;
+}
+
+procedure D {
+    read dd;
+    if (ee != ff) then {
+        print gg;
+    } else {
+        hh = ii + 5;
+    }
+    while (jj > kk) {
+        print ll;
+    }
+}
+
+procedure E {
+    mm = nn - 3;
+    print oo;
+    while (pp < qq) {
+        a = b + 4;
+    }
+    rr = ss + 4;
+}
+
+procedure F {}
