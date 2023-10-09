@@ -109,5 +109,8 @@ class WriteFacade {
     */
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 
+    void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
+
+    void storeIf(std::unordered_map<statementNumber, variable> variableMap);
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 };

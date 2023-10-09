@@ -10,6 +10,8 @@ PKB::PKB() {
   followsStore = std::make_unique<FollowsStore>();
   modifiesStore = std::make_unique<ModifiesStore>();
   procedureStore = std::make_unique<ProcedureStore>();
+  ifStore = std::make_unique<IfStore>();
+  whileStore = std::make_unique<WhileStore>();
   callStore = std::make_unique<CallStore>();
 }
 
@@ -672,4 +674,36 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::f
     }
   }
   return result;
+}
+
+void PKB::storeIf(std::unordered_map<statementNumber, variable> variableMap) {
+    ifStore->addVariableMap(variableMap);
+}
+
+std::unordered_set<statementNumber> PKB::getIf(Wildcard wc) {
+    return ifStore->getIf(wc);
+}
+
+std::unordered_set<statementNumber> PKB::getIf(variable v) {
+    return ifStore->getIf(v);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllIf() {
+    return ifStore->getAllIf();
+}
+
+void PKB::storeWhile(std::unordered_map<statementNumber, variable> variableMap) {
+    whileStore->addVariableMap(variableMap);
+}
+
+std::unordered_set<statementNumber> PKB::getWhile(Wildcard wc) {
+    return whileStore->getWhile(wc);
+}
+
+std::unordered_set<statementNumber> PKB::getWhile(variable v) {
+    return whileStore->getWhile(v);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllWhile() {
+    return whileStore->getAllWhile();
 }

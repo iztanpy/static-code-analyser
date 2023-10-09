@@ -17,6 +17,8 @@
 #include "Stores/FollowsStore.h"
 #include "Stores/ModifiesStore.h"
 #include "Stores/ProcedureStore.h"
+#include "Stores/IfStore.h"
+#include "Stores/WhileStore.h"
 #include "Stores/CallStore.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
@@ -41,6 +43,8 @@ class PKB {
   std::unique_ptr<FollowsStore> followsStore;
   std::unique_ptr<ModifiesStore> modifiesStore;
   std::unique_ptr<ProcedureStore> procedureStore;
+  std::unique_ptr<WhileStore> whileStore;
+  std::unique_ptr<IfStore> ifStore;
   std::unique_ptr<CallStore> callStore;
 
  public:
@@ -933,6 +937,23 @@ class PKB {
   * @return true if matching preceding statements are followed by matching following statements in the follow-star relationship, false otherwise.
   */
   bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
+
+  void storeIf(std::unordered_map<statementNumber, variable> variableMap);
+
+  std::unordered_set<statementNumber> getIf(Wildcard wc);
+
+  std::unordered_set<statementNumber> getIf(variable v);
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
+
+
+  void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
+
+  std::unordered_set<statementNumber> getWhile(Wildcard wc);
+
+  std::unordered_set<statementNumber> getWhile(variable v);
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
 
   // CallStore methods
 

@@ -158,6 +158,10 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/evaluator_util.h
         src/qps/query_evaluator/assign_pattern_evaluator.cpp
         src/qps/query_evaluator/assign_pattern_evaluator.h
+        src/PKB/Stores/IfStore.cpp
+        src/PKB/Stores/IfStore.h
+        src/PKB/Stores/WhileStore.cpp
+        src/PKB/Stores/WhileStore.h
         src/qps/qps_validator/qps_validator_handler.h
         src/qps/qps_validator/qps_validator.cpp
         src/qps/qps_validator/qps_validator.h

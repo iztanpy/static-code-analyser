@@ -310,6 +310,29 @@ bool ReadFacade::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
   return pkb.isFollowStar(wildcard, wildcard2);
 }
 
+std::unordered_set<statementNumber> ReadFacade::getIf(Wildcard wc) {
+    return pkb.getIf(wc);
+}
+
+std::unordered_set<statementNumber> ReadFacade::getIf(variable v) {
+    return pkb.getIf(v);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAllIf() {
+    return pkb.getAllIf();
+}
+
+std::unordered_set<statementNumber> ReadFacade::getWhile(Wildcard wc) {
+    return pkb.getWhile(wc);
+}
+
+std::unordered_set<statementNumber> ReadFacade::getWhile(variable v) {
+    return pkb.getWhile(v);
+}
+
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAllWhile() {
+    return pkb.getAllWhile();
+}
 
 
 
