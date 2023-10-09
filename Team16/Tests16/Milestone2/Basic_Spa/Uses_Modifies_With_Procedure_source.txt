@@ -57,5 +57,3 @@ procedure E {
     }
     rr = ss + 4;
 }
-
-procedure F {}
