@@ -50,74 +50,192 @@ TEST_CASE("One read statement 1") {
   REQUIRE(sourceProcessor.getVariables() == varSet);
 }
 
-
-TEST_CASE("Test SP-PKB connection") {
+TEST_CASE("TEST SP-PKB-QPS UsesP ModifiesP") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-
-    std::string simpleProgram = "procedure p {x = z - 3 + I; x = x + 1; y = y + z + 4;}";
-
+    QPS qps(readFacade);
+    std::string simpleProgram = "procedure poo { y = x + 1; read k; print l; }";
+    std::string query_1 =  "variable v; procedure p; Select v such that Uses(p, v)";
     sourceProcessor.processSource(simpleProgram);
+    REQUIRE((readFacade.isUses("poo", "x")));
+    REQUIRE((readFacade.isUses("poo", "l")));
+    REQUIRE((readFacade.isModifies("poo", "y")));
+    REQUIRE((readFacade.isModifies("poo", "k")));
+}
 
-    REQUIRE((readFacade.getAllAssigns() == std::unordered_set<statementNumber>({1, 2, 3})));
+TEST_CASE("TEST SP-PKB Connection 2") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
 
-    REQUIRE((readFacade.getAssignPair("x") == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{2, "x"}})));
+    writeFacade.storeCalls({{"main", {"p", "q"}}, {"p", {"q"}}, });
 
-    REQUIRE((readFacade.getAssignPair("y") == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{3, "y"}})));
+    writeFacade.storeProcedures({"main", "p", "q"});
 
-    REQUIRE((readFacade.getAssignPair("z") == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {1, "x"}, {3, "y"} })));
+    std::unordered_map <procedure, std::pair<int, int>> procedures = {{"main", {1, 4}}, {"p", {5, 8}}, {"q", {9, 10}}};
 
-    Wildcard wildcard = Wildcard();
+    writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}}, {5, {"a"}}, {6, {"b"}}, {7, {"c"}}, {9, {"m"}} });
 
-    REQUIRE((readFacade.getAssignPair(wildcard) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {1, "x"}, {2, "x"}, {3, "y"} })));
+    writeFacade.storeModifies({ {1, {"x"}}, {2, {"y"}}, {3, {"z"}}, {5, {"a"}}, {6, {"b"}}, {7, {"c"}}, {9, {"m"}} });
 
-    REQUIRE((readFacade.getAssigns(wildcard, "x") == std::unordered_set<statementNumber>({2})));
+    writeFacade.storeProcedures(procedures);
 
-    REQUIRE((readFacade.getAssigns(wildcard, "y") == std::unordered_set<statementNumber>({3})));
+    REQUIRE((readFacade.isModifies("main", "x")));
+    REQUIRE((readFacade.isModifies("main", "y")));
+    REQUIRE((readFacade.isModifies("main", "z")));
+    REQUIRE((readFacade.isModifies("main", "a")));
+    REQUIRE((readFacade.isModifies("main", "b")));
+    REQUIRE((readFacade.isModifies("main", "c")));
+    REQUIRE((readFacade.isModifies("main", "m")));
 
-    REQUIRE((readFacade.getAssigns(wildcard, "z") == std::unordered_set<statementNumber>({1, 3})));
+    REQUIRE((readFacade.isUses("main", "x")));
+    REQUIRE((readFacade.isUses("main", "y")));
+    REQUIRE((readFacade.isUses("main", "z")));
+    REQUIRE((readFacade.isUses("main", "a")));
+    REQUIRE((readFacade.isUses("main", "b")));
+    REQUIRE((readFacade.isUses("main", "c")));
+    REQUIRE((readFacade.isUses("main", "m")));
 
-    REQUIRE((readFacade.getAssigns(wildcard, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
+    Wildcard w = Wildcard();
 
-    REQUIRE((readFacade.getAssigns("x", "z") == std::unordered_set<statementNumber>({ 1 })));
+    REQUIRE((readFacade.isModifies("main", w)));
+    REQUIRE((readFacade.isModifies("p", w)));
+    REQUIRE((readFacade.isModifies("q", w)));
 
-    REQUIRE((readFacade.getAssigns("x", wildcard) == std::unordered_set<statementNumber>({1, 2})));
+    REQUIRE((readFacade.isUses("main", w)));
+    REQUIRE((readFacade.isUses("p", w)));
+    REQUIRE((readFacade.isUses("q", w)));
+    REQUIRE((!readFacade.isUses("r", w)));
 
-    REQUIRE((readFacade.isUses(1, "z")));
+    REQUIRE((!readFacade.isModifies("p", "x")));
+    REQUIRE((!readFacade.isModifies("p", "y")));
+    REQUIRE((!readFacade.isModifies("p", "z")));
+    REQUIRE((readFacade.isModifies("p", "a")));
+    REQUIRE((readFacade.isModifies("p", "b")));
+    REQUIRE((readFacade.isModifies("p", "c")));
+    REQUIRE((readFacade.isModifies("p", "m")));
 
-    REQUIRE((readFacade.isUses(1, "I")));
+    REQUIRE((!readFacade.isUses("p", "x")));
+    REQUIRE((!readFacade.isUses("p", "y")));
+    REQUIRE((!readFacade.isUses("p", "z")));
+    REQUIRE((readFacade.isUses("p", "a")));
+    REQUIRE((readFacade.isUses("p", "b")));
+    REQUIRE((readFacade.isUses("p", "c")));
+    REQUIRE((readFacade.isUses("p", "m")));
 
-    REQUIRE(!(readFacade.isUses(1, "x")));
+    REQUIRE((!readFacade.isModifies("q", "x")));
+    REQUIRE((!readFacade.isModifies("q", "y")));
+    REQUIRE((!readFacade.isModifies("q", "z")));
+    REQUIRE((!readFacade.isModifies("q", "a")));
+    REQUIRE((!readFacade.isModifies("q", "b")));
+    REQUIRE((!readFacade.isModifies("q", "c")));
+    REQUIRE((readFacade.isModifies("q", "m")));
 
-    REQUIRE((readFacade.isUses(2, "x")));
+    REQUIRE((!readFacade.isUses("q", "x")));
+    REQUIRE((!readFacade.isUses("q", "y")));
+    REQUIRE((!readFacade.isUses("q", "z")));
+    REQUIRE((!readFacade.isUses("q", "a")));
+    REQUIRE((!readFacade.isUses("q", "b")));
+    REQUIRE((!readFacade.isUses("q", "c")));
+    REQUIRE((readFacade.isUses("q", "m")));
 
-    REQUIRE((readFacade.isUses(3, "y")));
+    REQUIRE((readFacade.modifies("main") == std::unordered_set<variable>({"x", "y", "z", "a", "b", "c", "m"})));
+    REQUIRE((readFacade.modifies("p") == std::unordered_set<variable>({"a", "b", "c", "m"})));
+    REQUIRE((readFacade.modifies("q") == std::unordered_set<variable>({"m"})));
 
-    REQUIRE((readFacade.isUses(3, "z")));
+    REQUIRE((readFacade.uses("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
+    REQUIRE((readFacade.uses("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
+    REQUIRE((readFacade.uses("q") == std::unordered_set<variable>({ "m" })));
 
-    REQUIRE((readFacade.uses(StmtEntity::kAssign, "z") == std::unordered_set<statementNumber>({1, 3})));
+    REQUIRE((readFacade.modifiesProcedure(w) == std::unordered_set<procedure>({"main", "p", "q"})));
+    REQUIRE((readFacade.usesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
 
-    REQUIRE((readFacade.uses(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>({2})));
 
-    REQUIRE((readFacade.uses(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>({3})));
+    REQUIRE((readFacade.modifiesProcedure("x") == std::unordered_set<procedure>({"main"})));
+    REQUIRE((readFacade.usesProcedure("x") == std::unordered_set<procedure>({ "main" })));
 
-    REQUIRE((readFacade.uses(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
+    REQUIRE((readFacade.modifiesProcedure("a") == std::unordered_set<procedure>({"main", "p"})));
+    REQUIRE((readFacade.usesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
 
-    std::unordered_set<std::pair<statementNumber, variable>, PairHash> pairSet = std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {1, "z"}, {1, "I"}, {2, "x"}, {3, "y"}, {3, "z"}});
+    REQUIRE((readFacade.modifiesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
+    REQUIRE((readFacade.usesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
+}
 
-    REQUIRE((readFacade.uses(StmtEntity::kAssign) == pairSet));
+TEST_CASE("Test SP-PKB connection") {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  ReadFacade readFacade = ReadFacade(*pkb_ptr);
+  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
 
-    REQUIRE(readFacade.getVariables() == std::unordered_set<variable>({"x", "z", "I", "y"}));
+  std::string simpleProgram = "procedure p {x = z - 3 + I; x = x + 1; y = y + z + 4;}";
 
-    REQUIRE(readFacade.modifies(1) == std::unordered_set<variable>({"x"}));
-    REQUIRE(readFacade.modifies(2) == std::unordered_set<variable>({"x"}));
-    REQUIRE(readFacade.modifies(3) == std::unordered_set<variable>({"y"}));
+  sourceProcessor.processSource(simpleProgram);
 
-    REQUIRE(readFacade.uses(1) == std::unordered_set<variable>({"z", "I"}));
-    REQUIRE(readFacade.uses(2) == std::unordered_set<variable>({"x"}));
-    REQUIRE(readFacade.uses(3) == std::unordered_set<variable>({"y", "z"}));
+  REQUIRE((readFacade.getAllAssigns() == std::unordered_set<statementNumber>({1, 2, 3})));
+
+  REQUIRE((readFacade.getAssignPair(PartialExpr{"x"})
+      == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{2, "x"}})));
+
+  REQUIRE((readFacade.getAssignPair(PartialExpr{"y"})
+      == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{3, "y"}})));
+
+  REQUIRE((readFacade.getAssignPair(PartialExpr{"z"})
+      == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{1, "x"}, {3, "y"}})));
+
+  Wildcard wildcard = Wildcard();
+
+  REQUIRE((readFacade.getAssignPair(wildcard)
+      == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{1, "x"}, {2, "x"}, {3, "y"}})));
+
+  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"x"}) == std::unordered_set<statementNumber>({2})));
+
+  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"y"}) == std::unordered_set<statementNumber>({3})));
+
+  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"z"}) == std::unordered_set<statementNumber>({1, 3})));
+
+  REQUIRE((readFacade.getAssigns(wildcard, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
+
+  REQUIRE((readFacade.getAssigns("x", PartialExpr{"z"}) == std::unordered_set<statementNumber>({1})));
+
+  REQUIRE((readFacade.getAssigns("x", wildcard) == std::unordered_set<statementNumber>({1, 2})));
+
+  REQUIRE((readFacade.isUses(1, "z")));
+
+  REQUIRE((readFacade.isUses(1, "I")));
+
+  REQUIRE(!(readFacade.isUses(1, "x")));
+
+  REQUIRE((readFacade.isUses(2, "x")));
+
+  REQUIRE((readFacade.isUses(3, "y")));
+
+  REQUIRE((readFacade.isUses(3, "z")));
+
+  REQUIRE((readFacade.uses(StmtEntity::kAssign, "z") == std::unordered_set<statementNumber>({1, 3})));
+
+  REQUIRE((readFacade.uses(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>({2})));
+
+  REQUIRE((readFacade.uses(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>({3})));
+
+  REQUIRE((readFacade.uses(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> pairSet =
+      std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{1, "z"}, {1, "I"}, {2, "x"}, {3, "y"},
+                                                                          {3, "z"}});
+
+  REQUIRE((readFacade.uses(StmtEntity::kAssign) == pairSet));
+
+  REQUIRE(readFacade.getVariables() == std::unordered_set<variable>({"x", "z", "I", "y"}));
+
+  REQUIRE(readFacade.modifies(1) == std::unordered_set<variable>({"x"}));
+  REQUIRE(readFacade.modifies(2) == std::unordered_set<variable>({"x"}));
+  REQUIRE(readFacade.modifies(3) == std::unordered_set<variable>({"y"}));
+
+  REQUIRE(readFacade.uses(1) == std::unordered_set<variable>({"z", "I"}));
+  REQUIRE(readFacade.uses(2) == std::unordered_set<variable>({"x"}));
+  REQUIRE(readFacade.uses(3) == std::unordered_set<variable>({"y", "z"}));
 }
 
 TEST_CASE("One assign statement 1") {
@@ -144,12 +262,12 @@ TEST_CASE("One assign statement 1") {
       constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
       {{"x", constSet}});
   std::unordered_map<int, std::unordered_set<std::string>>
-      usesLineRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}}});
+      assignLinePartialRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x + 1"}}});
   std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"}});
   std::unordered_map<int, std::unordered_set<std::string>>
       usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}}});
 
-  REQUIRE(sourceProcessor.getUsesLineRHSPatternMap() == usesLineRHSPatternMap);
+  REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
   REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
   REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
   REQUIRE(sourceProcessor.getVariables() == varSet);

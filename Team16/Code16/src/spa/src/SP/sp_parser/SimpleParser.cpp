@@ -33,11 +33,20 @@ void SimpleParser::populatePKB() {
   // Store Parent <line, set<line>>
   writeFacade->storeParent(visitor->getParentStatementNumberMap());
   // Store Assignments: <line, RHS patterns>, <line, LHS var>
-  writeFacade->storeAssignments(visitor->getUsesLineRHSPatternMap(), visitor->getUsesLineLHSMap());
+  writeFacade->storeAssignments(visitor->getAssignLinePartialRHSPatternMap(), visitor->getUsesLineLHSMap());
+//  writeFacade->storeAssignments(visitor->getAssignLinePartialRHSPatternMap(),
+//                                visitor->getAssignLineFullRHSMap(),
+//                                visitor->getUsesLineLHSMap());
+  // Store Calls
+  writeFacade->storeCalls(visitor->getCallerCalleeHashmap());
+  // Store Procedures
+  writeFacade->storeProcedures(visitor->getProcedureLabels());
   // Store Uses: <all var in RHS>
   writeFacade->storeUses(visitor->getUsesLineRHSVarMap());
   // Store Modifies: <line, var>
   writeFacade->storeModifies(visitor->getModifiesMap());
+  // Store Procedures line numbers
+  writeFacade->storeProcedures(visitor->getProcedureLineNumberHashmap());
   // Store Follows <line, line>
   writeFacade->storeFollows(visitor->getFollowStatementNumberMap());
   // Store Variables <all var in LHS and RHS>
@@ -46,6 +55,4 @@ void SimpleParser::populatePKB() {
   writeFacade->storeConstants(visitor->getConstants());
   // Store Statement types
   writeFacade->storeStatements(visitor->getStatementTypesMap());
-  // Store Procedures
-  writeFacade->storeProcedures(visitor->getProcedureLabels());
 }

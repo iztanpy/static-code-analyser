@@ -19,13 +19,14 @@
 #include "Stores/ProcedureStore.h"
 #include "Stores/IfStore.h"
 #include "Stores/WhileStore.h"
+#include "Stores/CallStore.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
 
 typedef std::string variable;
 typedef int statementNumber;
-typedef std::string possibleCombinations;
+typedef std::string full;
 typedef std::string constant;
 typedef std::string statementType;
 typedef std::string partialMatch;
@@ -44,6 +45,7 @@ class PKB {
   std::unique_ptr<ProcedureStore> procedureStore;
   std::unique_ptr<WhileStore> whileStore;
   std::unique_ptr<IfStore> ifStore;
+  std::unique_ptr<CallStore> callStore;
 
  public:
   PKB();
@@ -59,8 +61,17 @@ class PKB {
   * @param numRHSMap An unordered map of statement numbers to sets of possible combinations for the right-hand side of assignments.
   * @param numLHSMap An unordered map of statement numbers to variables for the left-hand side of assignments.
   */
-  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> numRHSMap,
+  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
                       std::unordered_map<statementNumber, variable> numLHSMap);
+
+  void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
+                        std::unordered_map<statementNumber, full> fullRHSMap,
+                        std::unordered_map<statementNumber, variable> numLHSMap);
+
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
+    std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
+    std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
 
   /**
   * @brief Retrieves all assignment statement numbers in the program.
@@ -154,6 +165,15 @@ class PKB {
   void addProcedures(std::set<procedure> procedures);
 
   /**
+  * @brief Adds procedures and thier respective start numbers and line numbers to the program's procedure store.
+  * 
+  * This method adds procedures and thier respective start numbers and line numbers to the program's procedure store.
+  * 
+  * @param procedures An unordered map of procedures to pairs of start numbers and line numbers.
+  */
+  void addProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures);
+
+  /**
   * @brief Retrieves all procedures stored in the program.
   *
   * This method returns an unordered set containing all procedures stored in the program's procedure store.
@@ -161,6 +181,17 @@ class PKB {
   * @return An unordered set of procedures stored in the program.
   */
   std::unordered_set<procedure> getProcedures();
+
+  /**
+  * @brief Retrieves the start number and end number for a specific procedure.
+  * 
+  * This method returns a pair of integers representing the start number and end number for the specified procedure.
+  * 
+  * @param proc The procedure for which to retrieve the start number and end number.
+  * 
+  * @return A pair of integers representing the start number and end number for the specified procedure.
+  */
+  std::pair<int, int> getProcedureRange(procedure proc);
 
   /**
   * @brief Adds a set of variables to the program's variable store.
@@ -191,6 +222,9 @@ class PKB {
   * @param varUsesMap An unordered map of statement numbers to sets of variables that are used.
   */
   void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
+
+  void storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+      std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
   /**
   * @brief Checks if a specific statement uses a given variable.
@@ -256,6 +290,18 @@ class PKB {
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
+  bool isUses(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> uses(procedure procedure);
+
+  bool isUses(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> usesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> usesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedure();
+
   // ModifiesStore methods
 
   /**
@@ -266,6 +312,9 @@ class PKB {
   * @param varModifiesMap An unordered map of statement numbers to variables that are modified.
   */
   void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
+
+  void storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+      std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
   /**
   * @brief Checks if a specific statement modifies a given variable.
@@ -330,6 +379,18 @@ class PKB {
   * @return An unordered set of pairs representing modification relationships for statements of the specified type.
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
+
+  bool isModifies(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> modifies(procedure procedure);
+
+  bool isModifies(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> modifiesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
 
   // ConstantStore methods
 
@@ -896,5 +957,12 @@ class PKB {
 
 
     PKB(const PKB&) = delete;
+  // CallStore methods
+
+  void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
+
+  std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
+
+  PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;
 };

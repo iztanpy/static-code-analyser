@@ -45,7 +45,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
   REQUIRE(pattern_clauses.size() == 1);
 
   std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto* clause = dynamic_cast<WildCardPattern*>(pattern_clause.get());
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = Wildcard::Value;
@@ -74,10 +74,10 @@ TEST_CASE("Query Parser can return a parsed query") {
   REQUIRE(parsed_pattern_query.select.equals(expected));
   REQUIRE(parsed_pattern_query.such_that_clauses.empty());
 
-  auto* clause = dynamic_cast<WildCardPattern*>(pattern_clause.get());
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
   REQUIRE(clause->syn_assignment.equals(declarations[1]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(clause->rhs == Wildcard::Value);
+  REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, Wildcard::Value));
 }
 
 TEST_CASE("Query parser throws correct errors") {

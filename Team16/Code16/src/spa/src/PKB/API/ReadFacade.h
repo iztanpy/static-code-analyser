@@ -7,7 +7,6 @@
 #include "PKB/PKB.h"
 #include "utils/entity_types.h"
 
-typedef std::string partialMatch;
 typedef std::string variable;
 typedef int statementNumber;
 typedef std::string constant;
@@ -19,6 +18,9 @@ class ReadFacade {
 
  public:
   explicit ReadFacade(PKB& pkb);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(ExactExpr rhs);
+  std::unordered_set<statementNumber> getAssigns(Wildcard lhs, ExactExpr rhs);
+  std::unordered_set<statementNumber> getAssigns(variable lhs, ExactExpr rhs);
 
   /**
   * @brief Retrieves a set of all statement numbers corresponding to assignment statements in a program.
@@ -33,7 +35,7 @@ class ReadFacade {
   * @param partial A pattern to partially match against assignment statements.
   * @return An unordered set of pairs, where each pair consists of a statement number and a variable matching the pattern.
   */
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(partialMatch partial);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPair(PartialExpr rhs);
 
   /**
    * @brief Retrieves pairs of statement numbers and variables for assignment statements that match a given wildcard pattern.
@@ -51,7 +53,7 @@ class ReadFacade {
    * @param rhs A pattern to partially match against the right-hand side (RHS) of assignments.
    * @return An unordered set containing statement numbers for matching assignments.
    */
-  std::unordered_set<statementNumber> getAssigns(Wildcard lhs, partialMatch rhs);
+  std::unordered_set<statementNumber> getAssigns(Wildcard lhs, PartialExpr rhs);
 
   /**
    * @brief Retrieves statement numbers for assignment statements where both the left-hand side (LHS) and the right-hand side (RHS)
@@ -71,7 +73,7 @@ class ReadFacade {
   * @param rhs A pattern to partially match against the right-hand side (RHS) of assignments.
   * @return An unordered set containing statement numbers for matching assignments.
   */
-  std::unordered_set<statementNumber> getAssigns(variable lhs, partialMatch rhs);
+  std::unordered_set<statementNumber> getAssigns(variable lhs, PartialExpr rhs);
 
   /**
   * @brief Retrieves statement numbers for assignment statements where the left-hand side (LHS) matches a specific variable,
@@ -171,6 +173,18 @@ class ReadFacade {
   */
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
+  bool isUses(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> uses(procedure procedure);
+
+  bool isUses(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> usesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> usesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedure();
+
 
   // ModifiesStore methods
 
@@ -236,6 +250,19 @@ class ReadFacade {
   * @param type The type of statement to search for.
   * @return An unordered set of pairs containing statement numbers and variables modified in the specified statement type.
   */
+
+  bool isModifies(procedure procedure, Wildcard wildcard);
+
+  std::unordered_set<variable> modifies(procedure procedure);
+
+  bool isModifies(procedure procedure, variable variableName);
+
+  std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
+
+  std::unordered_set<procedure> modifiesProcedure(variable variableName);
+
+  std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
+
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
 
   // ConstantStore methods

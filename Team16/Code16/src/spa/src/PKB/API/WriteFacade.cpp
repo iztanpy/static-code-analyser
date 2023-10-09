@@ -11,12 +11,25 @@ void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
     pkb.setAssignments(numRHSMap, numLHSMap);
 }
 
+void WriteFacade::storeAssignments(std::unordered_map<statementNumber,
+                                   std::unordered_set<partialMatch>> partialRHSMap,
+                                   std::unordered_map<statementNumber, full> fullRHSMap,
+                                   std::unordered_map<statementNumber, variable> numLHSMap) {
+    pkb.setAssignments(partialRHSMap, fullRHSMap, numLHSMap);
+}
+
 void WriteFacade::storeVariables(std::unordered_set<std::string> variables) {
     pkb.addVariables(variables);
 }
 
 void WriteFacade::storeProcedures(std::set<std::string> procedures) {
     pkb.addProcedures(procedures);
+}
+
+void WriteFacade::storeProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures) {
+    pkb.addProcedures(procedures);
+    pkb.storeUsesProcedures(procedures, pkb.getCallStar());
+    pkb.storeModifiesProcedures(procedures, pkb.getCallStar());
 }
 
 void WriteFacade::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
@@ -37,6 +50,10 @@ void WriteFacade::storeParent(std::unordered_map<statementNumber, std::unordered
 
 void WriteFacade::storeFollows(std::unordered_map<statementNumber, statementNumber> map) {
     pkb.storeFollows(map);
+}
+
+void WriteFacade::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable) {
+    pkb.storeCalls(callTable);
 }
 
 void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {

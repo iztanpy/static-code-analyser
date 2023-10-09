@@ -136,11 +136,15 @@ class ReadTNode : public TNode {
  * It inherits from the `TNode` base class and provides specialized functionality for assignment statements.
  */
 class AssignTNode : public TNode {
+ private:
+    std::string fullRHS = "";
  public:
   explicit AssignTNode(int statementNumber) : TNode(statementNumber) {
       type = TokenType::kEntityAssign;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  void setFullRHS(const std::string& rhs);
+  std::string getFullRHS() const;
 };
 
 /**
@@ -414,6 +418,23 @@ class CondOperatorTNode : public TNode {
   }
 };
 
+/**
+ * @class ParenthesisTNode
+ * @brief Represents a parenthesis node in the AST.
+ *
+ * The `ParenthesisTNode` class represents a parenthesis node in the Abstract Syntax Tree (AST).
+ * It inherits from the `TNode` base class and provides specialized functionality for expressions within parentheses.
+ */
+class ParenthesisTNode : public TNode {
+ public:
+  explicit ParenthesisTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
+    type = tokenType;
+  }
+  void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent() const override {
+    return "(" + leftChild->getContent() + ")";
+  }
+};
 
 
 /**
@@ -487,6 +508,9 @@ class TNodeFactory {
          case TokenType::kOperatorLogicalOr:
          case TokenType::kOperatorLogicalNot: {
            return std::make_shared<CondOperatorTNode>(statementNumber, token.tokenType);
+         }
+         case TokenType::kSepOpenParen: {
+            return std::make_shared<ParenthesisTNode>(statementNumber, token.tokenType);
          default:
              throw std::invalid_argument("Error: unknown token type");
          }
