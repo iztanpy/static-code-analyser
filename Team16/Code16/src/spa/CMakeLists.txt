@@ -75,6 +75,8 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/ModifiesStore.h
         src/PKB/Stores/FollowsStore.cpp
         src/PKB/Stores/FollowsStore.h
+        src/PKB/Stores/CallStore.h
+        src/PKB/Stores/CallStore.cpp
         src/utils/Error.cpp
         src/utils/Error.h
         src/qps/qps_errors/qps_error.h
