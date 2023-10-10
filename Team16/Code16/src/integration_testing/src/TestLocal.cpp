@@ -28,20 +28,20 @@ void parse(SourceProcessor& sp, std::string filename) {
   sp.processSource(input);
 }
 
-TEST_CASE("Test Local") {
-  std::string filename = "/Users/isaactan/Documents/GitHub/23s1-cp-spa-team-16/Team16/Tests16/Milestone2/Basic_Spa/Assign_Patterns_All_Combinations_source.txt";
-  std::string query = "assign a; variable v; Select a pattern a(_, _\"k - 1 + i * 3 / 2\"_)";
-
-  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-  SourceProcessor sourceProcessor(&writeFacade);
-
-  parse(sourceProcessor, filename);
-
-  ReadFacade readFacade = ReadFacade(*pkb_ptr);
-  QPS qps(readFacade);
-
-  std::unordered_set<std::string> results = qps.Evaluate(query);
-
-  REQUIRE(results == std::unordered_set<std::string>({"2", "7"}));
-}
+//TEST_CASE("Test Local") {
+//  std::string filename = "../../../tests/Demo_source.txt";
+//  std::string query = "variable v; Select v";
+//
+//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+//  SourceProcessor sourceProcessor(&writeFacade);
+//
+//  parse(sourceProcessor, filename);
+//
+//  ReadFacade readFacade = ReadFacade(*pkb_ptr);
+//  QPS qps(readFacade);
+//
+//  std::unordered_set<std::string> results = qps.Evaluate(query);
+//
+//  REQUIRE(results == std::unordered_set<std::string>({"i", "x", "y", "z"}));
+//}
