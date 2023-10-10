@@ -74,4 +74,11 @@ std::string RemoveFirstWordFromArgs(std::string & str);
  * @return the remainder of the string
  */
 std::string RemoveFirstWord(std::string & str);
+
+/*!
+ * Removes the white spaces from an expression
+ * @param str the expression to be parsed
+ * @return expression with white spaces removed
+ */
+std::string RemoveSpacesFromExpr(const std::string & str);
 }  // namespace string_util

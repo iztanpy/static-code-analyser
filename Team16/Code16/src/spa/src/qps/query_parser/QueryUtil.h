@@ -82,6 +82,13 @@ class QueryUtil {
   static bool IsEnclosedInWildcard(const std::string & s);
 
   /*!
+* Checks if a string is enclosed with brackets
+* @param s is the input string
+* @return True if string is enclosed with brackets, else false
+*/
+  static bool IsEnclosedInBrackets(const std::string & s);
+
+  /*!
    * Checks if a string is a relationship reference
    * @param s is the input string
    * @return True if string is a relationship reference, else false
@@ -122,4 +129,11 @@ class QueryUtil {
    * @return The expression
    */
   static std::string RemovePartialMatch(const std::string & partial_match_string);
+
+  /*!
+ * Get the expression between the brackets
+ * @param s
+ * @return The expression between the brackets
+ */
+  static std::string RemoveBrackets(const std::string & s);
 };

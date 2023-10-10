@@ -39,6 +39,10 @@ bool QueryUtil::IsEnclosedInWildcard(const std::string& s) {
   return (s.size() >= 2 && s.front() == '_' && s.back() == '_');
 }
 
+bool QueryUtil::IsEnclosedInBrackets(const std::string& s) {
+  return (s.size() >= 2 && s.front() == '(' && s.back() == ')');
+}
+
 bool QueryUtil::IsRelRef(const std::string& s) {
   std::set<std::string> stringRelRef = RelRef::getStringRelRef();
   if (stringRelRef.find(s) != stringRelRef.end()) {
@@ -72,6 +76,10 @@ std::string QueryUtil::RemoveQuotations(const std::string& s) {
 }
 
 std::string QueryUtil::RemovePartialMatch(const std::string& s) {
+  return string_util::Trim(s.substr(1, s.length() - 2));
+}
+
+std::string QueryUtil::RemoveBrackets(const std::string& s) {
   return string_util::Trim(s.substr(1, s.length() - 2));
 }
 

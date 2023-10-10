@@ -36,10 +36,6 @@ int AssignmentParser::parse(std::vector<Token>& tokens) {
     std::string fullRHS;
     for (int i = RHSStart; i < RHSEnd; i++) {
         fullRHS += tokens[i].value;
-        bool isNextTokenCloseParenthesis = i <= RHSEnd - 2 && tokens[i + 1].value == ")";
-        if (tokens[i].value != "(" && i != RHSEnd - 1 && !isNextTokenCloseParenthesis) {
-          fullRHS += " ";
-        }
     }
     assignNode->setFullRHS(fullRHS);
     index += 1;

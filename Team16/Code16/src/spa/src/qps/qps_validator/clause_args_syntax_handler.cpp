@@ -12,18 +12,13 @@ void ClauseArgsSyntaxHandler::setNext(std::unique_ptr<QpsValidatorHandler> handl
 }
 
 void ClauseArgsSyntaxHandler::handle(std::string clause) {
-  std::vector<std::string> synonyms = string_util::SplitStringBy(',', clause);
-  if (synonyms.size() != 2) {
-    throw QpsSyntaxError("More than 2 synonyms in relation reference");
+  if (!QueryUtil::IsEnclosedInBrackets(clause)) {
+    throw QpsSyntaxError("Missing brackets");
   }
-
-  std::vector<std::string> lhs = string_util::SplitStringBy('(', synonyms[0]);
-  if (lhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 open brackets or missing arguments");
-  }
-  std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
-  if (rhs.size() != 2) {
-    throw QpsSyntaxError("More than 2 close brackets or missing arguments");
+  std::string clause_with_brackets_removed = QueryUtil::RemoveBrackets(clause);
+  std::vector<std::string> arguments = string_util::SplitStringBy(',', clause_with_brackets_removed);
+  if (arguments.size() != 2) {
+    throw QpsSyntaxError("More than 2 arguments");
   }
 }
 
