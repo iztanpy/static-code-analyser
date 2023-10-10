@@ -29,8 +29,8 @@ void parse(SourceProcessor& sp, std::string filename) {
 }
 
 //TEST_CASE("Test Local") {
-//  std::string filename = "../../../tests/Demo_source.txt";
-//  std::string query = "variable v; Select v";
+//  std::string filename = "../../../tests/Sample_source.txt";
+//  std::string query = "assign a; variable v; Select a pattern a(_, _\"x%10\"_)";
 //
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 //  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
@@ -43,5 +43,5 @@ void parse(SourceProcessor& sp, std::string filename) {
 //
 //  std::unordered_set<std::string> results = qps.Evaluate(query);
 //
-//  REQUIRE(results == std::unordered_set<std::string>({"i", "x", "y", "z"}));
+//  REQUIRE(results == std::unordered_set<std::string>({"i", "t"}));
 //}

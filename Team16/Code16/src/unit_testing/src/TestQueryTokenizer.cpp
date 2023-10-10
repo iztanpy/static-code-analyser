@@ -190,13 +190,8 @@ TEST_CASE("Test get relationship reference arguments") {
       {"a", DesignEntity::ASSIGN}
   };
 
-  try {
-    std::string more_that_2_arg = "(a, b, c)";
-    std::pair<QueryToken, QueryToken>
-        more_than_2_error_args = QueryTokenizer::getRelRefArgs(more_that_2_arg, error_declarations);
-  } catch (const QpsError& e) {
-    REQUIRE(strcmp(e.what(), more_than_2_error.what()) == 0);
-  }
+  std::string more_that_2_arg = "(a, b, c)";
+  REQUIRE_THROWS_AS(QueryTokenizer::getRelRefArgs(more_that_2_arg, error_declarations), QpsSyntaxError);
 
   std::string not_declared_arg = "(a, b)";
   REQUIRE_THROWS_AS(QueryTokenizer::getRelRefArgs(not_declared_arg, error_declarations), QpsSemanticError);
@@ -376,7 +371,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<QueryToken> pattern_tokens = {
       {"a1", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
-      {"abc + cde % fgh", PQLTokenType::PARTIALEXPR}
+      {"abc+cde%fgh", PQLTokenType::PARTIALEXPR}
   };
 
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
@@ -398,7 +393,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<QueryToken> pattern_tokens_2 = {
       {"a1", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"abc + cde % fgh", PQLTokenType::EXACTEXPR}
+      {"abc+cde%fgh", PQLTokenType::EXACTEXPR}
   };
 
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
