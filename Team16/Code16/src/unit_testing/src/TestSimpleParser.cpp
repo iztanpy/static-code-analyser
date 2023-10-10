@@ -699,8 +699,17 @@ TEST_CASE(("Test Uses: SP Assignment statement partial RHS pattern")) {
         {1, {"x", "1", "5", "y", "x+1", "(x+1)", "y/5", "y/5+1", "(y/5+1)", "((y/5+1))",
              "((x+1)*((y/5+1)))", "(x+1)*((y/5+1))"}},
         {4, {"five", "9", "var", "five/9", "five/9-var"}},
-        {5, {"p", "p*p", "(p*p)", "((p*p))"}}
+        {5, {"p", "p*p", "(p*p)", "((p*p))"}},
+        //{6, {"y", "k", "i", "1", "3/2", "k-1", "i*3", "i*3/2", "k-1+i*3/2", "y+k-1+i*3/2"}}
       });
+
+  for (auto& it : partialRHSMap) {
+      std::cout << it.first << ": ";
+      for (auto& it2 : it.second) {
+          std::cout << it2 << ", ";
+      }
+      std::cout << std::endl;
+  }
   REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == partialRHSMap);
 }
 
