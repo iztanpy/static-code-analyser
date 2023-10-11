@@ -12,10 +12,9 @@ typedef std::unordered_map<string, CfgNodePtr> CfgNodeMap;
 
 class Cfg {
  private:
-  std::shared_ptr<CfgNode> rootCfgNode = std::make_shared<CfgNode>(0);
-  static std::shared_ptr;
+  static std::shared_ptr<CfgNode> rootCfgNode;
+  static std::shared_ptr<CfgNode> currNode;
   static CfgNodeMap cfgNodeMap;
-  static std::shared_ptr<CfgStatementHandler> cfgStatementHandler;
 
  public:
   Cfg() {
