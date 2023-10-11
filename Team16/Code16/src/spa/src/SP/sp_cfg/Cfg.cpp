@@ -23,6 +23,9 @@ void Cfg::handleElseStatement(int stmtNumber) {
 void Cfg::handleWhileStatement(int stmtNumber) {
   CfgNodePtr whileNode = std::make_shared<CfgNode>(stmtNumber);
   currNode->addChildren(whileNode);
+  CfgNodePtr nextNode = std::make_shared<CfgNode>();
+  whileNode->addChildren(nextNode);
+  currNode = nextNode;
 }
 
 void Cfg::handleEndStatement() {

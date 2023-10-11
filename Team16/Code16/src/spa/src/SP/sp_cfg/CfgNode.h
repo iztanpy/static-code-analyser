@@ -17,6 +17,7 @@ private:
 	std::shared_ptr<CfgNode> parentNode = nullptr;
 	std::set<int> statementNumberSet;
 public:
+    CfgNode() {};
 	explicit CfgNode(int statementNo) {
       statementNumberSet.insert(statementNo);
     }
