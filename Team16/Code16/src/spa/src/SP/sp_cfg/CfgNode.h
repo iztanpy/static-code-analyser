@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <set>
 #include <unordered_set>
 
 /**
@@ -13,11 +14,11 @@
 class CfgNode {
 private:
 	std::unordered_set<std::shared_ptr<CfgNode>> children; // children don't need ordering
-	std::shared_ptr<CfgNode> parentNode;
-	int statementNumber;
+	std::shared_ptr<CfgNode> parentNode = nullptr;
+	std::set<int> statementNumber;
 public:
 	explicit CfgNode(int statementNo) : statementNumber(statementNo) {}
-	virtual ~CfgNode() = default;
+    virtual ~CfgNode() = default;
 	/**
 	* @brief Add a child node to this CfgNode.
 	* @param child A shared pointer to the child CfgNode.
@@ -25,13 +26,31 @@ public:
 	void addChildren(const std::shared_ptr<CfgNode>& child) {
 	  this->children.insert(child);
 	}
+
+    void addStmtNumber(int stmtNumber) {
+      this->statementNumber = stmtNumber;
+    }
 	/**
 	* @brief Set parent node of this CfgNode
 	* @param child A shared pointer to the parentNode
 	*/
 	void setParentNode(const std::shared_ptr<CfgNode>& parent) {
-	  this->parentNode = parentNode;
+	  this->parentNode = parent;
 	}
+    /**
+    * @brief Get parent node of this CfgNode
+    * @return A parent of this node
+    */
+    std::shared_ptr<CfgNode> getParentNode() {
+      return this->parentNode;
+    }
+    /**
+    * @brief Checks if this CfgNode is an end node.
+    * @return True if this CfgNode is an end node, false otherwise.
+    */
+    bool isEndNode() {
+      return this->statementNumber == -1;
+    }
 }
 
 
