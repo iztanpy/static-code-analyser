@@ -43,8 +43,8 @@ int WhileParser::parse(std::vector<Token>& tokens) {
     followsStatementStack.top().insert(lineNumber);
     std::set<int> whileFollowsSet;
     followsStatementStack.push(whileFollowsSet);
-
     currWhileDepth++;
     lineNumber++;
+    Cfg::handleWhileStatement(lineNumber);
     return index;
 }
