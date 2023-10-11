@@ -1,69 +1,37 @@
 #include "Cfg.h"
 
+CfgNodePtr Cfg::rootCfgNode = std::make_shared<CfgNode>(0);
+
+CfgNodePtr Cfg::currNode = rootCfgNode;
+
 void Cfg::handleStatement(int stmtNumber) {
-  cfgNode->addStatement(stmtNumber);
-  return cfgNode;
+  currNode->addStmtNumber(stmtNumber);
 }
 
 void Cfg::handleIfStatement(int stmtNumber) {
   CfgNodePtr ifNode = std::make_shared<CfgNode>(stmtNumber);
-  cfgNode->addChildren(ifNode);
-  ifNode->setParentNode(cfgNode);
-  return ifNode;
+  currNode->addChildren(ifNode);
+  ifNode->setParentNode(currNode);
 }
 
 void Cfg::handleElseStatement(int stmtNumber) {
   CfgNodePtr elseNode = std::make_shared<CfgNode>(stmtNumber);
-  cfgNode->addChildren(elseNode);
+  currNode->addChildren(elseNode);
 //  elseNode->addParent(cfgNode); keeping if parent for now not sure if pkb needs this
-  return elseNode;
 }
 
 void Cfg::handleWhileStatement(int stmtNumber) {
   CfgNodePtr whileNode = std::make_shared<CfgNode>(stmtNumber);
-  cfgNode->addChildren(whileNode);
-  return whileNode;
+  currNode->addChildren(whileNode);
 }
 
 void Cfg::handleEndStatement() {
   CfgNodePtr endNode = std::make_shared<CfgNode>(-1);
-  cfgNode->addChildren(endNode);
-  return endNode;
-}
-
-  // if its an end to a if/else create a dummy end node
-  CfgNodePtr currNode = addEndCfgNode(cfgNode);
-
-  currNode->addChildren(parent);
-  return currNode;
-}
-
-  // if its an end to a if/else create a dummy end node
-  CfgNodePtr currNode = addEndCfgNode(cfgNode);
-
-  currNode->addChildren(parent);
-  return currNode;
-}
-
-  // if its an end to a if/else create a dummy end node
-  CfgNodePtr currNode = addEndCfgNode(cfgNode);
-
-  currNode->addChildren(parent);
-  return currNode;
+  currNode->addChildren(endNode);
 }
 
 CfgNodeMap Cfg::cfgNodeMap = CfgNodeMap();
 
-std::shared_ptr<CfgStatementHandler> Cfg::cfgStatementHandler = std::make_shared<CfgStatementHandler>();
-
-std::shared_ptr<CfgNode> Cfg::getCfgNode() {
+CfgNodePtr Cfg::getCfgNode() {
   return rootCfgNode;
-}
-
-/*void Cfg::addCfgNodeToMap(const string& procedureName, CfgNodePtr cfgNode) {
-  cfgNodeMap[procedureName] = cfgNode;
-}*/
-
-CfgNodePtr Cfg::handleStatement(CfgNodePtr cfgNode, int stmtNumber) {
-    return cfgStatementHandler->handleStatement(cfgNode, stmtNumber);
 }
