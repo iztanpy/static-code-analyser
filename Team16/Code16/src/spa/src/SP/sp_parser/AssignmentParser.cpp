@@ -42,8 +42,8 @@ int AssignmentParser::parse(std::vector<Token>& tokens) {
     index += 1;
     designExtractor->extractDesign(assignNode, visitor);
     followsStatementStack.top().insert(lineNumber);
+    Cfg::handleStatement(lineNumber);
     lineNumber++;
-
     return index;
 }
 

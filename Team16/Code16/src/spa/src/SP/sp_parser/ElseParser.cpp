@@ -15,5 +15,6 @@ int ElseParser::parse(std::vector<Token>& tokens) {
   std::set<int> elseFollowsSet;
   followsStatementStack.push(elseFollowsSet);
   Parser::index += 2;  // skip over the next open brace
+  Cfg::handleElseStatement(parentStatementStack.top());
   return index;
 }

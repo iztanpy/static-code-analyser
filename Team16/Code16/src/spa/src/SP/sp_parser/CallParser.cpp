@@ -48,8 +48,7 @@ int CallParser::parse(std::vector<Token>& tokens) {
     // Update the current index and create the AST node
     index = index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(call, lineNumber);
-
+    Cfg::handleStatement(lineNumber);
     lineNumber++;
-
     return index;
 }

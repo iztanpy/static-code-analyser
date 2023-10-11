@@ -18,6 +18,9 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
       parentStatementStack.pop();  // Pop the parent
     } else if (index + 2 < tokens.size()) {
       if (tokens[index + 2].tokenType == TokenType::kSepOpenBrace) {
+        // handle else statement
+        Cfg::handleEndStatement();
+
         index += 1;
         return index;
       } else {
@@ -31,6 +34,7 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
       currWhileDepth--;  // Decrease the depth
       currIfDepth--;  // Decrease the depth
     } else {  // end of procedure
+
       visitor->setProcedureLineNumberMap(ParseUtils::getProcedureName(), lineNumber - 1);
       isParsingProcedure = false;
     }
