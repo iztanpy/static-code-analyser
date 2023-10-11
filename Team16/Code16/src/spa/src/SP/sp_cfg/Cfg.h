@@ -4,22 +4,14 @@
 #include <unordered_map>
 
 #include "CfgNode.h"
-
-typedef std::shared_ptr<CfgNode> CfgNodePtr;
-typedef std::unordered_map<std::string, CfgNodePtr> CfgNodeMap;
-
 class Cfg {
 private:
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::shared_ptr<CfgNode> currNode;
-    static CfgNodeMap cfgNodeMap;
 
 public:
-    Cfg() {
-        currNode = rootCfgNode;
-    };
-
-    virtual ~Cfg() = default;
+    Cfg();
+    ~Cfg(); // Remove the 'virtual' keyword
 
     static std::shared_ptr<CfgNode> getCfgNode();
     static void handleStatement(int stmtNumber);
@@ -28,3 +20,4 @@ public:
     static void handleWhileStatement(int stmtNumber);
     static void handleEndStatement();
 };
+
