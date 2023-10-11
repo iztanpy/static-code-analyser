@@ -1,7 +1,7 @@
 #include "Cfg.h"
 
 CfgNodePtr CfgStatementHandler::handleStatement(CfgNodePtr cfgNode, int stmtNumber) {
-  cfgNode->addStatement(stmtNumber);
+  cfgNode->addStmtNumber(stmtNumber);
   return cfgNode;
 }
 
@@ -34,13 +34,6 @@ CfgNodePtr CloseBraceCfgStatementHandler::addEndCfgNode(CfgNodePtr cfgNode) {
 CfgNodePtr CloseBraceCfgStatementHandler::handleStatement(CfgNodePtr cfgNode, int stmtNumber) {
   // traverse to parent if or while node
   CfgNodePtr parent = cfgNode->getParentNode(); //make sure to only get the if or while and not else
-  while (parent != nullptr) {
-    if parent->getType() == "if" || parent->getType() == "while" {
-      if parent.hasEnded() != true { // already has an end node pointing to it
-        break;
-      }
-    }
-  }
   // if its an end to a if/else create a dummy end node
   CfgNodePtr currNode = addEndCfgNode(cfgNode);
 
