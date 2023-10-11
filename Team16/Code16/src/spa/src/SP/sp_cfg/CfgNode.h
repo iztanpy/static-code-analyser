@@ -15,9 +15,11 @@ class CfgNode {
 private:
 	std::unordered_set<std::shared_ptr<CfgNode>> children; // children don't need ordering
 	std::shared_ptr<CfgNode> parentNode = nullptr;
-	std::set<int> statementNumber;
+	std::set<int> statementNumberSet;
 public:
-	explicit CfgNode(int statementNo) : statementNumber(statementNo) {}
+	explicit CfgNode(int statementNo) {
+      statementNumberSet.insert(statementNo);
+    }
     virtual ~CfgNode() = default;
 	/**
 	* @brief Add a child node to this CfgNode.
@@ -26,9 +28,12 @@ public:
 	void addChildren(const std::shared_ptr<CfgNode>& child) {
 	  this->children.insert(child);
 	}
-
+    /**
+    * @brief Add a statement number to this CfgNode.
+    * @param stmtNumber A statement number to be added to this CfgNode.
+    */
     void addStmtNumber(int stmtNumber) {
-      this->statementNumber = stmtNumber;
+      this->statementNumberSet.insert(stmtNumber);
     }
 	/**
 	* @brief Set parent node of this CfgNode
@@ -49,7 +54,10 @@ public:
     * @return True if this CfgNode is an end node, false otherwise.
     */
     bool isEndNode() {
-      return this->statementNumber == -1;
+      if (this->statementNumberSet.size() == 1) {
+        return *this->statementNumberSet.begin() == -1;
+      }
+      return false;
     }
 }
 

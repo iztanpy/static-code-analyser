@@ -31,6 +31,27 @@ void Cfg::handleEndStatement() {
   return endNode;
 }
 
+  // if its an end to a if/else create a dummy end node
+  CfgNodePtr currNode = addEndCfgNode(cfgNode);
+
+  currNode->addChildren(parent);
+  return currNode;
+}
+
+  // if its an end to a if/else create a dummy end node
+  CfgNodePtr currNode = addEndCfgNode(cfgNode);
+
+  currNode->addChildren(parent);
+  return currNode;
+}
+
+  // if its an end to a if/else create a dummy end node
+  CfgNodePtr currNode = addEndCfgNode(cfgNode);
+
+  currNode->addChildren(parent);
+  return currNode;
+}
+
 CfgNodeMap Cfg::cfgNodeMap = CfgNodeMap();
 
 std::shared_ptr<CfgStatementHandler> Cfg::cfgStatementHandler = std::make_shared<CfgStatementHandler>();
