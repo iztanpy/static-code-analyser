@@ -7,7 +7,6 @@ visitor(astVisitorPtr) {}
 
 int SimpleParser::parse(std::vector<Token>& tokens) {
     reset();
-
     while (index < tokens.size()) {
         Token* curr_token = &tokens[index];
         bool isWhileParent = !controlStructureStack.empty() && controlStructureStack.top() == "while";

@@ -10,6 +10,8 @@
 // Headers from "SP" subdirectory
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/DesignExtractor.h"
+#include "SP/sp_cfg/Cfg.h"
+#include "SP/sp_cfg/CfgNode.h"
 
 // Headers from other directories
 #include "utils/Error.h"
@@ -43,6 +45,9 @@ class Parser {
     void start_parse(std::vector<Token>& tokens, int curr_index);
     static DesignExtractor* designExtractor;  // Initialize to nullptr in the constructor
     static int index;
+    static Cfg cfgFacade;
+    std::shared_ptr<CfgNode> rootCfgNode = std::make_shared<CfgNode>(0);
+
     /**
     * @brief Increment the index used for token parsing.
     *
