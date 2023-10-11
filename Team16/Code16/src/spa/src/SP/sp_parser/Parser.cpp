@@ -21,6 +21,8 @@ std::unordered_map<int, std::unordered_set<int>> Parser::parentStatementNumberHa
 
 std::stack<int> Parser::parentStatementStack = std::stack<int>();
 
+std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgNodeMap = std::unordered_map<std::string, std::shared_ptr<CfgNode>>(); 
+
 void Parser::start_parse(std::vector<Token>& tokens, int curr_index) {
   int next_index = parse(tokens);
   if (next_index == -1) {

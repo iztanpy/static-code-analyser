@@ -27,8 +27,6 @@ class PrintParser;
 class CallParser;
 class CloseBraceParser;
 
-typedef std::unordered_map<string, CfgNodePtr> CfgNodeMap;
-
 /**
  * @class Parser
  * @brief Abstract base class for parsing operations on a sequence of tokens.
@@ -48,7 +46,7 @@ class Parser {
     static DesignExtractor* designExtractor;  // Initialize to nullptr in the constructor
     static int index;
     static Cfg cfgFacade;
-    CfgNodeMap Cfg::cfgNodeMap = CfgNodeMap();
+    static std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgNodeMap;
     /**
     * @brief Increment the index used for token parsing.
     *

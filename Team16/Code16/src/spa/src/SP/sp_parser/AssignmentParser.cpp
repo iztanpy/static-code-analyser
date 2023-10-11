@@ -18,6 +18,7 @@ int AssignmentParser::parse(std::vector<Token>& tokens) {
     }
 
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[index], lineNumber);
+    
     std::shared_ptr<AssignTNode> assignNode =
           std::dynamic_pointer_cast<AssignTNode>(TNodeFactory::createNode(tokens[index + 1], lineNumber));
     int RHSStart = index + 2;
