@@ -12,6 +12,7 @@
 #include "SP/sp_tokeniser/Token.h"
 #include "Parser.h"
 #include "SP/utils/ParseUtils.h"
+#include "SP/sp_cfg/CfgNode.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -43,6 +44,7 @@ class ProcedureParser : public Parser {
      * @return The index in the token vector after parsing the procedure statement.
      */
     int parse(std::vector<Token>& tokens) override;
+    static void addCfgNodeToMap(const string& procedureName, std::shared_ptr<CfgNode> cfgNode);
     ASTVisitor* visitor;
 };
 

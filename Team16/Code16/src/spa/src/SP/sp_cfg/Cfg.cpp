@@ -7,7 +7,7 @@ void Cfg::handleStatement(int stmtNumber) {
 
 void Cfg::handleIfStatement(int stmtNumber) {
   CfgNodePtr ifNode = std::make_shared<CfgNode>(stmtNumber);
-  cfgNode->addChildren(ifNode);
+  currNode->addChildren(ifNode);
   ifNode->setParentNode(cfgNode);
   return ifNode;
 }

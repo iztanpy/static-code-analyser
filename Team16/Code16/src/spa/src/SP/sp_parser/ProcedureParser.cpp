@@ -52,3 +52,7 @@ int ProcedureParser::parse(std::vector<Token>& tokens) {
     isParsingProcedure = true;
     return Parser::index;
 }
+
+void ProcedureParser::addCfgNodeToMap(const string& procedureName, std::shared_ptr<CfgNode> cfgNode) {
+    cfgNodeMap[procedureName] = cfgNode;
+}

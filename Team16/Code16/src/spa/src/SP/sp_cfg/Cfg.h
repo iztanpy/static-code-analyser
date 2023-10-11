@@ -13,14 +13,14 @@ typedef std::unordered_map<string, CfgNodePtr> CfgNodeMap;
 class Cfg {
  private:
   std::shared_ptr<CfgNode> rootCfgNode = std::make_shared<CfgNode>(0);
-  static std::shared_ptr currNode;
+  static std::shared_ptr;
   static CfgNodeMap cfgNodeMap;
   static std::shared_ptr<CfgStatementHandler> cfgStatementHandler;
 
  public:
   Cfg() {
-	 currNode = rootCfgNode;
-  }  
+	  currNode = rootCfgNode;
+  };
   virtual ~Cfg() = default;
   static std::shared_ptr<CfgNode> getCfgNode();
   /*static void addCfgNodeToMap(const string& procedureName, CfgNodePtr cfgNode);*/
