@@ -46,8 +46,6 @@ class Parser {
     static DesignExtractor* designExtractor;  // Initialize to nullptr in the constructor
     static int index;
     static Cfg cfgFacade;
-    std::shared_ptr<CfgNode> rootCfgNode = std::make_shared<CfgNode>(0);
-
     /**
     * @brief Increment the index used for token parsing.
     *

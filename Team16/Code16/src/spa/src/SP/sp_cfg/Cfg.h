@@ -10,43 +10,23 @@ typedef std::string string;
 typedef std::shared_ptr<CfgNode> CfgNodePtr;
 typedef std::unordered_map<string, CfgNodePtr> CfgNodeMap;
 
-class CfgStatementHandler {
- public:
-  static CfgNodePtr handleStatement(CfgNodePtr cfgNode, int stmtNumber);
-};
-
-class IfCfgStatementHandler : public CfgStatementHandler {
- public:
-  static CfgNodePtr handleStatement(CfgNodePtr cfgNode, int stmtNumber);
-};
-
-class ElseCfgStatementHandler : public CfgStatementHandler {
- public:
-  static CfgNodePtr handleStatement(CfgNodePtr cfgNode, int stmtNumber);
-};
-
-class WhileCfgStatementHandler : public CfgStatementHandler {
- public:
-  static CfgNodePtr handleStatement(CfgNodePtr cfgNode, int stmtNumber);
-};
-
-class CloseBraceCfgStatementHandler : public CfgStatementHandler {
- private:
-  static CfgNodePtr addEndCfgNode(CfgNodePtr cfgNode);
-
- public:
-  static CfgNodePtr handleStatement(CfgNodePtr cfgNode, int stmtNumber);
-};
-
 class Cfg {
  private:
+  std::shared_ptr<CfgNode> rootCfgNode = std::make_shared<CfgNode>(0);
+  static std::shared_ptr currNode;
   static CfgNodeMap cfgNodeMap;
   static std::shared_ptr<CfgStatementHandler> cfgStatementHandler;
 
  public:
-  Cfg() = default;
+  Cfg() {
+	 currNode = rootCfgNode;
+  }  
   virtual ~Cfg() = default;
-  static CfgNodeMap getCfgNodes();
-  static void addCfgNodeToMap(const string& procedureName, CfgNodePtr cfgNode);
-  static CfgNodePtr handleStatement(CfgNodePtr cfgNode, int stmtNumber);
+  static std::shared_ptr<CfgNode> getCfgNode();
+  /*static void addCfgNodeToMap(const string& procedureName, CfgNodePtr cfgNode);*/
+  static void handleStatement(int stmtNumber);
+  static void handleIfStatement(int stmtNumber);
+  static void handleElseStatement(int stmtNumber);
+  static void handleWhileStatement(int stmtNumber);
+  static void handleEndStatement();
 };
