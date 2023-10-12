@@ -13,6 +13,16 @@ procedure p;
 Select p such that Uses(p   , "aa"   )
 C, A
 5000
+4 - LHS string, RHS synonym
+procedure p; variable v;
+Select v such that Uses("A   ", v  )
+ss, qq, oo, nn, ll, jj, ii, gg, l, v, ff, s, cc, n, q, t, y, kk, aa, x, ee, w, p, b, o, h, f, z, c, pp, d, e, j
+5000
+5 - LHS string, RHS wildcard
+call c;
+Select c such that Uses( "  B", _)
+20, 14, 7, 5
+5000
 6 - LHS string, RHS string
 constant c;
 Select c such that Uses(" C"  , " nn")
