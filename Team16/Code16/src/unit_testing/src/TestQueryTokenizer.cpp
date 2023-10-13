@@ -454,3 +454,73 @@ TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
   REQUIRE(results_2.first[2].text == such_that_tokens_2[2].text);
   REQUIRE(results_2.first[2].type == such_that_tokens_2[2].type);
 }
+
+TEST_CASE("Tokenizer can tokenize Next and Next*") {
+  std::string sample_query_1 = "Select s1 such that Next(s1, _)";
+
+  std::vector<Declaration> declarations_1 = {
+      {"s1", DesignEntity::STMT},
+  };
+
+  std::vector<QueryToken> such_that_tokens =  {
+      {"Next", PQLTokenType::RELREF},
+      {"s1", PQLTokenType::SYNONYM},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  REQUIRE(results_1.first.size() == 3);
+  REQUIRE(results_1.first[0].text == such_that_tokens[0].text);
+  REQUIRE(results_1.first[0].type == such_that_tokens[0].type);
+  REQUIRE(results_1.first[1].text == such_that_tokens[1].text);
+  REQUIRE(results_1.first[1].type == such_that_tokens[1].type);
+  REQUIRE(results_1.first[2].text == such_that_tokens[2].text);
+  REQUIRE(results_1.first[2].type == such_that_tokens[2].type);
+
+  std::string sample_query_2 = "Select s1 such that Next*(2, 9)";
+
+  std::vector<QueryToken> such_that_tokens_2 =  {
+      {"Next*", PQLTokenType::RELREF},
+      {"2", PQLTokenType::INTEGER},
+      {"9", PQLTokenType::INTEGER}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1);
+
+  REQUIRE(results_2.first.size() == 3);
+  REQUIRE(results_2.first[0].text == such_that_tokens_2[0].text);
+  REQUIRE(results_2.first[0].type == such_that_tokens_2[0].type);
+  REQUIRE(results_2.first[1].text == such_that_tokens_2[1].text);
+  REQUIRE(results_2.first[1].type == such_that_tokens_2[1].type);
+  REQUIRE(results_2.first[2].text == such_that_tokens_2[2].text);
+  REQUIRE(results_2.first[2].type == such_that_tokens_2[2].type);
+}
+
+TEST_CASE("Tokenizer can tokenize Affects") {
+  std::string sample_query_1 = "Select a1 such that Affects(a1, a2)";
+
+  std::vector<Declaration> declarations_1 = {
+      {"a1", DesignEntity::STMT},
+      {"a2", DesignEntity::STMT}
+  };
+
+  std::vector<QueryToken> such_that_tokens =  {
+      {"Affects", PQLTokenType::RELREF},
+      {"a1", PQLTokenType::SYNONYM},
+      {"a2", PQLTokenType::SYNONYM}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  REQUIRE(results_1.first.size() == 3);
+  REQUIRE(results_1.first[0].text == such_that_tokens[0].text);
+  REQUIRE(results_1.first[0].type == such_that_tokens[0].type);
+  REQUIRE(results_1.first[1].text == such_that_tokens[1].text);
+  REQUIRE(results_1.first[1].type == such_that_tokens[1].type);
+  REQUIRE(results_1.first[2].text == such_that_tokens[2].text);
+  REQUIRE(results_1.first[2].type == such_that_tokens[2].type);
+}
