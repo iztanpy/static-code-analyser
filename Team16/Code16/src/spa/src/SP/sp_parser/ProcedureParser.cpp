@@ -3,9 +3,7 @@
 #include <utility>
 
 int ProcedureParser::parse(std::vector<Token>& tokens) {
-    
     if (isParsingProcedure) throw InvalidSyntaxError();
-
     // validate procedure declaration: procedure (already validated), name, open brace
     if (Parser::index + 2 > tokens.size()) {
         return -1;

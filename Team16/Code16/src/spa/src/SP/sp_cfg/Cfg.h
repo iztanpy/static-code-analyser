@@ -7,12 +7,12 @@
 
 #include "CfgNode.h"
 class Cfg {
-private:
-  static std::shared_ptr<CfgNode> currNode;
+ private:
+    static std::shared_ptr<CfgNode> currNode;
 
-public:
-  Cfg() = default;
-  virtual ~Cfg() = default;
+ public:
+    Cfg() = default;
+    virtual ~Cfg() = default;
 
     static std::shared_ptr<CfgNode> getCfgNode();
     static void handleStatement(int stmtNumber);
@@ -21,6 +21,8 @@ public:
     static void handleWhileStatement(int stmtNumber);
     static void handleEndStatement();
     static void handleEndElseStatement();
+    static void handleEndWhileStatement(int stmtNumber);
+    static void handleEndIfStatement();
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
 };

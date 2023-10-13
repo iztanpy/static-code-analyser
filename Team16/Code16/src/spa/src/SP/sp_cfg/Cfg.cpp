@@ -4,7 +4,7 @@ std::shared_ptr<CfgNode> Cfg::rootCfgNode = std::make_shared<CfgNode>(0);
 
 std::shared_ptr<CfgNode> Cfg::currNode = rootCfgNode;
 
-std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack = std::stack<std::shared_ptr<CfgNode>>();
+std::stack<std::shared_ptr<CfgNode>> Cfg::elseEndNodeStack = std::stack<std::shared_ptr<CfgNode>>();
 
 void Cfg::handleStatement(int stmtNumber) {
   currNode->addStmtNumber(stmtNumber);
@@ -16,7 +16,7 @@ void Cfg::handleIfStatement(int stmtNumber) {
   ifNode->setParentNode(currNode);
 }
 
-void Cfg::handleElseStatement(int parentStmtNumber) { //need to link end of else to end note
+void Cfg::handleElseStatement(int parentStmtNumber) {
   std::shared_ptr<CfgNode> endNode = std::make_shared<CfgNode>(-1);
   currNode->addChildren(endNode);
   elseEndNodeStack.push(endNode);
@@ -44,6 +44,20 @@ void Cfg::handleEndElseStatement() {
     currNode->addChildren(endNode);
     currNode = endNode;
     elseEndNodeStack.pop();
+}
+
+void Cfg::handleEndWhileStatement(int stmtNumber) {
+    std::shared_ptr<CfgNode> parentNode = currNode->getParentNode(stmtNumber);
+    std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
+    currNode->addChildren(parentNode);
+    currNode->addChildren(nextNode);
+    currNode = nextNode;
+}
+
+void Cfg::handleEndIfStatement() {
+    std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
+    currNode->addChildren(nextNode);
+    currNode = nextNode;
 }
 
 std::shared_ptr<CfgNode> Cfg::getCfgNode() {

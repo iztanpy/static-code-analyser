@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <memory>
 
 // Headers from "SP" subdirectory
 #include "SP/sp_tokeniser/Token.h"

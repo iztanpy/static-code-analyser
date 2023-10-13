@@ -21,7 +21,8 @@ std::unordered_map<int, std::unordered_set<int>> Parser::parentStatementNumberHa
 
 std::stack<int> Parser::parentStatementStack = std::stack<int>();
 
-std::unordered_map<std::string, std::shared_ptr<CfgNode>> Parser::cfgNodeMap = std::unordered_map<std::string, std::shared_ptr<CfgNode>>();
+std::unordered_map<std::string, std::shared_ptr<CfgNode>> Parser::cfgNodeMap =
+    std::unordered_map<std::string, std::shared_ptr<CfgNode>>();
 
 Cfg cfgFacade = Cfg();
 

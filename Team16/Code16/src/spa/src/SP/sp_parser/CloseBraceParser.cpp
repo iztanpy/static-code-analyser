@@ -8,22 +8,22 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
   insertFollowsHashMap(top_set);
   followsStatementStack.pop();
   if (!controlStructureStack.empty() && controlStructureStack.top() == "while" && currWhileDepth >= 1) {
+    Cfg::handleEndWhileStatement(parentStatementStack.top());  // End of While Block CFG
     controlStructureStack.pop();  // Pop the 'while'
     parentStatementStack.pop();  // Pop the parent statement
     currWhileDepth--;  // Decrease the depth
   } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
     if (index + 1 < tokens.size() && tokens[index + 1].getValue() != "else") {
+      Cfg::handleEndIfStatement();  // End of if Block CFG
       currIfDepth--;  // Decrease the depth
       controlStructureStack.pop();  // Pop the 'if'
       parentStatementStack.pop();  // Pop the parent
     } else if (index + 2 < tokens.size()) {
       if (tokens[index + 2].tokenType == TokenType::kSepOpenBrace) {
-        // handle else statement
-        Cfg::handleEndStatement();
-
         index += 1;
         return index;
       } else {
+        Cfg::handleEndElseStatement();  // End of Else Block CFG
         currIfDepth--;  // Decrease the depth
         controlStructureStack.pop();  // Pop the 'if'
         parentStatementStack.pop();  // Pop the paren
@@ -34,8 +34,8 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
       currWhileDepth--;  // Decrease the depth
       currIfDepth--;  // Decrease the depth
     } else {  // end of procedure
-
       visitor->setProcedureLineNumberMap(ParseUtils::getProcedureName(), lineNumber - 1);
+      Cfg::handleEndStatement();
       isParsingProcedure = false;
     }
   }
