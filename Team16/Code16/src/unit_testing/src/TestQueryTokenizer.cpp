@@ -203,7 +203,9 @@ TEST_CASE("Test get pattern arguments") {
       {"s", DesignEntity::STMT},
   };
 
-  std::pair<QueryToken, QueryToken> args = QueryTokenizer::getPatternArgs(sample_arg, declarations);
+  std::pair<QueryToken, QueryToken> args = QueryTokenizer::getPatternArgs(sample_arg,
+                                                                          declarations,
+                                                                          PQLTokenType::SYNONYM);
   std::pair<QueryToken, QueryToken> expected_args = {
       {"s", PQLTokenType::SYNONYM},
       {"x+y", PQLTokenType::PARTIALEXPR}
@@ -218,7 +220,9 @@ TEST_CASE("Test get pattern arguments") {
       {"s", DesignEntity::STMT},
   };
 
-  std::pair<QueryToken, QueryToken> args_2 = QueryTokenizer::getPatternArgs(sample_arg_2, declarations_2);
+  std::pair<QueryToken, QueryToken> args_2 = QueryTokenizer::getPatternArgs(sample_arg_2,
+                                                                            declarations_2,
+                                                                            PQLTokenType::SYNONYM);
   std::pair<QueryToken, QueryToken> expected_args_2 = {
       {"s", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD}
@@ -233,7 +237,9 @@ TEST_CASE("Test get pattern arguments") {
       {"s", DesignEntity::STMT},
   };
   // TODO (Su Mian): Need to factor in the case for "x+y"
-  std::pair<QueryToken, QueryToken> args_3 = QueryTokenizer::getPatternArgs(sample_arg_3, declarations_3);
+  std::pair<QueryToken, QueryToken> args_3 = QueryTokenizer::getPatternArgs(sample_arg_3,
+                                                                            declarations_3,
+                                                                            PQLTokenType::SYNONYM);
   std::pair<QueryToken, QueryToken> expected_args_3 = {
       {"s", PQLTokenType::SYNONYM},
       {"x", PQLTokenType::EXACTEXPR}
@@ -250,10 +256,12 @@ TEST_CASE("Test get pattern arguments") {
   };
 
   std::string more_that_2_arg = "(s, b, c)";
-  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(more_that_2_arg, error_declarations), QpsSyntaxError);
+  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(more_that_2_arg, error_declarations, PQLTokenType::SYNONYM),
+                    QpsSyntaxError);
 
   std::string not_declared_arg = "(a, _)";
-  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(not_declared_arg, error_declarations), QpsSemanticError);
+  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(not_declared_arg, error_declarations, PQLTokenType::SYNONYM),
+                    QpsSemanticError);
 }
 
 TEST_CASE("Test extract clause tokens") {
