@@ -32,7 +32,7 @@ int SimpleParser::parse(std::vector<Token>& tokens) {
 void SimpleParser::populatePKB() {
   // Store Parent <line, set<line>>
   writeFacade->storeParent(visitor->getParentStatementNumberMap());
-  // Store Assignments: <line, RHS patterns>, <line, LHS var>
+  // Store Assignments: <line, RHS patterns>, <line, full RHS>, <line, LHS var>
   writeFacade->storeAssignments(visitor->getAssignLinePartialRHSPatternMap(),
                                 visitor->getAssignLineFullRHSMap(),
                                 visitor->getUsesLineLHSMap());
@@ -54,4 +54,8 @@ void SimpleParser::populatePKB() {
   writeFacade->storeConstants(visitor->getConstants());
   // Store Statement types
   writeFacade->storeStatements(visitor->getStatementTypesMap());
+  // Store while control variables
+//  writeFacade->storeWhile(visitor->getWhileControlVarMap());
+  // Store if control variables
+//  writeFacade->storeIf(visitor->getIfControlVarMap());
 }
