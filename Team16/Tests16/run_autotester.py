@@ -24,6 +24,7 @@ class Runner:
         self.TOTAL_TESTS = 0
         self.TOTAL_PASSED_TESTS = 0
         self.TOTAL_FAILED_TESTS = 0
+        self.make_result_directory()
 
     @staticmethod
     def make_path_suitable(command):
@@ -53,8 +54,7 @@ class Runner:
             os.makedirs(path)
 
     def get_autotester_parameters(self, folder_to_test_in):
-        current_directory = os.getcwd()
-        test_name_list = glob.glob(os.path.join(current_directory, folder_to_test_in, "**", "*.txt"), recursive=True)
+        test_name_list = glob.glob(os.path.join(os.getcwd(), folder_to_test_in, "**", "*.txt"), recursive=True)
 
         source_tests = [name for name in test_name_list if name.endswith("source.txt")]
         query_tests = [name for name in test_name_list if name.endswith("queries.txt")]
@@ -69,11 +69,16 @@ class Runner:
             assert base_source == base_query, f"Source: {base_source}, Query: {base_query}"
 
             test_name = os.path.basename(source)[:-10]
-            parameters.append([source, query, test_name])
+
+            test_dir = os.path.dirname(source)
+            relative_path = os.path.join(folder_to_test_in,
+                                         os.path.relpath(test_dir, os.path.join(os.getcwd(), folder_to_test_in)))
+
+            parameters.append([source, query, test_name, relative_path])
 
         return parameters
 
-    def check_output_xml(self, output_xml, test_name):
+    def check_output_xml(self, output_xml, test_name, relative_path):
         if not os.path.exists(output_xml):
             return "\n"
 
@@ -88,14 +93,20 @@ class Runner:
         self.TOTAL_FAILED_TESTS += failed_tests
 
         if failed_tests > 0:
-            shutil.move(output_xml, os.path.join(self.FAIL_DIRECTORY, f"{test_name}out.xml"))
+            destination = os.path.join(self.FAIL_DIRECTORY, relative_path)
         else:
-            shutil.move(output_xml, os.path.join(self.PASS_DIRECTORY, f"{test_name}out.xml"))
+            destination = os.path.join(self.PASS_DIRECTORY, relative_path)
+
+        if not os.path.exists(destination):
+            os.makedirs(destination)
+
+        shutil.move(output_xml, os.path.join(destination, f"{test_name}out.xml"))
+        shutil.copy("analysis.xsl", destination)
 
         return f"\nTest passed: {passed_tests}\nTest failed: {failed_tests}\n"
 
     def execute_autotester(self, autotester_filepath, parameters, redirect_output):
-        source, query, test_name = parameters
+        source, query, test_name, relative_path = parameters
 
         command = [autotester_filepath, source, query, self.TEMP_XML_FILENAME]
         command = self.make_path_suitable(" ".join(command))
@@ -108,13 +119,11 @@ class Runner:
         if exit_code != self.SUCCESS_EXIT_CODE:
             return f"Execution failed for {test_name} with exit code: {exit_code}"
 
-        return f"Execution completed for {test_name} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name)}"
+        return f"Execution completed for {test_name} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
 
     def execute(self, folder_to_test_in, redirect_output=True):
         autotester_filepath = self.find_autotester_executable()
         parameters = self.get_autotester_parameters(folder_to_test_in)
-
-        self.make_result_directory()
 
         test_report = ""
         for param in parameters:
@@ -122,15 +131,12 @@ class Runner:
 
         print(test_report)
 
-        shutil.copy("analysis.xsl", self.PASS_DIRECTORY)
-        shutil.copy("analysis.xsl", self.FAIL_DIRECTORY)
-
 
 if __name__ == "__main__":
     start_time = time.time()
     runner = Runner()
     runner.execute("Milestone1")
-    # runner.execute("Milestone2")
+    runner.execute("Milestone2")
 
     print(f"Test statistics:")
     print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")

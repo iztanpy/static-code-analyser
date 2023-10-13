@@ -42,5 +42,5 @@ DesignEntity Entity::fromString(const std::string & entity_str) {
 
 std::set<std::string> Entity::getStringDesignEntities() {
   return {"stmt", "read", "print", "while", "if", "assign",
-          "variable", "constant", "procedure"};
+          "variable", "constant", "procedure", "call"};
 }

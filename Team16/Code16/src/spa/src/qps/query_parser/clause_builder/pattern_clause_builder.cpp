@@ -1,4 +1,5 @@
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
+#include "utils/string_utils.h"
 
 void PatternClauseBuilder::setSynAssignment(Declaration declaration) {
   syn_assignment = std::move(declaration);
@@ -26,9 +27,9 @@ void PatternClauseBuilder::setRhs(const QueryToken& param, const std::vector<Dec
   rhs_type = param.type;
   switch (param.type) {
     // these 2 are cases for expression and partial expressions
-
-    case PQLTokenType::EXACTEXPR:rhs = ExactExpr{param.text};
-    case PQLTokenType::PARTIALEXPR:rhs = PartialExpr{param.text};
+      case PQLTokenType::EXACTEXPR:rhs = ExactExpr{string_util::RemoveSpacesFromExpr(param.text)};
+      break;
+      case PQLTokenType::PARTIALEXPR:rhs = PartialExpr{string_util::RemoveSpacesFromExpr(param.text)};
       break;
     case PQLTokenType::WILDCARD:rhs = Wildcard::Value;
       break;

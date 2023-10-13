@@ -93,4 +93,14 @@ std::string string_util::RemoveFirstWord(std::string& str) {
   // If there's no space, return an empty string
   return "";
 }
+
+std::string string_util::RemoveSpacesFromExpr(const std::string& str) {
+  std::string result;
+  for (char c : str) {
+    if (!std::isspace(c)) {
+      result += c;
+    }
+  }
+  return result;
+}
 // ai-gen end

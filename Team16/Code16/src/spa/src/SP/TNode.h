@@ -195,7 +195,7 @@ class PlusTNode : public TNode {
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
   std::string getContent() const override {
-      return leftChild->getContent() + " + " + rightChild->getContent();
+      return leftChild->getContent() + "+" + rightChild->getContent();
   }
 };
 
@@ -214,7 +214,7 @@ class MinusTNode : public TNode {
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
   std::string getContent() const override {
-      return leftChild->getContent() + " - " + rightChild->getContent();
+      return leftChild->getContent() + "-" + rightChild->getContent();
   }
 };
 
@@ -299,7 +299,7 @@ class MultiplyTNode : public TNode {
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
   std::string getContent() const override {
-    return leftChild->getContent() + " * " + rightChild->getContent();
+    return leftChild->getContent() + "*" + rightChild->getContent();
   }
 };
 
@@ -318,7 +318,7 @@ class DivideTNode : public TNode {
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
   std::string getContent() const override {
-    return leftChild->getContent() + " / " + rightChild->getContent();
+    return leftChild->getContent() + "/" + rightChild->getContent();
   }
 };
 
@@ -337,7 +337,7 @@ class ModTNode : public TNode {
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
   std::string getContent() const override {
-    return leftChild->getContent() + " % " + rightChild->getContent();
+    return leftChild->getContent() + "%" + rightChild->getContent();
   }
 };
 
