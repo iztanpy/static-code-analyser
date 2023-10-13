@@ -1,6 +1,7 @@
 #include "CloseBraceParser.h"
 
 int CloseBraceParser::parse(std::vector<Token>& tokens) {
+  std::cout << "CloseBraceParser::parse: " << index << std::endl;
   if (index - 1 > 0 && tokens[index - 1].tokenType == TokenType::kSepOpenBrace) {
     throw InvalidSyntaxError();
   }
@@ -8,7 +9,7 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
   insertFollowsHashMap(top_set);
   followsStatementStack.pop();
   if (!controlStructureStack.empty() && controlStructureStack.top() == "while" && currWhileDepth >= 1) {
-    Cfg::handleEndWhileStatement(parentStatementStack.top());  // End of While Block CFG
+    Cfg::handleEndWhileStatement();  // End of While Block CFG
     controlStructureStack.pop();  // Pop the 'while'
     parentStatementStack.pop();  // Pop the parent statement
     currWhileDepth--;  // Decrease the depth
@@ -35,7 +36,7 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
       currIfDepth--;  // Decrease the depth
     } else {  // end of procedure
       visitor->setProcedureLineNumberMap(ParseUtils::getProcedureName(), lineNumber - 1);
-      Cfg::handleEndStatement();
+      Cfg::handleEndProcedureStatement();
       isParsingProcedure = false;
     }
   }

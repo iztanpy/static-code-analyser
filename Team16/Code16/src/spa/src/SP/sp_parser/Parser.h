@@ -85,6 +85,13 @@ class Parser {
     void setIndex(int newIndex) {
       index = newIndex;
     }
+    /**
+     * @brief Retrieves the cfg nodes map.
+     * @return The map of cfg root nodes.
+     */
+    std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
+      return cfgNodeMap;
+    }
 
     void reset() {
         index = 0;

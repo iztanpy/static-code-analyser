@@ -104,6 +104,13 @@ class SourceProcessor {
     std::unordered_map<std::string, std::pair<int, int>> getProcedureLineNumberHashmap();
     std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap();
     std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap();
+    /**
+     * @brief Retrieves the cfg nodes map.
+     * @return The map of cfg root nodes.
+    */
+      std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
+          return simpleParser.getCfgNodesMap();
+      }
 };
 
 

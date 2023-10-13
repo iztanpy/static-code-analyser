@@ -117,6 +117,9 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ElseParser.h
         src/SP/sp_parser/CloseBraceParser.cpp
         src/SP/sp_parser/CloseBraceParser.h
+        src/SP/sp_cfg/Cfg.cpp
+        src/SP/sp_cfg/Cfg.h
+        src/SP/sp_cfg/CfgNode.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -185,9 +188,6 @@ add_library(spa ${srcs} ${headers}
         src/qps/qps_validator/clause_synonym_semantic_handler.h
         src/qps/clauses/suchthat_clauses/calls.cpp
         src/qps/clauses/suchthat_clauses/calls.h
-        src/SP/sp_cfg/Cfg.cpp
-        src/SP/sp_cfg/Cfg.h
-        src/SP/sp_cfg/CfgNode.h)
         src/qps/clauses/suchthat_clauses/next.cpp
         src/qps/clauses/suchthat_clauses/next.h
         src/qps/clauses/suchthat_clauses/affects.cpp

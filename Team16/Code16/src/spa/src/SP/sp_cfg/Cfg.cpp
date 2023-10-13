@@ -6,52 +6,53 @@ std::shared_ptr<CfgNode> Cfg::currNode = rootCfgNode;
 
 std::stack<std::shared_ptr<CfgNode>> Cfg::elseEndNodeStack = std::stack<std::shared_ptr<CfgNode>>();
 
+std::stack<std::shared_ptr<CfgNode>> Cfg::keyNodesStack = std::stack<std::shared_ptr<CfgNode>>();
+
 void Cfg::handleStatement(int stmtNumber) {
   currNode->addStmtNumber(stmtNumber);
 }
 
 void Cfg::handleIfStatement(int stmtNumber) {
   std::shared_ptr<CfgNode> ifNode = std::make_shared<CfgNode>(stmtNumber);
+  keyNodesStack.push(ifNode);
   currNode->addChildren(ifNode);
-  ifNode->setParentNode(currNode);
+  currNode = ifNode;
 }
 
-void Cfg::handleElseStatement(int parentStmtNumber) {
-  std::shared_ptr<CfgNode> endNode = std::make_shared<CfgNode>(-1);
-  currNode->addChildren(endNode);
-  elseEndNodeStack.push(endNode);
+void Cfg::handleElseStatement() {
   std::shared_ptr<CfgNode> elseNode = std::make_shared<CfgNode>();
-  std::shared_ptr<CfgNode> parent = currNode->getParentNode(parentStmtNumber);
+  std::shared_ptr<CfgNode> parent = keyNodesStack.top();
+  keyNodesStack.pop();
   parent->addChildren(elseNode);
+  keyNodesStack.push(currNode);
   currNode = elseNode;
 }
 
 void Cfg::handleWhileStatement(int stmtNumber) {
   std::shared_ptr<CfgNode> whileNode = std::make_shared<CfgNode>(stmtNumber);
   currNode->addChildren(whileNode);
+  keyNodesStack.push(whileNode);
   std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
   whileNode->addChildren(nextNode);
   currNode = nextNode;
 }
 
-void Cfg::handleEndStatement() {
-  std::shared_ptr<CfgNode> endNode = std::make_shared<CfgNode>(-1);
-  currNode->addChildren(endNode);
+void Cfg::handleEndProcedureStatement() {
 }
 
 void Cfg::handleEndElseStatement() {
-    std::shared_ptr<CfgNode> endNode = elseEndNodeStack.top();
+    std::shared_ptr<CfgNode> endNode = keyNodesStack.top();
+    keyNodesStack.pop();
     currNode->addChildren(endNode);
     currNode = endNode;
-    elseEndNodeStack.pop();
 }
 
-void Cfg::handleEndWhileStatement(int stmtNumber) {
-  // link the currnode to the parent node
-  std::shared_ptr<CfgNode> parentNode = currNode->getParentNode(stmtNumber);
+void Cfg::handleEndWhileStatement() {
+  std::shared_ptr<CfgNode> parentNode = keyNodesStack.top();
+  keyNodesStack.pop();
   currNode->addChildren(parentNode);
   std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
-  parentNode->addChildren(nextNode);
+  currNode->addChildren(nextNode);
   currNode = nextNode;
 }
 

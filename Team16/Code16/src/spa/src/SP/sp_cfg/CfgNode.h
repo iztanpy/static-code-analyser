@@ -16,7 +16,7 @@ class CfgNode {
   /**
    * @brief Set of child nodes connected to this node in the CFG.
   */
-  std::unordered_set<std::shared_ptr<CfgNode>> children;
+  std::set<std::shared_ptr<CfgNode>> children;
   std::shared_ptr<CfgNode> parentNode = nullptr;
   std::set<int> statementNumberSet;
 
@@ -37,7 +37,12 @@ class CfgNode {
   void addChildren(const std::shared_ptr<CfgNode>& child) {
     children.insert(child);
   }
-
+  /**
+   * @brief Get children nodes to this node in the CFG.
+   */
+  std::set<std::shared_ptr<CfgNode>> getChildren() {
+    return children;
+  }
   /**
    * @brief Add a statement number to the set of statement numbers associated with this node.
    *
@@ -46,7 +51,12 @@ class CfgNode {
   void addStmtNumber(int stmtNumber) {
     statementNumberSet.insert(stmtNumber);
   }
-
+  /**
+   * @brief Get the set of statement numbers associated with this node.
+  */
+  std::set<int> getStmtNumberSet() {
+    return statementNumberSet;
+  }
   /**
    * @brief Set the parent node of this node in the CFG.
    *

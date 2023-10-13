@@ -4,6 +4,7 @@
 #include <memory>
 #include <stack>
 #include <unordered_map>
+#include <iostream>
 
 #include "CfgNode.h"
 /**
@@ -21,6 +22,7 @@ class Cfg {
    * This pointer keeps track of the current node while constructing the CFG.
    */
     static std::shared_ptr<CfgNode> currNode;
+    static std::stack<std::shared_ptr<CfgNode>> keyNodesStack;
 
  public:
     Cfg() = default;
@@ -53,10 +55,8 @@ class Cfg {
     * @brief Handle an "else" statement in the program.
     *
     * This method is used to handle an "else" statement in the program and update the CFG accordingly.
-    *
-    * @param stmtNumber The statement number of the "else" statement.
     */
-    static void handleElseStatement(int stmtNumber);
+    static void handleElseStatement();
     /**
     * @brief Handle a "while" statement in the program.
     *
@@ -70,7 +70,7 @@ class Cfg {
      *
      * This method is used to handle an "end" statement in the program and update the CFG accordingly.
      */
-    static void handleEndStatement();
+    static void handleEndProcedureStatement();
     /**
      * @brief Handle an end of an "else" statement.
      *
@@ -81,10 +81,8 @@ class Cfg {
      * @brief Handle an end of a "while" statement in the program.
      *
      * This method is used to handle an end of a "while' statement in the program and update the CFG accordingly.
-     *
-     * @param stmtNumber The statement number of the "while" statement.
      */
-    static void handleEndWhileStatement(int stmtNumber);
+    static void handleEndWhileStatement();
     /**
      * @brief Handle an end of an "if" statement in the program.
      *

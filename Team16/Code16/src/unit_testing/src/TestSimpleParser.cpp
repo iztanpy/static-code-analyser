@@ -765,6 +765,69 @@ TEST_CASE(("Test SP valid SIMPLE - keywords as names")) {
       "procedure p { if (i != 0) then { else = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
   sourceProcessor.processSource(simpleProgram);
 }
+
+TEST_CASE(("Test SP: CFG storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = R"(
+      procedure Second {
+        x = 0;
+        i = 5;
+        while (i!=0) {
+            x = x + 2*y;
+            call Third;
+            i = i - 1;
+        }
+        if (x==1) then {
+            x = x+1;
+        }  else {
+            z = 1;
+        }
+        z = z + x + i;
+        y = z + 2;
+        x = x * y + z;
+        }
+  )";
+  sourceProcessor.processSource(simpleProgram);
+  std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::set<int> statementNumberSet = rootSecond->getStmtNumberSet();
+  for (auto& it : statementNumberSet) {
+    std::cout << it << " -> ";
+  }
+//  while (rootSecond != nullptr) {
+//    rootSecond = nullptr;
+//    std::set<int> statementNumberSet = rootSecond->getStmtNumberSet();
+//    for (auto& it : statementNumberSet) {
+//      std::cout << it << " -> ";
+//    }
+//    if (rootSecond->getChildren().size() == 2) {
+//      std::cout << "2 children: ";
+//      for (const std::shared_ptr<CfgNode>& node : rootSecond->getChildren()) {
+//        for (int i : node->getStmtNumberSet()) {
+//            std::cout << i << " -> ";
+//        }
+//        std::cout << " } " << std::endl;
+//        rootSecond = node;
+//      }
+//    } else if (rootSecond->getChildren().size() == 1) {
+//      std::cout << "1 child: ";
+//      for (const std::shared_ptr<CfgNode>& node : rootSecond->getChildren()) {
+//        for (int i : node->getStmtNumberSet()) {
+//          std::cout << i << " -> ";
+//        }
+//        std::cout << " } " << std::endl;
+//        rootSecond = node;
+//      }
+//    } else if (rootSecond->getChildren().empty()) {
+//      std::cout << "no child: ";
+//      break;
+//    }
+//  }
+
+  REQUIRE(sourceProcessor.getCfgNodesMap().at("Second") != nullptr);
+}
+
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
