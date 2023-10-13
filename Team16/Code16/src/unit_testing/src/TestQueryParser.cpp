@@ -3,7 +3,6 @@
 #include "qps/query_parser/query_parser.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
-#include "qps/clauses/suchthat_clauses/calls.h"
 
 TEST_CASE("Query Parser can extract select clause") {
   std::string sample_query = "variable v; Select v";
@@ -125,4 +124,62 @@ TEST_CASE("Query parser throws correct errors") {
 
   std::string sample_query_2 = "Select 1v";
   REQUIRE_THROWS_AS(QueryParser::ParseTokenizedQuery(sample_query_2), QpsSyntaxError);
+}
+
+TEST_CASE("Parser can parse Next and Next*") {
+  std::string sample_query_1 = "stmt s1; Select s1 such that Next(2, 3)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"s1", DesignEntity::STMT}
+  };
+
+  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses = std::move(parsed_query.such_that_clauses);
+
+  StmtRef expected_lhs = StmtRef (2);
+  StmtRef expected_rhs = StmtRef (3);
+
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
+  auto* clause = dynamic_cast<Next*>(such_that_clause.get());
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expected_lhs));
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->rhs, expected_rhs));
+
+  std::string sample_query_2 = "procedure p; Select p such that Next*(2, 9)";
+  ParsedQuery parsed_query_2 = QueryParser::ParseTokenizedQuery(sample_query_2);
+  std::vector<Declaration> declarations_2 = {
+      {"p", DesignEntity::PROCEDURE}
+  };
+
+  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses_2 = std::move(parsed_query_2.such_that_clauses);
+
+  StmtRef expected_lhs_2 = StmtRef (2);
+  StmtRef expected_rhs_2 = StmtRef (9);
+
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause_2 = std::move(such_that_clauses_2[0]);
+  auto* clause_2 = dynamic_cast<NextT*>(such_that_clause_2.get());
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_2->lhs, expected_lhs_2));
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_2->rhs, expected_rhs_2));
+}
+
+TEST_CASE("Parser can parse Affects") {
+  std::string sample_query_1 = "stmt s1; Select s1 such that Affects(2, 6)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"s1", DesignEntity::STMT}
+  };
+
+  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses = std::move(parsed_query.such_that_clauses);
+
+  StmtRef expected_lhs = StmtRef (2);
+  StmtRef expected_rhs = StmtRef (6);
+
+  REQUIRE(such_that_clauses.size() == 1);
+
+  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
+  auto* clause = dynamic_cast<Affects*>(such_that_clause.get());
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->lhs, expected_lhs));
+  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause->rhs, expected_rhs));
 }
