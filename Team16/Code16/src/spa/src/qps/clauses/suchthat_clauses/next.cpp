@@ -1,4 +1,4 @@
-#include "next.h"
+#include "qps/clauses/suchthat_clauses/next.h"
 
 Constraint Next::Evaluate(ReadFacade& pkb_reader) {
   return {};

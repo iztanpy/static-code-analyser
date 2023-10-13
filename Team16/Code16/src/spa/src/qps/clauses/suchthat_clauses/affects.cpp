@@ -1,4 +1,4 @@
-#include "affects.h"
+#include "qps/clauses/suchthat_clauses/affects.h"
 
 Constraint Affects::Evaluate(ReadFacade& pkb_reader) {
   return {};
