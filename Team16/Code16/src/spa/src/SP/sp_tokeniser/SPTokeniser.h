@@ -12,6 +12,7 @@
 #include <utility>
 #include <stack>
 #include <unordered_set>
+#include <map>
 
 /**
  * @class SPtokeniser
@@ -40,4 +41,7 @@ class SPtokeniser {
      * @return A vector of `Token` structures representing individual tokens.
      */
     std::vector<struct Token> tokenise(const std::string& input);
+    void checkBraceStack(std::stack<char>& braceStack, std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue); 
+    std::pair<TokenType, std::string> matchRegex(const std::string& line); 
+    void checkValidLiteral(std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue);
 };
