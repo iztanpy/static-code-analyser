@@ -127,17 +127,9 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     for (const std::string& line : lines) {
         TokenType matchedType = TokenType::kUnknownTokenType;
         std::string matchedValue;
-        for (const auto& regex_rule : regex_rules) {
-            std::regex regex_pattern = regex_rule.second;
-            std::smatch match;
-
-            // Iterate through defined regular expressions to match token types
-            if (std::regex_search(line.begin(), line.end(), match, regex_pattern)) {
-                matchedType = regex_rule.first;
-                matchedValue = match[0];
-                break;
-            }
-        }
+        std::pair<TokenType, std::string> result = matchRegex(line);
+        matchedType = result.first;
+        matchedValue = result.second;
 
         if (matchedType == TokenType::kUnknownTokenType) { throw InvalidTokenTypeError(); }
 
@@ -147,30 +139,9 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
 
         if (matchedType == TokenType::kWhiteSpace) {
         } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
-            if (braceStack.empty()) {
-                throw InvalidSyntaxError();
-            } else {
-                char top = braceStack.top();
-                if (matchedValue[0] == '}' && top == '{') {
-                    braceStack.pop();
-                    Token token{ matchedType, matchedValue };
-                    tokens.push_back(token);
-                } else if (matchedValue[0] == ')' && top == '(') {
-                    braceStack.pop();
-                    // insert ')' as a token
-                    Token token{matchedType, matchedValue};
-                    tokens.push_back(token);
-                } else {
-                    throw InvalidSyntaxError();
-                }
-            }
+            checkBraceStack(braceStack, tokens, matchedType, matchedValue);
         } else if (matchedType == TokenType::kLiteralName) {
-            if (std::isdigit(matchedValue[0])) {
-                throw InvalidTokenTypeError();
-            } else {
-                Token token{matchedType, matchedValue};
-                tokens.push_back(token);
-            }
+            checkValidLiteral(tokens, matchedType, matchedValue);
         } else {
             Token token{matchedType, matchedValue};
             tokens.push_back(token);
@@ -180,4 +151,51 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
         throw InvalidSyntaxError();
     }
     return tokens;
+}
+
+
+void SPtokeniser::checkBraceStack(std::stack<char>& braceStack,
+    std::vector<Token>& tokens,
+    TokenType matchedType,
+    std::string matchedValue) {
+    if (braceStack.empty()) {
+        throw InvalidSyntaxError();
+    } else {
+        char top = braceStack.top();
+        if (matchedValue[0] == '}' && top == '{') {
+            braceStack.pop();
+            Token token{ matchedType, matchedValue };
+            tokens.push_back(token);
+        } else if (matchedValue[0] == ')' && top == '(') {
+            braceStack.pop();
+            // insert ')' as a token
+            Token token{ matchedType, matchedValue };
+            tokens.push_back(token);
+        } else {
+            throw InvalidSyntaxError();
+        }
+    }
+}
+
+std::pair<TokenType, std::string> SPtokeniser::matchRegex(const std::string& line) {
+    for (const auto& regex_rule : regex_rules) {
+        std::regex regex_pattern = regex_rule.second;
+        std::smatch match;
+
+        // Iterate through defined regular expressions to match token types
+        if (std::regex_search(line.begin(), line.end(), match, regex_pattern)) {
+            return { regex_rule.first, match[0] };
+        }
+    }
+    return { TokenType::kUnknownTokenType, "" };  // Return default values if no match is found
+}
+
+
+void SPtokeniser::checkValidLiteral(std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue) {
+  if (std::isdigit(matchedValue[0])) {
+    throw InvalidTokenTypeError();
+  } else {
+    Token token{ matchedType, matchedValue };
+    tokens.push_back(token);
+  }
 }
