@@ -25,29 +25,28 @@ void PKB::setAssignments(std::unordered_map<statementNumber,
 }
 
 void PKB::setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
-                    std::unordered_map<statementNumber, full> fullRHSMap,
-                    std::unordered_map<statementNumber, variable> numLHSMap) {
-    assignStore->addNumLHSMap(numLHSMap);
-    assignStore->addNumRHSMap(partialRHSMap);
-    assignStore->storeFullPatternAssign(fullRHSMap);
+                         std::unordered_map<statementNumber, full> fullRHSMap,
+                         std::unordered_map<statementNumber, variable> numLHSMap) {
+  assignStore->addNumLHSMap(numLHSMap);
+  assignStore->addNumRHSMap(partialRHSMap);
+  assignStore->storeFullPatternAssign(fullRHSMap);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPairPartial(partialMatch partial) {
-    return assignStore->getAssignPairPartial(partial);
+  return assignStore->getAssignPairPartial(partial);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAssignPairFull(full full) {
-    return assignStore->getAssignPairFull(full);
+  return assignStore->getAssignPairFull(full);
 }
 
 std::unordered_set<statementNumber> PKB::getAssignsWcF(Wildcard lhs, full rhs) {
-    return assignStore->getAssignsWcF(lhs, rhs);
+  return assignStore->getAssignsWcF(lhs, rhs);
 }
 
 std::unordered_set<statementNumber> PKB::getAssignsFF(full lhs, full rhs) {
-    return assignStore->getAssignsFF(lhs, rhs);
+  return assignStore->getAssignsFF(lhs, rhs);
 }
-
 
 std::unordered_set<statementNumber> PKB::getAllAssigns() {
   return assignStore->getAllAssigns();
@@ -84,7 +83,7 @@ void PKB::addProcedures(std::set<procedure> procedures) {
 }
 
 void PKB::addProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures) {
-    return procedureStore->addProcedures(procedures);
+  return procedureStore->addProcedures(procedures);
 }
 
 std::unordered_set<procedure> PKB::getProcedures() {
@@ -94,7 +93,7 @@ std::unordered_set<procedure> PKB::getProcedures() {
 // VariableStore methods
 
 std::pair<int, int> PKB::getProcedureRange(procedure proc) {
-    return procedureStore->getProcedureRange(proc);
+  return procedureStore->getProcedureRange(proc);
 }
 
 void PKB::addVariables(std::unordered_set<variable> variables) {
@@ -123,8 +122,8 @@ void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<varia
 }
 
 void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
-    std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
-    usesStore->storeUsesProcedures(procedures, callTableStar);
+                              std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
+  usesStore->storeUsesProcedures(procedures, callTableStar);
 }
 
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
@@ -152,27 +151,27 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(Stm
 }
 
 bool PKB::isUses(procedure procedure, Wildcard wildcard) {
-    return usesStore->isUses(procedure);
+  return usesStore->isUses(procedure);
 }
 
 std::unordered_set<variable> PKB::uses(procedure procedure) {
-    return usesStore->usesProcedureProc(procedure);
+  return usesStore->usesProcedureProc(procedure);
 }
 
 bool PKB::isUses(procedure procedure, variable variableName) {
-    return usesStore->isUses(procedure, variableName);
+  return usesStore->isUses(procedure, variableName);
 }
 
 std::unordered_set<procedure> PKB::usesProcedure(Wildcard wildcard) {
-    return usesStore->usesProcedure();
+  return usesStore->usesProcedure();
 }
 
 std::unordered_set<procedure> PKB::usesProcedure(variable variableName) {
-    return usesStore->usesProcedure(variableName);
+  return usesStore->usesProcedure(variableName);
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::usesProcedure() {
-    return usesStore->usesProcedurePair();
+  return usesStore->usesProcedurePair();
 }
 
 std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName) {
@@ -213,8 +212,8 @@ void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifie
 }
 
 void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
-    std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
-    modifiesStore->storeModifiesProcedures(procedures, callTableStar);
+                                  std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
+  modifiesStore->storeModifiesProcedures(procedures, callTableStar);
 }
 
 bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
@@ -268,27 +267,27 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies
 }
 
 bool PKB::isModifies(procedure procedure, Wildcard wildcard) {
-    return modifiesStore->isModifies(procedure);
+  return modifiesStore->isModifies(procedure);
 }
 
 std::unordered_set<variable> PKB::modifies(procedure procedure) {
-    return modifiesStore->modifiesProcedureProc(procedure);
+  return modifiesStore->modifiesProcedureProc(procedure);
 }
 
 bool PKB::isModifies(procedure procedure, variable variableName) {
-    return modifiesStore->isModifies(procedure, variableName);
+  return modifiesStore->isModifies(procedure, variableName);
 }
 
 std::unordered_set<procedure> PKB::modifiesProcedure(Wildcard wildcard) {
-    return modifiesStore->modifiesProcedure();
+  return modifiesStore->modifiesProcedure();
 }
 
 std::unordered_set<procedure> PKB::modifiesProcedure(variable variableName) {
-    return modifiesStore->modifiesProcedure(variableName);
+  return modifiesStore->modifiesProcedure(variableName);
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::modifiesProcedure() {
-    return modifiesStore->modifiesProcedurePair();
+  return modifiesStore->modifiesProcedurePair();
 }
 
 // ConstantStore methods
@@ -604,79 +603,81 @@ void PKB::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>
 }
 
 std::unordered_map<procedure, std::unordered_set<procedure>> PKB::getCallStar() {
-    return callStore->getCallStar();
+  return callStore->getCallStar();
 }
 
-std::unordered_set<procedure> PKB::call(Dec declaration, Wildcard wildcard) {
-    return callStore->call(declaration, wildcard);
+std::unordered_set<procedure> PKB::call(Declaration declaration, Wildcard wildcard) {
+  return callStore->call(declaration, wildcard);
 }
 
-std::unordered_set<procedure> PKB::call(Wildcard wildcard, Dec declaration) {
-    return callStore->call(wildcard, declaration);
+std::unordered_set<procedure> PKB::call(Wildcard wildcard, Declaration declaration) {
+  return callStore->call(wildcard, declaration);
 }
 
 std::unordered_set<procedure> PKB::call(procedure procedure, Wildcard wildcard) {
-    return callStore->getCallChildren(procedure);
+  return callStore->getCallChildren(procedure);
 }
 
 std::unordered_set<procedure> PKB::call(Wildcard wildcard, procedure procedure) {
-    return callStore->getCallParents(procedure);
+  return callStore->getCallParents(procedure);
 }
 
 bool PKB::isCall(procedure procedure, Wildcard wildcard) {
-    return callStore->isCall(procedure, wildcard);
+  return callStore->isCall(procedure, wildcard);
 }
 
 bool PKB::isCall(Wildcard wildcard, procedure procedure) {
-    return callStore->isCall(wildcard, procedure);
+  return callStore->isCall(wildcard, procedure);
 }
 
 bool PKB::isCall(procedure procedure, std::string procedure2) {
-    return callStore->isCall(procedure, procedure2);
+  return callStore->isCall(procedure, procedure2);
 }
 
 bool PKB::isCall(Wildcard wildcard1, Wildcard wildcard2) {
-    return callStore->isCall(wildcard1, wildcard2);
+  return callStore->isCall(wildcard1, wildcard2);
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::call(Dec declaration1, Dec declaration2) {
-    return callStore->call(declaration1, declaration2);
+std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::call(Declaration declaration1,
+                                                                        Declaration declaration2) {
+  return callStore->call(declaration1, declaration2);
 }
 
-std::unordered_set<procedure> PKB::callStar(Dec declaration, Wildcard wildcard) {
-    return callStore->callStar(declaration, wildcard);
+std::unordered_set<procedure> PKB::callStar(Declaration declaration, Wildcard wildcard) {
+  return callStore->callStar(declaration, wildcard);
 }
 
-std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, Dec declaration) {
-    return callStore->callStar(wildcard, declaration);
+std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, Declaration declaration) {
+  return callStore->callStar(wildcard, declaration);
 }
 
 std::unordered_set<procedure> PKB::callStar(procedure procedure, Wildcard wildcard) {
-    return callStore->getCallStarChildren(procedure);
+  return callStore->getCallStarChildren(procedure);
 }
 
 std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, procedure procedure) {
-    return callStore->getCallStarParents(procedure);
+  return callStore->getCallStarParents(procedure);
 }
 
 bool PKB::isCallStar(procedure procedure, Wildcard wildcard) {
-    return callStore->isCallStar(procedure, wildcard);
+  return callStore->isCallStar(procedure, wildcard);
 }
 
 bool PKB::isCallStar(Wildcard wildcard, procedure procedure) {
-    return callStore->isCallStar(wildcard, procedure);
+  return callStore->isCallStar(wildcard, procedure);
 }
 
 bool PKB::isCallStar(procedure procedure, std::string procedure2) {
-    return callStore->isCallStar(procedure, procedure2);
+  return callStore->isCallStar(procedure, procedure2);
 }
 
 bool PKB::isCallStar(Wildcard wildcard1, Wildcard wildcard2) {
-    return callStore->isCallStar(wildcard1, wildcard2);
+  return callStore->isCallStar(wildcard1, wildcard2);
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::callStar(Dec declaration1, Dec declaration2) {
-    return callStore->callStar(declaration1, declaration2);
+std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::callStar(Declaration declaration1,
+                                                                            Declaration declaration2) {
+  return callStore->callStar(declaration1, declaration2);
 }
 
 // returns all statements that are of a specified StmtEntity type and follows* any statement
@@ -749,33 +750,33 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::f
 }
 
 void PKB::storeIf(std::unordered_map<statementNumber, variable> variableMap) {
-    ifStore->addVariableMap(variableMap);
+  ifStore->addVariableMap(variableMap);
 }
 
 std::unordered_set<statementNumber> PKB::getIf(Wildcard wc) {
-    return ifStore->getIf(wc);
+  return ifStore->getIf(wc);
 }
 
 std::unordered_set<statementNumber> PKB::getIf(variable v) {
-    return ifStore->getIf(v);
+  return ifStore->getIf(v);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllIf() {
-    return ifStore->getAllIf();
+  return ifStore->getAllIf();
 }
 
 void PKB::storeWhile(std::unordered_map<statementNumber, variable> variableMap) {
-    whileStore->addVariableMap(variableMap);
+  whileStore->addVariableMap(variableMap);
 }
 
 std::unordered_set<statementNumber> PKB::getWhile(Wildcard wc) {
-    return whileStore->getWhile(wc);
+  return whileStore->getWhile(wc);
 }
 
 std::unordered_set<statementNumber> PKB::getWhile(variable v) {
-    return whileStore->getWhile(v);
+  return whileStore->getWhile(v);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllWhile() {
-    return whileStore->getAllWhile();
+  return whileStore->getAllWhile();
 }

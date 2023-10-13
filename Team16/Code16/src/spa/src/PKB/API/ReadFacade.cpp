@@ -79,27 +79,27 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::u
 }
 
 bool ReadFacade::isUses(procedure procedure, Wildcard wildcard) {
-    return pkb.isUses(procedure, wildcard);
+  return pkb.isUses(procedure, wildcard);
 }
 
 std::unordered_set<variable> ReadFacade::uses(procedure procedure) {
-    return pkb.uses(procedure);
+  return pkb.uses(procedure);
 }
 
 bool ReadFacade::isUses(procedure procedure, variable variableName) {
-    return pkb.isUses(procedure, variableName);
+  return pkb.isUses(procedure, variableName);
 }
 
 std::unordered_set<procedure> ReadFacade::usesProcedure(Wildcard wildcard) {
-    return pkb.usesProcedure(wildcard);
+  return pkb.usesProcedure(wildcard);
 }
 
 std::unordered_set<procedure> ReadFacade::usesProcedure(variable variableName) {
-    return pkb.usesProcedure(variableName);
+  return pkb.usesProcedure(variableName);
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::usesProcedure() {
-    return pkb.usesProcedure();
+  return pkb.usesProcedure();
 }
 
 bool ReadFacade::isModifies(statementNumber lineNumber, variable variableName) {
@@ -123,27 +123,27 @@ std::unordered_set<statementNumber> ReadFacade::modifies(StmtEntity type, Wildca
 }
 
 bool ReadFacade::isModifies(procedure procedure, Wildcard wildcard) {
-    return pkb.isModifies(procedure, wildcard);
+  return pkb.isModifies(procedure, wildcard);
 }
 
 std::unordered_set<variable> ReadFacade::modifies(procedure procedure) {
-    return pkb.modifies(procedure);
+  return pkb.modifies(procedure);
 }
 
 bool ReadFacade::isModifies(procedure procedure, variable variableName) {
-    return pkb.isModifies(procedure, variableName);
+  return pkb.isModifies(procedure, variableName);
 }
 
 std::unordered_set<procedure> ReadFacade::modifiesProcedure(Wildcard wildcard) {
-    return pkb.modifiesProcedure(wildcard);
+  return pkb.modifiesProcedure(wildcard);
 }
 
 std::unordered_set<procedure> ReadFacade::modifiesProcedure(variable variableName) {
-    return pkb.modifiesProcedure(variableName);
+  return pkb.modifiesProcedure(variableName);
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::modifiesProcedure() {
-    return pkb.modifiesProcedure();
+  return pkb.modifiesProcedure();
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::modifies(StmtEntity type) {
@@ -310,100 +310,102 @@ bool ReadFacade::isFollowStar(Wildcard wildcard, Wildcard wildcard2) {
   return pkb.isFollowStar(wildcard, wildcard2);
 }
 
-std::unordered_set<procedure> ReadFacade::call(Dec declaration, Wildcard wildcard) {
-    return pkb.call(declaration, wildcard);
+std::unordered_set<procedure> ReadFacade::call(Declaration declaration, Wildcard wildcard) {
+  return pkb.call(declaration, wildcard);
 }
 
-std::unordered_set<procedure> ReadFacade::call(Wildcard wildcard, Dec declaration) {
-    return pkb.call(wildcard, declaration);
+std::unordered_set<procedure> ReadFacade::call(Wildcard wildcard, Declaration declaration) {
+  return pkb.call(wildcard, declaration);
 }
 
 std::unordered_set<procedure> ReadFacade::call(procedure procedure, Wildcard wildcard) {
-    return pkb.call(procedure, wildcard);
+  return pkb.call(procedure, wildcard);
 }
 
 std::unordered_set<procedure> ReadFacade::call(Wildcard wildcard, procedure procedure) {
-    return pkb.call(wildcard, procedure);
+  return pkb.call(wildcard, procedure);
 }
 
 bool ReadFacade::isCall(procedure procedure, Wildcard wildcard) {
-    return pkb.isCall(procedure, wildcard);
+  return pkb.isCall(procedure, wildcard);
 }
 
 bool ReadFacade::isCall(Wildcard wildcard, procedure procedure) {
-    return pkb.isCall(wildcard, procedure);
+  return pkb.isCall(wildcard, procedure);
 }
 
 bool ReadFacade::isCall(procedure procedure, std::string procedure2) {
-    return pkb.isCall(procedure, procedure2);
+  return pkb.isCall(procedure, procedure2);
 }
 
 bool ReadFacade::isCall(Wildcard wildcard1, Wildcard wildcard2) {
-    return pkb.isCall(wildcard1, wildcard2);
+  return pkb.isCall(wildcard1, wildcard2);
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> ReadFacade::call(Dec declaration1, Dec declaration2) {
-    return pkb.call(declaration1, declaration2);
+std::unordered_set<std::pair<procedure, procedure>, PairHash> ReadFacade::call(Declaration declaration1,
+                                                                               Declaration declaration2) {
+  return pkb.call(declaration1, declaration2);
 }
 
-std::unordered_set<procedure> ReadFacade::callStar(Dec declaration, Wildcard wildcard) {
-    return pkb.callStar(declaration, wildcard);
+std::unordered_set<procedure> ReadFacade::callStar(Declaration declaration, Wildcard wildcard) {
+  return pkb.callStar(declaration, wildcard);
 }
 
-std::unordered_set<procedure> ReadFacade::callStar(Wildcard wildcard, Dec declaration) {
-    return pkb.callStar(wildcard, declaration);
+std::unordered_set<procedure> ReadFacade::callStar(Wildcard wildcard, Declaration declaration) {
+  return pkb.callStar(wildcard, declaration);
 }
 
 std::unordered_set<procedure> ReadFacade::callStar(procedure procedure, Wildcard wildcard) {
-    return pkb.callStar(procedure, wildcard);
+  return pkb.callStar(procedure, wildcard);
 }
 
 std::unordered_set<procedure> ReadFacade::callStar(Wildcard wildcard, procedure procedure) {
-    return pkb.callStar(wildcard, procedure);
+  return pkb.callStar(wildcard, procedure);
 }
 
 bool ReadFacade::isCallStar(procedure procedure, Wildcard wildcard) {
-    return pkb.isCallStar(procedure, wildcard);
+  return pkb.isCallStar(procedure, wildcard);
 }
 
 bool ReadFacade::isCallStar(Wildcard wildcard, procedure procedure) {
-    return pkb.isCallStar(wildcard, procedure);
+  return pkb.isCallStar(wildcard, procedure);
 }
 
 bool ReadFacade::isCallStar(procedure procedure, std::string procedure2) {
-    return pkb.isCallStar(procedure, procedure2);
+  return pkb.isCallStar(procedure, procedure2);
 }
 
 bool ReadFacade::isCallStar(Wildcard wildcard1, Wildcard wildcard2) {
-    return pkb.isCallStar(wildcard1, wildcard2);
+  return pkb.isCallStar(wildcard1, wildcard2);
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> ReadFacade::callStar(Dec declaration1, Dec declaration2) {
-    return pkb.callStar(declaration1, declaration2);
+std::unordered_set<std::pair<procedure, procedure>, PairHash> ReadFacade::callStar(Declaration declaration1,
+                                                                                   Declaration declaration2) {
+  return pkb.callStar(declaration1, declaration2);
 }
 
 std::unordered_set<statementNumber> ReadFacade::getIf(Wildcard wc) {
-    return pkb.getIf(wc);
+  return pkb.getIf(wc);
 }
 
 std::unordered_set<statementNumber> ReadFacade::getIf(variable v) {
-    return pkb.getIf(v);
+  return pkb.getIf(v);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAllIf() {
-    return pkb.getAllIf();
+  return pkb.getAllIf();
 }
 
 std::unordered_set<statementNumber> ReadFacade::getWhile(Wildcard wc) {
-    return pkb.getWhile(wc);
+  return pkb.getWhile(wc);
 }
 
 std::unordered_set<statementNumber> ReadFacade::getWhile(variable v) {
-    return pkb.getWhile(v);
+  return pkb.getWhile(v);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAllWhile() {
-    return pkb.getAllWhile();
+  return pkb.getAllWhile();
 }
 
 

@@ -65,13 +65,13 @@ class PKB {
                       std::unordered_map<statementNumber, variable> numLHSMap);
 
   void setAssignments(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> partialRHSMap,
-                        std::unordered_map<statementNumber, full> fullRHSMap,
-                        std::unordered_map<statementNumber, variable> numLHSMap);
+                      std::unordered_map<statementNumber, full> fullRHSMap,
+                      std::unordered_map<statementNumber, variable> numLHSMap);
 
-    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
-    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
-    std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
-    std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairPartial(partialMatch partial);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAssignPairFull(full full);
+  std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
+  std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
 
   /**
   * @brief Retrieves all assignment statement numbers in the program.
@@ -224,7 +224,7 @@ class PKB {
   void storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap);
 
   void storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
-      std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
+                           std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
   /**
   * @brief Checks if a specific statement uses a given variable.
@@ -314,7 +314,7 @@ class PKB {
   void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
 
   void storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
-      std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
+                               std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
   /**
   * @brief Checks if a specific statement modifies a given variable.
@@ -946,7 +946,6 @@ class PKB {
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
 
-
   void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
 
   std::unordered_set<statementNumber> getWhile(Wildcard wc);
@@ -961,9 +960,9 @@ class PKB {
 
   std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
-  std::unordered_set<procedure> call(Dec declaration, Wildcard wildcard);
+  std::unordered_set<procedure> call(Declaration declaration, Wildcard wildcard);
 
-  std::unordered_set<procedure> call(Wildcard wildcard, Dec declaration);
+  std::unordered_set<procedure> call(Wildcard wildcard, Declaration declaration);
 
   std::unordered_set<procedure> call(procedure procedure, Wildcard wildcard);
 
@@ -977,11 +976,12 @@ class PKB {
 
   bool isCall(Wildcard wildcard, Wildcard wildcard2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Dec declaration1, Dec declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Declaration declaration1,
+                                                                     Declaration declaration2);
 
-  std::unordered_set<procedure> callStar(Dec declaration, Wildcard wildcard);
+  std::unordered_set<procedure> callStar(Declaration declaration, Wildcard wildcard);
 
-  std::unordered_set<procedure> callStar(Wildcard wildcard, Dec declaration);
+  std::unordered_set<procedure> callStar(Wildcard wildcard, Declaration declaration);
 
   std::unordered_set<procedure> callStar(procedure procedure, Wildcard wildcard);
 
@@ -995,7 +995,8 @@ class PKB {
 
   bool isCallStar(Wildcard wildcard1, Wildcard wildcard2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Dec declaration1, Dec declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Declaration declaration1,
+                                                                         Declaration declaration2);
 
   PKB(const PKB&) = delete;
   PKB& operator=(const PKB&) = delete;

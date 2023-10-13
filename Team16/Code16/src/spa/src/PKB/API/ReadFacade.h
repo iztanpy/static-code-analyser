@@ -697,9 +697,9 @@ class ReadFacade {
   */
   bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
-  std::unordered_set<procedure> call(Dec declaration, Wildcard wildcard);
+  std::unordered_set<procedure> call(Declaration declaration, Wildcard wildcard);
 
-  std::unordered_set<procedure> call(Wildcard wildcard, Dec declaration);
+  std::unordered_set<procedure> call(Wildcard wildcard, Declaration declaration);
 
   std::unordered_set<procedure> call(procedure procedure, Wildcard wildcard);
 
@@ -713,11 +713,12 @@ class ReadFacade {
 
   bool isCall(Wildcard wildcard, Wildcard wildcard2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Dec declaration1, Dec declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Declaration declaration1,
+                                                                     Declaration declaration2);
 
-  std::unordered_set<procedure> callStar(Dec declaration, Wildcard wildcard);
+  std::unordered_set<procedure> callStar(Declaration declaration, Wildcard wildcard);
 
-  std::unordered_set<procedure> callStar(Wildcard wildcard, Dec declaration);
+  std::unordered_set<procedure> callStar(Wildcard wildcard, Declaration declaration);
 
   std::unordered_set<procedure> callStar(procedure procedure, Wildcard wildcard);
 
@@ -731,7 +732,8 @@ class ReadFacade {
 
   bool isCallStar(Wildcard wildcard1, Wildcard wildcard2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Dec declaration1, Dec declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Declaration declaration1,
+                                                                         Declaration declaration2);
 
   std::unordered_set<statementNumber> getIf(Wildcard wc);
 
