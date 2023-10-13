@@ -6,6 +6,9 @@
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
 #include "qps/query_evaluator/calls_evaluator.h"
 
+/*!
+ * Represents a Calls clause in a query according to PQL grammar
+ */
 class Calls : public SuchThatClause {
  public:
   EntRef lhs;
@@ -22,6 +25,9 @@ class Calls : public SuchThatClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a CallsT clause in a query according to PQL grammar
+ */
 class CallsT : public SuchThatClause {
  public:
   EntRef lhs;
