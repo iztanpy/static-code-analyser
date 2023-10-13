@@ -64,7 +64,7 @@ std::unordered_set<procedure> CallStore::getCallChildren(procedure p) {
   return this->callTable[p];
 }
 
-std::unordered_set<procedure> CallStore::call(Declaration declaration, Wildcard wildcard) {
+std::unordered_set<procedure> CallStore::call(StmtEntity proc, Wildcard wildcard) {
   std::unordered_set<procedure> result;
   for (auto const& x : callTable) {
     if (x.second.size() > 0) {
@@ -74,7 +74,7 @@ std::unordered_set<procedure> CallStore::call(Declaration declaration, Wildcard 
   return result;
 }
 
-std::unordered_set<procedure> CallStore::call(Wildcard wildcard, Declaration declaration) {
+std::unordered_set<procedure> CallStore::call(Wildcard wildcard, StmtEntity proc) {
   std::unordered_set<procedure> result;
   for (auto const& x : callTableReverse) {
     if (x.second.size() > 0) {
@@ -104,8 +104,8 @@ std::unordered_map<procedure, std::unordered_set<procedure>> CallStore::getCallS
   return this->callTableStar;
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::call(Declaration declaration1,
-                                                                              Declaration declaration2) {
+std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::call(StmtEntity proc1,
+                                                                              StmtEntity proc2) {
   std::unordered_set<std::pair<procedure, procedure>, PairHash> pairs;
   for (auto const& x : callTable) {
     for (auto const& second : x.second) {
@@ -119,8 +119,8 @@ std::unordered_set<procedure> CallStore::getCallParents(procedure p) {
   return this->callTableReverse[p];
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::callStar(Declaration declaration1,
-                                                                                  Declaration declaration2) {
+std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::callStar(StmtEntity proc1,
+                                                                                  StmtEntity proc2) {
   std::unordered_set<std::pair<procedure, procedure>, PairHash> pairs;
   for (auto const& x : callTableStar) {
     for (auto const& second : x.second) {
@@ -130,7 +130,7 @@ std::unordered_set<std::pair<procedure, procedure>, PairHash> CallStore::callSta
   return pairs;
 }
 
-std::unordered_set<procedure> CallStore::callStar(Declaration declaration, Wildcard wildcard) {
+std::unordered_set<procedure> CallStore::callStar(StmtEntity proc, Wildcard wildcard) {
   std::unordered_set<procedure> result;
   for (auto const& x : callTableStar) {
     if (x.second.size() > 0) {
@@ -140,7 +140,7 @@ std::unordered_set<procedure> CallStore::callStar(Declaration declaration, Wildc
   return result;
 }
 
-std::unordered_set<procedure> CallStore::callStar(Wildcard wildcard, Declaration declaration) {
+std::unordered_set<procedure> CallStore::callStar(Wildcard wildcard, StmtEntity proc) {
   std::unordered_set<procedure> result;
   for (auto const& x : callTableStarReverse) {
     if (x.second.size() > 0) {

@@ -178,8 +178,8 @@ TEST_CASE("Calls and Callstar methods") {
   REQUIRE(!readFacade.isCall("q", "main"));
   REQUIRE(!readFacade.isCall("q", "p"));
 
-  Declaration dec1 = Declaration{"p1", DesignEntity::PROCEDURE};
-  Declaration dec2 = Declaration{"p2", DesignEntity::PROCEDURE};
+  StmtEntity dec1 = StmtEntity::kProcedure;
+  StmtEntity dec2 = StmtEntity::kProcedure;
 
   Wildcard w = Wildcard();
 
@@ -216,10 +216,6 @@ TEST_CASE("Calls and Callstar methods") {
       == std::unordered_set<std::pair<procedure, procedure>, PairHash>({{"main", "p"}, {"p", "q"}})));
   REQUIRE((readFacade.callStar(dec1, dec2)
       == std::unordered_set<std::pair<procedure, procedure>, PairHash>({{"main", "p"}, {"p", "q"}, {"main", "q"}})));
-
-  REQUIRE((readFacade.callStar("main", w) == std::unordered_set<procedure>({"p", "q"})));
-  REQUIRE((readFacade.callStar("p", w) == std::unordered_set<procedure>({"q"})));
-  REQUIRE((readFacade.callStar("q", w) == std::unordered_set<procedure>({})));
 }
 
 TEST_CASE("Test SP-PKB connection") {

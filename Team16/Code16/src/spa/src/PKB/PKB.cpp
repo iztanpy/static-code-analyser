@@ -606,20 +606,22 @@ std::unordered_map<procedure, std::unordered_set<procedure>> PKB::getCallStar() 
   return callStore->getCallStar();
 }
 
-std::unordered_set<procedure> PKB::call(Declaration declaration, Wildcard wildcard) {
-  return callStore->call(declaration, wildcard);
+std::unordered_set<procedure> PKB::call(StmtEntity procedure, Wildcard wildcard) {
+  return callStore->call(procedure, wildcard);
 }
 
-std::unordered_set<procedure> PKB::call(Wildcard wildcard, Declaration declaration) {
-  return callStore->call(wildcard, declaration);
+std::unordered_set<procedure> PKB::call(Wildcard wildcard, StmtEntity procedure) {
+  return callStore->call(wildcard, procedure);
 }
 
-std::unordered_set<procedure> PKB::call(procedure procedure, Wildcard wildcard) {
-  return callStore->getCallChildren(procedure);
+std::unordered_set<procedure> PKB::call(procedure procedure, StmtEntity proc) {
+  throw std::runtime_error("Mrinal Cuong unimplemented");
+//  return callStore->getCallChildren(procedure);
 }
 
-std::unordered_set<procedure> PKB::call(Wildcard wildcard, procedure procedure) {
-  return callStore->getCallParents(procedure);
+std::unordered_set<procedure> PKB::call(StmtEntity proc, procedure procedure) {
+  throw std::runtime_error("Mrinal Cuong unimplemented");
+//  return callStore->getCallParents(procedure);
 }
 
 bool PKB::isCall(procedure procedure, Wildcard wildcard) {
@@ -638,25 +640,27 @@ bool PKB::isCall(Wildcard wildcard1, Wildcard wildcard2) {
   return callStore->isCall(wildcard1, wildcard2);
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::call(Declaration declaration1,
-                                                                        Declaration declaration2) {
-  return callStore->call(declaration1, declaration2);
+std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::call(StmtEntity procedure1,
+                                                                        StmtEntity procedure2) {
+  return callStore->call(procedure1, procedure2);
 }
 
-std::unordered_set<procedure> PKB::callStar(Declaration declaration, Wildcard wildcard) {
-  return callStore->callStar(declaration, wildcard);
+std::unordered_set<procedure> PKB::callStar(StmtEntity procedure, Wildcard wildcard) {
+  return callStore->callStar(procedure, wildcard);
 }
 
-std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, Declaration declaration) {
-  return callStore->callStar(wildcard, declaration);
+std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, StmtEntity procedure) {
+  return callStore->callStar(wildcard, procedure);
 }
 
-std::unordered_set<procedure> PKB::callStar(procedure procedure, Wildcard wildcard) {
-  return callStore->getCallStarChildren(procedure);
+std::unordered_set<procedure> PKB::callStar(procedure procedure, StmtEntity proc) {
+  throw std::runtime_error("Mrinal Cuong unimplemented");
+//  return callStore->getCallStarChildren(procedure);
 }
 
-std::unordered_set<procedure> PKB::callStar(Wildcard wildcard, procedure procedure) {
-  return callStore->getCallStarParents(procedure);
+std::unordered_set<procedure> PKB::callStar(StmtEntity proc, procedure procedure) {
+  throw std::runtime_error("Mrinal Cuong unimplemented");
+//  return callStore->getCallStarParents(procedure);
 }
 
 bool PKB::isCallStar(procedure procedure, Wildcard wildcard) {
@@ -675,9 +679,9 @@ bool PKB::isCallStar(Wildcard wildcard1, Wildcard wildcard2) {
   return callStore->isCallStar(wildcard1, wildcard2);
 }
 
-std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::callStar(Declaration declaration1,
-                                                                            Declaration declaration2) {
-  return callStore->callStar(declaration1, declaration2);
+std::unordered_set<std::pair<procedure, procedure>, PairHash> PKB::callStar(StmtEntity procedure1,
+                                                                            StmtEntity procedure2) {
+  return callStore->callStar(procedure1, procedure2);
 }
 
 // returns all statements that are of a specified StmtEntity type and follows* any statement

@@ -695,45 +695,45 @@ class ReadFacade {
   * @param wildcard2 A wildcard pattern to match against followed statements.
   * @return true if matching statements are in a follow* relationship with each other, false otherwise.
   */
-  bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
+  bool isFollowStar(Wildcard wildcard1, Wildcard wildcard2);
 
-  std::unordered_set<procedure> call(Declaration declaration, Wildcard wildcard);
+  std::unordered_set<procedure> call(StmtEntity procedure, Wildcard wildcard);
 
-  std::unordered_set<procedure> call(Wildcard wildcard, Declaration declaration);
+  std::unordered_set<procedure> call(Wildcard wildcard, StmtEntity procedure);
 
-  std::unordered_set<procedure> call(procedure procedure, Wildcard wildcard);
+  std::unordered_set<procedure> call(procedure procedure, StmtEntity proc);
 
-  std::unordered_set<procedure> call(Wildcard wildcard, procedure procedure);
+  std::unordered_set<procedure> call(StmtEntity proc, procedure procedure);
 
   bool isCall(procedure procedure, Wildcard wildcard);
 
   bool isCall(Wildcard wildcard, procedure procedure);
 
-  bool isCall(procedure procedure, std::string procedure2);
+  bool isCall(procedure procedure1, procedure procedure2);
 
   bool isCall(Wildcard wildcard, Wildcard wildcard2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Declaration declaration1,
-                                                                     Declaration declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(StmtEntity procedure1,
+                                                                     StmtEntity procedure2);
 
-  std::unordered_set<procedure> callStar(Declaration declaration, Wildcard wildcard);
+  std::unordered_set<procedure> callStar(StmtEntity procedure, Wildcard wildcard);
 
-  std::unordered_set<procedure> callStar(Wildcard wildcard, Declaration declaration);
+  std::unordered_set<procedure> callStar(Wildcard wildcard, StmtEntity procedure);
 
-  std::unordered_set<procedure> callStar(procedure procedure, Wildcard wildcard);
+  std::unordered_set<procedure> callStar(procedure procedure, StmtEntity proc);
 
-  std::unordered_set<procedure> callStar(Wildcard wildcard, procedure procedure);
+  std::unordered_set<procedure> callStar(StmtEntity proc, procedure procedure);
 
   bool isCallStar(procedure procedure, Wildcard wildcard);
 
   bool isCallStar(Wildcard wildcard, procedure procedure);
 
-  bool isCallStar(procedure procedure, std::string procedure2);
+  bool isCallStar(procedure procedure1, procedure procedure2);
 
   bool isCallStar(Wildcard wildcard1, Wildcard wildcard2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Declaration declaration1,
-                                                                         Declaration declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1,
+                                                                         StmtEntity procedure2);
 
   std::unordered_set<statementNumber> getIf(Wildcard wc);
 

@@ -23,12 +23,12 @@ class CallStore {
 
   std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(Declaration declaration1,
-                                                                     Declaration declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> call(StmtEntity procedure1,
+                                                                     StmtEntity procedure2);
 
-  std::unordered_set<procedure> call(Declaration declaration, Wildcard wildcard);
+  std::unordered_set<procedure> call(StmtEntity procedure, Wildcard wildcard);
 
-  std::unordered_set<procedure> call(Wildcard wildcard, Declaration declaration);
+  std::unordered_set<procedure> call(Wildcard wildcard, StmtEntity procedure);
 
   std::unordered_set<procedure> getCallChildren(procedure p);
 
@@ -42,12 +42,12 @@ class CallStore {
 
   bool isCall(procedure p, procedure p2);
 
-  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(Declaration declaration1,
-                                                                         Declaration declaration2);
+  std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1,
+                                                                         StmtEntity procedure2);
 
-  std::unordered_set<procedure> callStar(Declaration declaration, Wildcard wildcard);
+  std::unordered_set<procedure> callStar(StmtEntity procedure, Wildcard wildcard);
 
-  std::unordered_set<procedure> callStar(Wildcard wildcard, Declaration declaration);
+  std::unordered_set<procedure> callStar(Wildcard wildcard, StmtEntity procedure);
 
   std::unordered_set<procedure> getCallStarChildren(procedure p);
 
