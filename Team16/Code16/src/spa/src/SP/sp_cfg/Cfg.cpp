@@ -47,11 +47,12 @@ void Cfg::handleEndElseStatement() {
 }
 
 void Cfg::handleEndWhileStatement(int stmtNumber) {
-    std::shared_ptr<CfgNode> parentNode = currNode->getParentNode(stmtNumber);
-    std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
-    currNode->addChildren(parentNode);
-    currNode->addChildren(nextNode);
-    currNode = nextNode;
+  // link the currnode to the parent node
+  std::shared_ptr<CfgNode> parentNode = currNode->getParentNode(stmtNumber);
+  currNode->addChildren(parentNode);
+  std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
+  parentNode->addChildren(nextNode);
+  currNode = nextNode;
 }
 
 void Cfg::handleEndIfStatement() {
