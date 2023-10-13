@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/query_evaluator/evaluator_util.h"
 #include "utils/entity_types.h"
