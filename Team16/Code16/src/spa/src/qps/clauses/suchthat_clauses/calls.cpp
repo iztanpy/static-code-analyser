@@ -5,7 +5,7 @@ Constraint Calls::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void Calls::Validate() {
-  // TODO(Cuong): implement validate method call
+  SuchThatValidator::ValidateCalls(lhs, rhs);
 }
 
 Constraint CallsT::Evaluate(ReadFacade& pkb_reader) {
@@ -13,5 +13,5 @@ Constraint CallsT::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void CallsT::Validate() {
-  // TODO(Cuong): implement validate method call
+  SuchThatValidator::ValidateCalls(lhs, rhs);
 }

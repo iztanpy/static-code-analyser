@@ -18,6 +18,8 @@ struct SuchThatValidator {
       {DesignEntity::STMT, DesignEntity::ASSIGN, DesignEntity::READ, DesignEntity::PRINT, DesignEntity::IF_STMT,
        DesignEntity::WHILE_LOOP, DesignEntity::CALL};
 
+  inline static const DesignEntity kValidCalls = DesignEntity::PROCEDURE;
+
   /*!
    * Validates the Parent and Follow clause
    * @param lhs is the right hand side of the Parent/Follow clause
@@ -41,4 +43,12 @@ struct SuchThatValidator {
    * Will throw QpsSemanticError if the Uses and Modifies clause is invalid
    */
   static void ValidateUsesModifies(EntRef lhs, EntRef rhs);
+
+  /*!
+   * Validates Calls clause
+   * @param lhs is the right hand side of the Calls clause
+   * @param rhs is the left hand side of the Calls clause
+   * Will throw QpsSemanticError if the Calls clause is invalid
+   */
+  static void ValidateCalls(EntRef lhs, EntRef rhs);
 };
