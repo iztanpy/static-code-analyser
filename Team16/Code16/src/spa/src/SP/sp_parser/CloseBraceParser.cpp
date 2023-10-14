@@ -1,7 +1,6 @@
 #include "CloseBraceParser.h"
 
 int CloseBraceParser::parse(std::vector<Token>& tokens) {
-  std::cout << "CloseBraceParser::parse: " << index << std::endl;
   if (index - 1 > 0 && tokens[index - 1].tokenType == TokenType::kSepOpenBrace) {
     throw InvalidSyntaxError();
   }

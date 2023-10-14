@@ -29,6 +29,20 @@ class CfgNode {
 
   virtual ~CfgNode() = default;
 
+  bool operator==(const CfgNode& other) const {
+    if (this->statementNumberSet != other.statementNumberSet) {
+      std::cout << "statementNumberSet wrong" << std::endl;
+      for (const auto& stmtNo : this->statementNumberSet) {
+        std::cout << stmtNo << std::endl;
+      }
+      for (const auto& stmtNo : other.statementNumberSet) {
+        std::cout << stmtNo << std::endl;
+      }
+      return false;
+    }
+    return true;
+  }
+
   /**
    * @brief Add a child node to this node in the CFG.
    *
