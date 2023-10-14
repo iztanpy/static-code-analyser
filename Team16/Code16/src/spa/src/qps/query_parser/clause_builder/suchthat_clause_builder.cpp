@@ -1,5 +1,4 @@
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
-#include "qps/clauses/suchthat_clauses/calls.h"
 
 SuchThatClauseBuilder::SuchThatClauseBuilder() = default;
 
@@ -10,13 +9,16 @@ void SuchThatClauseBuilder::setRelRef(RelRefType relRef) {
 void SuchThatClauseBuilder::setLhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
   RefParam refParam;
   /*
-   * Check if the rel ref is Follows, FollowsT, Parent or ParentT
+   * Check if the rel ref is Follows, FollowsT, Next, NextT, Affects, Parent or ParentT
    * In these cases, LHS will all be StmtRef
    * Else, LHS could be either StmtRef or EntRef
    */
   switch (this->rel_ref) {
     case RelRefType::FOLLOWS:
     case RelRefType::FOLLOWST:
+    case RelRefType::NEXT:
+    case RelRefType::NEXTT:
+    case RelRefType::AFFECTS:
     case RelRefType::PARENT:
     case RelRefType::PARENTT:lhs = getStmtRef(param, declarations);
       break;
@@ -31,13 +33,16 @@ void SuchThatClauseBuilder::setLhs(const QueryToken& param, const std::vector<De
 void SuchThatClauseBuilder::setRhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
   RefParam refParam;
   /*
-   * Check if the rel ref is Follows, FollowsT, Parent or ParentT
+   * Check if the rel ref is Follows, FollowsT, Next, NextT, Affects, Parent or ParentT
    * In these cases, RHS are all StmtRef
    * Else, RHS are all EntRef
    */
   switch (rel_ref) {
     case RelRefType::FOLLOWS:
     case RelRefType::FOLLOWST:
+    case RelRefType::NEXT:
+    case RelRefType::NEXTT:
+    case RelRefType::AFFECTS:
     case RelRefType::PARENT:
     case RelRefType::PARENTT:rhs = getStmtRef(param, declarations);
       break;
@@ -181,6 +186,24 @@ std::unique_ptr<SuchThatClause> SuchThatClauseBuilder::getClause() const {
     case RelRefType::CALLST:
       if (std::holds_alternative<EntRef >(lhs) && std::holds_alternative<EntRef>(rhs)) {
         return std::make_unique<CallsT>(std::get<EntRef>(lhs), std::get<EntRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
+    case RelRefType::NEXT:
+      if (std::holds_alternative<StmtRef >(lhs) && std::holds_alternative<StmtRef>(rhs)) {
+        return std::make_unique<Next>(std::get<StmtRef>(lhs), std::get<StmtRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
+    case RelRefType::NEXTT:
+      if (std::holds_alternative<StmtRef >(lhs) && std::holds_alternative<StmtRef>(rhs)) {
+        return std::make_unique<NextT>(std::get<StmtRef>(lhs), std::get<StmtRef>(rhs));
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
+    case RelRefType::AFFECTS:
+      if (std::holds_alternative<StmtRef >(lhs) && std::holds_alternative<StmtRef>(rhs)) {
+        return std::make_unique<Affects>(std::get<StmtRef>(lhs), std::get<StmtRef>(rhs));
       } else {
         throw QpsSyntaxError("Syntax error");
       }
