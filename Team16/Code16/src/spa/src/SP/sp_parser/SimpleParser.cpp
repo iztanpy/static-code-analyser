@@ -56,6 +56,6 @@ void SimpleParser::populatePKB() {
   writeFacade->storeStatements(visitor->getStatementTypesMap());
   // Store while control variables
   writeFacade->storeWhile(visitor->getWhileControlVarMap());
-//   Store if control variables
+  // Store if control variables
   writeFacade->storeIf(visitor->getIfControlVarMap());
 }
