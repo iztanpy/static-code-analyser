@@ -37,13 +37,16 @@ void ClauseArgsSyntaxHandler::handle(std::string clause, PQLTokenType pattern_ty
   }
   std::string clause_with_brackets_removed = QueryUtil::RemoveBrackets(clause);
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause_with_brackets_removed);
-  if (pattern_type == PQLTokenType::PATTERN_IF) {
-    if (arguments.size() != 3) {
-      throw QpsSyntaxError("More than 3 arguments");  // for if pattern
+  if (arguments.size() != 2 && arguments.size() != 3) {
+    throw QpsSyntaxError("Must have 2 or 3 arguments");
+  }
+
+  if (arguments.size() == 3) {
+    if (!QueryUtil::IsWildcard(arguments[2])) {
+      throw QpsSyntaxError("Invalid third argument for if pattern");
     }
-  } else {
-    if (arguments.size() != 2) {
-      throw QpsSyntaxError("More than 2 arguments");  // for while and assign pattern
+    if (pattern_type != PQLTokenType::PATTERN_IF) {
+      throw QpsSemanticError("Synonym not if entity");
     }
   }
 }

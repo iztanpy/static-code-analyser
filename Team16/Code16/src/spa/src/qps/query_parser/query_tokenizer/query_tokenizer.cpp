@@ -196,12 +196,19 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
 }
 
 PQLTokenType QueryTokenizer::getPatternTokenType(std::string & pattern_syn, std::vector<Declaration>& declarations) {
-  if (QueryUtil::IsInDeclarations(pattern_syn, declarations)) {
-    return PQLTokenType::SYNONYM;
-  } else if (pattern_syn == "while") {
-    return PQLTokenType::PATTERN_WHILE;
-  } else {
-    return PQLTokenType::PATTERN_IF;
+  Declaration synonym_declaration;
+  for (Declaration declaration : declarations) {
+    if (declaration.synonym == pattern_syn) {
+      synonym_declaration = declaration;
+      break;
+    }
+  }
+  switch (synonym_declaration.design_entity) {
+    case DesignEntity::WHILE_LOOP: return PQLTokenType::PATTERN_WHILE;
+    case DesignEntity::IF_STMT: return PQLTokenType::PATTERN_IF;
+    case DesignEntity::ASSIGN: return PQLTokenType::SYNONYM;
+    default:
+      throw QpsSemanticError("Synonym not declared");
   }
 }
 

@@ -96,24 +96,21 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
 
-  switch (pattern_type) {
-    case PQLTokenType::SYNONYM:
-      // RHS pattern of assignment pattern can be partial expr, exact expr or wildcard
-      if (!QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
-          && !QueryUtil::IsExactExpressionSpecification(right_hand_side)
-          && !QueryUtil::IsWildcard(right_hand_side)) {
-        throw QpsSyntaxError("Invalid argument for RHS of assignment pattern clause");
-      }
-      break;
-    case PQLTokenType::PATTERN_WHILE:
-    case PQLTokenType::PATTERN_IF:
-      // RHS of while and if pattern has to be a wildcard
-      if (!QueryUtil::IsWildcard(right_hand_side)) {
-        throw QpsSyntaxError("RHS of while or if pattern is not wildcard");
-      }
-      break;
-    default:
-      throw QpsSyntaxError("Unrecognised pattern clause token");
+
+  // RHS can only be these 3 types regardless of pattern synonym
+  if (!QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
+      && !QueryUtil::IsExactExpressionSpecification(right_hand_side)
+      && !QueryUtil::IsWildcard(right_hand_side)) {
+    throw QpsSyntaxError("Invalid argument for RHS pattern clause");
+  }
+
+  if (QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
+      || QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
+    if (pattern_type == PQLTokenType::PATTERN_IF) {
+      throw QpsSyntaxError("Invalid if pattern syntax");
+    } else if (pattern_type == PQLTokenType::PATTERN_WHILE) {
+      throw QpsSemanticError("Pattern synonym must be an assign synonym");  // because can only be wildcard
+    }
   }
 }
 
