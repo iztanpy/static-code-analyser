@@ -3,8 +3,6 @@
 QueryEvaluator::QueryEvaluator(ReadFacade& pkb) : pkb(pkb) {}
 
 std::unordered_set<std::string> QueryEvaluator::Evaluate(const ParsedQuery& query) {
-  // TODO: Tell sumian to pass back the updated data structure
-
   ConstraintTable constraint_table;
 
   // Evaluate clauses

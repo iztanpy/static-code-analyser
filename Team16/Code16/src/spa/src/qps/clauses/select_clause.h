@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <unordered_set>
+
 #include "qps/design_entity.h"
 #include "qps/clauses/clause.h"
 #include "qps/query_evaluator/select_evaluator.h"

@@ -21,7 +21,7 @@ void AssignPattern::Validate() {
   PatternValidator::Validate(syn_assignment, lhs);
 }
 
-Constraint WhilePattern::Evaluate(ReadFacade & pkb_reader) {
+Constraint WhilePattern::Evaluate(ReadFacade& pkb_reader) {
   return Constraint();
 }
 
@@ -29,7 +29,7 @@ void WhilePattern::Validate() {
   // TODO(Cuong): validate
 }
 
-Constraint IfPattern::Evaluate(ReadFacade & pkb_reader) {
+Constraint IfPattern::Evaluate(ReadFacade& pkb_reader) {
   return Constraint();
 }
 

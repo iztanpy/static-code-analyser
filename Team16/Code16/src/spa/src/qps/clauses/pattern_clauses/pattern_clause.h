@@ -2,6 +2,7 @@
 
 #include <string>
 #include <variant>
+#include <unordered_set>
 
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/clauses/clause.h"
@@ -71,12 +72,12 @@ class AssignPattern : public PatternClause {
   void Validate() override;
 };
 
-class WhilePattern: public PatternClause {
+class WhilePattern : public PatternClause {
  public:
   Declaration syn_assignment;
   EntRef lhs;
 
-  WhilePattern(Declaration syn_assignment, EntRef lhs): syn_assignment(syn_assignment), lhs(lhs) {
+  WhilePattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
     Validate();
   }
 
@@ -86,12 +87,12 @@ class WhilePattern: public PatternClause {
   void Validate() override;
 };
 
-class IfPattern: public PatternClause {
+class IfPattern : public PatternClause {
  public:
   Declaration syn_assignment;
   EntRef lhs;
 
-  IfPattern(Declaration syn_assignment, EntRef lhs): syn_assignment(syn_assignment), lhs(lhs) {
+  IfPattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
     Validate();
   }
 
