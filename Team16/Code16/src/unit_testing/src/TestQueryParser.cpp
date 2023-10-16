@@ -210,3 +210,41 @@ TEST_CASE("Parser can parse Affects") {
   REQUIRE(SuchThatClause::are_stmt_ref_equal(affects_clause->lhs, expected_lhs));
   REQUIRE(SuchThatClause::are_stmt_ref_equal(affects_clause->rhs, expected_rhs));
 }
+
+TEST_CASE("Parser can parse while pattern") {
+  std::string sample_query_1 = "while w;\n"
+                               "Select w pattern w (\"x\", _)";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"w", DesignEntity::WHILE_LOOP}
+  };
+  std::vector<std::unique_ptr<PatternClause>> pattern_clauses = std::move(parsed_query_1.pattern_clauses);
+
+  REQUIRE(pattern_clauses.size() == 1);
+
+  EntRef expected_lhs = EntRef ("x");
+  std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
+  auto* clause = dynamic_cast<WhilePattern*>(pattern_clause.get());
+
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
+  REQUIRE(clause->syn_assignment.equals(declarations[0]));
+}
+
+TEST_CASE("Parser can parse if pattern") {
+  std::string sample_query_1 = "if ifs;\n"
+                               "Select ifs pattern ifs (_, _, _)";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"ifs", DesignEntity::IF_STMT}
+  };
+  std::vector<std::unique_ptr<PatternClause>> pattern_clauses = std::move(parsed_query_1.pattern_clauses);
+
+  REQUIRE(pattern_clauses.size() == 1);
+
+  EntRef expected_lhs = EntRef (Wildcard::Value);
+  std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
+  auto* clause = dynamic_cast<IfPattern*>(pattern_clause.get());
+
+  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
+  REQUIRE(clause->syn_assignment.equals(declarations[0]));
+}

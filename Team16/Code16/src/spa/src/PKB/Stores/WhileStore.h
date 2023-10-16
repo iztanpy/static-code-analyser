@@ -11,13 +11,13 @@ class WhileStore {
  private:
     typedef std::string variable;
     typedef int statementNumber;
-    std::unordered_map<statementNumber, variable> variableMap;
+    std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> reverseVariableMap;
 
  public:
     WhileStore();
 
-    void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);
+    void addVariableMap(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
     std::unordered_set<statementNumber> getWhile(Wildcard wc);
     std::unordered_set<statementNumber> getWhile(variable v);

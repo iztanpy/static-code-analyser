@@ -70,3 +70,33 @@ class AssignPattern : public PatternClause {
  private:
   void Validate() override;
 };
+
+class WhilePattern: public PatternClause {
+ public:
+  Declaration syn_assignment;
+  EntRef lhs;
+
+  WhilePattern(Declaration syn_assignment, EntRef lhs): syn_assignment(syn_assignment), lhs(lhs) {
+    Validate();
+  }
+
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+ private:
+  void Validate() override;
+};
+
+class IfPattern: public PatternClause {
+ public:
+  Declaration syn_assignment;
+  EntRef lhs;
+
+  IfPattern(Declaration syn_assignment, EntRef lhs): syn_assignment(syn_assignment), lhs(lhs) {
+    Validate();
+  }
+
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+ private:
+  void Validate() override;
+};

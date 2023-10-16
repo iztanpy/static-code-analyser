@@ -765,6 +765,99 @@ TEST_CASE(("Test SP valid SIMPLE - keywords as names")) {
       "procedure p { if (i != 0) then { else = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
   sourceProcessor.processSource(simpleProgram);
 }
+
+TEST_CASE(("Test SP Control Variable storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  WriteFacade writeFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = R"(
+    procedure A {
+        read a;
+        print b;
+        while (c > d + 3) {
+            if (e == f - 2) then {
+                call B;
+            } else {
+                g = h + 4;
+            }
+        }
+        call C;
+        i = j * 2;
+    }
+
+    procedure B {
+        read k;
+        print l;
+        m = n / 2;
+        if (o > p) then {
+            print q;
+        } else {
+            call D;
+        }
+        r = s - 1;
+    }
+
+    procedure C {
+        print t;
+        u = v + 3;
+        while (w < x) {
+            if (y > z) then {
+                call E;
+            } else {
+                print aa;
+            }
+        }
+        bb = cc * 2;
+    }
+
+    procedure D {
+        read dd;
+        if (ee != ff) then {
+            print gg;
+        } else {
+            hh = ii + 5;
+        }
+        while (jj > kk) {
+            print ll;
+        }
+    }
+
+    procedure E {
+        mm = nn - 3;
+        print oo;
+        while (pp < qq) {
+            a = b + 4;
+        }
+        rr = ss + 4;
+    }
+     )";
+
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+      { {6, "g"}, {8, "i"}, {11, "m"}, {15, "r"}, {17, "u"}, {22, "bb"}, {26, "hh"}, {29, "mm"}, {32, "a"}, {33, "rr"} });
+
+  std::unordered_map<int, std::string> usesLineLHSMap2 = sourceProcessor.getUsesLineLHSMap();
+
+  std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getWhileControlVarMap();
+  std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getIfControlVarMap();
+  std::unordered_map<int, std::unordered_set<std::string>> whileMaperes =
+      std::unordered_map<int, std::unordered_set<std::string>>({
+        {3, {"c", "d"}}, {18, {"w", "x"}},{27, {"jj", "kk"}}, {31, {"pp", "qq"}}
+  });
+  std::unordered_map<int, std::unordered_set<std::string>> ifMapers =
+      std::unordered_map<int, std::unordered_set<std::string>>({
+        {4, {"e", "f"}}, {12, {"o", "p"}}, {19, {"y", "z"}}, {24, {"ee", "ff"}}
+  });
+
+  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
+      std::unordered_set<std::string>>({ {1, {"x"}}, {3, {"i"}}, {5, {"x", "y"}} });
+
+  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
+  REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
+
+}
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();

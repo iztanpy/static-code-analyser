@@ -21,6 +21,22 @@ void AssignPattern::Validate() {
   PatternValidator::Validate(syn_assignment, lhs);
 }
 
+Constraint WhilePattern::Evaluate(ReadFacade & pkb_reader) {
+  return Constraint();
+}
+
+void WhilePattern::Validate() {
+  // TODO(Cuong): validate
+}
+
+Constraint IfPattern::Evaluate(ReadFacade & pkb_reader) {
+  return Constraint();
+}
+
+void IfPattern::Validate() {
+  // TODO(Cuong): validate
+}
+
 bool PatternClause::are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2) {
   if (std::holds_alternative<ExactExpr>(expr_1) && std::holds_alternative<ExactExpr>(expr_2)) {
     return std::get<ExactExpr>(expr_1).value == std::get<ExactExpr>(expr_2).value;
@@ -32,3 +48,4 @@ bool PatternClause::are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2) {
     return false;
   }
 }
+
