@@ -32,5 +32,5 @@ struct ExactExpr {
  * Represents a type that a pattern expressions can take in PQL grammar
  */
 using ExprSpec = std::variant<PartialExpr, ExactExpr, Wildcard>;
-using synonym = std::string;
+using Synonym = std::string;
 

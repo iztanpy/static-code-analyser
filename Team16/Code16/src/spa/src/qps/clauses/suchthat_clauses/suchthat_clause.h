@@ -51,7 +51,7 @@ class SuchThatClause : public Clause {
    * of the same name, it will only return 1 due to unordered_set
    * @return a set of elements
    */
-  std::unordered_set<synonym> GetSynonyms() override;
+  std::unordered_set<Synonym> GetSynonyms() override;
 
   ~SuchThatClause() override = default;
 

@@ -71,8 +71,8 @@ bool SuchThatClause::are_ent_ref_equal(const RefParam& param_1, const RefParam& 
 }
 
 // ai-gen start (3.5, 0)
-std::unordered_set<synonym> SuchThatClause::GetSynonyms() {
-  std::unordered_set < synonym > synonyms;
+std::unordered_set<Synonym> SuchThatClause::GetSynonyms() {
+  std::unordered_set<Synonym> synonyms;
 
   // Helper lambda to extract Declaration from StmtRef or EntRef
   auto extractSynonym = [&](const RefParam& param) {

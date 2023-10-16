@@ -66,7 +66,7 @@ TEST_CASE("Query Parser can return a parsed query") {
   SelectClause expected_select_clause;
   expected_select_clause.declaration = declarations[0];
 
-  std::vector<synonym> expected_selects = {declarations[0].synonym};
+  std::vector<Synonym> expected_selects = {declarations[0].synonym};
 
   EntRef expected_lhs = EntRef(declarations[0]);
   EntRef expected_rhs = EntRef(Wildcard::Value);
@@ -92,7 +92,7 @@ TEST_CASE("Parser can parse Calls and Calls*") {
   SelectClause expected_select_clause;
   expected_select_clause.declaration = declarations[0];
 
-  std::vector<synonym> expected_selects = {declarations[0].synonym};
+  std::vector<Synonym> expected_selects = {declarations[0].synonym};
 
   EntRef expected_lhs = EntRef(declarations[0]);
   EntRef expected_rhs = EntRef(Wildcard::Value);
@@ -115,7 +115,7 @@ TEST_CASE("Parser can parse Calls and Calls*") {
   SelectClause expected_select_clause_2;
   expected_select_clause_2.declaration = declarations_2[0];
 
-  std::vector<synonym> expected_selects_2 = {declarations_2[0].synonym};
+  std::vector<Synonym> expected_selects_2 = {declarations_2[0].synonym};
 
   EntRef expected_lhs_2 = EntRef(declarations_2[0]);
   EntRef expected_rhs_2 = EntRef("Third");
@@ -148,7 +148,7 @@ TEST_CASE("Parser can parse Next and Next*") {
   SelectClause expected_select_clause;
   expected_select_clause.declaration = declarations[0];
 
-  std::vector<synonym> expected_selects = {declarations[0].synonym};
+  std::vector<Synonym> expected_selects = {declarations[0].synonym};
 
   StmtRef expected_lhs = StmtRef(2);
   StmtRef expected_rhs = StmtRef(3);
@@ -171,7 +171,7 @@ TEST_CASE("Parser can parse Next and Next*") {
   SelectClause expected_select_clause_2;
   expected_select_clause_2.declaration = declarations_2[0];
 
-  std::vector<synonym> expected_selects_2 = {declarations_2[0].synonym};
+  std::vector<Synonym> expected_selects_2 = {declarations_2[0].synonym};
 
   StmtRef expected_lhs_2 = StmtRef(2);
   StmtRef expected_rhs_2 = StmtRef(9);
@@ -196,7 +196,7 @@ TEST_CASE("Parser can parse Affects") {
   SelectClause expected_select_clause;
   expected_select_clause.declaration = declarations[0];
 
-  std::vector<synonym> expected_selects = {declarations[0].synonym};
+  std::vector<Synonym> expected_selects = {declarations[0].synonym};
 
   StmtRef expected_lhs = StmtRef(2);
   StmtRef expected_rhs = StmtRef(6);
@@ -222,7 +222,7 @@ TEST_CASE("Parser can parse while pattern") {
   SelectClause expected_select_clause;
   expected_select_clause.declaration = declarations[0];
 
-  std::vector<synonym> expected_selects = {declarations[0].synonym};
+  std::vector<Synonym> expected_selects = {declarations[0].synonym};
 
   auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query_1.clauses[0]).get());
   auto* while_clause = dynamic_cast<WhilePattern*>(std::move(parsed_query_1.clauses[1]).get());
@@ -244,7 +244,7 @@ TEST_CASE("Parser can parse if pattern") {
   SelectClause expected_select_clause;
   expected_select_clause.declaration = declarations[0];
 
-  std::vector<synonym> expected_selects = {declarations[0].synonym};
+  std::vector<Synonym> expected_selects = {declarations[0].synonym};
 
   auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query_1.clauses[0]).get());
   auto* if_clause = dynamic_cast<IfPattern*>(std::move(parsed_query_1.clauses[1]).get());

@@ -30,5 +30,5 @@ class SelectClause : public Clause {
    * only has 1 synonym
    * @return a set of just 1 element
    */
-  std::unordered_set<synonym> GetSynonyms() override;
+  std::unordered_set<Synonym> GetSynonyms() override;
 };

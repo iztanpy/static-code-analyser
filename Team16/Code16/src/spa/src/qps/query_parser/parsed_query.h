@@ -15,6 +15,6 @@
  * clauses: a vector of clauses that are in the query
  */
 struct ParsedQuery {
-  std::vector<synonym> selects;
+  std::vector<Synonym> selects;
   std::vector<std::unique_ptr<Clause>> clauses;
 };

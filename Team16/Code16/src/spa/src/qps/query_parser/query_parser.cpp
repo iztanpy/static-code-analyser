@@ -15,7 +15,7 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
   std::vector<QueryToken> selectTokens = tokenised_query.select_tokens;
 
   std::vector<std::unique_ptr<Clause>> clauses;
-  std::vector<synonym> selects;
+  std::vector<Synonym> selects;
 
   /* For now, we only have one synonym for select clause
    * hence we can just return the first value of the vector
