@@ -16,6 +16,7 @@
 #include "qps/query_parser/QueryUtil.h"
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 #include "qps/qps_validator/pattern_syn_semantic_handler.h"
+#include "utils/string_utils.h"
 
 void qps_validator::ValidateStatement(std::string statement, bool is_select_statement_processed) {
   StatementSyntaxHandler statement_syntax_handler = StatementSyntaxHandler(is_select_statement_processed);
@@ -96,7 +97,6 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
 
-
   // RHS can only be these 3 types regardless of pattern synonym
   if (!QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
       && !QueryUtil::IsExactExpressionSpecification(right_hand_side)
@@ -114,7 +114,11 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
   }
 }
 
-void qps_validator::ValidateIfPatternClause(std::string third_token) {
+void qps_validator::ValidateIfPatternClause(std::vector<std::string>& arguments) {
+  if (arguments.size() != 3) {
+    throw QpsSemanticError("Pattern synonym is not if statement");
+  }
+  std::string third_token = string_util::RemoveSpacesFromExpr(arguments[2]);
   if (!QueryUtil::IsWildcard(third_token)) {
     throw QpsSyntaxError("Third argument of if pattern is not wildcard");
   }
