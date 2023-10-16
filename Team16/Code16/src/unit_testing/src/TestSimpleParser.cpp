@@ -841,11 +841,6 @@ TEST_CASE(("Test SP: CFG storage")) {
   bool is8Found = false;
   bool is9Found = false;
   for (auto& it : node7->getChildren()) {
-      std::cout << "child  ";
-      for (auto& it2 : it->getStmtNumberSet()) {
-          std::cout << it2 << " ";
-      }
-      std::cout << std::endl;
       if (it->getStmtNumberSet() == statementNumberSet8) {
           node8 = it;
           is8Found = !is8Found;
@@ -856,8 +851,15 @@ TEST_CASE(("Test SP: CFG storage")) {
   }
   REQUIRE((is8Found && is9Found));
   // check 8 -> 10, 11, 12 ERROR (end of if not detected inside CloseBraceParser)
-//    REQUIRE(node8->getChildren().size() == 1);
-//    REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({10, 11, 12}));
+  REQUIRE(node8->getChildren().size() == 1);
+//  for (auto& it : node8->getChildren()) {
+//    std::cout << "node 8 child  ";
+//    for (auto& it2 : it->getStmtNumberSet()) {
+//      std::cout << it2 << " ";
+//    }
+//    std::cout << std::endl;
+//  }
+  REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({10, 11, 12}));
   // check 9 -> 10, 11, 12
   REQUIRE(node9->getChildren().size() == 1);
   REQUIRE(node9->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({10, 11, 12}));
@@ -904,6 +906,150 @@ TEST_CASE(("Test SP: CFG storage")) {
           nodeEnd2 = it;
           isEnd2Found = !isEnd2Found;
       }
+  }
+  REQUIRE((is19Found && isEnd2Found));
+  // check 19 -> 18
+  REQUIRE(node19->getChildren().size() == 1);
+  REQUIRE(node19->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({18}));
+}
+
+
+TEST_CASE(("Test SP: nested if/while CFG storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  auto writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = R"(
+      procedure Second {
+        x = 0;
+        i = 5;
+        while (i!=0) {
+          x = x + 2*y;
+          call Third;
+          i = i - 1;
+          if (x==1) then {
+              x = x+1;
+              while (else > 1) {
+                if (else == 1) then {
+                  x = x + 1;
+                }
+                else = else + 1;
+              }
+          } else {
+              z = 1;
+          }
+        }
+        else = else * else;
+        z = z + x + i;
+        y = z + 2;
+        x = x * y + z;
+      }
+  )";
+  sourceProcessor.processSource(simpleProgram);
+
+  // PROCEDURE SECOND CHECK
+  // check root name in map
+  std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  // check 12
+  REQUIRE(rootSecond->getStmtNumberSet() == std::set<int>({1, 2}));
+  REQUIRE(rootSecond->getChildren().size() == 1);
+  // check 3
+  REQUIRE(rootSecond->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({3}));
+  REQUIRE(rootSecond->getChildren().begin()->get()->getChildren().size() == 2);
+  
+  // check 456 & 7
+  std::set<int> statementNumberSet456 = std::set<int>({4, 5, 6});
+  std::set<int> statementNumberSet7 = std::set<int>({7});
+  std::shared_ptr<CfgNode> node7;
+  std::shared_ptr<CfgNode> node456;
+  bool is456Found = false;
+  bool is7Found = false;
+  for (auto& it : rootSecond->getChildren().begin()->get()->getChildren()) {
+    if (it->getStmtNumberSet() == statementNumberSet456) {
+      node456 = it;
+      is456Found = !is456Found;
+    } else if (it->getStmtNumberSet() == statementNumberSet7) {
+      node7 = it;
+      is7Found = !is7Found;
+    }
+  }
+  REQUIRE((is456Found && is7Found));
+  // check 456 -> 3
+  REQUIRE(node456->getChildren().size() == 1);
+  REQUIRE(node456->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({3}));
+  // check 7 -> 8 & 9
+  REQUIRE(node7->getChildren().size() == 2);
+  std::set<int> statementNumberSet8 = std::set<int>({8});
+  std::set<int> statementNumberSet9 = std::set<int>({9});
+  std::shared_ptr<CfgNode> node8;
+  std::shared_ptr<CfgNode> node9;
+  bool is8Found = false;
+  bool is9Found = false;
+  for (auto& it : node7->getChildren()) {
+    if (it->getStmtNumberSet() == statementNumberSet8) {
+      node8 = it;
+      is8Found = !is8Found;
+    } else if (it->getStmtNumberSet() == statementNumberSet9) {
+      node9 = it;
+      is9Found = !is9Found;
+    }
+  }
+  REQUIRE((is8Found && is9Found));
+  // check 8 -> 10, 11, 12 ERROR (end of if not detected inside CloseBraceParser)
+  REQUIRE(node8->getChildren().size() == 1);
+//  for (auto& it : node8->getChildren()) {
+//    std::cout << "node 8 child  ";
+//    for (auto& it2 : it->getStmtNumberSet()) {
+//      std::cout << it2 << " ";
+//    }
+//    std::cout << std::endl;
+//  }
+  REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({10, 11, 12}));
+  // check 9 -> 10, 11, 12
+  REQUIRE(node9->getChildren().size() == 1);
+  REQUIRE(node9->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({10, 11, 12}));
+  // check 10, 11, 12 -> empty
+  REQUIRE(node9->getChildren().begin()->get()->getChildren().size() == 0);
+
+  // PROCEDURE THIRD CHECK
+  // check root name in map
+  std::shared_ptr<CfgNode> rootThird = sourceProcessor.getCfgNodesMap().at("Third");
+  // check 13, 14, 15
+  REQUIRE(rootThird->getStmtNumberSet() == std::set<int>({13, 14, 15}));
+  REQUIRE(rootThird->getChildren().size() == 1);
+  // check 16
+  REQUIRE(rootThird->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({16}));
+  REQUIRE(rootThird->getChildren().begin()->get()->getChildren().size() == 2);
+  // check 16 -> 17 && 16 -> END
+  std::shared_ptr<CfgNode> node17;
+  std::shared_ptr<CfgNode> nodeEnd;
+  bool is17Found = false;
+  bool isEndFound = false;
+  for (auto& it : rootThird->getChildren().begin()->get()->getChildren()) {
+    if (it->getStmtNumberSet() == std::set<int>({17})) {
+      node17 = it;
+      is17Found = !is17Found;
+    } else if (it->getStmtNumberSet().empty()) {
+      nodeEnd = it;
+      isEndFound = !isEndFound;
+    }
+  }
+  REQUIRE((is17Found && isEndFound));
+  // check 17 -> 18
+  REQUIRE(node17->getChildren().size() == 1);
+  REQUIRE(node17->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({18}));
+  // check 18 -> 19 && 18 -> END
+  std::shared_ptr<CfgNode> node19;
+  std::shared_ptr<CfgNode> nodeEnd2;
+  bool is19Found = false;
+  bool isEnd2Found = false;
+  for (auto& it : node17->getChildren().begin()->get()->getChildren()) {
+    if (it->getStmtNumberSet() == std::set<int>({19})) {
+      node19 = it;
+      is19Found = !is19Found;
+    } else if (it->getStmtNumberSet().empty()) {
+      nodeEnd2 = it;
+      isEnd2Found = !isEnd2Found;
+    }
   }
   REQUIRE((is19Found && isEnd2Found));
   // check 19 -> 18

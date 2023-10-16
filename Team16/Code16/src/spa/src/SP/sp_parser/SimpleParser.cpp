@@ -11,7 +11,7 @@ int SimpleParser::parse(std::vector<Token>& tokens) {
         Token* curr_token = &tokens[index];
         bool isWhileParent = !controlStructureStack.empty() && controlStructureStack.top() == "while";
         bool isIfParent = !controlStructureStack.empty() && (
-            controlStructureStack.top() == "if");
+            controlStructureStack.top() == "if" || controlStructureStack.top() == "else");
         int parentStatementNumber = !parentStatementStack.empty() ? parentStatementStack.top() : -1;
         if ((isWhileParent || isIfParent) && parentStatementNumber != -1
             && curr_token->tokenType != TokenType::kSepCloseBrace) {
