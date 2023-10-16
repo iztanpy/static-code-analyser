@@ -941,10 +941,10 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   // check root name in map
   std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
-  REQUIRE(rootSecond->getStmtNumberSet() == std::set<int>({1, 2}));
+  REQUIRE(rootSecond->getStmtNumberSet() == std::set < int > ({ 1, 2 }));
   REQUIRE(rootSecond->getChildren().size() == 1);
   // check 3
-  REQUIRE(rootSecond->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({3}));
+  REQUIRE(rootSecond->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 3 }));
   REQUIRE(rootSecond->getChildren().begin()->get()->getChildren().size() == 2);
   // check 3 -> 4 5 6 and 14 15 16 17
   std::shared_ptr<CfgNode> node456;
@@ -952,18 +952,18 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   bool is456Found = false;
   bool is14151617Found = false;
   for (auto& it : rootSecond->getChildren().begin()->get()->getChildren()) {
-      if (it->getStmtNumberSet() == std::set<int>({4, 5, 6})) {
-          node456 = it;
-          is456Found = !is456Found;
-      } else if (it->getStmtNumberSet() == std::set<int>({14, 15, 16, 17})) {
-          node14151617 = it;
-          is14151617Found = !is14151617Found;
-      }
+    if (it->getStmtNumberSet() == std::set < int > ({ 4, 5, 6 })) {
+      node456 = it;
+      is456Found = !is456Found;
+    } else if (it->getStmtNumberSet() == std::set < int > ({ 14, 15, 16, 17 })) {
+      node14151617 = it;
+      is14151617Found = !is14151617Found;
+    }
   }
   REQUIRE((is456Found && is14151617Found));
   // check 456 -> 7
   REQUIRE(node456->getChildren().size() == 1);
-  REQUIRE(node456->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({7}));
+  REQUIRE(node456->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 7 }));
   // check 7 -> 8 and 13
   REQUIRE(node456->getChildren().begin()->get()->getChildren().size() == 2);
   std::shared_ptr<CfgNode> node8;
@@ -971,21 +971,21 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   bool is8Found = false;
   bool is13Found = false;
   for (auto& it : node456->getChildren().begin()->get()->getChildren()) {
-      if (it->getStmtNumberSet() == std::set<int>({8})) {
-          node8 = it;
-          is8Found = !is8Found;
-      } else if (it->getStmtNumberSet() == std::set<int>({13})) {
-          node13 = it;
-          is13Found = !is13Found;
-      }
+    if (it->getStmtNumberSet() == std::set < int > ({ 8 })) {
+      node8 = it;
+      is8Found = !is8Found;
+    } else if (it->getStmtNumberSet() == std::set < int > ({ 13 })) {
+      node13 = it;
+      is13Found = !is13Found;
+    }
   }
   REQUIRE((is8Found && is13Found));
   // check 8 -> 9
   std::shared_ptr<CfgNode> node9;
   REQUIRE(node8->getChildren().size() == 1);
-  REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({9}));
+  REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 9 }));
   for (auto& it : node8->getChildren()) {
-      node9 = it;
+    node9 = it;
   }
   // check 9 -> 10 and empty (end while)
   REQUIRE(node9->getChildren().size() == 2);
@@ -994,38 +994,38 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   bool is10Found = false;
   bool isEndWhileFound = false;
   for (auto& it : node9->getChildren()) {
-      if (it->getStmtNumberSet() == std::set<int>({10})) {
-          node10 = it;
-          is10Found = !is10Found;
-      } else if (it->getStmtNumberSet().empty()) {
-          nodeEndWhile = it;
-          isEndWhileFound = !isEndWhileFound;
-      }
+    if (it->getStmtNumberSet() == std::set < int > ({ 10 })) {
+      node10 = it;
+      is10Found = !is10Found;
+    } else if (it->getStmtNumberSet().empty()) {
+      nodeEndWhile = it;
+      isEndWhileFound = !isEndWhileFound;
+    }
   }
   REQUIRE((is10Found && isEndWhileFound));
   // check 10 -> 11
   REQUIRE(node10->getChildren().size() == 1);
-  REQUIRE(node10->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({11}));
+  REQUIRE(node10->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 11 }));
   // check 11 -> 12
   REQUIRE(node10->getChildren().begin()->get()->getChildren().size() == 1);
   std::shared_ptr<CfgNode> node12;
   bool is12Found = false;
   for (auto& it : node10->getChildren().begin()->get()->getChildren()) {
-    if (it->getStmtNumberSet() == std::set<int>({12})) {
+    if (it->getStmtNumberSet() == std::set < int > ({ 12 })) {
       node12 = it;
       is12Found = !is12Found;
     }
   }
   REQUIRE(is12Found);
   REQUIRE(node12->getChildren().size() == 1);
-  REQUIRE(node12->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({9}));
+  REQUIRE(node12->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 9 }));
   REQUIRE(node12->getChildren().begin()->get()->getChildren().size() == 2);
   bool isEndWhileAfter9 = false;
   bool is10After9 = false;
   for (auto& it : node12->getChildren().begin()->get()->getChildren()) {
     if (it->getStmtNumberSet().empty()) {
       isEndWhileAfter9 = !isEndWhileAfter9;
-    } else if (it->getStmtNumberSet() == std::set<int>({10})) {
+    } else if (it->getStmtNumberSet() == std::set < int > ({ 10 })) {
       is10After9 = !is10After9;
     }
   }
@@ -1042,12 +1042,104 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(node13->getChildren().begin()->get()->getChildren().size() == 1);
   REQUIRE(nodeEndWhile->getChildren().begin()->get()->getChildren().size() == 1);
   REQUIRE(node13->getChildren().begin()->get()->getChildren().begin()->get()->getStmtNumberSet() ==
-      std::set<int>({3}));
+      std::set < int > ({ 3 }));
   REQUIRE(nodeEndWhile->getChildren().begin()->get()->getChildren().begin()->get()->getStmtNumberSet() ==
-      std::set<int>({3}));
+      std::set < int > ({ 3 }));
 
   // check 14 15 16 18 -> END (no node no nothing!)
   REQUIRE(node14151617->getChildren().size() == 0);
+}
+
+TEST_CASE(("Test SP Control Variable storage")) {
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  WriteFacade writeFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+  std::string simpleProgram = R"(
+    procedure A {
+        read a;
+        print b;
+        while (c > d + 3) {
+            if (e == f - 2) then {
+                call B;
+            } else {
+                g = h + 4;
+            }
+        }
+        call C;
+        i = j * 2;
+    }
+
+    procedure B {
+        read k;
+        print l;
+        m = n / 2;
+        if (o > p) then {
+            print q;
+        } else {
+            call D;
+        }
+        r = s - 1;
+    }
+
+    procedure C {
+        print t;
+        u = v + 3;
+        while (w < x) {
+            if (y > z) then {
+                call E;
+            } else {
+                print aa;
+            }
+        }
+        bb = cc * 2;
+    }
+
+    procedure D {
+        read dd;
+        if (ee != ff) then {
+            print gg;
+        } else {
+            hh = ii + 5;
+        }
+        while (jj > kk) {
+            print ll;
+        }
+    }
+
+    procedure E {
+        mm = nn - 3;
+        print oo;
+        while (pp < qq) {
+            a = b + 4;
+        }
+        rr = ss + 4;
+    }
+     )";
+
+  sourceProcessor.processSource(simpleProgram);
+
+  std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+      { {6, "g"}, {8, "i"}, {11, "m"}, {15, "r"}, {17, "u"}, {22, "bb"}, {26, "hh"}, {29, "mm"}, {32, "a"}, {33, "rr"} });
+
+  std::unordered_map<int, std::string> usesLineLHSMap2 = sourceProcessor.getUsesLineLHSMap();
+
+  std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getWhileControlVarMap();
+  std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getIfControlVarMap();
+  std::unordered_map<int, std::unordered_set<std::string>> whileMaperes =
+      std::unordered_map<int, std::unordered_set<std::string>>({
+        {3, {"c", "d"}}, {18, {"w", "x"}},{27, {"jj", "kk"}}, {31, {"pp", "qq"}}
+  });
+  std::unordered_map<int, std::unordered_set<std::string>> ifMapers =
+      std::unordered_map<int, std::unordered_set<std::string>>({
+        {4, {"e", "f"}}, {12, {"o", "p"}}, {19, {"y", "z"}}, {24, {"ee", "ff"}}
+  });
+
+  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
+      std::unordered_set<std::string>>({ {1, {"x"}}, {3, {"i"}}, {5, {"x", "y"}} });
+
+  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
+  REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
 }
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {

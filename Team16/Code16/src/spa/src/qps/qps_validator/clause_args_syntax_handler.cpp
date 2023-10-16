@@ -30,3 +30,23 @@ void ClauseArgsSyntaxHandler::handle(const std::string & left_hand_side, const s
     throw QpsSyntaxError("Invalid argument for relationship reference");
   }
 }
+
+void ClauseArgsSyntaxHandler::handle(std::string clause, PQLTokenType pattern_type) {
+  if (!QueryUtil::IsEnclosedInBrackets(clause)) {
+    throw QpsSyntaxError("Missing brackets");
+  }
+  std::string clause_with_brackets_removed = QueryUtil::RemoveBrackets(clause);
+  std::vector<std::string> arguments = string_util::SplitStringBy(',', clause_with_brackets_removed);
+  if (arguments.size() != 2 && arguments.size() != 3) {
+    throw QpsSyntaxError("Must have 2 or 3 arguments");
+  }
+
+  if (arguments.size() == 3) {
+    if (!QueryUtil::IsWildcard(arguments[2])) {
+      throw QpsSyntaxError("Invalid third argument for if pattern");
+    }
+    if (pattern_type != PQLTokenType::PATTERN_IF) {
+      throw QpsSemanticError("Synonym not if entity");
+    }
+  }
+}

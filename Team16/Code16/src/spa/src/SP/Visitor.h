@@ -196,6 +196,10 @@ class Visitor {
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
   std::unordered_map<int, std::string> assignLineFullRHSMap;
 
+  // Control Variables
+  std::unordered_map<int, std::unordered_set<std::string>> ifControlVarMap;
+  std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap;
+
   // Modifies
   std::unordered_map<int, std::string> modifiesMap;
 
@@ -288,6 +292,30 @@ class Visitor {
      */
     std::unordered_map<int, std::string> getAssignLineFullRHSMap() const {
         return assignLineFullRHSMap;
+    }
+    /**
+     * @brief Get the mapping of statement numbers to control variables of if conditional statements.
+     *
+     * This method returns an unordered map that associates statement numbers with the control variables of if
+     * conditional statements.
+     *
+     * @return An unordered map where keys are statement numbers, and values are the control variables of if
+     * conditional statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getIfControlVarMap() const {
+        return ifControlVarMap;
+    }
+    /**
+     * @brief Get the mapping of statement numbers to control variables of while conditional statements.
+     *
+     * This method returns an unordered map that associates statement numbers with the control variables of while
+     * conditional statements.
+     *
+     * @return An unordered map where keys are statement numbers, and values are the control variables of while
+     * conditional statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getWhileControlVarMap() const {
+        return whileControlVarMap;
     }
     /**
      * @brief Get the mapping of statement numbers to variables modified in those statements.

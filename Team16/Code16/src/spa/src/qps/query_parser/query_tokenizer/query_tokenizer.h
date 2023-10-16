@@ -12,7 +12,8 @@ enum class PQLTokenType {
   DECLARATION,
   SELECT,
   SUCH_THAT,
-  PATTERN,
+  PATTERN_WHILE,
+  PATTERN_IF,
   WILDCARD,
   RELREF,
   INTEGER,
@@ -98,10 +99,19 @@ class QueryTokenizer {
    * Returns the LHS and RHS of pattern clause
    * @param clause is the trimmed string from pattern clause
    * @param declarations is the set of declared entities
+   * @param pattern_type
    * @return the LHS and RHS as a pair
    */
   static std::pair<QueryToken, QueryToken> getPatternArgs(std::string& clause,
-                                                          std::vector<Declaration>& declarations);
+                                                          std::vector<Declaration>& declarations,
+                                                          PQLTokenType pattern_type);
+
+  /*!
+   * Gets the PQLTokenType of a pattern
+   * @param pattern_syn to be checked
+   * @return SYNONYM if it is an assign synonym, PATTERN_WHILE if it is 'while', PATTERN_IF if it is 'if'
+   */
+  static PQLTokenType getPatternTokenType(std::string& pattern_syn, std::vector<Declaration>& declarations);
 
   /*!
    * Returns the query tokens of such that and pattern clauses
