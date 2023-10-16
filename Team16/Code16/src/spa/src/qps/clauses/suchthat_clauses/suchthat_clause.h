@@ -44,7 +44,7 @@ class SuchThatClause : public Clause {
    * @param pkb_reader
    * @return Constraint that contains all possible valid values for this clause
    */
-  virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
+  Constraint Evaluate(ReadFacade& pkb_reader) override = 0;
   ~SuchThatClause() override = default;
 
  private:

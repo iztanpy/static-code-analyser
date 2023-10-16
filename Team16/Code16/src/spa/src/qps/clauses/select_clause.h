@@ -21,5 +21,5 @@ class SelectClause : public Clause {
    * @param pkb_reader is the PKB ReadFacade
    * @return a UnaryConstraint that contains all possible values of this synonym
    */
-  UnaryConstraint Evaluate(ReadFacade& pkb_reader);
+  Constraint Evaluate(ReadFacade& pkb_reader);
 };
