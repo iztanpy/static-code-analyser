@@ -218,16 +218,19 @@ TEST_CASE("Parser can parse while pattern") {
   std::vector<Declaration> declarations = {
       {"w", DesignEntity::WHILE_LOOP}
   };
-  std::vector<std::unique_ptr<PatternClause>> pattern_clauses = std::move(parsed_query_1.pattern_clauses);
 
-  REQUIRE(pattern_clauses.size() == 1);
+  SelectClause expected_select_clause;
+  expected_select_clause.declaration = declarations[0];
 
-  EntRef expected_lhs = EntRef ("x");
-  std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto* clause = dynamic_cast<WhilePattern*>(pattern_clause.get());
+  std::vector<synonym> expected_selects = {declarations[0].synonym};
 
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(clause->syn_assignment.equals(declarations[0]));
+  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query_1.clauses[0]).get());
+  auto* while_clause = dynamic_cast<WhilePattern*>(std::move(parsed_query_1.clauses[1]).get());
+
+  REQUIRE(parsed_query_1.clauses.size() == 2);
+  REQUIRE(parsed_query_1.selects == expected_selects);
+  REQUIRE(select_clause->equals(expected_select_clause));
+  REQUIRE(while_clause->syn_assignment.equals(declarations[0]));
 }
 
 TEST_CASE("Parser can parse if pattern") {
@@ -237,14 +240,17 @@ TEST_CASE("Parser can parse if pattern") {
   std::vector<Declaration> declarations = {
       {"ifs", DesignEntity::IF_STMT}
   };
-  std::vector<std::unique_ptr<PatternClause>> pattern_clauses = std::move(parsed_query_1.pattern_clauses);
 
-  REQUIRE(pattern_clauses.size() == 1);
+  SelectClause expected_select_clause;
+  expected_select_clause.declaration = declarations[0];
 
-  EntRef expected_lhs = EntRef (Wildcard::Value);
-  std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto* clause = dynamic_cast<IfPattern*>(pattern_clause.get());
+  std::vector<synonym> expected_selects = {declarations[0].synonym};
 
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(clause->syn_assignment.equals(declarations[0]));
+  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query_1.clauses[0]).get());
+  auto* if_clause = dynamic_cast<IfPattern*>(std::move(parsed_query_1.clauses[1]).get());
+
+  REQUIRE(parsed_query_1.clauses.size() == 2);
+  REQUIRE(parsed_query_1.selects == expected_selects);
+  REQUIRE(select_clause->equals(expected_select_clause));
+  REQUIRE(if_clause->syn_assignment.equals(declarations[0]));
 }
