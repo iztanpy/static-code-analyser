@@ -162,11 +162,9 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
   std::string right_hand_side = string_util::RemoveSpacesFromExpr(arguments[1]);
   // check if lhs is a entRef and lhs is valid for each pattern type
   qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side, pattern_type);
-
   // Additional check for third argument of if pattern
   if (pattern_type == PQLTokenType::PATTERN_IF) {
-    std::string third_token = string_util::RemoveSpacesFromExpr(arguments[2]);
-    qps_validator::ValidateIfPatternClause(third_token);
+    qps_validator::ValidateIfPatternClause(arguments);
   }
 
   // Set the different types of tokens
