@@ -30,6 +30,13 @@ class PatternClause : public Clause {
    * @return Constraint that contains all possible valid values for this clause
    */
   Constraint Evaluate(ReadFacade& pkb_reader) override = 0;
+
+  /*!
+   * Gets the synonyms used in this Pattern clause.
+   * @return a set of elements
+   */
+  std::unordered_set<synonym> GetSynonyms() override;
+
   ~PatternClause() override = default;
 
  private:

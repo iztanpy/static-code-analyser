@@ -24,7 +24,7 @@ class QueryParser {
    * @param declarations the set of declarations
    * @return a vector of select clauses
    */
-  static std::vector<SelectClause>
+  static std::vector<std::unique_ptr<Clause>>
   ExtractSelectClauses(const std::vector<QueryToken>& selectTokens, const std::vector<Declaration>& declarations);
 
   /*!
@@ -33,7 +33,7 @@ class QueryParser {
    * @param declarations the set of declarations
    * @return a vector of pointers to such that clauses
    */
-  static std::vector<std::unique_ptr<SuchThatClause>>
+  static std::vector<std::unique_ptr<Clause>>
   ExtractSuchThatClauses(const std::vector<QueryToken>& suchThatTokens, const std::vector<Declaration>& declarations);
 
   /*!
@@ -42,6 +42,6 @@ class QueryParser {
    * @param declarations the set of declarations
    * @return a vector of pointers to pattern clauses
    */
-  static std::vector<std::unique_ptr<PatternClause>>
+  static std::vector<std::unique_ptr<Clause>>
   ExtractPatternClauses(const std::vector<QueryToken>& patternTokens, const std::vector<Declaration>& declarations);
 };

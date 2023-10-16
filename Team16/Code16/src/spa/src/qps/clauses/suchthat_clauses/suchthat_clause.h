@@ -45,6 +45,14 @@ class SuchThatClause : public Clause {
    * @return Constraint that contains all possible valid values for this clause
    */
   Constraint Evaluate(ReadFacade& pkb_reader) override = 0;
+
+  /*!
+   * Gets the synonyms used in this SuchThat clause. If SuchThat clause has 2 synonyms
+   * of the same name, it will only return 1 due to unordered_set
+   * @return a set of elements
+   */
+  std::unordered_set<synonym> GetSynonyms() override;
+
   ~SuchThatClause() override = default;
 
  private:

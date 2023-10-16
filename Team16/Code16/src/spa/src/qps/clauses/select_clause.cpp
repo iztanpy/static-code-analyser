@@ -7,3 +7,7 @@ bool SelectClause::equals(const SelectClause& other) const {
 Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
   return SelectEvaluator::Evaluate(declaration, pkb_reader);
 }
+
+std::unordered_set<synonym> SelectClause::GetSynonyms() {
+  return {declaration.synonym};
+}

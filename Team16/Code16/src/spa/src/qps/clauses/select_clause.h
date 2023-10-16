@@ -21,5 +21,12 @@ class SelectClause : public Clause {
    * @param pkb_reader is the PKB ReadFacade
    * @return a UnaryConstraint that contains all possible values of this synonym
    */
-  Constraint Evaluate(ReadFacade& pkb_reader);
+  Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+  /*!
+   * Gets the synonyms used in this Select clause. However, each select clause
+   * only has 1 synonym
+   * @return a set of just 1 element
+   */
+  std::unordered_set<synonym> GetSynonyms() override;
 };

@@ -1,5 +1,16 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
+std::unordered_set<synonym> PatternClause::GetSynonyms() {
+  std::unordered_set < synonym > synonyms;
+  synonyms.insert(syn_assignment.synonym);
+
+  if (std::holds_alternative<Declaration>(lhs)) {
+    synonyms.insert(std::get<Declaration>(lhs).synonym);
+  }
+
+  return synonyms;
+}
+
 Constraint AssignPattern::Evaluate(ReadFacade& pkb_reader) {
   return std::visit([this, &pkb_reader](auto&& lhs_arg, auto&& rhs_arg) {
     return Constraint{AssignPatternEvaluator::Handle(this->syn_assignment.synonym, lhs_arg, rhs_arg, pkb_reader)};
