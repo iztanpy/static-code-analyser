@@ -16,4 +16,10 @@ void ClauseSynonymSemanticHandler::handle(std::string synonym) {
   if (!QueryUtil::IsInDeclarations(synonym, declarations)) {
     throw QpsSemanticError("Synonym not declared");
   }
+//
+//  if (!QueryUtil::IsSynAssign(synonym, declarations)
+//      && !QueryUtil::IsSynIf(synonym, declarations)
+//      && !QueryUtil::IsSynWhile(synonym, declarations)) {
+//    throw QpsSemanticError("Invalid pattern type");
+//  }
 }

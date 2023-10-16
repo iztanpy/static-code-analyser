@@ -676,7 +676,7 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::f
   return result;
 }
 
-void PKB::storeIf(std::unordered_map<statementNumber, variable> variableMap) {
+void PKB::storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
     ifStore->addVariableMap(variableMap);
 }
 
@@ -692,7 +692,7 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllIf
     return ifStore->getAllIf();
 }
 
-void PKB::storeWhile(std::unordered_map<statementNumber, variable> variableMap) {
+void PKB::storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
     whileStore->addVariableMap(variableMap);
 }
 

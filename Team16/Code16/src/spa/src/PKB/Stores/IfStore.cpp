@@ -7,14 +7,16 @@ typedef std::string variable;
 typedef int statementNumber;
 
 IfStore::IfStore() {
-    variableMap = std::unordered_map<statementNumber, variable>();
+    variableMap = std::unordered_map<statementNumber, std::unordered_set<variable>>();
     reverseVariableMap = std::unordered_map<variable, std::unordered_set<statementNumber>>();
 }
 
-void IfStore::addVariableMap(std::unordered_map<statementNumber, variable> variableMap) {
+void IfStore::addVariableMap(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
     this->variableMap = variableMap;
     for (auto const& [key, value] : variableMap) {
-        reverseVariableMap[value].insert(key);
+        for (auto const& x : value) {
+            reverseVariableMap[x].insert(key);
+        }
     }
 }
 
@@ -39,7 +41,9 @@ std::unordered_set<statementNumber> IfStore::getIf(variable v) {
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> IfStore::getAllIf() {
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& [key, value] : variableMap) {
-        result.insert(std::make_pair(key, value));
+        for (auto const& x : value) {
+            result.insert(std::make_pair(key, x));
+        }
     }
     return result;
 }

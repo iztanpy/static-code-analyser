@@ -82,6 +82,17 @@ class SourceProcessor {
      */
     std::unordered_map<int, std::string> getAssignLineFullRHSMap();
     /**
+     * @brief Retrieves a map of statement numbers associated with control variables of if conditional statements.
+     * @return An unordered map where keys are statement numbers, and values are variables of if conditional statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getIfControlVarMap();
+    /**
+     * @brief Retrieves a map of statement numbers associated with control variables of while conditional statements.
+     * @return An unordered map where keys are statement numbers, and values are variables of while conditional
+     * statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getWhileControlVarMap();
+    /**
      * @brief Retrieves a map of statement numbers associated with variables in MODIFIES relationships.
      * @return An unordered map where keys are statement numbers, and values are variables in MODIFIES relationships.
      */

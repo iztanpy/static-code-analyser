@@ -12,13 +12,13 @@ class IfStore {
  private:
     typedef std::string variable;
     typedef int statementNumber;
-    std::unordered_map<statementNumber, variable> variableMap;
+    std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap;
     std::unordered_map<variable, std::unordered_set<statementNumber>> reverseVariableMap;
 
  public:
     IfStore();
 
-    void addVariableMap(std::unordered_map<statementNumber, variable> variableMap);
+    void addVariableMap(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
     std::unordered_set<statementNumber> getIf(Wildcard wc);
     std::unordered_set<statementNumber> getIf(variable v);
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
