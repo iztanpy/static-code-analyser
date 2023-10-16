@@ -52,7 +52,6 @@ class PatternClause : public Clause {
    */
   Declaration syn_assignment;
   EntRef lhs;
-  ExprSpec rhs;
 };
 
 class AssignPattern : public PatternClause {
