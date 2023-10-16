@@ -26,7 +26,7 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
       Cfg::handleEndIfStatement(hasElse);
       index += 1;
       return index;
-    } else { // End of if Block CFG no else!
+    } else {  // End of if Block CFG no else!
       Cfg::handleEndIfStatement(hasElse);
       currIfDepth--;  // Decrease the depth
       controlStructureStack.pop();  // Pop the 'if'
