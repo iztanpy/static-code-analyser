@@ -68,10 +68,13 @@ void Cfg::handleEndWhileStatement() {
   currNode = nextNode;
 }
 
-void Cfg::handleEndIfStatement() {
+void Cfg::handleEndIfStatement(bool hasElse) {
     std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
     currNode->addChildren(nextNode);
     currNode = nextNode;
+    if (hasElse == false) {
+      keyNodesStack.pop();
+    }
 }
 
 std::shared_ptr<CfgNode> Cfg::getCfgNode() {

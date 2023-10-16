@@ -23,11 +23,11 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
         && tokens[index + 1].getValue() == "else"
         && tokens[index + 2].tokenType == TokenType::kSepOpenBrace;
     if (hasElse) {  // End of if Block CFG
-      Cfg::handleEndIfStatement();
+      Cfg::handleEndIfStatement(hasElse);
       index += 1;
       return index;
     } else { // End of if Block CFG no else!
-      Cfg::handleEndIfStatement();
+      Cfg::handleEndIfStatement(hasElse);
       currIfDepth--;  // Decrease the depth
       controlStructureStack.pop();  // Pop the 'if'
       parentStatementStack.pop();  // Pop the parent
