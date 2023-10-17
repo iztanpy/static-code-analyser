@@ -1,6 +1,7 @@
 #include "CallStore.h"
 #include <stack>
 #include <iostream>
+#include "utils/Error.h"
 
 typedef std::string procedure;
 
@@ -52,6 +53,9 @@ void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<proc
       std::unordered_set<procedure> calleeCallees = callTable[callee];
       for (auto it3 = calleeCallees.begin(); it3 != calleeCallees.end(); ++it3) {
         procedure calleeCallee = *it3;
+        if (caller == calleeCallee) {
+            throw InvalidSemanticError();
+        }
         this->callTableStar[caller].insert(calleeCallee);
         this->callTableStarReverse[calleeCallee].insert(caller);
         callStack.push(calleeCallee);
