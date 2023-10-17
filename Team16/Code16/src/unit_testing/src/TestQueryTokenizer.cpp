@@ -589,7 +589,7 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
 
   // Not enough arguments for if pattern
   std::string sample_query_2 = "Select ifs pattern ifs(_,_)";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSyntaxError);
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSemanticError);
 
   // Undeclared if synonym
   std::string sample_query_3 = "Select if pattern if(\"x\",_,_)";

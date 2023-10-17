@@ -103,9 +103,9 @@ void ValidatePatternSynonym(std::string pattern_synonym, std::vector<Declaration
 
 /*!
  * Additional check that third argument if a wildcard
- * @param third_token token to be checked
+ * @param arguments tokens to be checked
  */
-void ValidateIfPatternClause(std::string third_token);
+void ValidateIfPatternClause(std::vector<std::string>& arguments);
 
 /*!
  * Validates the individual arguments of pattern clause
