@@ -40,6 +40,12 @@ struct QueryStructure {
   std::string select_statement;
 };
 
+enum class ClauseEnum {
+  PATTERN,
+  SUCH_THAT,
+  NONE
+};
+
 class QueryTokenizer {
  public:
   /*!
@@ -122,4 +128,20 @@ class QueryTokenizer {
   static std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
   extractClauseTokens(std::string select_statement,
                       std::vector<Declaration>& declarations);
+
+  /*!
+   * Processes a such that clause
+   * @param clause string to be processed
+   * @param declarations set of declared entities
+   * @return a vector of such that tokens
+   */
+  static std::vector<QueryToken> processSuchThatClause(std::string clause, std::vector<Declaration>& declarations);
+
+  /*!
+   * Processes a pattern clause
+   * @param clause string to be processed
+   * @param declarations set of declared entities
+   * @return a vector of pattern tokens
+   */
+  static std::vector<QueryToken> processPatternClause(std::string clause, std::vector<Declaration>& declarations);
 };

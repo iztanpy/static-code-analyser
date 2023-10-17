@@ -78,8 +78,10 @@ std::vector<size_t> QueryTokenizer::getClauseIndexes(const std::string& remainin
   std::vector<std::regex> rgxVector = {
       qps_constants::kSuchThatClauseRegex,
       qps_constants::kPatternClauseRegex,
+      qps_constants::kAndClauseRegex,
       qps_constants::kOnlySuchThat,
-      qps_constants::kOnlyPattern
+      qps_constants::kOnlyPattern,
+      qps_constants::kOnlyAnd
   };
 
   for (const auto& rgx : rgxVector) {
@@ -210,6 +212,37 @@ PQLTokenType QueryTokenizer::getPatternTokenType(std::string & pattern_syn, std:
   }
 }
 
+std::vector<QueryToken> QueryTokenizer::processSuchThatClause(std::string clause_with_such_that_removed,
+                                              std::vector<Declaration>& declarations) {
+  std::vector<QueryToken> result;
+  qps_validator::ValidateNonEmptyClause(clause_with_such_that_removed);
+  std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
+  qps_validator::ValidateRelRef(rel_ref);
+  result.push_back({rel_ref, PQLTokenType::RELREF});
+
+  std::string rel_ref_syn_pair = string_util::RemoveFirstWordFromArgs(clause_with_such_that_removed);
+  std::pair<QueryToken, QueryToken> rel_ref_args = getRelRefArgs(rel_ref_syn_pair, declarations);
+  result.push_back(rel_ref_args.first);
+  result.push_back(rel_ref_args.second);
+  return result;
+}
+
+std::vector<QueryToken> QueryTokenizer::processPatternClause(std::string clause_with_pattern_removed,
+                                             std::vector<Declaration>& declarations) {
+  std::vector<QueryToken> result;
+  qps_validator::ValidateNonEmptyClause(clause_with_pattern_removed);
+  std::string pattern_syn = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
+  qps_validator::ValidatePatternSynonym(pattern_syn, declarations);
+  PQLTokenType pattern_type = getPatternTokenType(pattern_syn, declarations);
+  result.push_back({pattern_syn, pattern_type});
+
+  std::string pattern_arg = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
+  std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg, declarations, pattern_type);
+  result.push_back(pattern_args.first);
+  result.push_back(pattern_args.second);
+  return result;
+}
+
 std::pair<std::vector<QueryToken>,
           std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::string select_statement,
                                                                        std::vector<Declaration>& declarations) {
@@ -226,9 +259,8 @@ std::pair<std::vector<QueryToken>,
   std::vector<size_t> clause_beginning_indexes = getClauseIndexes(remaining_statement);
   clause_beginning_indexes.push_back(remaining_statement.length());  // push back to avoid out of range error
 
-  std::string prev_clause;
+  ClauseEnum prev_clause = ClauseEnum::NONE; // initialize prev clause to none
   std::string curr_clause;
-  std::string processed_clause;
   size_t start_index = 0;
 
   for (int i = 0; i < clause_beginning_indexes.size() - 1; i++) {
@@ -236,30 +268,43 @@ std::pair<std::vector<QueryToken>,
     curr_clause = string_util::Trim(remaining_statement.substr(start_index, next_index - start_index));
     start_index = next_index;
 
-    if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
+    if (clauseMatch(curr_clause, qps_constants::kAndClauseRegex)) {
+      std::vector<QueryToken> tokens;
+      qps_validator::ValidateAndIsNotFirstClause(prev_clause);
+      std::string clause_with_and_removed = string_util::RemoveFirstWord(curr_clause);
+      qps_validator::ValidateAndClause(clause_with_and_removed);
+      switch (prev_clause) {
+        case ClauseEnum::SUCH_THAT:
+          tokens = processSuchThatClause(clause_with_and_removed, declarations);
+          for (const QueryToken& token : tokens) {
+            such_that_tokens.push_back(token);
+          }
+          break;
+        case ClauseEnum::PATTERN:
+          tokens = processPatternClause(clause_with_and_removed, declarations);
+          for (const QueryToken& token : tokens) {
+            pattern_tokens.push_back(token);
+          }
+          break;
+        default:
+          throw QpsSyntaxError("Unrecognised clause");
+      }
+    } else if (clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)) {
+      prev_clause = ClauseEnum::SUCH_THAT;
       std::string clause_with_such_that_removed = string_util::RemoveFirstWord(curr_clause);
       clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
-      qps_validator::ValidateNonEmptyClause(clause_with_such_that_removed);
-      std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
-      qps_validator::ValidateRelRef(rel_ref);
-      such_that_tokens.push_back({rel_ref, PQLTokenType::RELREF});
+      std::vector<QueryToken> tokens = processSuchThatClause(clause_with_such_that_removed, declarations);
+      for (const QueryToken& token : tokens) {
+        such_that_tokens.push_back(token);
+      }
 
-      std::string rel_ref_syn_pair = string_util::RemoveFirstWordFromArgs(clause_with_such_that_removed);
-      std::pair<QueryToken, QueryToken> rel_ref_args = getRelRefArgs(rel_ref_syn_pair, declarations);
-      such_that_tokens.push_back(rel_ref_args.first);
-      such_that_tokens.push_back(rel_ref_args.second);
     } else if (clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
+      prev_clause = ClauseEnum::PATTERN;
       std::string clause_with_pattern_removed = string_util::RemoveFirstWord(curr_clause);
-      qps_validator::ValidateNonEmptyClause(clause_with_pattern_removed);
-      std::string pattern_syn = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
-      qps_validator::ValidatePatternSynonym(pattern_syn, declarations);
-      PQLTokenType pattern_type = getPatternTokenType(pattern_syn, declarations);
-      pattern_tokens.push_back({pattern_syn, pattern_type});
-
-      std::string pattern_arg = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
-      std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg, declarations, pattern_type);
-      pattern_tokens.push_back(pattern_args.first);
-      pattern_tokens.push_back(pattern_args.second);
+      std::vector<QueryToken> tokens = processPatternClause(clause_with_pattern_removed, declarations);
+      for (const QueryToken& token : tokens) {
+        pattern_tokens.push_back(token);
+      }
     } else {
       throw QpsSyntaxError("Unrecognized clause");
     }
