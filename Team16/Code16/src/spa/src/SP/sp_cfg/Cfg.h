@@ -23,6 +23,7 @@ class Cfg {
    */
     static std::shared_ptr<CfgNode> currNode;
     static std::stack<std::shared_ptr<CfgNode>> keyNodesStack;
+    static std::stack<std::set<int>> nextParentStack;
 
  public:
     Cfg() = default;
@@ -91,5 +92,7 @@ class Cfg {
     static void handleEndIfStatement(bool hasElse);
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
+    static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap; 
+    static void retrieveParent(int stmtNumber);
 };
 

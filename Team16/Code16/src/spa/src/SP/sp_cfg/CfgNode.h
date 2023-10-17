@@ -113,4 +113,12 @@ class CfgNode {
     }
     return false;
   }
+
+  int getLastStatementNumber() {
+      auto lastElementIt = statementNumberSet.rbegin(); 
+      if (lastElementIt != statementNumberSet.rend()) {
+          return *lastElementIt; 
+      }
+      return -1;
+  }
 };

@@ -92,6 +92,10 @@ class Parser {
     std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
       return cfgNodeMap;
     }
+    
+    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+        return cfgFacade.nextStatementNumberHashmap;
+    }
 
     void reset() {
         index = 0;

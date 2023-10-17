@@ -119,9 +119,14 @@ class SourceProcessor {
      * @brief Retrieves the cfg nodes map.
      * @return The map of cfg root nodes.
     */
-      std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
-          return simpleParser.getCfgNodesMap();
-      }
+    std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
+       return simpleParser.getCfgNodesMap();
+    }
+      
+    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+       return simpleParser.getNextStatementMap();
+    }
+      
 };
 
 
