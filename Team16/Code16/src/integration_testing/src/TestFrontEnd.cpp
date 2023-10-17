@@ -175,13 +175,13 @@ TEST_CASE("Test SP-PKB connection") {
 
   REQUIRE((readFacade.getAllAssigns() == std::unordered_set<statementNumber>({1, 2, 3})));
 
-  REQUIRE((readFacade.getAssignPair(PartialExpr{"x"})
+  REQUIRE((readFacade.getAssignPair(PartialExpr{"(x)"})
       == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{2, "x"}})));
 
-  REQUIRE((readFacade.getAssignPair(PartialExpr{"y"})
+  REQUIRE((readFacade.getAssignPair(PartialExpr{"(y)"})
       == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{3, "y"}})));
 
-  REQUIRE((readFacade.getAssignPair(PartialExpr{"z"})
+  REQUIRE((readFacade.getAssignPair(PartialExpr{"(z)"})
       == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{1, "x"}, {3, "y"}})));
 
   Wildcard wildcard = Wildcard();
@@ -189,15 +189,15 @@ TEST_CASE("Test SP-PKB connection") {
   REQUIRE((readFacade.getAssignPair(wildcard)
       == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{1, "x"}, {2, "x"}, {3, "y"}})));
 
-  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"x"}) == std::unordered_set<statementNumber>({2})));
+  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"(x)"}) == std::unordered_set<statementNumber>({2})));
 
-  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"y"}) == std::unordered_set<statementNumber>({3})));
+  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"(y)"}) == std::unordered_set<statementNumber>({3})));
 
-  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"z"}) == std::unordered_set<statementNumber>({1, 3})));
+  REQUIRE((readFacade.getAssigns(wildcard, PartialExpr{"(z)"}) == std::unordered_set<statementNumber>({1, 3})));
 
   REQUIRE((readFacade.getAssigns(wildcard, wildcard) == std::unordered_set<statementNumber>({1, 2, 3})));
 
-  REQUIRE((readFacade.getAssigns("x", PartialExpr{"z"}) == std::unordered_set<statementNumber>({1})));
+  REQUIRE((readFacade.getAssigns("x", PartialExpr{"(z)"}) == std::unordered_set<statementNumber>({1})));
 
   REQUIRE((readFacade.getAssigns("x", wildcard) == std::unordered_set<statementNumber>({1, 2})));
 
@@ -262,7 +262,7 @@ TEST_CASE("One assign statement 1") {
       constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>(
       {{"x", constSet}});
   std::unordered_map<int, std::unordered_set<std::string>>
-      assignLinePartialRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "1", "x+1"}}});
+      assignLinePartialRHSPatternMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"(x)", "(1)", "((x)+(1))"}}});
   std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"}});
   std::unordered_map<int, std::unordered_set<std::string>>
       usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}}});
