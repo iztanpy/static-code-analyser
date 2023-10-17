@@ -185,6 +185,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/qps_validator/clause_synonym_semantic_handler.h
         src/qps/clauses/suchthat_clauses/calls.cpp
         src/qps/clauses/suchthat_clauses/calls.h
+        src/qps/query_evaluator/calls_evaluator.cpp
+        src/qps/query_evaluator/calls_evaluator.h
         src/qps/clauses/suchthat_clauses/next.cpp
         src/qps/clauses/suchthat_clauses/next.h
         src/qps/clauses/suchthat_clauses/affects.cpp

@@ -717,7 +717,8 @@ TEST_CASE(("Test SP Statement type storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
-  std::string simpleProgram = "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; }}}";
+  std::string simpleProgram =
+      "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; call k; }}}";
   sourceProcessor.processSource(simpleProgram);
 
   std::unordered_map<int, StmtEntity> statementTypesMap = std::unordered_map<int, StmtEntity>(
@@ -725,7 +726,8 @@ TEST_CASE(("Test SP Statement type storage")) {
        {2, StmtEntity::kIf},
        {3, StmtEntity::kRead},
        {4, StmtEntity::kPrint},
-       {5, StmtEntity::kAssign}});
+       {5, StmtEntity::kAssign},
+       {6, StmtEntity::kCall}});
   REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
 }
 

@@ -464,7 +464,7 @@ class TNodeFactory {
              return std::make_shared<PrintTNode>(statementNumber, token.value);
          }
          case TokenType::kEntityCall: {
-             return std::make_shared<PrintTNode>(statementNumber, token.value);
+             return std::make_shared<CallTNode>(statementNumber, token.value);
          }
          case TokenType::kEntityIf: {
              return std::make_shared<IfTNode>(statementNumber);
