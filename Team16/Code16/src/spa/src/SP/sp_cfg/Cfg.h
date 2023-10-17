@@ -94,5 +94,11 @@ class Cfg {
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
     static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap; 
     static void retrieveParent(int stmtNumber);
+    static void resetHashMap() {
+        for (auto& entry : nextStatementNumberHashmap) {
+            entry.second.clear(); // Clear the set associated with the key
+        }
+        nextStatementNumberHashmap.clear(); // Clear the entire map
+    }
 };
 

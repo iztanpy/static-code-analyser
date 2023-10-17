@@ -32,46 +32,46 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
-//TEST_CASE("Test Sample Next") {
-//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
-//    SourceProcessor sourceProcessor(&writeFacade);
-//    std::string simpleProgram3 = R"(procedure Second {
-//        x = 0; 
-//        i = 5;
-//        while (i!=0) {
-//            x = x + 2*y;
-//            call Third;
-//            i = i - 1; 
-//        }
-//        if (x==1) then {
-//            x = x+1; 
-//        } else {
-//            z = 1; 
-//        }
-//        z = z + x + i;
-//        y = z + 2;
-//        x = x * y + z; 
-//      })";
-//    sourceProcessor.processSource(simpleProgram3);
-//    std::unordered_map<int, std::set<int>> correct_res = {
-//      {1, {2}},
-//      {2, {3}},
-//      {3, {4,7}},
-//      {4, {5}},
-//      {5, {6}},
-//      {6, {3}},
-//      {7, {8,9}},
-//      {8, {10}},
-//      {9, {10}},
-//      {10, {11}},
-//      {11, {12}},
-//    };
-//
-//    std::unordered_map<int, std::set<int>> res = sourceProcessor.getNextStatementMap();
-//    REQUIRE(res == correct_res);
-//
-//}
+TEST_CASE("Test Sample Next") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(procedure Second {
+        x = 0; 
+        i = 5;
+        while (i!=0) {
+            x = x + 2*y;
+            call Third;
+            i = i - 1; 
+        }
+        if (x==1) then {
+            x = x+1; 
+        } else {
+            z = 1; 
+        }
+        z = z + x + i;
+        y = z + 2;
+        x = x * y + z; 
+      })";
+    sourceProcessor.processSource(simpleProgram3);
+    std::unordered_map<int, std::set<int>> correct_res = {
+      {1, {2}},
+      {2, {3}},
+      {3, {4,7}},
+      {4, {5}},
+      {5, {6}},
+      {6, {3}},
+      {7, {8,9}},
+      {8, {10}},
+      {9, {10}},
+      {10, {11}},
+      {11, {12}},
+    };
+
+    std::unordered_map<int, std::set<int>> res = sourceProcessor.getNextStatementMap();
+    REQUIRE(res == correct_res);
+
+}
 
 
 TEST_CASE("Test Complicated Next") {
