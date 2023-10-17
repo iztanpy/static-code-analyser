@@ -86,13 +86,21 @@ void Cfg::handleEndElseStatement() {
 }
 
 void Cfg::handleEndWhileStatement() {
+  // need to handle the case where curr node is empty (i.e. previous node is an end node from if else) 
   std::shared_ptr<CfgNode> parentNode = keyNodesStack.top();
   keyNodesStack.pop();
   currNode->addChildren(parentNode);
+  if (currNode->getStmtNumberSet().empty()) {
+      if (!nextParentStack.empty()) {
+          retrieveParent(parentNode->getLastStatementNumber());
+          nextParentStack.push({ parentNode->getLastStatementNumber() });
+      }
+  } else {
+      nextStatementNumberHashmap[currNode->getLastStatementNumber()].insert(parentNode->getLastStatementNumber());
+      nextParentStack.push({ parentNode->getLastStatementNumber() });
+  }
   std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
   parentNode->addChildren(nextNode);
-  nextStatementNumberHashmap[currNode->getLastStatementNumber()].insert(parentNode->getLastStatementNumber());
-  nextParentStack.push({ parentNode->getLastStatementNumber() });
   currNode = nextNode;
 }
 
