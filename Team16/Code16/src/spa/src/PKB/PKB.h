@@ -938,7 +938,7 @@ class PKB {
   */
   bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
-  void storeIf(std::unordered_map<statementNumber, variable> variableMap);
+  void storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
   std::unordered_set<statementNumber> getIf(Wildcard wc);
 
@@ -946,8 +946,8 @@ class PKB {
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
 
-  void storeWhile(std::unordered_map<statementNumber, variable> variableMap);
-
+  void storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
+  
   std::unordered_set<statementNumber> getWhile(Wildcard wc);
 
   std::unordered_set<statementNumber> getWhile(variable v);

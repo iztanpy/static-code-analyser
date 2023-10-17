@@ -99,6 +99,28 @@ bool QueryUtil::IsSynAssign(const std::string& s, const std::vector<Declaration>
   return false;
 }
 
+bool QueryUtil::IsSynIf(const std::string& s, const std::vector<Declaration>& declarations) {
+  if (IsSynonym(s)) {
+    for (const Declaration& declaration : declarations) {
+      if (declaration.synonym == s && declaration.design_entity == DesignEntity::IF_STMT) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool QueryUtil::IsSynWhile(const std::string& s, const std::vector<Declaration>& declarations) {
+  if (IsSynonym(s)) {
+    for (const Declaration& declaration : declarations) {
+      if (declaration.synonym == s && declaration.design_entity == DesignEntity::WHILE_LOOP) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 bool QueryUtil::IsInDeclarations(const std::string& s, const std::vector<Declaration>& declarations) {
   for (const Declaration& declaration : declarations) {
     if (declaration.synonym == s) {

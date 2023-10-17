@@ -4,6 +4,7 @@
 #include <set>
 #include <vector>
 #include "qps/declaration.h"
+#include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 
 namespace qps_validator {
 /*!
@@ -69,6 +70,14 @@ void ValidateClauseIndexes(std::vector<size_t>& indexes);
 void ValidateClauseArgs(std::string clause);
 
 /*!
+ * Validates the pattern clause arguments
+ * @param clause to be validated
+ * @param pattern_type
+ * @throws QpsSyntaxError if clause syntax is invalid
+ */
+void ValidateClauseArgs(std::string clause, PQLTokenType pattern_type);
+
+/*!
  * Validates the individual arguments of clause
  * @param lhs left argument to be validated
  * @param rhs right argument to be validated
@@ -85,12 +94,29 @@ void ValidateClauseArgs(std::string lhs, std::string rhs);
 void ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations);
 
 /*!
+ * Validates the pattern synonyms
+ * @param pattern_synonym to be validated
+ * @param declarations set of declarations
+ * @throws QpsSemanticError if the pattern synonym is not an assignment, if or while statement
+ */
+void ValidatePatternSynonym(std::string pattern_synonym, std::vector<Declaration> & declarations);
+
+/*!
+ * Additional check that third argument if a wildcard
+ * @param arguments tokens to be checked
+ */
+void ValidateIfPatternClause(std::vector<std::string>& arguments);
+
+/*!
  * Validates the individual arguments of pattern clause
  * @param left_hand_side
  * @param right_hand_side
+ * @param pattern_type
  * @throws QpsSyntaxError if either arguments have invalid syntax
  */
-void ValidatePatternClauseArgs(const std::string& left_hand_side, const std::string& right_hand_side);
+void ValidatePatternClauseArgs(const std::string& left_hand_side,
+                               const std::string& right_hand_side,
+                               PQLTokenType pattern_type);
 
 /*!
  * Validates the syntax of such that clause

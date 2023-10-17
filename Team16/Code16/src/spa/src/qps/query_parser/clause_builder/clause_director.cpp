@@ -32,14 +32,7 @@ std::unique_ptr<SuchThatClause> ClauseDirector::makeSuchThatClause(SuchThatClaus
 std::unique_ptr<PatternClause> ClauseDirector::makePatternClause(PatternClauseBuilder builder,
                                                                  const std::vector<QueryToken>& tokens,
                                                                  const std::vector<Declaration>& declarations) {
-  Declaration syn_assignment;
-  for (const Declaration& declaration : declarations) {
-    if (declaration.synonym == tokens[0].text) {
-      syn_assignment = declaration;
-      break;
-    }
-  }
-  builder.setSynAssignment(syn_assignment);
+  builder.setPatternType(tokens[0], declarations);
   builder.setLhs(tokens[1], declarations);
   builder.setRhs(tokens[2], declarations);
   return builder.getClause();

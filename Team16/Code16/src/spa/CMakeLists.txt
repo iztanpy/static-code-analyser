@@ -191,6 +191,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/next.h
         src/qps/clauses/suchthat_clauses/affects.cpp
         src/qps/clauses/suchthat_clauses/affects.h
+        src/qps/qps_validator/pattern_syn_semantic_handler.cpp
+        src/qps/qps_validator/pattern_syn_semantic_handler.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
