@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - milestone-*
   pull_request:
     branches:
       - '**' #run for all branches
