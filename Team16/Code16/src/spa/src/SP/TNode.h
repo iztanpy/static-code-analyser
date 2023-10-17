@@ -246,7 +246,7 @@ class MinusTNode : public TNode {
  * It inherits from the `TNode` base class and provides specialized functionality for while statements.
  */
 class WhileTNode : public TNode {
-   public:
+ public:
     explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
         type = TokenType::kEntityWhile;
     }
