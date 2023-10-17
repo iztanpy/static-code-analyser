@@ -38,7 +38,7 @@ void ASTVisitor::visit(const VariableTNode* node, std::string& key) {
           set.insert(node->getContent());
         } else {
           std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-          set.insert(node->content);
+          set.insert(node->getContent(true));
         }
     }
     variables.insert(node->content);
@@ -48,7 +48,7 @@ void ASTVisitor::visit(const ConstantTNode* node, std::string& key) {
     constants.insert(node->content);
     if (key.empty()) {
       std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-      set.insert(node->content);
+      set.insert(node->getContent(true));
     }
 }
 
@@ -57,7 +57,7 @@ void ASTVisitor::visit(const PlusTNode* node, std::string& key) {
     node->rightChild->accept(this, key);
     if (key.empty()) {
       std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-      set.insert(node->getContent());
+      set.insert(node->getContent(true));
     }
 }
 
@@ -66,7 +66,7 @@ void ASTVisitor::visit(const MinusTNode* node, std::string& key) {
     node->rightChild->accept(this, key);
     if (key.empty()) {
       std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-      set.insert(node->getContent());
+      set.insert(node->getContent(true));
     }
 }
 
@@ -75,7 +75,7 @@ void ASTVisitor::visit(const MultiplyTNode* node, std::string& key) {
   node->rightChild->accept(this, key);
   if (key.empty()) {
     std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-    set.insert(node->getContent());
+    set.insert(node->getContent(true));
   }
 }
 
@@ -84,7 +84,7 @@ void ASTVisitor::visit(const DivideTNode* node, std::string& key) {
   node->rightChild->accept(this, key);
   if (key.empty()) {
     std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-    set.insert(node->getContent());
+    set.insert(node->getContent(true));
   }
 }
 
@@ -93,7 +93,7 @@ void ASTVisitor::visit(const ModTNode* node, std::string& key) {
   node->rightChild->accept(this, key);
   if (key.empty()) {
     std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-    set.insert(node->getContent());
+    set.insert(node->getContent(true));
   }
 }
 
@@ -137,12 +137,4 @@ void ASTVisitor::visit(const IfTNode* node, std::string& key) {
 
 void ASTVisitor::visit(const CallTNode* node, std::string& key) {
     statementTypesMap.insert({node->statementNumber, StmtEntity::kCall});
-}
-
-void ASTVisitor::visit(const ParenthesisTNode* node, std::string& key) {
-  node->leftChild->accept(this, key);
-  if (key.empty()) {
-    std::unordered_set<std::string>& set = assignLinePartialRHSPatternMap[node->statementNumber];
-    set.insert(node->getContent());
-  }
 }

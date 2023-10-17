@@ -54,9 +54,10 @@ class TNode {
 
   /**
    * @brief Gets the content of the node as a string.
+   * @param withBrackets A boolean indicating whether to include brackets in the string representation.
    * @return The content of the node.
    */
-  virtual std::string getContent() const {
+  virtual std::string getContent(const bool withBrackets = false) const {
       return content;
   }
 };
@@ -161,6 +162,12 @@ class VariableTNode : public TNode {
       content = c;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent(bool withBrackets = false) const override {
+      if (withBrackets) {
+        return "(" + content + ")";
+      }
+      return content;
+  }
 };
 
 
@@ -178,6 +185,12 @@ class ConstantTNode : public TNode {
       content = c;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  std::string getContent(bool withBrackets = false) const override {
+    if (withBrackets) {
+      return "(" + content + ")";
+    }
+    return content;
+  }
 };
 
 
@@ -194,8 +207,11 @@ class PlusTNode : public TNode {
       type = TokenType::kOperatorPlus;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
-      return leftChild->getContent() + "+" + rightChild->getContent();
+  std::string getContent(bool withBrackets) const override {
+      if (withBrackets) {
+        return "(" + leftChild->getContent(withBrackets) + "+" + rightChild->getContent(withBrackets) + ")";
+      }
+      return leftChild->getContent(withBrackets) + "+" + rightChild->getContent(withBrackets);
   }
 };
 
@@ -213,8 +229,11 @@ class MinusTNode : public TNode {
       type = TokenType::kOperatorMinus;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
-      return leftChild->getContent() + "-" + rightChild->getContent();
+  std::string getContent(bool withBrackets) const override {
+      if (withBrackets) {
+        return "(" + leftChild->getContent(withBrackets) + "-" + rightChild->getContent(withBrackets) + ")";
+      }
+      return leftChild->getContent(withBrackets) + "-" + rightChild->getContent(withBrackets);
   }
 };
 
@@ -227,11 +246,11 @@ class MinusTNode : public TNode {
  * It inherits from the `TNode` base class and provides specialized functionality for while statements.
  */
 class WhileTNode : public TNode {
- public:
-  explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
-    type = TokenType::kEntityWhile;
-  }
-  void accept(ASTVisitor* visitor, std::string& key) const override;
+   public:
+    explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
+        type = TokenType::kEntityWhile;
+    }
+    void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
 
@@ -298,8 +317,11 @@ class MultiplyTNode : public TNode {
     type = TokenType::kOperatorMultiply;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
-    return leftChild->getContent() + "*" + rightChild->getContent();
+  std::string getContent(bool withBrackets) const override {
+    if (withBrackets) {
+      return "(" + leftChild->getContent(withBrackets) + "*" + rightChild->getContent(withBrackets) + ")";
+    }
+    return leftChild->getContent(withBrackets) + "*" + rightChild->getContent(withBrackets);
   }
 };
 
@@ -317,8 +339,11 @@ class DivideTNode : public TNode {
     type = TokenType::kOperatorDivide;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
-    return leftChild->getContent() + "/" + rightChild->getContent();
+  std::string getContent(bool withBrackets) const override {
+    if (withBrackets) {
+      return "(" + leftChild->getContent(withBrackets) + "/" + rightChild->getContent(withBrackets) + ")";
+    }
+    return leftChild->getContent(withBrackets) + "/" + rightChild->getContent(withBrackets);
   }
 };
 
@@ -336,8 +361,11 @@ class ModTNode : public TNode {
     type = TokenType::kOperatorMod;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
-    return leftChild->getContent() + "%" + rightChild->getContent();
+  std::string getContent(bool withBrackets) const override {
+    if (withBrackets) {
+      return "(" + leftChild->getContent(withBrackets) + "%" + rightChild->getContent(withBrackets) + ")";
+    }
+    return leftChild->getContent(withBrackets) + "%" + rightChild->getContent(withBrackets);
   }
 };
 
@@ -355,7 +383,7 @@ class RelOperatorTNode : public TNode {
     type = tokenType;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
+  std::string getContent(bool withBrackets = false) const override {
     std::string rep = "";
     switch (type) {
       case TokenType::kOperatorEqual:
@@ -379,7 +407,7 @@ class RelOperatorTNode : public TNode {
       default:
         throw InvalidTokenTypeError("Error: invalid token type");
     }
-    return leftChild->getContent() + rep + rightChild->getContent();
+    return leftChild->getContent(withBrackets) + rep + rightChild->getContent(withBrackets);
   }
 };
 
@@ -396,7 +424,7 @@ class CondOperatorTNode : public TNode {
     type = tokenType;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
+  std::string getContent(bool withBrackets = false) const override {
     std::string rep = "";
     switch (type) {
       case TokenType::kOperatorLogicalNot:
@@ -412,30 +440,11 @@ class CondOperatorTNode : public TNode {
         throw InvalidTokenTypeError("Error: invalid token type");
     }
     if (!leftChild) {
-      return rep + "(" + rightChild->getContent() + ")";
+      return rep + "(" + rightChild->getContent(withBrackets) + ")";
     }
-    return "(" + leftChild->getContent() + ")" + rep + "(" + rightChild->getContent() + ")";
+    return "(" + leftChild->getContent(withBrackets) + ")" + rep + "(" + rightChild->getContent(withBrackets) + ")";
   }
 };
-
-/**
- * @class ParenthesisTNode
- * @brief Represents a parenthesis node in the AST.
- *
- * The `ParenthesisTNode` class represents a parenthesis node in the Abstract Syntax Tree (AST).
- * It inherits from the `TNode` base class and provides specialized functionality for expressions within parentheses.
- */
-class ParenthesisTNode : public TNode {
- public:
-  explicit ParenthesisTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
-    type = tokenType;
-  }
-  void accept(ASTVisitor* visitor, std::string& key) const override;
-  std::string getContent() const override {
-    return "(" + leftChild->getContent() + ")";
-  }
-};
-
 
 /**
  * @class TNodeFactory
@@ -508,9 +517,6 @@ class TNodeFactory {
          case TokenType::kOperatorLogicalOr:
          case TokenType::kOperatorLogicalNot: {
            return std::make_shared<CondOperatorTNode>(statementNumber, token.tokenType);
-         }
-         case TokenType::kSepOpenParen: {
-            return std::make_shared<ParenthesisTNode>(statementNumber, token.tokenType);
          default:
              throw std::invalid_argument("Error: unknown token type");
          }

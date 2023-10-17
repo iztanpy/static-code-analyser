@@ -84,7 +84,3 @@ void IfTNode::accept(ASTVisitor* visitor, std::string& key) const {
 void CallTNode::accept(ASTVisitor* visitor, std::string& key) const {
     visitor->visit(this, key);
 }
-
-void ParenthesisTNode::accept(ASTVisitor *visitor, std::string& key) const {
-  visitor->visit(this, key);
-}
