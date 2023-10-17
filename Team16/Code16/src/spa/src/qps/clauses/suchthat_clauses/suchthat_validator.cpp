@@ -55,3 +55,19 @@ void SuchThatValidator::ValidateUsesModifies(StmtRef lhs, EntRef rhs) {
     }
   }
 }
+
+void SuchThatValidator::ValidateCalls(EntRef lhs, EntRef rhs) {
+  if (std::holds_alternative<Declaration>(lhs)) {
+    Declaration lhs_decl = std::get<Declaration>(lhs);
+    if (lhs_decl.design_entity != kValidCalls) {
+      throw QpsSemanticError("[Calls] Invalid LHS synonym");
+    }
+  }
+
+  if (std::holds_alternative<Declaration>(rhs)) {
+    Declaration rhs_decl = std::get<Declaration>(rhs);
+    if (rhs_decl.design_entity != kValidCalls) {
+      throw QpsSemanticError("[Calls] Invalid RHS synonym");
+    }
+  }
+}

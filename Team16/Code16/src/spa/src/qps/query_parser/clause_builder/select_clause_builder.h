@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <memory>
+#include <utility>
+
 #include "qps/clauses/select_clause.h"
 #include "qps/query_parser/clause_builder/clause_builder.h"
 
@@ -21,5 +24,5 @@ class SelectClauseBuilder : public ClauseBuilder {
    * Returns the select clause
    * @return the select clause
    */
-  SelectClause getClause() const;
+  std::unique_ptr<SelectClause> getClause() const;
 };

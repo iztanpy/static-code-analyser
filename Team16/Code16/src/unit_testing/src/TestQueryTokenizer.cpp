@@ -423,7 +423,7 @@ TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
       {"p", DesignEntity::PROCEDURE},
   };
 
-  std::vector<QueryToken> such_that_tokens =  {
+  std::vector<QueryToken> such_that_tokens = {
       {"Calls", PQLTokenType::RELREF},
       {"p", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD}
@@ -442,7 +442,7 @@ TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
 
   std::string sample_query_2 = "Select p such that Calls*(p, \"Third\")";
 
-  std::vector<QueryToken> such_that_tokens_2 =  {
+  std::vector<QueryToken> such_that_tokens_2 = {
       {"Calls*", PQLTokenType::RELREF},
       {"p", PQLTokenType::SYNONYM},
       {"Third", PQLTokenType::IDENT}
@@ -467,7 +467,7 @@ TEST_CASE("Tokenizer can tokenize Next and Next*") {
       {"s1", DesignEntity::STMT},
   };
 
-  std::vector<QueryToken> such_that_tokens =  {
+  std::vector<QueryToken> such_that_tokens = {
       {"Next", PQLTokenType::RELREF},
       {"s1", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD}
@@ -486,7 +486,7 @@ TEST_CASE("Tokenizer can tokenize Next and Next*") {
 
   std::string sample_query_2 = "Select s1 such that Next*(2, 9)";
 
-  std::vector<QueryToken> such_that_tokens_2 =  {
+  std::vector<QueryToken> such_that_tokens_2 = {
       {"Next*", PQLTokenType::RELREF},
       {"2", PQLTokenType::INTEGER},
       {"9", PQLTokenType::INTEGER}
@@ -512,7 +512,7 @@ TEST_CASE("Tokenizer can tokenize Affects") {
       {"a2", DesignEntity::STMT}
   };
 
-  std::vector<QueryToken> such_that_tokens =  {
+  std::vector<QueryToken> such_that_tokens = {
       {"Affects", PQLTokenType::RELREF},
       {"a1", PQLTokenType::SYNONYM},
       {"a2", PQLTokenType::SYNONYM}
@@ -537,7 +537,7 @@ TEST_CASE("Tokenizer can tokenize while pattern") {
       {"w", DesignEntity::WHILE_LOOP},
   };
 
-  std::vector<QueryToken> pattern_tokens =  {
+  std::vector<QueryToken> pattern_tokens = {
       {"w", PQLTokenType::PATTERN_WHILE},
       {"x", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD}
@@ -570,7 +570,7 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
       {"ifs", DesignEntity::IF_STMT},
   };
 
-  std::vector<QueryToken> pattern_tokens =  {
+  std::vector<QueryToken> pattern_tokens = {
       {"ifs", PQLTokenType::PATTERN_IF},
       {"_", PQLTokenType::WILDCARD},
       {"_", PQLTokenType::WILDCARD}
@@ -589,7 +589,7 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
 
   // Not enough arguments for if pattern
   std::string sample_query_2 = "Select ifs pattern ifs(_,_)";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSyntaxError);
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSemanticError);
 
   // Undeclared if synonym
   std::string sample_query_3 = "Select if pattern if(\"x\",_,_)";

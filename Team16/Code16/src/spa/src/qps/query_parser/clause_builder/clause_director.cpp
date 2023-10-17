@@ -6,7 +6,7 @@
 #include "qps/declaration.h"
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
 
-SelectClause ClauseDirector::makeSelectClause(
+std::unique_ptr<Clause> ClauseDirector::makeSelectClause(
     SelectClauseBuilder builder, const QueryToken& token, const std::vector<Declaration>& declarations
 ) {
   // find the design entity using the synonym in token
@@ -21,15 +21,15 @@ SelectClause ClauseDirector::makeSelectClause(
   return builder.getClause();
 }
 
-std::unique_ptr<SuchThatClause> ClauseDirector::makeSuchThatClause(SuchThatClauseBuilder builder,
-                                                                   const std::vector<QueryToken>& tokens,
-                                                                   const std::vector<Declaration>& declarations) {
+std::unique_ptr<Clause> ClauseDirector::makeSuchThatClause(SuchThatClauseBuilder builder,
+                                                           const std::vector<QueryToken>& tokens,
+                                                           const std::vector<Declaration>& declarations) {
   builder.setRelRef(RelRef::fromString(tokens[0].text));
   builder.setLhs(tokens[1], declarations);
   builder.setRhs(tokens[2], declarations);
   return builder.getClause();
 }
-std::unique_ptr<PatternClause> ClauseDirector::makePatternClause(PatternClauseBuilder builder,
+std::unique_ptr<Clause> ClauseDirector::makePatternClause(PatternClauseBuilder builder,
                                                                  const std::vector<QueryToken>& tokens,
                                                                  const std::vector<Declaration>& declarations) {
   builder.setPatternType(tokens[0], declarations);
