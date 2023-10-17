@@ -24,3 +24,8 @@ TEST_CASE("Test CallStore Functionality") {
 	REQUIRE(callStore.getCallStarParents("proc2") == std::unordered_set<procedure>({ "main", "proc1" }));
 	REQUIRE(callStore.getCallStarParents("proc3") == std::unordered_set<procedure>({ "main", "proc1", "proc2" }));
 }
+
+TEST_CASE("Test CallStore Functionality 2") {
+	CallStore callStore = CallStore();
+	REQUIRE_THROWS(callStore.storeCalls({ { "main", {"proc1", "proc2"} }, {"proc1", {"proc2"} }, {"proc2", {"main"}} }));
+}
