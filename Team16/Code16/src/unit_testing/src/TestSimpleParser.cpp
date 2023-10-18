@@ -9,6 +9,14 @@
 #include <memory>
 #include <set>
 
+// code for testing purposes
+//  for (auto& i : res2) {
+//    std::cout << i.first << ": ";
+//    for (auto& j : i.second) {
+//      std::cout << j << " ";
+//    }
+//    std::cout << std::endl;
+//  }
 
 // Define your TokenType and Token objects here (if not already defined)
 TokenType variableType = TokenType::kLiteralName;
@@ -31,86 +39,83 @@ Token token1 = Token(constantType, "1");
 Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
-//
-//TEST_CASE("Test Hardcore Next") {
-//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
-//    SourceProcessor sourceProcessor2(&writeFacade);
-//    std::string simpleProgram4 = R"(procedure Four {
-//        if (x == 0) then {
-//            if (x == 1) then {
-//                x = 1; 
-//                x = 2;
-//            }
-//            x = 3; 
-//            x = 4;
-//            if (x == 5) then {
-//                x = 8; 
-//                if (x == 6) then {
-//                    x = 7; 
-//                    y = 2; 
-//                } else {
-//                    x = 8; 
-//                    x = 9;
-//                }
-//                x = 9;
-//            } else {
-//                while (x == 0) {
-//                    x = 1; 
-//                    x = 2; 
-//                }
-//            }
-//        }
-//        x = 2; 
-//      })";
-//    sourceProcessor2.processSource(simpleProgram4);
-//    std::unordered_map<int, std::set<int>> r = {
-//      {1, {2}},
-//      {2, {3}},
-//      {3, {4}},
-//      {4, {5}},
-//      {5, {6}},
-//      {6, {7}},
-//      {7, {8,15}},
-//      {8, {9}},
-//      {9, {10,12}},
-//      {10, {11}},
-//      {12, {13}},
-//      {11, {14}},
-//      {13, {14}},
-//      {14, {18}},
-//      {15, {16,18}},
-//      {16, {17}},
-//      {17, {15}},
-//
-//    };
-//
-//    std::unordered_map<int, std::set<int>> res2 = sourceProcessor2.getNextStatementMap();
-//    REQUIRE(res2 == r);
-//
-//}
 
+TEST_CASE("Test Hardcore Next") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram = R"(procedure Four {
+        if (x == 0) then {
+            if (x == 1) then {
+                x = 1;
+                x = 2;
+            }
+            x = 3;
+            x = 4;
+            if (x == 5) then {
+                x = 8;
+                if (x == 6) then {
+                    x = 7;
+                    y = 2;
+                } else {
+                    x = 8;
+                    x = 9;
+                }
+                x = 9;
+            } else {
+                while (x == 0) {
+                    x = 1;
+                    x = 2;
+                }
+            }
+        }
+        x = 2;
+      })";
+    sourceProcessor.processSource(simpleProgram);
+    std::unordered_map<int, std::set<int>> r = {
+      {1, {2}},
+      {2, {3}},
+      {3, {4}},
+      {4, {5}},
+      {5, {6}},
+      {6, {7}},
+      {7, {8,15}},
+      {8, {9}},
+      {9, {10,12}},
+      {10, {11}},
+      {12, {13}},
+      {11, {14}},
+      {13, {14}},
+      {14, {18}},
+      {15, {16,18}},
+      {16, {17}},
+      {17, {15}},
+
+    };
+
+    REQUIRE(sourceProcessor.getNextStatementMap() == r);
+}
 
 TEST_CASE("Test Sample Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(procedure Second {
-        x = 0; 
+        x = 0;
         i = 5;
         while (i!=0) {
             x = x + 2*y;
             call Third;
-            i = i - 1; 
+            i = i - 1;
         }
         if (x==1) then {
-            x = x+1; 
+            x = x+1;
         } else {
-            z = 1; 
+            z = 1;
         }
         z = z + x + i;
         y = z + 2;
-        x = x * y + z; 
+        x = x * y + z;
       })";
     sourceProcessor.processSource(simpleProgram3);
     std::unordered_map<int, std::set<int>> correct_res = {
@@ -127,17 +132,14 @@ TEST_CASE("Test Sample Next") {
       {11, {12}},
     };
 
-    std::unordered_map<int, std::set<int>> res = sourceProcessor.getNextStatementMap();
-    REQUIRE(res == correct_res);
-
+    REQUIRE(sourceProcessor.getNextStatementMap() == correct_res);
 }
-
 
 TEST_CASE("Test Complicated Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
-    SourceProcessor sourceProcessor2(&writeFacade);
-    std::string simpleProgram4 = R"(procedure Second {
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram = R"(procedure Second {
         while (x==0) {
             if (x==1) then {
                 help = help +1; 
@@ -152,7 +154,7 @@ TEST_CASE("Test Complicated Next") {
         }
         a = a + b; 
       })";
-    sourceProcessor2.processSource(simpleProgram4);
+    sourceProcessor.processSource(simpleProgram);
     std::unordered_map<int, std::set<int>> r = {
       {1, {2,9}},
       {2, {3,4}},
@@ -164,9 +166,7 @@ TEST_CASE("Test Complicated Next") {
       {8, {1}},
     };
 
-    std::unordered_map<int, std::set<int>> res2 = sourceProcessor2.getNextStatementMap();
-    REQUIRE(res2 == r);
-
+    REQUIRE(sourceProcessor.getNextStatementMap() == r);
 }
 
 TEST_CASE("Test call sn rs.") {
@@ -775,13 +775,6 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
        std::unordered_set<std::string>>({{1, {"x", "y"}}, {2, {"five", "var"}}});
 
   std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getAssignLinePartialRHSPatternMap();
-  for (auto& it : res) {
-    std::cout << it.first << ": ";
-    for (auto& it2 : it.second) {
-      std::cout << it2 << ", ";
-    }
-    std::cout << std::endl;
-  }
 
   REQUIRE(sourceProcessor.getVariables() == varSet);
   REQUIRE(sourceProcessor.getConstants() == constSet);

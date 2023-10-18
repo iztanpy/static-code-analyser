@@ -25,6 +25,11 @@ class Cfg {
     static std::shared_ptr<CfgNode> currNode;
     static std::stack<std::shared_ptr<CfgNode>> keyNodesStack;
     static std::stack<std::set<int>> nextParentStack;
+    static std::shared_ptr<CfgNode> retrieveTopKeyNode();
+    static void createNewEmptyCfgNode();
+    static void addStmtNumberToEmptyOrNewCfgNode(int stmtNumber);
+    static void pushLastIfElseNumbersOntoNextStack();
+    static void storeNextRelationship(int lastStmtNumber, int nextStmtNumber, bool shouldPushToNextStack = true);
 
  public:
     Cfg() = default;
@@ -94,12 +99,14 @@ class Cfg {
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
     static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap;
-    static void retrieveParent(int stmtNumber);
-    static void resetHashMap() {
+    static void retrieveParentIfNotEmpty(int stmtNumber);
+    static void resetCFG() {
         for (auto& entry : nextStatementNumberHashmap) {
             entry.second.clear();  // Clear the set associated with the key
         }
         nextStatementNumberHashmap.clear();  // Clear the entire map
+        keyNodesStack = std::stack<std::shared_ptr<CfgNode>>();
+        nextParentStack = std::stack<std::set<int>>();
     }
 };
 
