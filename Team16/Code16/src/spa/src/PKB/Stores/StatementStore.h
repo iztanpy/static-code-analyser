@@ -44,5 +44,7 @@ class StatementStore {
   * @return An unordered set of all statement numbers stored in the statement store.
   */
   std::unordered_set<statementNumber> getAllStatements();
+
+  bool isPresent(statementNumber statement);
 };
 
