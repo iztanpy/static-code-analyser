@@ -252,11 +252,10 @@ TEST_CASE("Test Calls ") {
     REQUIRE(readFacade.isModifies(5, "j"));
     REQUIRE(readFacade.isModifies(6, "j"));
     StmtEntity call = StmtEntity::kCall;
-    //REQUIRE(readFacade.modifies(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
-    REQUIRE(pkb_ptr->getStatements(StmtEntity::kStmt) == std::unordered_set<statementNumber>({ 1, 2, 3, 4, 5 }));
+    REQUIRE(readFacade.modifies(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
+    REQUIRE(pkb_ptr->getStatements(StmtEntity::kStmt) == std::unordered_set<statementNumber>({ 1, 2, 3, 4, 5, 6 }));
     REQUIRE(pkb_ptr->getStatements(call) == std::unordered_set<statementNumber>({ 3, 5}));
-
-    //REQUIRE(readFacade.modifies(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
+    REQUIRE(readFacade.modifies(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
 
 }
 
