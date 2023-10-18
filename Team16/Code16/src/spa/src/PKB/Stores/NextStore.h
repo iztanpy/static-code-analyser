@@ -44,16 +44,6 @@ public:
 
     bool isNext(statementNumber num1, statementNumber num2);
 
-    std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity, StmtEntity);
-
-    std::set<statementNumber> NextStar(StmtEntity, Wildcard);
-
-    std::set<statementNumber> NextStar(StmtEntity, statementNumber);
-
-    std::set<statementNumber> NextStar(Wildcard, StmtEntity);
-
-    std::set<statementNumber> NextStar(statementNumber, StmtEntity);
-
     bool isNextStar(Wildcard, Wildcard);
 
     bool isNextStar(Wildcard, statementNumber num);
