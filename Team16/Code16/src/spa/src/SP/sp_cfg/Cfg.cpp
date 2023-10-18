@@ -29,6 +29,7 @@ void Cfg::handleIfStatement(int stmtNumber) {
     }
     currNode->addStmtNumber(stmtNumber);
   } else {
+    nextStatementNumberHashmap[currNode->getLastStatementNumber()].insert(stmtNumber);
     std::shared_ptr<CfgNode> ifNode = std::make_shared<CfgNode>(stmtNumber);
     currNode->addChildren(ifNode);
     currNode = ifNode;
@@ -105,9 +106,9 @@ void Cfg::handleEndWhileStatement() {
 }
 
 void Cfg::handleEndIfStatement(bool hasElse) {
+    nextParentStack.push({ currNode->getLastStatementNumber() });
     std::shared_ptr<CfgNode> nextNode = std::make_shared<CfgNode>();
     currNode->addChildren(nextNode);
-    nextParentStack.push({ currNode->getLastStatementNumber() });
     currNode = nextNode;
     if (hasElse == false) {
       keyNodesStack.pop();
