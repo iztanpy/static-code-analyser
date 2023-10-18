@@ -82,6 +82,17 @@ class SourceProcessor {
      */
     std::unordered_map<int, std::string> getAssignLineFullRHSMap();
     /**
+     * @brief Retrieves a map of statement numbers associated with control variables of if conditional statements.
+     * @return An unordered map where keys are statement numbers, and values are variables of if conditional statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getIfControlVarMap();
+    /**
+     * @brief Retrieves a map of statement numbers associated with control variables of while conditional statements.
+     * @return An unordered map where keys are statement numbers, and values are variables of while conditional
+     * statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getWhileControlVarMap();
+    /**
      * @brief Retrieves a map of statement numbers associated with variables in MODIFIES relationships.
      * @return An unordered map where keys are statement numbers, and values are variables in MODIFIES relationships.
      */
@@ -101,16 +112,35 @@ class SourceProcessor {
      * @return A set containing procedure labels defined in the program.
     */
     std::set<std::string> getProcedureLabels();
+    /**
+     * @brief Retrieves a map of a procedure associated with a pair consisting of its starting line number and ending line number.
+     * @return An unordered map where keys are the procedure, and values are a pair consisting of its starting line number and ending line number.
+    */
     std::unordered_map<std::string, std::pair<int, int>> getProcedureLineNumberHashmap();
+    /**
+     * @brief Retrieves a map of a caller procedured associated with the procedure that is being called.
+     * @return An unordered map where keys are the caller, and values are the callee procedures.
+    */
     std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap();
+    /**
+     * @brief Retrieves a map of statement numbers associated with the procedure that is being called.
+     * @return An unordered map where keys are statement numbers, and values are the procedure that is being called.
+    */
     std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap();
     /**
      * @brief Retrieves the cfg nodes map.
      * @return The map of cfg root nodes.
     */
-      std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
-          return simpleParser.getCfgNodesMap();
-      }
+    std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
+       return simpleParser.getCfgNodesMap();
+    }
+    /**
+    * @brief Retrieves the store next hashmap.
+    * @return The map of statement numbers for the next abstraction.
+    */
+    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+       return simpleParser.getNextStatementMap();
+    }
 };
 
 

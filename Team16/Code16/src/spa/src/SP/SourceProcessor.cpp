@@ -43,6 +43,13 @@ std::unordered_map<int, std::string> SourceProcessor::getAssignLineFullRHSMap() 
   return visitor.getAssignLineFullRHSMap();
 }
 
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getWhileControlVarMap() {
+  return visitor.getWhileControlVarMap();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> SourceProcessor::getIfControlVarMap() {
+  return visitor.getIfControlVarMap();
+}
 std::unordered_map<int, std::string> SourceProcessor::getModifiesMap() {
   return visitor.getModifiesMap();
 }
@@ -70,3 +77,4 @@ std::unordered_map<std::string, std::unordered_set<std::string>> SourceProcessor
 std::unordered_map<int, std::string> SourceProcessor::getCallStatementNumberEntityHashmap() {
     return visitor.getCallStatementNumberEntityHashmap();
 }
+

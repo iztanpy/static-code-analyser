@@ -60,11 +60,11 @@ void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> va
     pkb.storeModifies(varModifiesMap);
 }
 
-void WriteFacade::storeWhile(std::unordered_map<statementNumber, variable> variableMap) {
+void WriteFacade::storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
     pkb.storeWhile(variableMap);
 }
 
-void WriteFacade::storeIf(std::unordered_map<statementNumber, variable> variableMap) {
+void WriteFacade::storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
     pkb.storeIf(variableMap);
 }
 

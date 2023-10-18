@@ -5,6 +5,7 @@
 #include <stack>
 #include <unordered_map>
 #include <iostream>
+#include <set>
 
 #include "CfgNode.h"
 /**
@@ -23,6 +24,7 @@ class Cfg {
    */
     static std::shared_ptr<CfgNode> currNode;
     static std::stack<std::shared_ptr<CfgNode>> keyNodesStack;
+    static std::stack<std::set<int>> nextParentStack;
 
  public:
     Cfg() = default;
@@ -88,8 +90,16 @@ class Cfg {
      *
      * This method is used to handle an end of an "if" statement in the program and update the CFG accordingly.
     */
-    static void handleEndIfStatement();
+    static void handleEndIfStatement(bool hasElse);
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
+    static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap;
+    static void retrieveParent(int stmtNumber);
+    static void resetHashMap() {
+        for (auto& entry : nextStatementNumberHashmap) {
+            entry.second.clear();  // Clear the set associated with the key
+        }
+        nextStatementNumberHashmap.clear();  // Clear the entire map
+    }
 };
 

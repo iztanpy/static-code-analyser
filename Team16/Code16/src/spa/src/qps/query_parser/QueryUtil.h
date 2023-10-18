@@ -61,6 +61,22 @@ class QueryUtil {
   static bool IsSynAssign(const std::string & s, const std::vector<Declaration> & declarations);
 
   /*!
+   * Checks if a string is a synonym and an if statement
+   * @param s is the input string
+   * @param declarations is the vector of declarations
+   * @return True if string is a synonym and declared as an if statement, else false
+   */
+  static bool IsSynIf(const std::string & s, const std::vector<Declaration> & declarations);
+
+  /*!
+   * Checks if a string is a synonym and a while statement
+   * @param s is the input string
+   * @param declarations is the vector of declarations
+   * @return True if string is a synonym and declared as a while statement, else false
+   */
+  static bool IsSynWhile(const std::string & s, const std::vector<Declaration> & declarations);
+
+  /*!
    * Checks if a string quoted
    * @param s is the input string
    * @return True if string is quoted, else false

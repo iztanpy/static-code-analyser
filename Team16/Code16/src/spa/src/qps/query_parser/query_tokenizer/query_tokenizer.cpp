@@ -9,7 +9,6 @@
 #include "utils/string_utils.h"
 #include "utils/lexical_utils.h"
 #include "qps/qps_errors/qps_syntax_error.h"
-#include "qps/qps_errors/qps_semantic_error.h"
 #include "qps/constants.h"
 #include "qps/query_parser/QueryUtil.h"
 #include "qps/qps_validator/qps_validator.h"
@@ -151,8 +150,9 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string& cla
 }
 
 std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& clause,
-                                                                 std::vector<Declaration>& declarations) {
-  qps_validator::ValidateClauseArgs(clause);
+                                                                 std::vector<Declaration>& declarations,
+                                                                 PQLTokenType pattern_type) {
+  qps_validator::ValidateClauseArgs(clause, pattern_type);
   std::string clause_with_brackets_removed = QueryUtil::RemoveBrackets(clause);
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause_with_brackets_removed);
 
@@ -160,8 +160,12 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
   QueryToken left_token;
   std::string left_hand_side = string_util::RemoveSpacesFromExpr(arguments[0]);
   std::string right_hand_side = string_util::RemoveSpacesFromExpr(arguments[1]);
-  // check if lhs is a entRef and lhs is an expr or a partial expr
-  qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side);
+  // check if lhs is a entRef and lhs is valid for each pattern type
+  qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side, pattern_type);
+  // Additional check for third argument of if pattern
+  if (pattern_type == PQLTokenType::PATTERN_IF) {
+    qps_validator::ValidateIfPatternClause(arguments);
+  }
 
   // Set the different types of tokens
   if (QueryUtil::IsWildcard(left_hand_side)) {
@@ -187,6 +191,23 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
 
   std::pair<QueryToken, QueryToken> arg_pair = {left_token, right_token};
   return arg_pair;
+}
+
+PQLTokenType QueryTokenizer::getPatternTokenType(std::string & pattern_syn, std::vector<Declaration>& declarations) {
+  Declaration synonym_declaration;
+  for (Declaration declaration : declarations) {
+    if (declaration.synonym == pattern_syn) {
+      synonym_declaration = declaration;
+      break;
+    }
+  }
+  switch (synonym_declaration.design_entity) {
+    case DesignEntity::WHILE_LOOP: return PQLTokenType::PATTERN_WHILE;
+    case DesignEntity::IF_STMT: return PQLTokenType::PATTERN_IF;
+    case DesignEntity::ASSIGN: return PQLTokenType::SYNONYM;
+    default:
+      throw QpsSemanticError("Synonym not declared");
+  }
 }
 
 std::pair<std::vector<QueryToken>,
@@ -230,12 +251,13 @@ std::pair<std::vector<QueryToken>,
     } else if (clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
       std::string clause_with_pattern_removed = string_util::RemoveFirstWord(curr_clause);
       qps_validator::ValidateNonEmptyClause(clause_with_pattern_removed);
-      std::string syn_assign = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
-      qps_validator::ValidateClauseSynonym(syn_assign, declarations);
-      pattern_tokens.push_back({syn_assign, PQLTokenType::SYNONYM});
+      std::string pattern_syn = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
+      qps_validator::ValidatePatternSynonym(pattern_syn, declarations);
+      PQLTokenType pattern_type = getPatternTokenType(pattern_syn, declarations);
+      pattern_tokens.push_back({pattern_syn, pattern_type});
 
-      std::string pattern_arg_pair = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
-      std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg_pair, declarations);
+      std::string pattern_arg = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
+      std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg, declarations, pattern_type);
       pattern_tokens.push_back(pattern_args.first);
       pattern_tokens.push_back(pattern_args.second);
     } else {
