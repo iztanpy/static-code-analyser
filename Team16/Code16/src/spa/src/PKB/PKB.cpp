@@ -126,6 +126,10 @@ void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>>
     usesStore->storeUsesProcedures(procedures, callTableStar);
 }
 
+void PKB::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
+    usesStore->storeUsesCalls(calls);
+}
+
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
     return usesStore->isUses(lineNumber, variableName);
 }

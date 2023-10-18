@@ -58,6 +58,7 @@ void WriteFacade::storeCalls(std::unordered_map<procedure, std::unordered_set<pr
 
 void WriteFacade::storeCallStatements(std::unordered_map<statementNumber, procedure> callStatements) {
     pkb.storeModifiesCalls(callStatements);
+    pkb.storeUsesCalls(callStatements);
 }
 
 void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
