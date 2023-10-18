@@ -17,7 +17,7 @@ void Cfg::handleStatement(int stmtNumber) {
         retrieveParent(stmtNumber);
     }
     if (!currNode->getStmtNumberSet().empty()) {
-        nextStatementNumberHashmap[currNode->getLastStatementNumber()].insert(stmtNumber); 
+        nextStatementNumberHashmap[currNode->getLastStatementNumber()].insert(stmtNumber);
     }
     currNode->addStmtNumber(stmtNumber);
 }
@@ -78,7 +78,7 @@ void Cfg::handleEndElseStatement() {
     std::shared_ptr<CfgNode> endNode = keyNodesStack.top();
     keyNodesStack.pop();
     currNode->addChildren(endNode);
-    std::set<int> previousParent = nextParentStack.top(); 
+    std::set<int> previousParent = nextParentStack.top();
     previousParent.insert(currNode->getLastStatementNumber());
     nextParentStack.pop();
     nextParentStack.push(previousParent);
@@ -86,7 +86,7 @@ void Cfg::handleEndElseStatement() {
 }
 
 void Cfg::handleEndWhileStatement() {
-  // need to handle the case where curr node is empty (i.e. previous node is an end node from if else) 
+  // need to handle the case where curr node is empty (i.e. previous node is an end node from if else)
   std::shared_ptr<CfgNode> parentNode = keyNodesStack.top();
   keyNodesStack.pop();
   currNode->addChildren(parentNode);

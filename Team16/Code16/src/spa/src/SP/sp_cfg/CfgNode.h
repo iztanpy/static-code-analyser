@@ -113,12 +113,18 @@ class CfgNode {
     }
     return false;
   }
-
+  /**
+  * @brief Gets the last statement number within the statement number hashset.
+  *
+  * If the last statement can't be found, it will return a value of -2.
+  *
+  * @return last statement number if exists, else return -2.
+  */
   int getLastStatementNumber() {
-      auto lastElementIt = statementNumberSet.rbegin(); 
+      auto lastElementIt = statementNumberSet.rbegin();
       if (lastElementIt != statementNumberSet.rend()) {
-          return *lastElementIt; 
+          return *lastElementIt;
       }
-      return -1;
+      return -2;
   }
 };

@@ -5,6 +5,7 @@
 #include <stack>
 #include <unordered_map>
 #include <iostream>
+#include <set>
 
 #include "CfgNode.h"
 /**
@@ -92,13 +93,13 @@ class Cfg {
     static void handleEndIfStatement(bool hasElse);
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
-    static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap; 
+    static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap;
     static void retrieveParent(int stmtNumber);
     static void resetHashMap() {
         for (auto& entry : nextStatementNumberHashmap) {
-            entry.second.clear(); // Clear the set associated with the key
+            entry.second.clear();  // Clear the set associated with the key
         }
-        nextStatementNumberHashmap.clear(); // Clear the entire map
+        nextStatementNumberHashmap.clear();  // Clear the entire map
     }
 };
 
