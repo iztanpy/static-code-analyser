@@ -53,6 +53,15 @@ void ModifiesStore::storeModifiesProcedures(std::unordered_map<procedure,
     }
 }
 
+void ModifiesStore::storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls) {
+    for (auto const& x : calls) {
+        ModifiesVariableMap[x.first].insert(ModifiesProcedureMap[x.second].begin(), ModifiesProcedureMap[x.second].end());
+        for (auto const& y : ModifiesProcedureMap[x.second]) {
+            ModifiesVariableMapReverse[y].insert(x.first);
+        }
+    }
+}
+
 bool ModifiesStore::isModifies(statementNumber statement, variable variable) {
     if (ModifiesVariableMap.find(statement) != ModifiesVariableMap.end()) {
         if (ModifiesVariableMap[statement].find(variable) != ModifiesVariableMap[statement].end()) {

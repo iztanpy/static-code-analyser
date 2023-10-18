@@ -235,6 +235,31 @@ TEST_CASE("Calls and Callstar methods error") {
     REQUIRE_THROWS(writeFacade.storeCalls({ {"main", {"p"}}, {"p", {"q"}}, {"q", {"main"}}}));
 }
 
+TEST_CASE("Test Calls ") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+
+    // Initialize SP and SP tokenizer
+    std::string simpleProgram = "procedure p {x = x + 1; y = y  + 2; call q;} procedure q {m = m + 1; call r;} procedure r { j = j + 1;}";
+
+    sourceProcessor.processSource(simpleProgram);
+    REQUIRE(readFacade.isModifies(3, "m"));
+    REQUIRE(readFacade.isModifies(3, "j"));
+    REQUIRE(readFacade.isModifies(5, "j"));
+    REQUIRE(readFacade.isModifies(6, "j"));
+    StmtEntity call = StmtEntity::kCall;
+    //REQUIRE(readFacade.modifies(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
+    REQUIRE(pkb_ptr->getStatements(StmtEntity::kStmt) == std::unordered_set<statementNumber>({ 1, 2, 3, 4, 5 }));
+    REQUIRE(pkb_ptr->getStatements(call) == std::unordered_set<statementNumber>({ 3, 5}));
+
+    //REQUIRE(readFacade.modifies(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
+
+}
+
 TEST_CASE("Test SP-PKB connection") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);

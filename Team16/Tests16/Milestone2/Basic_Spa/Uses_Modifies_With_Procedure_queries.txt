@@ -48,3 +48,8 @@ constant c;
 Select c such that Modifies(" A", "  dd  ")
 5, 1, 4, 2, 3
 5000
+13 - Test calls
+call c;
+Select c such that Modifies(c, "m")
+7
+5000
