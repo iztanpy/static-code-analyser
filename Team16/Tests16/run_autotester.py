@@ -103,7 +103,9 @@ class Runner:
         shutil.move(output_xml, os.path.join(destination, f"{test_name}out.xml"))
         shutil.copy("analysis.xsl", destination)
 
-        return f"\nTest passed: {passed_tests}\nTest failed: {failed_tests}\n"
+        total_tests = passed_tests + failed_tests
+
+        return f"\nPass: {passed_tests}/{total_tests}\nFail: {failed_tests}/{total_tests}\n"
 
     def execute_autotester(self, autotester_filepath, parameters, redirect_output):
         source, query, test_name, relative_path = parameters
@@ -117,9 +119,9 @@ class Runner:
             exit_code = os.system(command)
 
         if exit_code != self.SUCCESS_EXIT_CODE:
-            return f"Execution failed for {test_name} with exit code: {exit_code}"
+            return f"Execution failed for {test_name[:-1]} with exit code: {exit_code}"
 
-        return f"Execution completed for {test_name} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
+        return f"Execution completed for {test_name[:-1]} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
 
     def execute(self, folder_to_test_in, redirect_output=True):
         autotester_filepath = self.find_autotester_executable()
@@ -138,12 +140,11 @@ if __name__ == "__main__":
     runner.execute("Milestone1")
     runner.execute("Milestone2")
 
-    print(f"Test statistics:")
-    print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")
-    print(f"Total failed tests: {runner.TOTAL_FAILED_TESTS}")
-    print(f"Total tests: {runner.TOTAL_TESTS}")
+    print(f"Test results")
+    print(f"Pass: {runner.TOTAL_PASSED_TESTS}/{runner.TOTAL_TESTS}")
+    print(f"Fail: {runner.TOTAL_FAILED_TESTS}/{runner.TOTAL_TESTS}")
 
-    print(f"Total time taken: {time.time() - start_time:.4f} seconds")
+    print(f"Wall time: {time.time() - start_time:.2f} sec")
 
     if runner.TOTAL_FAILED_TESTS > 0:
         raise Exception("Some tests failed!")
