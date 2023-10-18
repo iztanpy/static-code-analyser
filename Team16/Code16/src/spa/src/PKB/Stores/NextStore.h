@@ -22,7 +22,7 @@ class NextStore {
 private:
     typedef std::string variable;
     typedef int statementNumber;
-    std::unordered_map<statementNumber, CfgNode> cfgLegend;
+    std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
     Cfg cfg;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
@@ -34,17 +34,7 @@ public:
 
     void storeCfg(Cfg cfg);
 
-    void storeCfgLegend(std::unordered_map<statementNumber, CfgNode> cfgLegend);
-
-    std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
-
-    std::set<statementNumber> Next(StmtEntity, Wildcard);
-
-    std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
-
-    std::set<statementNumber> Next(Wildcard, StmtEntity ent);
-
-    std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
+    void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 
     bool isNext(Wildcard, Wildcard);
 
@@ -64,12 +54,14 @@ public:
 
     std::set<statementNumber> NextStar(statementNumber, StmtEntity);
 
-    bool NextStar(Wildcard, Wildcard);
+    bool isNextStar(Wildcard, Wildcard);
 
-    bool NextStar(Wildcard, statementNumber);
+    bool isNextStar(Wildcard, statementNumber num);
 
-    bool NextStar(statementNumber, Wildcard);
+    bool isNextStar(statementNumber num, Wildcard);
 
-    bool NextStar(statementNumber, statementNumber);
+    bool isNextStar(statementNumber num1, statementNumber num2);
+
+    bool isNodeFollowing(std::shared_ptr<CfgNode> startNode, std::shared_ptr<CfgNode> endNode);
 };
 

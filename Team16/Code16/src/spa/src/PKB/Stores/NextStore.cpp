@@ -25,19 +25,9 @@ void NextStore::storeCfg(Cfg cfg) {
     this->cfg = cfg;
 }
 
-void NextStore::storeCfgLegend(std::unordered_map<statementNumber, CfgNode> cfgLegend) {
+void NextStore::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
     this->cfgLegend = cfgLegend;
 }
-
-std::set<std::pair<statementNumber, statementNumber>> NextStore::Next(StmtEntity, StmtEntity);
-
-std::set<statementNumber> NextStore::Next(StmtEntity, Wildcard);
-
-std::set<statementNumber> NextStore::Next(StmtEntity, statementNumber);
-
-std::set<statementNumber> NextStore::Next(Wildcard, StmtEntity);
-
-std::set<statementNumber> NextStore::Next(statementNumber, StmtEntity);
 
 bool NextStore::isNext(Wildcard, Wildcard) {
     if (this->NextMap.empty()) {
@@ -70,20 +60,74 @@ bool NextStore::isNext(statementNumber num1, statementNumber num2) {
     return false;
 }
 
-std::set<std::pair<statementNumber, statementNumber>> NextStore::NextStar(StmtEntity, StmtEntity);
+bool NextStore::isNextStar(Wildcard, Wildcard) {
+    return this->isNext(Wildcard(), Wildcard());
+}
 
-std::set<statementNumber> NextStore::NextStar(StmtEntity, Wildcard);
+// first move to the statement number node
+bool NextStore::isNextStar(Wildcard, statementNumber num) {
+    // first locate the node using the nodelegend
+    std::shared_ptr<CfgNode> startNode = cfgLegend[num];
+    // check if node statement number list has any number positioned before num
+    std::set nodeStatementNumberList = startNode->getStmtNumberSet();
+    // if num is not at the start of the list, there are other numbers before it
+    if (nodeStatementNumberList.find(num) != nodeStatementNumberList.begin()) {
+        return true;
+    }
+    // if num has a parent, there are other numbers beforee it
+    if (startNode->getParentNode(num) != nullptr) {
+        return true;
+    }
+    // else this is not valid
+    return false;
+}
 
-std::set<statementNumber> NextStore::NextStar(StmtEntity, statementNumber);
+bool NextStore::isNextStar(statementNumber num, Wildcard) {
+    std::shared_ptr<CfgNode> startNode = cfgLegend[num];
+    std::set nodeStatementNumberList = startNode->getStmtNumberSet();
+    // if num is not at the end of the list, there are other numbers after it
+    if (nodeStatementNumberList.find(num) != nodeStatementNumberList.end()) {
+        return true;
+    }
+    // if num has a child, there are other numbers after it
+    if (startNode->getChildren().size() != 0) {
+        return true;
+    }
+    // else this is not valid
+    return false;
+}
 
-std::set<statementNumber> NextStore::NextStar(Wildcard, StmtEntity);
+bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
+    std::shared_ptr<CfgNode> startNode = cfgLegend[num1];
+    std::shared_ptr<CfgNode> endNode = cfgLegend[num2];
 
-std::set<statementNumber> NextStore::NextStar(statementNumber, StmtEntity);
+    if (startNode == endNode) {
+        // check the statement list to determine which number comes first
+        std::set nodeStatementNumberList = startNode->getStmtNumberSet();
+        if (*nodeStatementNumberList.find(num1) < *nodeStatementNumberList.find(num2)) {
+            return true;
+        }
+        return false;
+    }
+    if (isNodeFollowing(startNode, endNode)) {
+        return true;
+    }
+    return false;
 
-bool NextStore::NextStar(Wildcard, Wildcard);
+}
 
-bool NextStore::NextStar(Wildcard, statementNumber);
-
-bool NextStore::NextStar(statementNumber, Wildcard);
-
-bool NextStore::NextStar(statementNumber, statementNumber);
+bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode, std::shared_ptr<CfgNode> endNode) {
+    if (startNode == nullptr || startNode == endNode) {
+        return false;
+    }
+    std::set<std::shared_ptr<CfgNode>> childrens = startNode->getChildren();
+    if (childrens.count(endNode) > 0) {
+        return true;
+    }
+    for (auto child : childrens) {
+        if (isNodeFollowing(child, endNode)) {
+            return true;
+        }
+    }
+    return false;
+};

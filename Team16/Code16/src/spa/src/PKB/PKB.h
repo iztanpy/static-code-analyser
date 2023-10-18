@@ -1019,6 +1019,25 @@ class PKB {
 
     bool isNext(statementNumber num1, statementNumber num2);
 
+    std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity ent1, StmtEntity ent2);
+
+    std::set<statementNumber> NextStar(StmtEntity ent, Wildcard);
+
+    std::set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
+
+    std::set<statementNumber> NextStar(Wildcard, StmtEntity ent);
+
+    std::set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
+
+    bool isNextStar(Wildcard, Wildcard);
+
+    bool isNextStar(Wildcard, statementNumber num);
+
+    bool isNextStar(statementNumber num, Wildcard);
+
+    bool isNextStar(statementNumber num1, statementNumber num2);
+
+
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;
 };
