@@ -53,8 +53,23 @@ constant c;
 Select c such that Modifies(" A", "  dd  ")
 5, 1, 4, 2, 3
 5000
-13 - Test calls
+13 - Test calls with Modifies
 call c;
 Select c such that Modifies(c, "m")
 5
+5000
+14 - Test calls with Uses
+call c;
+Select c such that Uses(c, "n")
+5
+5000
+15 - Test all with modifies
+stmt s;
+Select s such that Modifies(s, "m")
+5, 11
+5000
+16 - Test all with uses
+stmt s;
+Select s such that Uses(s, "ss")
+7, 20, 33
 5000
