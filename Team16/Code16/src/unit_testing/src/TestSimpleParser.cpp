@@ -31,6 +31,65 @@ Token token1 = Token(constantType, "1");
 Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
+//
+//TEST_CASE("Test Hardcore Next") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor2(&writeFacade);
+//    std::string simpleProgram4 = R"(procedure Four {
+//        if (x == 0) then {
+//            if (x == 1) then {
+//                x = 1; 
+//                x = 2;
+//            }
+//            x = 3; 
+//            x = 4;
+//            if (x == 5) then {
+//                x = 8; 
+//                if (x == 6) then {
+//                    x = 7; 
+//                    y = 2; 
+//                } else {
+//                    x = 8; 
+//                    x = 9;
+//                }
+//                x = 9;
+//            } else {
+//                while (x == 0) {
+//                    x = 1; 
+//                    x = 2; 
+//                }
+//            }
+//        }
+//        x = 2; 
+//      })";
+//    sourceProcessor2.processSource(simpleProgram4);
+//    std::unordered_map<int, std::set<int>> r = {
+//      {1, {2}},
+//      {2, {3}},
+//      {3, {4}},
+//      {4, {5}},
+//      {5, {6}},
+//      {6, {7}},
+//      {7, {8,15}},
+//      {8, {9}},
+//      {9, {10,12}},
+//      {10, {11}},
+//      {12, {13}},
+//      {11, {14}},
+//      {13, {14}},
+//      {14, {18}},
+//      {15, {16,18}},
+//      {16, {17}},
+//      {17, {15}},
+//
+//    };
+//
+//    std::unordered_map<int, std::set<int>> res2 = sourceProcessor2.getNextStatementMap();
+//    REQUIRE(res2 == r);
+//
+//}
+
 
 TEST_CASE("Test Sample Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -109,9 +168,6 @@ TEST_CASE("Test Complicated Next") {
     REQUIRE(res2 == r);
 
 }
-
-
-
 
 TEST_CASE("Test call sn rs.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
