@@ -1001,6 +1001,12 @@ class PKB {
         StmtEntity procedure2);
 
     // Next Methods
+    void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
+
+    void storeCfg(Cfg cfg);
+
+    void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
+
     std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
 
     std::set<statementNumber> Next(StmtEntity ent, Wildcard);

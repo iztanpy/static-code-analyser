@@ -68,3 +68,15 @@ void WriteFacade::storeIf(std::unordered_map<statementNumber, std::unordered_set
     pkb.storeIf(variableMap);
 }
 
+void WriteFacade::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
+    pkb.storeNext(NextMap);
+}
+
+void WriteFacade::storeCfg(Cfg cfg) {
+    pkb.storeCfg(cfg);
+}
+
+void WriteFacade::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+    pkb.storeCfgLegend(cfgLegend);
+}
+

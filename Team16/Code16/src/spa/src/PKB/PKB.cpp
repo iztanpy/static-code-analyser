@@ -781,6 +781,17 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllWh
     return whileStore->getAllWhile();
 }
 
+void PKB::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
+    nextStore->storeNext(NextMap);
+}
+
+void PKB::storeCfg(Cfg cfg) {
+    nextStore->storeCfg(cfg);
+}
+
+void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+    nextStore->storeCfgLegend(cfgLegend);
+}
 
 std::set<std::pair<statementNumber, statementNumber>> PKB::Next(StmtEntity ent1, StmtEntity ent2) {
     std::set<std::pair<statementNumber, statementNumber>> result;
