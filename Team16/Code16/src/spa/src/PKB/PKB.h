@@ -20,6 +20,7 @@
 #include "Stores/IfStore.h"
 #include "Stores/WhileStore.h"
 #include "Stores/CallStore.h"
+#include "Stores/NextStore.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
@@ -46,6 +47,7 @@ class PKB {
     std::unique_ptr<WhileStore> whileStore;
     std::unique_ptr<IfStore> ifStore;
     std::unique_ptr<CallStore> callStore;
+    std::unique_ptr<NextStore> nextStore;
 
  public:
     PKB();
@@ -997,6 +999,25 @@ class PKB {
 
     std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1,
         StmtEntity procedure2);
+
+    // Next Methods
+    std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
+
+    std::set<statementNumber> Next(StmtEntity ent, Wildcard);
+
+    std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
+
+    std::set<statementNumber> Next(Wildcard, StmtEntity ent);
+
+    std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
+
+    bool isNext(Wildcard, Wildcard);
+
+    bool isNext(Wildcard, statementNumber num);
+
+    bool isNext(statementNumber num, Wildcard);
+
+    bool isNext(statementNumber num1, statementNumber num2);
 
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;
