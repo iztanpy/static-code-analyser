@@ -6,10 +6,13 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <memory>
 
 // Headers from "SP" subdirectory
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/DesignExtractor.h"
+#include "SP/sp_cfg/Cfg.h"
+#include "SP/sp_cfg/CfgNode.h"
 
 // Headers from other directories
 #include "utils/Error.h"
@@ -43,6 +46,8 @@ class Parser {
     void start_parse(std::vector<Token>& tokens, int curr_index);
     static DesignExtractor* designExtractor;  // Initialize to nullptr in the constructor
     static int index;
+    static Cfg cfgFacade;
+    static std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgNodeMap;
     /**
     * @brief Increment the index used for token parsing.
     *
@@ -80,7 +85,30 @@ class Parser {
     void setIndex(int newIndex) {
       index = newIndex;
     }
-
+    /**
+     * @brief Retrieves the cfg nodes map.
+     * @return The map of cfg root nodes.
+     */
+    std::unordered_map<std::string, std::shared_ptr<CfgNode>> getCfgNodesMap() {
+        return cfgNodeMap;
+    }
+    /**
+     * @brief Retrieves the statement number to cfg nodes map.
+     * @return The map of statement numbers to cfg nodes.
+     */
+     std::unordered_map<int, std::shared_ptr<CfgNode>> getStmtNumberToCfgNodeHashmap() {
+         return cfgFacade.getStmtNumberToCfgNodeHashmap();
+     }
+    /**
+    * @brief Retrieves the next statement hashmap.
+    * @return An unordered map with a statement number as a key and its associated next statement numbers as its values.
+    */
+    std::unordered_map<int, std::unordered_set<int>> getNextStatementMap() {
+        return cfgFacade.nextStatementNumberHashmap;
+    }
+    /**
+    * @brief Resets all hashmaps for testing purposes.
+    */
     void reset() {
         index = 0;
         lineNumber = 1;
@@ -91,6 +119,7 @@ class Parser {
         controlStructureStack = std::stack<std::string>();
         parentStatementNumberHashmap = std::unordered_map<int, std::unordered_set<int>>();
         parentStatementStack = std::stack<int>();
+        cfgFacade.resetCFG();
     }
 
  protected:

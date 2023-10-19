@@ -7,12 +7,11 @@ visitor(astVisitorPtr) {}
 
 int SimpleParser::parse(std::vector<Token>& tokens) {
     reset();
-
     while (index < tokens.size()) {
         Token* curr_token = &tokens[index];
         bool isWhileParent = !controlStructureStack.empty() && controlStructureStack.top() == "while";
         bool isIfParent = !controlStructureStack.empty() && (
-            controlStructureStack.top() == "if");
+            controlStructureStack.top() == "if" || controlStructureStack.top() == "else");
         int parentStatementNumber = !parentStatementStack.empty() ? parentStatementStack.top() : -1;
         if ((isWhileParent || isIfParent) && parentStatementNumber != -1
             && curr_token->tokenType != TokenType::kSepCloseBrace) {
@@ -60,4 +59,10 @@ void SimpleParser::populatePKB() {
   writeFacade->storeWhile(visitor->getWhileControlVarMap());
   // Store if control variables
   writeFacade->storeIf(visitor->getIfControlVarMap());
+  // Store Next
+//  writeFacade->storeNext(getNextStatementMap());
+  // Store CFG root nodes
+//  writeFacade->storeCfg(getCfgNodesMap());
+  // Store CFG legend
+//  writeFacade->storeCfgLegend(getStmtNumberToCfgNodeHashmap());
 }

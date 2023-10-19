@@ -117,6 +117,9 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ElseParser.h
         src/SP/sp_parser/CloseBraceParser.cpp
         src/SP/sp_parser/CloseBraceParser.h
+        src/SP/sp_cfg/Cfg.cpp
+        src/SP/sp_cfg/Cfg.h
+        src/SP/sp_cfg/CfgNode.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
