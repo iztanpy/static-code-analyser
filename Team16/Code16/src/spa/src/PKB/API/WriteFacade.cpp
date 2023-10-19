@@ -1,8 +1,3 @@
-#include <unordered_map>
-#include <set>
-#include <memory>
-
-
 #include "PKB/API/WriteFacade.h"
 
 WriteFacade::WriteFacade(PKB& pkb) : pkb(pkb) {}

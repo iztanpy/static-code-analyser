@@ -13,7 +13,6 @@ NextStore::NextStore() {
     std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
     auto NextStarMap = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
     auto NextStarMapReverse = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
-
 }
 
 void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {

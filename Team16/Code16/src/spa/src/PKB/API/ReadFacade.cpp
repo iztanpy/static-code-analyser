@@ -1,8 +1,3 @@
-#include <iostream>
-#include <unordered_set>
-#include <set>
-
-
 #include "PKB/API/ReadFacade.h"
 
 ReadFacade::ReadFacade(PKB& pkb) : pkb(pkb) {}
