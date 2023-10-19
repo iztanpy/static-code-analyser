@@ -19,7 +19,7 @@ class ModifiesP : public SuchThatClause {
   }
 
   ModifiesP(EntRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -42,7 +42,7 @@ class ModifiesS : public SuchThatClause {
   }
 
   ModifiesS(StmtRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

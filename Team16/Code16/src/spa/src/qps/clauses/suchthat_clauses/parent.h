@@ -19,7 +19,7 @@ class Parent : public SuchThatClause {
   }
 
   Parent(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -42,7 +42,7 @@ class ParentT : public SuchThatClause {
   }
 
   ParentT(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

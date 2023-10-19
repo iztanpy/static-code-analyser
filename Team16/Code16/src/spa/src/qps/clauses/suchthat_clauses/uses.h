@@ -21,7 +21,7 @@ class UsesS : public SuchThatClause {
   }
 
   UsesS(StmtRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -44,7 +44,7 @@ class UsesP : public SuchThatClause {
   }
 
   UsesP(EntRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

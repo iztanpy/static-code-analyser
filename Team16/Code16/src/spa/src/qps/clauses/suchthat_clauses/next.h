@@ -15,7 +15,7 @@ class Next : public SuchThatClause {
   }
 
   Next(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -35,7 +35,7 @@ class NextT : public SuchThatClause {
   }
 
   NextT(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

@@ -21,9 +21,11 @@
  */
 class SuchThatClause : public Clause {
  public:
-  RelRefType rel_ref;  // an identifier to make things easier
   RefParam lhs;
   RefParam rhs;
+
+  SuchThatClause(RefParam lhs, RefParam rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {}
 
   /*!
    * Checks if two RefParams are equal

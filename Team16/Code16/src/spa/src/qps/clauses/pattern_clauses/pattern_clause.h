@@ -99,6 +99,7 @@ class AssignPattern : public PatternClause {
 
 class WhilePattern : public PatternClause {
  public:
+  // TODO(phuccuongngo99): Need to call your Validator here
   using PatternClause::PatternClause;
 
   RelRefType GetRelRef() const override {
@@ -113,6 +114,7 @@ class WhilePattern : public PatternClause {
 
 class IfPattern : public PatternClause {
  public:
+  // TODO(phuccuongngo99): Need to call your Validator here
   using PatternClause::PatternClause;
 
   RelRefType GetRelRef() const override {

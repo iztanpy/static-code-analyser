@@ -19,7 +19,7 @@ class Calls : public SuchThatClause {
   }
 
   Calls(EntRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -42,7 +42,7 @@ class CallsT : public SuchThatClause {
   }
 
   CallsT(EntRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

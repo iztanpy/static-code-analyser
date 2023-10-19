@@ -19,7 +19,7 @@ class Follows : public SuchThatClause {
   }
 
   Follows(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -42,7 +42,7 @@ class FollowsT : public SuchThatClause {
   }
 
   FollowsT(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
