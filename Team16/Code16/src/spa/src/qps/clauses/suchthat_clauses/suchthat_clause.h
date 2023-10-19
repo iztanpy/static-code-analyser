@@ -4,6 +4,7 @@
 #include <variant>
 #include <unordered_set>
 #include <utility>
+#include <cstdint>
 
 #include "qps/declaration.h"
 #include "qps/clauses/clause.h"
@@ -54,6 +55,11 @@ class SuchThatClause : public Clause {
   std::unordered_set<Synonym> GetSynonyms() override;
 
   ~SuchThatClause() override = default;
+
+  /*!
+   * Functions to support hashing of clauses
+   */
+  size_t Hash() const override;
 
  private:
   /*!

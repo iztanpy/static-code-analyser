@@ -31,4 +31,6 @@ class SelectClause : public Clause {
    * @return a set of just 1 element
    */
   std::unordered_set<Synonym> GetSynonyms() override;
+
+  size_t Hash() const override;
 };

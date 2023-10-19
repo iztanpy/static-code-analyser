@@ -1,8 +1,8 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
 std::unordered_set<Synonym> PatternClause::GetSynonyms() {
-  std::unordered_set<Synonym> synonyms;
-  synonyms.insert(syn_assignment.synonym);
+  std::unordered_set < Synonym > synonyms;
+  synonyms.insert(declaration.synonym);
 
   if (std::holds_alternative<Declaration>(lhs)) {
     synonyms.insert(std::get<Declaration>(lhs).synonym);
@@ -13,12 +13,18 @@ std::unordered_set<Synonym> PatternClause::GetSynonyms() {
 
 Constraint AssignPattern::Evaluate(ReadFacade& pkb_reader) {
   return std::visit([this, &pkb_reader](auto&& lhs_arg, auto&& rhs_arg) {
-    return Constraint{AssignPatternEvaluator::Handle(this->syn_assignment.synonym, lhs_arg, rhs_arg, pkb_reader)};
+    return Constraint{AssignPatternEvaluator::Handle(this->declaration.synonym, lhs_arg, rhs_arg, pkb_reader)};
   }, lhs, rhs);
 }
 
 void AssignPattern::Validate() {
-  PatternValidator::Validate(syn_assignment, lhs);
+  PatternValidator::Validate(declaration, lhs);
+}
+
+size_t AssignPattern::Hash() const {
+  uint64_t result = PatternClause::Hash();
+  result = result * 31 + std::hash<ExprSpec>{}(rhs);
+  return static_cast<size_t>(result);
 }
 
 Constraint WhilePattern::Evaluate(ReadFacade& pkb_reader) {
@@ -49,3 +55,9 @@ bool PatternClause::are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2) {
   }
 }
 
+size_t PatternClause::Hash() const {
+  uint64_t result = typeid(PatternClause).hash_code();
+  result = result * 31 + std::hash<Declaration>{}(declaration);
+  result = result * 31 + std::hash<EntRef>{}(lhs);
+  return static_cast<size_t>(result);
+}

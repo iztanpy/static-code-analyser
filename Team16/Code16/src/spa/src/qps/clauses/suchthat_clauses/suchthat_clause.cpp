@@ -72,7 +72,7 @@ bool SuchThatClause::are_ent_ref_equal(const RefParam& param_1, const RefParam& 
 
 // ai-gen start (3.5, 0)
 std::unordered_set<Synonym> SuchThatClause::GetSynonyms() {
-  std::unordered_set<Synonym> synonyms;
+  std::unordered_set < Synonym > synonyms;
 
   // Helper lambda to extract Declaration from StmtRef or EntRef
   auto extractSynonym = [&](const RefParam& param) {
@@ -95,3 +95,11 @@ std::unordered_set<Synonym> SuchThatClause::GetSynonyms() {
   return synonyms;
 }
 // ai-gen end
+
+size_t SuchThatClause::Hash() const {
+  uint64_t result = typeid(SuchThatClause).hash_code();
+  result = result * 31 + std::hash<int>{}(static_cast<int>(rel_ref));
+  result = result * 31 + std::hash<RefParam>{}(lhs);
+  result = result * 31 + std::hash<RefParam>{}(rhs);
+  return static_cast<size_t>(result);
+}

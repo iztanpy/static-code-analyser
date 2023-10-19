@@ -13,5 +13,10 @@ class Clause {
 //  virtual int Score() = 0;
   virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
   virtual std::unordered_set<Synonym> GetSynonyms() = 0;
+
+  // Functions to support hashing of clauses
+//  virtual bool equals(const Clause* other) const = 0;
+  virtual size_t Hash() const = 0;
+
   virtual ~Clause() = default;
 };

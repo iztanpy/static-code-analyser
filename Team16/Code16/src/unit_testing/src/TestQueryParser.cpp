@@ -50,7 +50,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
 
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = Wildcard::Value;
-  REQUIRE(clause->syn_assignment.equals(declarations[1]));
+  REQUIRE(clause->declaration.equals(declarations[1]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }
@@ -77,7 +77,7 @@ TEST_CASE("Query Parser can return a parsed query") {
   REQUIRE(parsed_pattern_query.clauses.size() == 2);
   REQUIRE(parsed_pattern_query.selects == expected_selects);
   REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(assign_clause->syn_assignment.equals(declarations[1]));
+  REQUIRE(assign_clause->declaration.equals(declarations[1]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(assign_clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(assign_clause->rhs, Wildcard::Value));
 }
@@ -230,7 +230,7 @@ TEST_CASE("Parser can parse while pattern") {
   REQUIRE(parsed_query_1.clauses.size() == 2);
   REQUIRE(parsed_query_1.selects == expected_selects);
   REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(while_clause->syn_assignment.equals(declarations[0]));
+  REQUIRE(while_clause->declaration.equals(declarations[0]));
 }
 
 TEST_CASE("Parser can parse if pattern") {
@@ -252,5 +252,5 @@ TEST_CASE("Parser can parse if pattern") {
   REQUIRE(parsed_query_1.clauses.size() == 2);
   REQUIRE(parsed_query_1.selects == expected_selects);
   REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(if_clause->syn_assignment.equals(declarations[0]));
+  REQUIRE(if_clause->declaration.equals(declarations[0]));
 }

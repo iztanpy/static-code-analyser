@@ -18,6 +18,14 @@
 class PatternClause : public Clause {
  public:
   /*!
+   * Pattern clause are in the format syn_assignment(lhs, rhs)
+   */
+  Declaration declaration;
+  EntRef lhs;
+
+  PatternClause(Declaration declaration, EntRef lhs) : declaration(declaration), lhs(lhs) {}
+
+  /*!
    * Checks if two expression-specs are equal
    * @param expr_1 first expression-spec
    * @param expr_2 second expression-spec
@@ -38,6 +46,11 @@ class PatternClause : public Clause {
    */
   std::unordered_set<Synonym> GetSynonyms() override;
 
+  /*!
+   * Functions to support hashing of clauses
+   */
+  size_t Hash() const override;
+
   ~PatternClause() override = default;
 
  private:
@@ -46,26 +59,24 @@ class PatternClause : public Clause {
    * Will throw QpsSemanticError if the clause is initialized with invalid arguments
    */
   virtual void Validate() = 0;
-
-  /*!
-   * Pattern clause are in the format syn_assignment(lhs, rhs)
-   */
-  Declaration syn_assignment;
-  EntRef lhs;
 };
 
 class AssignPattern : public PatternClause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
   ExprSpec rhs;
 
-  AssignPattern(Declaration syn_assignment, EntRef lhs, ExprSpec rhs)
-      : syn_assignment(syn_assignment), lhs(lhs), rhs(rhs) {
+  AssignPattern(Declaration syn, EntRef lhs, ExprSpec rhs)
+      : PatternClause(syn, lhs), rhs(rhs) {
     Validate();
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+  /*!
+   * Functions to support hashing of assign pattern
+   * because it has an extra field ExprSpec
+   */
+  size_t Hash() const override;
 
  private:
   void Validate() override;
@@ -73,12 +84,7 @@ class AssignPattern : public PatternClause {
 
 class WhilePattern : public PatternClause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
-
-  WhilePattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
-    Validate();
-  }
+  using PatternClause::PatternClause;
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 
@@ -88,12 +94,7 @@ class WhilePattern : public PatternClause {
 
 class IfPattern : public PatternClause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
-
-  IfPattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
-    Validate();
-  }
+  using PatternClause::PatternClause;
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 

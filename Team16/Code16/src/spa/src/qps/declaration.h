@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <functional>
 
 #include "utils/entity_types.h"
 #include "qps/design_entity.h"
@@ -16,3 +17,17 @@ struct Declaration {
    */
   bool equals(Declaration other) const;
 };
+
+/*!
+ * Hash function for Declaration
+ */
+namespace std {
+template<>
+struct hash<Declaration> {
+  size_t operator()(const Declaration& decl) const {
+    size_t h1 = std::hash<std::string>()(decl.synonym);
+    size_t h2 = std::hash<int>()(static_cast<int>(decl.design_entity));
+    return h1 ^ (h2 << 1);
+  }
+};
+}
