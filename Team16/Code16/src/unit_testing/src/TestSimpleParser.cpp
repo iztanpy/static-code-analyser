@@ -9,6 +9,14 @@
 #include <memory>
 #include <set>
 
+// code for testing purposes
+//  for (auto& i : res2) {
+//    std::cout << i.first << ": ";
+//    for (auto& j : i.second) {
+//      std::cout << j << " ";
+//    }
+//    std::cout << std::endl;
+//  }
 
 // Define your TokenType and Token objects here (if not already defined)
 TokenType variableType = TokenType::kLiteralName;
@@ -32,29 +40,85 @@ Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
 
+TEST_CASE("Test Hardcore Next") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram = R"(procedure Four {
+        if (x == 0) then {
+            if (x == 1) then {
+                x = 1;
+                x = 2;
+            }
+            x = 3;
+            x = 4;
+            if (x == 5) then {
+                x = 8;
+                if (x == 6) then {
+                    x = 7;
+                    y = 2;
+                } else {
+                    x = 8;
+                    x = 9;
+                }
+                x = 9;
+            } else {
+                while (x == 0) {
+                    x = 1;
+                    x = 2;
+                }
+            }
+        }
+        x = 2;
+      })";
+    sourceProcessor.processSource(simpleProgram);
+    std::unordered_map<int, std::unordered_set<int>> r = {
+      {1, {2}},
+      {2, {3}},
+      {3, {4}},
+      {4, {5}},
+      {5, {6}},
+      {6, {7}},
+      {7, {8,15}},
+      {8, {9}},
+      {9, {10,12}},
+      {10, {11}},
+      {12, {13}},
+      {11, {14}},
+      {13, {14}},
+      {14, {18}},
+      {15, {16,18}},
+      {16, {17}},
+      {17, {15}},
+
+    };
+
+    REQUIRE(sourceProcessor.getNextStatementMap() == r);
+}
+
 TEST_CASE("Test Sample Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(procedure Second {
-        x = 0; 
+        x = 0;
         i = 5;
         while (i!=0) {
             x = x + 2*y;
             call Third;
-            i = i - 1; 
+            i = i - 1;
         }
         if (x==1) then {
-            x = x+1; 
+            x = x+1;
         } else {
-            z = 1; 
+            z = 1;
         }
         z = z + x + i;
         y = z + 2;
-        x = x * y + z; 
+        x = x * y + z;
       })";
     sourceProcessor.processSource(simpleProgram3);
-    std::unordered_map<int, std::set<int>> correct_res = {
+    std::unordered_map<int, std::unordered_set<int>> correct_res = {
       {1, {2}},
       {2, {3}},
       {3, {4,7}},
@@ -68,17 +132,14 @@ TEST_CASE("Test Sample Next") {
       {11, {12}},
     };
 
-    std::unordered_map<int, std::set<int>> res = sourceProcessor.getNextStatementMap();
-    REQUIRE(res == correct_res);
-
+    REQUIRE(sourceProcessor.getNextStatementMap() == correct_res);
 }
-
 
 TEST_CASE("Test Complicated Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
-    SourceProcessor sourceProcessor2(&writeFacade);
-    std::string simpleProgram4 = R"(procedure Second {
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram = R"(procedure Second {
         while (x==0) {
             if (x==1) then {
                 help = help +1; 
@@ -93,8 +154,8 @@ TEST_CASE("Test Complicated Next") {
         }
         a = a + b; 
       })";
-    sourceProcessor2.processSource(simpleProgram4);
-    std::unordered_map<int, std::set<int>> r = {
+    sourceProcessor.processSource(simpleProgram);
+    std::unordered_map<int, std::unordered_set<int>> r = {
       {1, {2,9}},
       {2, {3,4}},
       {3, {1}},
@@ -105,13 +166,8 @@ TEST_CASE("Test Complicated Next") {
       {8, {1}},
     };
 
-    std::unordered_map<int, std::set<int>> res2 = sourceProcessor2.getNextStatementMap();
-    REQUIRE(res2 == r);
-
+    REQUIRE(sourceProcessor.getNextStatementMap() == r);
 }
-
-
-
 
 TEST_CASE("Test call sn rs.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -719,13 +775,6 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
        std::unordered_set<std::string>>({{1, {"x", "y"}}, {2, {"five", "var"}}});
 
   std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getAssignLinePartialRHSPatternMap();
-  for (auto& it : res) {
-    std::cout << it.first << ": ";
-    for (auto& it2 : it.second) {
-      std::cout << it2 << ", ";
-    }
-    std::cout << std::endl;
-  }
 
   REQUIRE(sourceProcessor.getVariables() == varSet);
   REQUIRE(sourceProcessor.getConstants() == constSet);
@@ -1019,15 +1068,19 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
       }
   )";
   sourceProcessor.processSource(simpleProgram);
+  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
 
   // check root name in map
   std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set < int > ({ 1, 2 }));
   REQUIRE(rootSecond->getChildren().size() == 1);
-  // check 3
+  REQUIRE(cfgLegend.at(1) == rootSecond);
+  REQUIRE(cfgLegend.at(2) == rootSecond);
+    // check 3
   REQUIRE(rootSecond->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 3 }));
   REQUIRE(rootSecond->getChildren().begin()->get()->getChildren().size() == 2);
+  REQUIRE(cfgLegend.at(3) == *rootSecond->getChildren().begin());
   // check 3 -> 4 5 6 and 14 15 16 17
   std::shared_ptr<CfgNode> node456;
   std::shared_ptr<CfgNode> node14151617;
@@ -1043,9 +1096,11 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((is456Found && is14151617Found));
+  REQUIRE((cfgLegend.at(4) == node456 && cfgLegend.at(5) == node456 && cfgLegend.at(6) == node456));
   // check 456 -> 7
   REQUIRE(node456->getChildren().size() == 1);
   REQUIRE(node456->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 7 }));
+  REQUIRE(cfgLegend.at(7) == *node456->getChildren().begin());
   // check 7 -> 8 and 13
   REQUIRE(node456->getChildren().begin()->get()->getChildren().size() == 2);
   std::shared_ptr<CfgNode> node8;
@@ -1062,6 +1117,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((is8Found && is13Found));
+  REQUIRE(cfgLegend.at(8) == node8);
+  REQUIRE(cfgLegend.at(13) == node13);
   // check 8 -> 9
   std::shared_ptr<CfgNode> node9;
   REQUIRE(node8->getChildren().size() == 1);
@@ -1069,6 +1126,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   for (auto& it : node8->getChildren()) {
     node9 = it;
   }
+  REQUIRE(cfgLegend.at(9) == node9);
   // check 9 -> 10 and empty (end while)
   REQUIRE(node9->getChildren().size() == 2);
   std::shared_ptr<CfgNode> node10;
@@ -1085,9 +1143,11 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((is10Found && isEndWhileFound));
+  REQUIRE(cfgLegend.at(10) == node10);
   // check 10 -> 11
   REQUIRE(node10->getChildren().size() == 1);
   REQUIRE(node10->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 11 }));
+  REQUIRE(cfgLegend.at(11) == *node10->getChildren().begin());
   // check 11 -> 12
   REQUIRE(node10->getChildren().begin()->get()->getChildren().size() == 1);
   std::shared_ptr<CfgNode> node12;
@@ -1112,9 +1172,11 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((isEndWhileAfter9 && is10After9));
+  REQUIRE(cfgLegend.at(12) == node12);
   // check 13 -> empty (end if)
   REQUIRE(node13->getChildren().size() == 1);
   REQUIRE(node13->getChildren().begin()->get()->getStmtNumberSet().empty());
+  REQUIRE(cfgLegend.at(13) == node13);
 
   // check empty (end while) -> empty (end if)
   REQUIRE(nodeEndWhile->getChildren().size() == 1);
@@ -1130,6 +1192,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
 
   // check 14 15 16 18 -> END (no node no nothing!)
   REQUIRE(node14151617->getChildren().size() == 0);
+  REQUIRE((cfgLegend.at(14) == node14151617 && cfgLegend.at(15) == node14151617 && cfgLegend.at(16) == node14151617 &&
+      cfgLegend.at(17) == node14151617));
 }
 
 TEST_CASE(("Test SP Control Variable storage")) {

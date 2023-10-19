@@ -93,10 +93,17 @@ class Parser {
         return cfgNodeMap;
     }
     /**
+     * @brief Retrieves the statement number to cfg nodes map.
+     * @return The map of statement numbers to cfg nodes.
+     */
+     std::unordered_map<int, std::shared_ptr<CfgNode>> getStmtNumberToCfgNodeHashmap() {
+         return cfgFacade.getStmtNumberToCfgNodeHashmap();
+     }
+    /**
     * @brief Retrieves the next statement hashmap.
     * @return An unordered map with a statement number as a key and its associated next statement numbers as its values.
     */
-    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+    std::unordered_map<int, std::unordered_set<int>> getNextStatementMap() {
         return cfgFacade.nextStatementNumberHashmap;
     }
     /**
@@ -112,7 +119,7 @@ class Parser {
         controlStructureStack = std::stack<std::string>();
         parentStatementNumberHashmap = std::unordered_map<int, std::unordered_set<int>>();
         parentStatementStack = std::stack<int>();
-        cfgFacade.resetHashMap();
+        cfgFacade.resetCFG();
     }
 
  protected:

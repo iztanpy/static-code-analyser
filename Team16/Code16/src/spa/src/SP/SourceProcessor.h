@@ -135,10 +135,17 @@ class SourceProcessor {
        return simpleParser.getCfgNodesMap();
     }
     /**
+     * @brief Retrieves the statement number to cfg nodes map.
+     * @return The map of statement numbers to cfg nodes.
+    */
+    std::unordered_map<int, std::shared_ptr<CfgNode>> getStmtNumberToCfgNodeHashmap() {
+        return simpleParser.getStmtNumberToCfgNodeHashmap();
+    }
+    /**
     * @brief Retrieves the store next hashmap.
     * @return The map of statement numbers for the next abstraction.
     */
-    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+    std::unordered_map<int, std::unordered_set<int>> getNextStatementMap() {
        return simpleParser.getNextStatementMap();
     }
 };
