@@ -10,6 +10,8 @@ typedef int statementNumber;
 NextStore::NextStore() {
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
+    std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
+
 }
 
 void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
@@ -67,34 +69,11 @@ bool NextStore::isNextStar(Wildcard, Wildcard) {
 // first move to the statement number node
 bool NextStore::isNextStar(Wildcard, statementNumber num) {
     // first locate the node using the nodelegend
-    std::shared_ptr<CfgNode> startNode = cfgLegend[num];
-    // check if node statement number list has any number positioned before num
-    std::set nodeStatementNumberList = startNode->getStmtNumberSet();
-    // if num is not at the start of the list, there are other numbers before it
-    if (nodeStatementNumberList.find(num) != nodeStatementNumberList.begin()) {
-        return true;
-    }
-    // if num has a parent, there are other numbers beforee it
-    if (startNode->getParentNode(num) != nullptr) {
-        return true;
-    }
-    // else this is not valid
-    return false;
+    return this->isNext(Wildcard(), num);
 }
 
 bool NextStore::isNextStar(statementNumber num, Wildcard) {
-    std::shared_ptr<CfgNode> startNode = cfgLegend[num];
-    std::set nodeStatementNumberList = startNode->getStmtNumberSet();
-    // if num is not at the end of the list, there are other numbers after it
-    if (nodeStatementNumberList.find(num) != nodeStatementNumberList.end()) {
-        return true;
-    }
-    // if num has a child, there are other numbers after it
-    if (startNode->getChildren().size() != 0) {
-        return true;
-    }
-    // else this is not valid
-    return false;
+    return this->isNext(num, Wildcard());
 }
 
 bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {

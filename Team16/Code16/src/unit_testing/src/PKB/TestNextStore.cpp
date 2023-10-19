@@ -7,6 +7,8 @@
 #include "utils/entity_types.h"
 #include "SP/SourceProcessor.h"
 #include "PKB/API/WriteFacade.h"
+#include "PKB/API/ReadFacade.h"
+
 
 TEST_CASE("Test Next store") {
     auto nextStore = NextStore();
@@ -112,9 +114,10 @@ TEST_CASE("If else in a while loop") {
 
 TEST_CASE("While in a if else") {
     auto nextStore = NextStore();
-    auto pkb = PKB();
-    auto facade = WriteFacade(pkb);
-    auto sourceProcessor = SourceProcessor(&facade);
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto sourceProcessor = SourceProcessor(&writeFacade);
+    auto readFacade = ReadFacade(*pkb_ptr);
     std::string simpleProgram4 = R"(procedure Second {
         if (x==1) then {
             while (x==0) {
@@ -132,6 +135,7 @@ TEST_CASE("While in a if else") {
       })";
     sourceProcessor.processSource(simpleProgram4);
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    auto map = sourceProcessor.getNextStatementMap();
     nextStore.storeCfgLegend(cfgLegend);
     // same node
     REQUIRE(nextStore.isNextStar(2, 3));

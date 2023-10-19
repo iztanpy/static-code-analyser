@@ -13,6 +13,7 @@ PKB::PKB() {
     ifStore = std::make_unique<IfStore>();
     whileStore = std::make_unique<WhileStore>();
     callStore = std::make_unique<CallStore>();
+    nextStore = std::make_unique<NextStore>();
 }
 
 // AssignStore methods
