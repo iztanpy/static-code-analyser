@@ -101,31 +101,48 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
     std::shared_ptr<CfgNode> startNode = cfgLegend[num1];
     std::shared_ptr<CfgNode> endNode = cfgLegend[num2];
 
+    if (startNode == nullptr || endNode == nullptr) {
+        return false;
+    }
+
     if (startNode == endNode) {
         // check the statement list to determine which number comes first
         std::set nodeStatementNumberList = startNode->getStmtNumberSet();
         if (*nodeStatementNumberList.find(num1) < *nodeStatementNumberList.find(num2)) {
             return true;
         }
-        return false;
     }
-    if (isNodeFollowing(startNode, endNode)) {
+    auto visited = std::unordered_set<std::shared_ptr<CfgNode>>();
+    if (isNodeFollowing(startNode, endNode, visited)) {
         return true;
     }
     return false;
-
 }
 
-bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode, std::shared_ptr<CfgNode> endNode) {
-    if (startNode == nullptr || startNode == endNode) {
+bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
+                                std::shared_ptr<CfgNode> endNode,
+                                std::unordered_set<std::shared_ptr<CfgNode>>visited) {
+    if (startNode == nullptr || endNode == nullptr) {
         return false;
     }
+
+    // if the startnode is the endnode, and we have visited the startnode before, this is a while loop
+    if (startNode == endNode && visited.count(startNode) != 0) {
+        return true;
+    }
+    // else if the endnode is not the startnode, but we have traversed the whole tree, then we return false
+    if (visited.count(startNode) != 0) {
+        return false;
+    }
+    // else we have not visited the startnode before, and we add it to the visited list
+    visited.insert(startNode);
     std::set<std::shared_ptr<CfgNode>> childrens = startNode->getChildren();
     if (childrens.count(endNode) > 0) {
         return true;
     }
+    // we want to keep track of the nodes that we have visited
     for (auto child : childrens) {
-        if (isNodeFollowing(child, endNode)) {
+        if (isNodeFollowing(child, endNode, visited)) {
             return true;
         }
     }

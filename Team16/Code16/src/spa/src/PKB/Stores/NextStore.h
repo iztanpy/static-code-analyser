@@ -52,6 +52,8 @@ public:
 
     bool isNextStar(statementNumber num1, statementNumber num2);
 
-    bool isNodeFollowing(std::shared_ptr<CfgNode> startNode, std::shared_ptr<CfgNode> endNode);
+    bool isNodeFollowing(std::shared_ptr<CfgNode> startNode,
+                         std::shared_ptr<CfgNode> endNode,
+                         std::unordered_set<std::shared_ptr<CfgNode>>);
 };
 

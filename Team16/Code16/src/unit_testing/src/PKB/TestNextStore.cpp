@@ -20,12 +20,75 @@ TEST_CASE("Test Next store") {
     REQUIRE(!nextStore.isNext(Wildcard(), 1));
 }
 
-TEST_CASE("Test NextStar Store") {
+TEST_CASE("Test NextStar Store if") {
     auto nextStore = NextStore();
     auto pkb = PKB();
     auto facade = WriteFacade(pkb);
     auto sourceProcessor = SourceProcessor(&facade);
     std::string simpleProgram4 = R"(procedure Second {
+        if (x==1) then {
+            help = help +1;
+        } else {
+            if (x == 2) then {
+                 help = help +1;
+                 help = help +2;
+                 help = help +3;
+            }
+            test = test + 1;
+        }
+        a = a + b;
+      })";
+    sourceProcessor.processSource(simpleProgram4);
+    std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    nextStore.storeCfgLegend(cfgLegend);
+    // same node
+    REQUIRE(nextStore.isNextStar(1, 2));
+    // different node
+    REQUIRE(nextStore.isNextStar(1, 3));
+    // no path from 2 to 6
+    REQUIRE(!nextStore.isNextStar(2,6));
+    //path from 2 to 8
+    REQUIRE(nextStore.isNextStar(2, 8));
+    // line number 9 does not exist
+    REQUIRE(!nextStore.isNextStar(2, 9));
+    // line number 9 does not exist
+    REQUIRE(!nextStore.isNextStar(8, 9));
+}
+
+TEST_CASE("Test NextStar Store while") {
+    auto nextStore = NextStore();
+    auto pkb = PKB();
+    auto facade = WriteFacade(pkb);
+    auto sourceProcessor = SourceProcessor(&facade);
+    std::string simpleProgram4 = R"(procedure Second {
+        while (x==1) {
+            help = help +1;
+        }
+        a = a + b;
+      })";
+    sourceProcessor.processSource(simpleProgram4);
+    std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    nextStore.storeCfgLegend(cfgLegend);
+    // same node
+    REQUIRE(nextStore.isNextStar(1, 2));
+    // different node
+    REQUIRE(nextStore.isNextStar(1, 3));
+    // returns to the while loop
+    REQUIRE(nextStore.isNextStar(2, 1));
+    // no path from 3 to 1
+    REQUIRE(!nextStore.isNextStar(3,1));
+    // line number 4 does not exist
+    REQUIRE(!nextStore.isNextStar(3, 4));
+    // line number 8 and 9 does not exist
+    REQUIRE(!nextStore.isNextStar(8, 9));
+}
+
+TEST_CASE("If else in a while loop") {
+    auto nextStore = NextStore();
+    auto pkb = PKB();
+    auto facade = WriteFacade(pkb);
+    auto sourceProcessor = SourceProcessor(&facade);
+    std::string simpleProgram4 =R"(procedure Second {
         while (x==0) {
             if (x==1) then {
                 help = help +1;
@@ -41,8 +104,47 @@ TEST_CASE("Test NextStar Store") {
         a = a + b;
       })";
     sourceProcessor.processSource(simpleProgram4);
-
+    std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    nextStore.storeCfgLegend(cfgLegend);
+    // same node
+    REQUIRE(nextStore.isNextStar(2, 3));
 }
+
+TEST_CASE("While in a if else") {
+    auto nextStore = NextStore();
+    auto pkb = PKB();
+    auto facade = WriteFacade(pkb);
+    auto sourceProcessor = SourceProcessor(&facade);
+    std::string simpleProgram4 = R"(procedure Second {
+        if (x==1) then {
+            while (x==0) {
+                help = help +1;
+            }
+        } else {
+            if (x == 2) then {
+                 help = help +1;
+                 help = help +2;
+                 help = help +3;
+            }
+            test = test + 1;
+        }
+        a = a + b;
+      })";
+    sourceProcessor.processSource(simpleProgram4);
+    std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    nextStore.storeCfgLegend(cfgLegend);
+    // same node
+    REQUIRE(nextStore.isNextStar(2, 3));
+    // node is not reachable
+    REQUIRE(!nextStore.isNextStar(3, 6));
+    REQUIRE(!nextStore.isNextStar(2,6));
+    REQUIRE(!nextStore.isNextStar(2,5));
+    // node is reachable
+    REQUIRE(nextStore.isNextStar(2,2));
+    REQUIRE(nextStore.isNextStar(1,6));
+    REQUIRE(nextStore.isNextStar(1,9));
+}
+
 
 
 

@@ -20,8 +20,7 @@ add_executable(unit_testing ${srcs}
         src/TestWhileParser.cpp
         src/PKB/ProcedureStoreTest.cpp 
         src/PKB/CallStoreTest.cpp
-        src/PKB/TestNextStore.cpp
-        src/PKB/TestNextStore.h)
+        src/PKB/TestNextStore.cpp)
 
 target_link_libraries(unit_testing spa)
 
