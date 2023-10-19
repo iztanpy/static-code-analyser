@@ -25,7 +25,9 @@ class Cfg {
     static std::shared_ptr<CfgNode> currNode;
     static std::stack<std::shared_ptr<CfgNode>> keyNodesStack;
     static std::stack<std::set<int>> nextParentStack;
+    static std::unordered_map<int, std::shared_ptr<CfgNode>> stmtNumberToCfgNodeHashmap;
     static std::shared_ptr<CfgNode> retrieveTopKeyNode();
+    static void addCfgNodeToMap(int stmtNumber);
     static void createNewEmptyCfgNode();
     static void addStmtNumberToEmptyOrNewCfgNode(int stmtNumber);
     static void pushLastIfElseNumbersOntoNextStack();
@@ -99,6 +101,7 @@ class Cfg {
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
     static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap;
+    static std::unordered_map<int, std::shared_ptr<CfgNode>> getStmtNumberToCfgNodeHashmap();
     static void retrieveParentIfNotEmpty(int stmtNumber);
     static void resetCFG() {
         for (auto& entry : nextStatementNumberHashmap) {

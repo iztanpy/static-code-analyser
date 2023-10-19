@@ -93,6 +93,13 @@ class Parser {
         return cfgNodeMap;
     }
     /**
+     * @brief Retrieves the statement number to cfg nodes map.
+     * @return The map of statement numbers to cfg nodes.
+     */
+     std::unordered_map<int, std::shared_ptr<CfgNode>> getStmtNumberToCfgNodeHashmap() {
+         return cfgFacade.getStmtNumberToCfgNodeHashmap();
+     }
+    /**
     * @brief Retrieves the next statement hashmap.
     * @return An unordered map with a statement number as a key and its associated next statement numbers as its values.
     */

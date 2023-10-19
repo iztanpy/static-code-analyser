@@ -10,10 +10,21 @@ std::stack<std::set<int>> Cfg::nextParentStack = std::stack<std::set<int>>();
 
 std::unordered_map<int, std::set<int>> Cfg::nextStatementNumberHashmap = std::unordered_map<int, std::set<int>>();
 
+std::unordered_map<int, std::shared_ptr<CfgNode>> Cfg::stmtNumberToCfgNodeHashmap
+        = std::unordered_map<int, std::shared_ptr<CfgNode>>();
+
+std::unordered_map<int, std::shared_ptr<CfgNode>> Cfg::getStmtNumberToCfgNodeHashmap() {
+    return stmtNumberToCfgNodeHashmap;
+}
+
+void Cfg::addCfgNodeToMap(int stmtNumber) {
+    stmtNumberToCfgNodeHashmap[stmtNumber] = currNode;
+}
 
 void Cfg::handleStatement(int stmtNumber) {
     storeNextRelationship(currNode->getLastStatementNumber(), stmtNumber, false);
     currNode->addStmtNumber(stmtNumber);
+    addCfgNodeToMap(stmtNumber);
 }
 
 void Cfg::handleIfStatement(int stmtNumber) {
@@ -91,6 +102,7 @@ void Cfg::addStmtNumberToEmptyOrNewCfgNode(int stmtNumber) {
         currNode->addChildren(newNode);
         currNode = newNode;
     }
+    addCfgNodeToMap(stmtNumber);
     keyNodesStack.push(currNode);
 }
 

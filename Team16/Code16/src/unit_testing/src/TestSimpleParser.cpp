@@ -1068,15 +1068,19 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
       }
   )";
   sourceProcessor.processSource(simpleProgram);
+  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
 
   // check root name in map
   std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set < int > ({ 1, 2 }));
   REQUIRE(rootSecond->getChildren().size() == 1);
-  // check 3
+  REQUIRE(cfgLegend.at(1) == rootSecond);
+  REQUIRE(cfgLegend.at(2) == rootSecond);
+    // check 3
   REQUIRE(rootSecond->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 3 }));
   REQUIRE(rootSecond->getChildren().begin()->get()->getChildren().size() == 2);
+  REQUIRE(cfgLegend.at(3) == *rootSecond->getChildren().begin());
   // check 3 -> 4 5 6 and 14 15 16 17
   std::shared_ptr<CfgNode> node456;
   std::shared_ptr<CfgNode> node14151617;
@@ -1092,9 +1096,11 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((is456Found && is14151617Found));
+  REQUIRE((cfgLegend.at(4) == node456 && cfgLegend.at(5) == node456 && cfgLegend.at(6) == node456));
   // check 456 -> 7
   REQUIRE(node456->getChildren().size() == 1);
   REQUIRE(node456->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 7 }));
+  REQUIRE(cfgLegend.at(7) == *node456->getChildren().begin());
   // check 7 -> 8 and 13
   REQUIRE(node456->getChildren().begin()->get()->getChildren().size() == 2);
   std::shared_ptr<CfgNode> node8;
@@ -1111,6 +1117,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((is8Found && is13Found));
+  REQUIRE(cfgLegend.at(8) == node8);
+  REQUIRE(cfgLegend.at(13) == node13);
   // check 8 -> 9
   std::shared_ptr<CfgNode> node9;
   REQUIRE(node8->getChildren().size() == 1);
@@ -1118,6 +1126,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   for (auto& it : node8->getChildren()) {
     node9 = it;
   }
+  REQUIRE(cfgLegend.at(9) == node9);
   // check 9 -> 10 and empty (end while)
   REQUIRE(node9->getChildren().size() == 2);
   std::shared_ptr<CfgNode> node10;
@@ -1134,9 +1143,11 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((is10Found && isEndWhileFound));
+  REQUIRE(cfgLegend.at(10) == node10);
   // check 10 -> 11
   REQUIRE(node10->getChildren().size() == 1);
   REQUIRE(node10->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 11 }));
+  REQUIRE(cfgLegend.at(11) == *node10->getChildren().begin());
   // check 11 -> 12
   REQUIRE(node10->getChildren().begin()->get()->getChildren().size() == 1);
   std::shared_ptr<CfgNode> node12;
@@ -1161,9 +1172,11 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
     }
   }
   REQUIRE((isEndWhileAfter9 && is10After9));
+  REQUIRE(cfgLegend.at(12) == node12);
   // check 13 -> empty (end if)
   REQUIRE(node13->getChildren().size() == 1);
   REQUIRE(node13->getChildren().begin()->get()->getStmtNumberSet().empty());
+  REQUIRE(cfgLegend.at(13) == node13);
 
   // check empty (end while) -> empty (end if)
   REQUIRE(nodeEndWhile->getChildren().size() == 1);
@@ -1179,6 +1192,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
 
   // check 14 15 16 18 -> END (no node no nothing!)
   REQUIRE(node14151617->getChildren().size() == 0);
+  REQUIRE((cfgLegend.at(14) == node14151617 && cfgLegend.at(15) == node14151617 && cfgLegend.at(16) == node14151617 &&
+      cfgLegend.at(17) == node14151617));
 }
 
 TEST_CASE(("Test SP Control Variable storage")) {
