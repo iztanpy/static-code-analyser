@@ -18,8 +18,10 @@ add_executable(unit_testing ${srcs}
         src/TestSemanticValidator.cpp
         src/TestStringUtil.cpp
         src/TestWhileParser.cpp
-        src/PKB/ProcedureStoreTest.cpp 
-        src/PKB/CallStoreTest.cpp)
+        src/PKB/ProcedureStoreTest.cpp
+        src/PKB/CallStoreTest.cpp
+        src/TestClauseSet.cpp
+)
 
 target_link_libraries(unit_testing spa)
 
