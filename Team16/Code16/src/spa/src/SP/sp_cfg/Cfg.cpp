@@ -8,7 +8,8 @@ std::stack<std::shared_ptr<CfgNode>> Cfg::keyNodesStack = std::stack<std::shared
 
 std::stack<std::set<int>> Cfg::nextParentStack = std::stack<std::set<int>>();
 
-std::unordered_map<int, std::set<int>> Cfg::nextStatementNumberHashmap = std::unordered_map<int, std::set<int>>();
+std::unordered_map<int, std::unordered_set<int>> Cfg::nextStatementNumberHashmap
+        = std::unordered_map<int, std::unordered_set<int>>();
 
 std::unordered_map<int, std::shared_ptr<CfgNode>> Cfg::stmtNumberToCfgNodeHashmap
         = std::unordered_map<int, std::shared_ptr<CfgNode>>();

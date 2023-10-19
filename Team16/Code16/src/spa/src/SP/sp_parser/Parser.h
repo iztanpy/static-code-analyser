@@ -103,7 +103,7 @@ class Parser {
     * @brief Retrieves the next statement hashmap.
     * @return An unordered map with a statement number as a key and its associated next statement numbers as its values.
     */
-    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+    std::unordered_map<int, std::unordered_set<int>> getNextStatementMap() {
         return cfgFacade.nextStatementNumberHashmap;
     }
     /**

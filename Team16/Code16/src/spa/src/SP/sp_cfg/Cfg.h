@@ -100,7 +100,7 @@ class Cfg {
     static void handleEndIfStatement(bool hasElse);
     static std::shared_ptr<CfgNode> rootCfgNode;
     static std::stack<std::shared_ptr<CfgNode>> elseEndNodeStack;
-    static std::unordered_map<int, std::set<int>> nextStatementNumberHashmap;
+    static std::unordered_map<int, std::unordered_set<int>> nextStatementNumberHashmap;
     static std::unordered_map<int, std::shared_ptr<CfgNode>> getStmtNumberToCfgNodeHashmap();
     static void retrieveParentIfNotEmpty(int stmtNumber);
     static void resetCFG() {
@@ -108,6 +108,7 @@ class Cfg {
             entry.second.clear();  // Clear the set associated with the key
         }
         nextStatementNumberHashmap.clear();  // Clear the entire map
+        stmtNumberToCfgNodeHashmap.clear();
         keyNodesStack = std::stack<std::shared_ptr<CfgNode>>();
         nextParentStack = std::stack<std::set<int>>();
     }

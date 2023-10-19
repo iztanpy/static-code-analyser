@@ -72,7 +72,7 @@ TEST_CASE("Test Hardcore Next") {
         x = 2;
       })";
     sourceProcessor.processSource(simpleProgram);
-    std::unordered_map<int, std::set<int>> r = {
+    std::unordered_map<int, std::unordered_set<int>> r = {
       {1, {2}},
       {2, {3}},
       {3, {4}},
@@ -118,7 +118,7 @@ TEST_CASE("Test Sample Next") {
         x = x * y + z;
       })";
     sourceProcessor.processSource(simpleProgram3);
-    std::unordered_map<int, std::set<int>> correct_res = {
+    std::unordered_map<int, std::unordered_set<int>> correct_res = {
       {1, {2}},
       {2, {3}},
       {3, {4,7}},
@@ -155,7 +155,7 @@ TEST_CASE("Test Complicated Next") {
         a = a + b; 
       })";
     sourceProcessor.processSource(simpleProgram);
-    std::unordered_map<int, std::set<int>> r = {
+    std::unordered_map<int, std::unordered_set<int>> r = {
       {1, {2,9}},
       {2, {3,4}},
       {3, {1}},

@@ -145,7 +145,7 @@ class SourceProcessor {
     * @brief Retrieves the store next hashmap.
     * @return The map of statement numbers for the next abstraction.
     */
-    std::unordered_map<int, std::set<int>> getNextStatementMap() {
+    std::unordered_map<int, std::unordered_set<int>> getNextStatementMap() {
        return simpleParser.getNextStatementMap();
     }
 };
