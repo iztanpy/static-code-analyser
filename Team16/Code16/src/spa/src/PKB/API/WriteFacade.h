@@ -115,7 +115,7 @@ class WriteFacade {
     void storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
-  
+
     void storeCallStatements(std::unordered_map<statementNumber, procedure> callStatements);
 
     void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
@@ -123,5 +123,4 @@ class WriteFacade {
     void storeCfg(Cfg cfg);
 
     void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
-
 };
