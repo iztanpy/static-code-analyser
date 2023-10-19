@@ -41,7 +41,7 @@ class Clause {
    * Gets the hash of this clause.
    * @return hash of this clause
    */
-  virtual size_t Hash() { return std::hash<int>{}(static_cast<int>(GetRelRef())); }
+  virtual size_t Hash() const { return std::hash<int>{}(static_cast<int>(GetRelRef())); }
 
   virtual ~Clause() = default;
 
@@ -51,5 +51,17 @@ class Clause {
    */
   int Score() {
     return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size());
+  }
+};
+
+struct ClauseHasher {
+  size_t operator()(const Clause* clause) const {
+    return clause->Hash();
+  }
+};
+
+struct ClauseEquality {
+  bool operator()(const Clause* lhs, const Clause* rhs) const {
+    return lhs->equals(rhs);
   }
 };

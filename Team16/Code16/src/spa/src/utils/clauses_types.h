@@ -3,8 +3,15 @@
 #include <variant>
 #include <string>
 #include <functional>
+#include <unordered_set>
 
 #include "qps/declaration.h"
+#include "qps/clauses/clause.h"
+
+/*!
+ *
+ */
+using ClauseSet = std::unordered_set<Clause*, ClauseHasher, ClauseEquality>;
 
 /*!
  * Represents StmtRef in PQL grammar

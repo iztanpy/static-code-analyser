@@ -12,7 +12,7 @@ std::unordered_set<Synonym> SelectClause::GetSynonyms() {
   return {declaration.synonym};
 }
 
-size_t SelectClause::Hash() {
+size_t SelectClause::Hash() const {
   uint64_t result = Clause::Hash();
   result = result * 31 + std::hash<Declaration>()(declaration);
   return static_cast<size_t>(result);

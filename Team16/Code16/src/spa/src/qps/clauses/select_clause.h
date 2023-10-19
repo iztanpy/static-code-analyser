@@ -36,7 +36,7 @@ class SelectClause : public Clause {
    * Gets the hash of this Select clause
    * @return the hash of this Select clause
    */
-  size_t Hash() override;
+  size_t Hash() const override;
 
   /*!
    * Checks if this Select clause is equal to another clause
