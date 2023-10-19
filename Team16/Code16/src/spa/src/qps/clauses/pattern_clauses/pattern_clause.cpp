@@ -21,7 +21,7 @@ void AssignPattern::Validate() {
   PatternValidator::Validate(declaration, lhs);
 }
 
-size_t AssignPattern::Hash() const {
+size_t AssignPattern::Hash() {
   uint64_t result = PatternClause::Hash();
   result = result * 31 + std::hash<ExprSpec>{}(rhs);
   return static_cast<size_t>(result);
@@ -55,8 +55,8 @@ bool PatternClause::are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2) {
   }
 }
 
-size_t PatternClause::Hash() const {
-  uint64_t result = typeid(PatternClause).hash_code();
+size_t PatternClause::Hash() {
+  uint64_t result = Clause::Hash();
   result = result * 31 + std::hash<Declaration>{}(declaration);
   result = result * 31 + std::hash<EntRef>{}(lhs);
   return static_cast<size_t>(result);

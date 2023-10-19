@@ -18,7 +18,7 @@ class Clause {
 
   // Functions to support hashing of clauses
 //  virtual bool equals(const Clause* other) const = 0;
-  virtual size_t Hash() const = 0;
+  size_t Hash() { return std::hash<int>{}(static_cast<int>(GetRelRef())); }
 
   virtual ~Clause() = default;
 

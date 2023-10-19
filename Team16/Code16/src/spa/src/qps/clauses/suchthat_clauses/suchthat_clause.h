@@ -59,7 +59,7 @@ class SuchThatClause : public Clause {
   /*!
    * Functions to support hashing of clauses
    */
-  size_t Hash() const override;
+  size_t Hash();
 
  private:
   /*!

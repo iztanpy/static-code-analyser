@@ -49,7 +49,7 @@ class PatternClause : public Clause {
   /*!
    * Functions to support hashing of clauses
    */
-  size_t Hash() const override;
+  size_t Hash();
 
   ~PatternClause() override = default;
 
@@ -81,7 +81,7 @@ class AssignPattern : public PatternClause {
    * Functions to support hashing of assign pattern
    * because it has an extra field ExprSpec
    */
-  size_t Hash() const override;
+  size_t Hash();
 
  private:
   void Validate() override;

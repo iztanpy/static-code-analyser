@@ -96,9 +96,8 @@ std::unordered_set<Synonym> SuchThatClause::GetSynonyms() {
 }
 // ai-gen end
 
-size_t SuchThatClause::Hash() const {
-  uint64_t result = typeid(SuchThatClause).hash_code();
-  result = result * 31 + std::hash<int>{}(static_cast<int>(rel_ref));
+size_t SuchThatClause::Hash() {
+  uint64_t result = Clause::Hash();
   result = result * 31 + std::hash<RefParam>{}(lhs);
   result = result * 31 + std::hash<RefParam>{}(rhs);
   return static_cast<size_t>(result);
