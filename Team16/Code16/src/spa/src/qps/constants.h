@@ -24,6 +24,8 @@ const std::string kSelectKeyword = "Select";
 
 const std::regex kSuchThatClauseRegex("such that [A-Za-z]");
 const std::regex kPatternClauseRegex("pattern [A-Za-z]");
+const std::regex kAndClauseRegex("and [A-Za-z]");
 const std::regex kOnlySuchThat("such that$");
 const std::regex kOnlyPattern("pattern$");
+const std::regex kOnlyAnd("and$");
 }  // namespace qps_constants

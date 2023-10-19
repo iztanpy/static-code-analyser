@@ -16,7 +16,7 @@ Constraint UsesEvaluator::Handle(Declaration& lhs,
                                  Declaration& rhs,
                                  ReadFacade& pkb_reader) {
   if (lhs.equals(rhs)) {
-    return false;
+    return UnaryConstraint{lhs.synonym, {}};
   }
 
   if (lhs.design_entity == DesignEntity::PROCEDURE) {

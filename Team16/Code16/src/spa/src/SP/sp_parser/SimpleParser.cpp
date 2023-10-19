@@ -45,6 +45,8 @@ void SimpleParser::populatePKB() {
   writeFacade->storeModifies(visitor->getModifiesMap());
   // Store Procedures line numbers
   writeFacade->storeProcedures(visitor->getProcedureLineNumberHashmap());
+  // Store call statements and the procedures they call
+  writeFacade->storeCallStatements(visitor->getCallStatementNumberEntityHashmap());
   // Store Follows <line, line>
   writeFacade->storeFollows(visitor->getFollowStatementNumberMap());
   // Store Variables <all var in LHS and RHS>

@@ -228,6 +228,8 @@ class PKB {
     void storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
         std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
+    void storeUsesCalls(std::unordered_map<statementNumber, procedure> calls);
+
     /**
     * @brief Checks if a specific statement uses a given variable.
     *
@@ -317,6 +319,8 @@ class PKB {
 
     void storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
         std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
+
+    void storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls);
 
     /**
     * @brief Checks if a specific statement modifies a given variable.

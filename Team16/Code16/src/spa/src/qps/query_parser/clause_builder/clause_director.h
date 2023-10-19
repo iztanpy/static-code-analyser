@@ -20,7 +20,7 @@ class ClauseDirector {
    * @param declarations is the set of declarations
    * @return a Select clause
    */
-  static SelectClause makeSelectClause(
+  static std::unique_ptr<Clause> makeSelectClause(
       SelectClauseBuilder builder, const QueryToken& token, const std::vector<Declaration>& declarations);
 
   /*!
@@ -30,7 +30,7 @@ class ClauseDirector {
    * @param declarations is the set of declarations
    * @return a pointer to a such that clause
    */
-  static std::unique_ptr<SuchThatClause> makeSuchThatClause(
+  static std::unique_ptr<Clause> makeSuchThatClause(
       SuchThatClauseBuilder builder,
       const std::vector<QueryToken>& tokens,
       const std::vector<Declaration>& declarations);
@@ -42,7 +42,7 @@ class ClauseDirector {
    * @param declarations is the set of declarations
    * @return a pointer to a pattern clause
    */
-  static std::unique_ptr<PatternClause> makePatternClause(
+  static std::unique_ptr<Clause> makePatternClause(
       PatternClauseBuilder builder,
       const std::vector<QueryToken>& tokens,
       const std::vector<Declaration>& declarations);

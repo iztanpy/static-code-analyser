@@ -32,7 +32,7 @@ UnaryConstraint FollowsEvaluator::Handle(Declaration& lhs, int rhs, ReadFacade& 
 }
 Constraint FollowsEvaluator::Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_FollowT) {
   if (lhs.equals(rhs)) {
-    return false;
+    return UnaryConstraint{lhs.synonym, {}};
   }
   StmtEntity lhs_stmt_entity = ConvertToStmtEntity(lhs.design_entity);
   StmtEntity rhs_stmt_entity = ConvertToStmtEntity(rhs.design_entity);

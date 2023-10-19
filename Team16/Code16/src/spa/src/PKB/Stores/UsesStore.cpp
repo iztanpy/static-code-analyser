@@ -52,6 +52,15 @@ void UsesStore::storeUsesProcedures(std::unordered_map<procedure,
     }
 }
 
+void UsesStore::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
+    for (auto const& x : calls) {
+        UsesVariableMap[x.first].insert(UsesProcedureMap[x.second].begin(), UsesProcedureMap[x.second].end());
+        for (auto const& y : UsesProcedureMap[x.second]) {
+            UsesVariableMapReverse[y].insert(x.first);
+        }
+    }
+}
+
 bool UsesStore::isUses(statementNumber lineNumber, variable variableName) {
     if (UsesVariableMap.find(lineNumber) != UsesVariableMap.end()) {
         if (UsesVariableMap[lineNumber].find(variableName) != UsesVariableMap[lineNumber].end()) {
