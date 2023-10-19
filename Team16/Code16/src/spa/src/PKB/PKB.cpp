@@ -943,3 +943,7 @@ bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
     return nextStore->isNextStar(num1, num2);
 }
 
+void PKB::clearNextStarCache() {
+    nextStore->clearCache();
+}
+

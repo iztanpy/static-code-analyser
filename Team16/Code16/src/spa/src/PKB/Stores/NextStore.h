@@ -22,8 +22,10 @@ class NextStore {
 private:
     typedef std::string variable;
     typedef int statementNumber;
-    std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
     Cfg cfg;
+    std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextStarMap;
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextStarMapReverse;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
 
@@ -54,6 +56,9 @@ public:
 
     bool isNodeFollowing(std::shared_ptr<CfgNode> startNode,
                          std::shared_ptr<CfgNode> endNode,
-                         std::unordered_set<std::shared_ptr<CfgNode>>);
+                         std::unordered_set<std::shared_ptr<CfgNode>> visitedNodes,
+                         std::unordered_set<statementNumber> visitedNums);
+
+    void clearCache();
 };
 

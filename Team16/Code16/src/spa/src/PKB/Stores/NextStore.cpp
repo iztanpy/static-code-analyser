@@ -11,6 +11,8 @@ NextStore::NextStore() {
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
     std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
+    auto NextStarMap = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
+    auto NextStarMapReverse = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
 
 }
 
@@ -77,6 +79,13 @@ bool NextStore::isNextStar(statementNumber num, Wildcard) {
 }
 
 bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
+    // check the cache to see if the statement numbers are inside
+    if (NextStarMap.find(num1) != NextStarMap.end()) {
+        if (NextStarMap[num1].find(num2) != NextStarMap[num1].end()) {
+            return true;
+        }
+    }
+
     std::shared_ptr<CfgNode> startNode = cfgLegend[num1];
     std::shared_ptr<CfgNode> endNode = cfgLegend[num2];
 
@@ -92,7 +101,8 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
         }
     }
     auto visited = std::unordered_set<std::shared_ptr<CfgNode>>();
-    if (isNodeFollowing(startNode, endNode, visited)) {
+    auto visitedNums = std::unordered_set<statementNumber>();
+    if (isNodeFollowing(startNode, endNode, visited, visitedNums)) {
         return true;
     }
     return false;
@@ -100,7 +110,8 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
 
 bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
                                 std::shared_ptr<CfgNode> endNode,
-                                std::unordered_set<std::shared_ptr<CfgNode>>visited) {
+                                std::unordered_set<std::shared_ptr<CfgNode>>visited,
+                                std::unordered_set<statementNumber>visitedNums) {
     if (startNode == nullptr || endNode == nullptr) {
         return false;
     }
@@ -115,15 +126,36 @@ bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
     }
     // else we have not visited the startnode before, and we add it to the visited list
     visited.insert(startNode);
+
+    // CACHING
+
+    // there exists a path from all the visited nodes to the statement number list that we specified.
+    std::set<statementNumber> nodeStatementNumberList = startNode->getStmtNumberSet();
+    for (auto num : visitedNums) {
+        for (auto nodeNum : nodeStatementNumberList) {
+            NextStarMap[num].insert(nodeNum);
+        }
+    }
+    // add the statementNumberList to the visited Nums
+    for (auto num : nodeStatementNumberList) {
+        visitedNums.insert(num);
+    }
+
     std::set<std::shared_ptr<CfgNode>> childrens = startNode->getChildren();
     if (childrens.count(endNode) > 0) {
         return true;
     }
     // we want to keep track of the nodes that we have visited
     for (auto child : childrens) {
-        if (isNodeFollowing(child, endNode, visited)) {
+        if (isNodeFollowing(child, endNode, visited, visitedNums)) {
             return true;
         }
     }
     return false;
-};
+}
+
+void NextStore::clearCache() {
+    NextStarMap.clear();
+    NextStarMapReverse.clear();
+}
+

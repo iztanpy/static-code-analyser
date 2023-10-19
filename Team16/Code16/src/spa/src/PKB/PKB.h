@@ -1043,6 +1043,8 @@ class PKB {
 
     bool isNextStar(statementNumber num1, statementNumber num2);
 
+    void clearNextStarCache();
+
 
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;

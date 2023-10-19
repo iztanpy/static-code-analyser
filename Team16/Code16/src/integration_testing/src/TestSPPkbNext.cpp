@@ -37,8 +37,8 @@ TEST_CASE("Test Next store") {
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
     writeFacade.storeNext(sourceProcessor.getNextStatementMap());
     // same node
-    REQUIRE(readFacade.Next(StmtEntity::kIf, Wildcard()) == std::set<statementNumber>({2,4}));
-    REQUIRE(readFacade.Next(Wildcard(), StmtEntity::kIf) == std::set<statementNumber>({1}));
+    REQUIRE(readFacade.Next(StmtEntity::kIf, Wildcard()) == std::set<statementNumber>({1,3}));
+    REQUIRE(readFacade.Next(Wildcard(), StmtEntity::kIf) == std::set<statementNumber>({3}));
     REQUIRE(readFacade.Next(1, StmtEntity::kIf) == std::set<statementNumber>({3}));
 }
 
