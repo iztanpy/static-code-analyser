@@ -10,6 +10,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
+#include <memory>
+
 
 #include "SP/sp_cfg/Cfg.h"
 #include "SP/sp_cfg/CfgNode.h"
@@ -19,7 +21,7 @@
 
 
 class NextStore {
-private:
+ private:
     typedef std::string variable;
     typedef int statementNumber;
     Cfg cfg;
@@ -29,7 +31,7 @@ private:
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
 
-public:
+ public:
     NextStore();
 
     void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);

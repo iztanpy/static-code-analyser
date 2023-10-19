@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <set>
 #include <utility>
 #include "PKB/PKB.h"
 #include "utils/entity_types.h"

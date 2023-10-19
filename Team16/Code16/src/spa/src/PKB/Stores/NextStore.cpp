@@ -110,8 +110,8 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
 
 bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
                                 std::shared_ptr<CfgNode> endNode,
-                                std::unordered_set<std::shared_ptr<CfgNode>>visited,
-                                std::unordered_set<statementNumber>visitedNums) {
+                                std::unordered_set<std::shared_ptr<CfgNode> > visited,
+                                std::unordered_set<statementNumber> visitedNums) {
     if (startNode == nullptr || endNode == nullptr) {
         return false;
     }
@@ -158,4 +158,3 @@ void NextStore::clearCache() {
     NextStarMap.clear();
     NextStarMapReverse.clear();
 }
-

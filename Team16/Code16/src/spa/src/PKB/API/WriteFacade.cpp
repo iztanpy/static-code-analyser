@@ -1,5 +1,7 @@
 #include <unordered_map>
 #include <set>
+#include <memory>
+
 
 #include "PKB/API/WriteFacade.h"
 
