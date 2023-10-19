@@ -111,14 +111,13 @@ bool QueryTokenizer::clauseMatch(std::string& clause, const std::regex& regexPat
 std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string& clause,
                                                                 std::vector<Declaration>& declarations) {
   qps_validator::ValidateClauseArgs(clause);
+  clause = QueryUtil::RemoveBrackets(clause);
   std::vector<std::string> synonyms = string_util::SplitStringBy(',', clause);
-  std::vector<std::string> lhs = string_util::SplitStringBy('(', synonyms[0]);
-  std::vector<std::string> rhs = string_util::SplitStringBy(')', synonyms[1]);
 
   QueryToken right_token;
   QueryToken left_token;
-  std::string right_hand_side = string_util::Trim(rhs[0]);
-  std::string left_hand_side = string_util::Trim(lhs[1]);
+  std::string right_hand_side = string_util::Trim(synonyms[1]);
+  std::string left_hand_side = string_util::Trim(synonyms[0]);
   // check if lhs and rhs is a stmtRef or entRef
   qps_validator::ValidateClauseArgs(left_hand_side, right_hand_side);
 

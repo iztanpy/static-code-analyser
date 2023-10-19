@@ -37,6 +37,11 @@ void ClauseArgsSyntaxHandler::handle(std::string clause, PQLTokenType pattern_ty
   }
   std::string clause_with_brackets_removed = QueryUtil::RemoveBrackets(clause);
   std::vector<std::string> arguments = string_util::SplitStringBy(',', clause_with_brackets_removed);
+  for (const std::string& argument : arguments) {
+    if (argument.empty()) {
+      throw QpsSyntaxError("Missing arguments");
+    }
+  }
   if (arguments.size() != 2 && arguments.size() != 3) {
     throw QpsSyntaxError("Must have 2 or 3 arguments");
   }

@@ -264,8 +264,7 @@ TEST_CASE("Parser can parse multiple such that clauses") {
       {"w", DesignEntity::WHILE_LOOP}
   };
 
-  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses = std::move(parsed_query_1.such_that_clauses);
-  REQUIRE(such_that_clauses.size() == 3);
+  REQUIRE(parsed_query_1.clauses.size() == 4);
 
   StmtRef expected_lhs_1 = StmtRef(declarations[0]);
   EntRef expected_rhs_1 = EntRef ("x");
@@ -274,18 +273,15 @@ TEST_CASE("Parser can parse multiple such that clauses") {
   StmtRef expected_lhs_3 = StmtRef(1);
   StmtRef expected_rhs_3 = StmtRef(declarations[0]);
 
-  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
-  auto* clause_1 = dynamic_cast<ModifiesS*>(such_that_clause.get());
+  auto* clause_1 = dynamic_cast<ModifiesS*>(parsed_query_1.clauses[1].get());
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_1->lhs, expected_lhs_1));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause_1->rhs, expected_rhs_1));
 
-  such_that_clause = std::move(such_that_clauses[1]);
-  auto* clause_2 = dynamic_cast<ParentT*>(such_that_clause.get());
+  auto* clause_2 = dynamic_cast<ParentT*>(parsed_query_1.clauses[2].get());
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_2->lhs, expected_lhs_2));
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_2->rhs, expected_rhs_2));
 
-  such_that_clause = std::move(such_that_clauses[2]);
-  auto* clause_3 = dynamic_cast<NextT*>(such_that_clause.get());
+  auto* clause_3 = dynamic_cast<NextT*>(parsed_query_1.clauses[3].get());
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_3->lhs, expected_lhs_3));
   REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_3->rhs, expected_rhs_3));
 }
@@ -300,26 +296,22 @@ TEST_CASE("Parser can parse multiple pattern clauses") {
       {"ifs", DesignEntity::IF_STMT}
   };
 
-  std::vector<std::unique_ptr<PatternClause>> pattern_clauses = std::move(parsed_query_1.pattern_clauses);
-  REQUIRE(pattern_clauses.size() == 3);
+  REQUIRE(parsed_query_1.clauses.size() == 4);
 
   EntRef expected_lhs_1 = EntRef ("x");
-  std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto* clause_1 = dynamic_cast<WhilePattern*>(pattern_clause.get());
+  auto* clause_1 = dynamic_cast<WhilePattern*>(parsed_query_1.clauses[1].get());
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause_1->lhs, expected_lhs_1));
   REQUIRE(clause_1->syn_assignment.equals(declarations[0]));
 
   EntRef expected_lhs_2 = EntRef ("y");
   ExprSpec expected_rhs_2 = PartialExpr{"x+y"};
-  pattern_clause = std::move(pattern_clauses[1]);
-  auto* clause_2 = dynamic_cast<AssignPattern*>(pattern_clause.get());
+  auto* clause_2 = dynamic_cast<AssignPattern*>(parsed_query_1.clauses[2].get());
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause_2->lhs, expected_lhs_2));
   REQUIRE(PatternClause::are_expr_spec_equal(clause_2->rhs, expected_rhs_2));
   REQUIRE(clause_2->syn_assignment.equals(declarations[1]));
 
   EntRef expected_lhs_3 = EntRef ("z");
-  pattern_clause = std::move(pattern_clauses[2]);
-  auto* clause_3 = dynamic_cast<IfPattern*>(pattern_clause.get());
+  auto* clause_3 = dynamic_cast<IfPattern*>(parsed_query_1.clauses[3].get());
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause_3->lhs, expected_lhs_3));
   REQUIRE(clause_3->syn_assignment.equals(declarations[2]));
 }
@@ -333,29 +325,23 @@ TEST_CASE("Parser can parse multiple different clauses") {
       {"a", DesignEntity::ASSIGN},
   };
 
-  std::vector<std::unique_ptr<PatternClause>> pattern_clauses = std::move(parsed_query_1.pattern_clauses);
-  REQUIRE(pattern_clauses.size() == 1);
-  std::vector<std::unique_ptr<SuchThatClause>> such_that_clauses = std::move(parsed_query_1.such_that_clauses);
-  REQUIRE(such_that_clauses.size() == 2);
+  REQUIRE(parsed_query_1.clauses.size() == 4);
 
   StmtRef expected_lhs_1 = StmtRef(declarations[0]);
   StmtRef expected_rhs_1 = StmtRef(declarations[1]);
-  std::unique_ptr<SuchThatClause> such_that_clause = std::move(such_that_clauses[0]);
-  auto* such_that_clause_1 = dynamic_cast<ParentT*>(such_that_clause.get());
+  auto* such_that_clause_1 = dynamic_cast<ParentT*>(parsed_query_1.clauses[1].get());
   REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_1->lhs, expected_lhs_1));
   REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_1->rhs, expected_rhs_1));
 
   StmtRef expected_lhs_2 = StmtRef (1);
   StmtRef expected_rhs_2 = StmtRef(declarations[1]);
-  such_that_clause = std::move(such_that_clauses[1]);
-  auto* such_that_clause_2 = dynamic_cast<NextT*>(such_that_clause.get());
+  auto* such_that_clause_2 = dynamic_cast<NextT*>(parsed_query_1.clauses[2].get());
   REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_2->lhs, expected_lhs_2));
   REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_2->rhs, expected_rhs_2));
 
   EntRef expected_lhs_3 = EntRef ("x");
   ExprSpec expected_rhs_3 = Wildcard::Value;
-  std::unique_ptr<PatternClause> pattern_clause = std::move(pattern_clauses[0]);
-  auto* pattern_clause_1 = dynamic_cast<AssignPattern*>(pattern_clause.get());
+  auto* pattern_clause_1 = dynamic_cast<AssignPattern*>(parsed_query_1.clauses[3].get());
   REQUIRE(SuchThatClause::are_ent_ref_equal(pattern_clause_1->lhs, expected_lhs_3));
   REQUIRE(PatternClause::are_expr_spec_equal(pattern_clause_1->rhs, expected_rhs_3));
   REQUIRE(pattern_clause_1->syn_assignment.equals(declarations[1]));
