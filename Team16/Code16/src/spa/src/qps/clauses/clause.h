@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_set>
+#include <memory>
 
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "PKB/API/ReadFacade.h"
@@ -55,13 +56,15 @@ class Clause {
 };
 
 struct ClauseHasher {
-  size_t operator()(const Clause* clause) const {
+  size_t operator()(const std::unique_ptr<Clause>& clause) const {
     return clause->Hash();
   }
 };
 
 struct ClauseEquality {
-  bool operator()(const Clause* lhs, const Clause* rhs) const {
-    return lhs->equals(rhs);
+  bool operator()(const std::unique_ptr<Clause>& lhs, const std::unique_ptr<Clause>& rhs) const {
+    return lhs->equals(rhs.get());
   }
 };
+
+using ClauseSet = std::unordered_set<std::unique_ptr<Clause>, ClauseHasher, ClauseEquality>;
