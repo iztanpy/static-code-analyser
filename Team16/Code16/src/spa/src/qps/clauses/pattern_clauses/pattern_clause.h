@@ -2,6 +2,7 @@
 
 #include <string>
 #include <variant>
+#include <unordered_set>
 
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/clauses/clause.h"
@@ -29,7 +30,14 @@ class PatternClause : public Clause {
    * @param pkb_reader
    * @return Constraint that contains all possible valid values for this clause
    */
-  virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
+  Constraint Evaluate(ReadFacade& pkb_reader) override = 0;
+
+  /*!
+   * Gets the synonyms used in this Pattern clause.
+   * @return a set of elements
+   */
+  std::unordered_set<Synonym> GetSynonyms() override;
+
   ~PatternClause() override = default;
 
  private:
@@ -44,7 +52,6 @@ class PatternClause : public Clause {
    */
   Declaration syn_assignment;
   EntRef lhs;
-  ExprSpec rhs;
 };
 
 class AssignPattern : public PatternClause {
@@ -64,12 +71,12 @@ class AssignPattern : public PatternClause {
   void Validate() override;
 };
 
-class WhilePattern: public PatternClause {
+class WhilePattern : public PatternClause {
  public:
   Declaration syn_assignment;
   EntRef lhs;
 
-  WhilePattern(Declaration syn_assignment, EntRef lhs): syn_assignment(syn_assignment), lhs(lhs) {
+  WhilePattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
     Validate();
   }
 
@@ -79,12 +86,12 @@ class WhilePattern: public PatternClause {
   void Validate() override;
 };
 
-class IfPattern: public PatternClause {
+class IfPattern : public PatternClause {
  public:
   Declaration syn_assignment;
   EntRef lhs;
 
-  IfPattern(Declaration syn_assignment, EntRef lhs): syn_assignment(syn_assignment), lhs(lhs) {
+  IfPattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
     Validate();
   }
 

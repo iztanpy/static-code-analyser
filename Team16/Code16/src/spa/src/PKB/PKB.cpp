@@ -127,6 +127,10 @@ void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>>
     usesStore->storeUsesProcedures(procedures, callTableStar);
 }
 
+void PKB::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
+    usesStore->storeUsesCalls(calls);
+}
+
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
     return usesStore->isUses(lineNumber, variableName);
 }
@@ -217,6 +221,10 @@ void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, i
     modifiesStore->storeModifiesProcedures(procedures, callTableStar);
 }
 
+void PKB::storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls) {
+    modifiesStore->storeModifiesCalls(calls);
+}
+
 bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
     return modifiesStore->isModifies(lineNumber, variableName);
 }
@@ -234,12 +242,10 @@ std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, variable vari
     std::unordered_set<statementNumber> result;
 
     for (auto const& stmt : relevantStmts) {
-        const std::unordered_set<variable>& modifiedVariables = modifiesStore->modifies(stmt);
-        if (modifiedVariables.find(variableName) != modifiedVariables.end()) {
+        if (modifiesStore->isModifies(stmt, variableName)) {
             result.insert(stmt);
         }
     }
-
     return result;
 }
 
