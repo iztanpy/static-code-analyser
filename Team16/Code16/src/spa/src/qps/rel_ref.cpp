@@ -48,3 +48,34 @@ std::set<std::string> RelRef::getStringRelRef() {
   return {"Follows", "Follows*", "Parent", "Parent*", "Modifies", "Uses",
           "Calls", "Calls*", "Next", "Next*", "Affects"};
 }
+
+int RelRef::getClauseScore(RelRefType rel_ref, int num_synonym) {
+  static const int kSynonymPenalty = 1;
+  static const std::map<RelRefType, int> kClauseScore = {
+      // SelectClause
+      {RelRefType::SELECT, 4},
+
+      // SuchThatClause
+      {RelRefType::FOLLOWS, 4},
+      {RelRefType::FOLLOWST, 4},
+      {RelRefType::MODIFIESS, 4},
+      {RelRefType::MODIFIESP, 4},
+      {RelRefType::PARENTT, 4},
+      {RelRefType::PARENT, 4},
+      {RelRefType::USESS, 4},
+      {RelRefType::USESP, 4},
+      {RelRefType::CALLS, 4},
+      {RelRefType::CALLST, 4},
+      {RelRefType::NEXT, 4},
+      {RelRefType::NEXTT, 4},
+      {RelRefType::AFFECTS, 4},
+
+      // PatternClause
+      {RelRefType::ASSIGN, 4},
+      {RelRefType::WHILE, 4},
+      {RelRefType::IF, 4}
+  };
+
+  assert((num_synonym == 1 || num_synonym == 2) && "[num_synonym] can only be 1 or 2");
+  return kClauseScore.at(rel_ref) + (num_synonym == 2 ? kSynonymPenalty : 0);
+}

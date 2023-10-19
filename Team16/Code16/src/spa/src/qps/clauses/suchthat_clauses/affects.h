@@ -10,6 +10,10 @@ class Affects : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
+  RelRefType GetRelRef() override {
+    return RelRefType::AFFECTS;
+  }
+
   Affects(StmtRef lhs, StmtRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();

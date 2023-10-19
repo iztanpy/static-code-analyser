@@ -14,6 +14,10 @@ class Calls : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
+  RelRefType GetRelRef() override {
+    return RelRefType::CALLS;
+  }
+
   Calls(EntRef lhs, EntRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
@@ -32,6 +36,10 @@ class CallsT : public SuchThatClause {
  public:
   EntRef lhs;
   EntRef rhs;
+
+  RelRefType GetRelRef() override {
+    return RelRefType::CALLST;
+  }
 
   CallsT(EntRef lhs, EntRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {

@@ -4,13 +4,15 @@
 
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "PKB/API/ReadFacade.h"
+#include "qps/rel_ref.h"
 
 /*!
  * Represents a clause in a query
  */
 class Clause {
  public:
-//  virtual int Score() = 0;
+  virtual RelRefType GetRelRef() = 0;
+
   virtual Constraint Evaluate(ReadFacade& pkb_reader) = 0;
   virtual std::unordered_set<Synonym> GetSynonyms() = 0;
 
@@ -19,4 +21,8 @@ class Clause {
   virtual size_t Hash() const = 0;
 
   virtual ~Clause() = default;
+
+  int Score() {
+    return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size());
+  }
 };

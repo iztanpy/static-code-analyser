@@ -32,5 +32,17 @@ class SelectClause : public Clause {
    */
   std::unordered_set<Synonym> GetSynonyms() override;
 
+  /*!
+   * Gets the hash of this Select clause
+   * @return the hash of this Select clause
+   */
   size_t Hash() const override;
+
+  /*!
+  * Gets the RelRefType of this clause
+  * @return
+  */
+  RelRefType GetRelRef() override {
+    return RelRefType::SELECT;
+  }
 };

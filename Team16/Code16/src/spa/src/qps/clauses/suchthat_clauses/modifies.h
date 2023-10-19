@@ -14,6 +14,10 @@ class ModifiesP : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
+  RelRefType GetRelRef() override {
+    return RelRefType::MODIFIESP;
+  }
+
   ModifiesP(EntRef lhs, EntRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
@@ -32,6 +36,10 @@ class ModifiesS : public SuchThatClause {
  public:
   StmtRef lhs;
   EntRef rhs;
+
+  RelRefType GetRelRef() override {
+    return RelRefType::MODIFIESS;
+  }
 
   ModifiesS(StmtRef lhs, EntRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {

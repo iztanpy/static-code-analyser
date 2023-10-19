@@ -59,11 +59,16 @@ class PatternClause : public Clause {
    * Will throw QpsSemanticError if the clause is initialized with invalid arguments
    */
   virtual void Validate() = 0;
+  RelRefType GetRelRef() override = 0;
 };
 
 class AssignPattern : public PatternClause {
  public:
   ExprSpec rhs;
+
+  RelRefType GetRelRef() override {
+    return RelRefType::ASSIGN;
+  }
 
   AssignPattern(Declaration syn, EntRef lhs, ExprSpec rhs)
       : PatternClause(syn, lhs), rhs(rhs) {
@@ -86,6 +91,10 @@ class WhilePattern : public PatternClause {
  public:
   using PatternClause::PatternClause;
 
+  RelRefType GetRelRef() override {
+    return RelRefType::WHILE;
+  }
+
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 
  private:
@@ -95,6 +104,10 @@ class WhilePattern : public PatternClause {
 class IfPattern : public PatternClause {
  public:
   using PatternClause::PatternClause;
+
+  RelRefType GetRelRef() override {
+    return RelRefType::IF;
+  }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 

@@ -67,6 +67,6 @@ class SuchThatClause : public Clause {
    * Will throw QpsSemanticError if the clause is initialized with invalid arguments
    */
   virtual void Validate() = 0;
+
+  RelRefType GetRelRef() override = 0;
 };
-
-

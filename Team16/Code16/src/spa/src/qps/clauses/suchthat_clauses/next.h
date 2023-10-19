@@ -10,6 +10,10 @@ class Next : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
+  RelRefType GetRelRef() override {
+    return RelRefType::NEXT;
+  }
+
   Next(StmtRef lhs, StmtRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
@@ -25,6 +29,10 @@ class NextT : public SuchThatClause {
  public:
   StmtRef lhs;
   StmtRef rhs;
+
+  RelRefType GetRelRef() override {
+    return RelRefType::NEXTT;
+  }
 
   NextT(StmtRef lhs, StmtRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {

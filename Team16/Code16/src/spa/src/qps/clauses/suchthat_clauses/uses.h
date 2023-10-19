@@ -16,6 +16,10 @@ class UsesS : public SuchThatClause {
   StmtRef lhs;
   EntRef rhs;
 
+  RelRefType GetRelRef() override {
+    return RelRefType::USESS;
+  }
+
   UsesS(StmtRef lhs, EntRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
@@ -34,6 +38,10 @@ class UsesP : public SuchThatClause {
  public:
   EntRef lhs;
   EntRef rhs;
+
+  RelRefType GetRelRef() override {
+    return RelRefType::USESP;
+  }
 
   UsesP(EntRef lhs, EntRef rhs)
       : lhs(std::move(lhs)), rhs(std::move(rhs)) {
