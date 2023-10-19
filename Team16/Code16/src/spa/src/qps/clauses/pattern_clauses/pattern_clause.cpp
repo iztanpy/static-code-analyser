@@ -33,7 +33,7 @@ bool operator==(const PatternClause& lhs, const PatternClause& rhs) {
 
 bool PatternClause::equals(const Clause* other) const {
   const auto* other_clause = dynamic_cast<const PatternClause*>(other);
-  return other_clause != nullptr && this == other_clause;
+  return other_clause != nullptr && *this == *other_clause;
 }
 
 Constraint WhilePattern::Evaluate(ReadFacade& pkb_reader) {
@@ -78,5 +78,5 @@ bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {
 
 bool AssignPattern::equals(const Clause* other) const {
   const auto* other_clause = dynamic_cast<const AssignPattern*>(other);
-  return other_clause != nullptr && this == other_clause;
+  return other_clause != nullptr && *this == *other_clause;
 }

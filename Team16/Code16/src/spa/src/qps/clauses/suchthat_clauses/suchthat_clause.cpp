@@ -104,10 +104,13 @@ size_t SuchThatClause::Hash() const {
 }
 
 bool operator==(const SuchThatClause& lhs, const SuchThatClause& rhs) {
+  bool a = lhs.GetRelRef() == rhs.GetRelRef();
+  bool b = lhs.lhs == rhs.lhs;
+  bool c = lhs.rhs == rhs.rhs;
   return lhs.GetRelRef() == rhs.GetRelRef() && lhs.lhs == rhs.lhs && lhs.rhs == rhs.rhs;
 }
 
 bool SuchThatClause::equals(const Clause* other) const {
   const auto* other_clause = dynamic_cast<const SuchThatClause*>(other);
-  return other_clause != nullptr && this == other_clause;
+  return other_clause != nullptr && *this == *other_clause;
 }
