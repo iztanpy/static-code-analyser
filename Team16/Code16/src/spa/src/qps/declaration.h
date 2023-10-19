@@ -15,7 +15,9 @@ struct Declaration {
    * @param other declaration to compare
    * @return true if the declarations are equal, else false
    */
-  bool equals(Declaration other) const;
+  bool operator==(const Declaration& other) const {
+    return synonym == other.synonym && design_entity == other.design_entity;
+  }
 };
 
 /*!

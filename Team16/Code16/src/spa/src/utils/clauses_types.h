@@ -23,10 +23,18 @@ using RefParam = std::variant<StmtRef, EntRef>;
 
 struct PartialExpr {
   std::string value;
+
+  bool operator==(const PartialExpr& other) const {
+    return value == other.value;
+  }
 };
 
 struct ExactExpr {
   std::string value;
+
+  bool operator==(const ExactExpr& other) const {
+    return value == other.value;
+  }
 };
 
 /*!

@@ -6,7 +6,7 @@ TEST_CASE("Select Clause Builder successfully sets attributes of clause") {
   Declaration declaration = {"v", DesignEntity::VARIABLE};
   builder.setDeclaration(declaration);
   std::unique_ptr<SelectClause> select_clause = builder.getClause();
-  REQUIRE(select_clause->declaration.equals(declaration));
+  REQUIRE(select_clause->declaration == declaration);
 }
 
 TEST_CASE("Clause Director can create select clause") {
@@ -18,7 +18,7 @@ TEST_CASE("Clause Director can create select clause") {
   declarations.push_back(declaration);
   std::unique_ptr<Clause> selectClause = ClauseDirector::makeSelectClause(builder, token, declarations);
   auto* clause = dynamic_cast<SelectClause*>(selectClause.get());
-  REQUIRE(clause->declaration.equals(declaration));
+  REQUIRE(clause->declaration == declaration);
 }
 
 TEST_CASE("Such that Clause Builder successfully sets attributes of parent relation") {
@@ -301,7 +301,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExp
 
   EntRef expected_lhs = EntRef(declarations[1]);
   ExprSpec expected_rhs = PartialExpr{"x+y"};
-  REQUIRE(clause->declaration.equals(declarations[0]));
+  REQUIRE(clause->declaration == (declarations[0]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }
@@ -324,7 +324,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
 
   EntRef expected_lhs = EntRef(declarations[1]);
   ExprSpec expected_rhs = PartialExpr{"x+y"};
-  REQUIRE(clause->declaration.equals(declarations[0]));
+  REQUIRE(clause->declaration == (declarations[0]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }
@@ -346,7 +346,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
 
   EntRef expected_lhs = Wildcard::Value;
   ExprSpec expected_rhs = PartialExpr{"x+y"};
-  REQUIRE(clause->declaration.equals(declarations[0]) == true);
+  REQUIRE(clause->declaration == declarations[0]);
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }

@@ -59,7 +59,14 @@ class SuchThatClause : public Clause {
   /*!
    * Functions to support hashing of clauses
    */
-  size_t Hash();
+  size_t Hash() override;
+
+  RelRefType GetRelRef() const override = 0;
+
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const SuchThatClause& lhs, const SuchThatClause& rhs);
 
  private:
   /*!
@@ -67,6 +74,4 @@ class SuchThatClause : public Clause {
    * Will throw QpsSemanticError if the clause is initialized with invalid arguments
    */
   virtual void Validate() = 0;
-
-  RelRefType GetRelRef() override = 0;
 };

@@ -16,7 +16,7 @@ class UsesS : public SuchThatClause {
   StmtRef lhs;
   EntRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::USESS;
   }
 
@@ -39,7 +39,7 @@ class UsesP : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::USESP;
   }
 

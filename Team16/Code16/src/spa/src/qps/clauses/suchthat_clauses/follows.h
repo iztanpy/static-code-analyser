@@ -14,7 +14,7 @@ class Follows : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::FOLLOWS;
   }
 
@@ -37,7 +37,7 @@ class FollowsT : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::FOLLOWST;
   }
 

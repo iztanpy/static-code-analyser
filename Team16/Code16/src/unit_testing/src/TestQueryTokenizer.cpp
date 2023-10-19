@@ -42,8 +42,8 @@ TEST_CASE("Test extract declarations") {
       {"v", DesignEntity::VARIABLE},
       {"a", DesignEntity::ASSIGN}
   };
-  REQUIRE(declarations[0].equals(expected_declarations[0]));
-  REQUIRE(declarations[1].equals(expected_declarations[1]));
+  REQUIRE(declarations[0] == expected_declarations[0]);
+  REQUIRE(declarations[1] == expected_declarations[1]);
 
   QpsSyntaxError invalid_entity_error = QpsSyntaxError("Design entity is not valid");
   QpsSyntaxError missing_synonym_error = QpsSyntaxError("Missing synonyms for design entity");

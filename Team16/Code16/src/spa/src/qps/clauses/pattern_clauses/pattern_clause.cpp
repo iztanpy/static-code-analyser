@@ -27,6 +27,15 @@ size_t AssignPattern::Hash() {
   return static_cast<size_t>(result);
 }
 
+bool operator==(const PatternClause& lhs, const PatternClause& rhs) {
+  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs;
+}
+
+bool PatternClause::equals(const Clause* other) const {
+  const auto* other_clause = dynamic_cast<const PatternClause*>(other);
+  return other_clause != nullptr && this == other_clause;
+}
+
 Constraint WhilePattern::Evaluate(ReadFacade& pkb_reader) {
   return Constraint();
 }
@@ -60,4 +69,14 @@ size_t PatternClause::Hash() {
   result = result * 31 + std::hash<Declaration>{}(declaration);
   result = result * 31 + std::hash<EntRef>{}(lhs);
   return static_cast<size_t>(result);
+}
+
+bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {
+  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs
+      && lhs.rhs == rhs.rhs;
+}
+
+bool AssignPattern::equals(const Clause* other) const {
+  const auto* other_clause = dynamic_cast<const AssignPattern*>(other);
+  return other_clause != nullptr && this == other_clause;
 }

@@ -36,13 +36,23 @@ class SelectClause : public Clause {
    * Gets the hash of this Select clause
    * @return the hash of this Select clause
    */
-  size_t Hash();
+  size_t Hash() override;
+
+  /*!
+   * Checks if this Select clause is equal to another clause
+   * @param other clauses of other types
+   * @return true if they are equal, else false
+   */
+  bool equals(const Clause* other) const override;
 
   /*!
   * Gets the RelRefType of this clause
   * @return
   */
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::SELECT;
   }
+
+  // Overloaded == operator
+  friend bool operator==(const SelectClause& lhs, const SelectClause& rhs);
 };

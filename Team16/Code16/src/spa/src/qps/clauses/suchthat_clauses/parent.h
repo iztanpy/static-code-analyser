@@ -14,7 +14,7 @@ class Parent : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::PARENT;
   }
 
@@ -37,7 +37,7 @@ class ParentT : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::PARENTT;
   }
 

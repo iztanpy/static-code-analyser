@@ -49,7 +49,12 @@ class PatternClause : public Clause {
   /*!
    * Functions to support hashing of clauses
    */
-  size_t Hash();
+  size_t Hash() override;
+
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const PatternClause& lhs, const PatternClause& rhs);
 
   ~PatternClause() override = default;
 
@@ -59,14 +64,14 @@ class PatternClause : public Clause {
    * Will throw QpsSemanticError if the clause is initialized with invalid arguments
    */
   virtual void Validate() = 0;
-  RelRefType GetRelRef() override = 0;
+  RelRefType GetRelRef() const override = 0;
 };
 
 class AssignPattern : public PatternClause {
  public:
   ExprSpec rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::ASSIGN;
   }
 
@@ -77,11 +82,16 @@ class AssignPattern : public PatternClause {
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
 
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const AssignPattern& lhs, const AssignPattern& rhs);
+
   /*!
    * Functions to support hashing of assign pattern
    * because it has an extra field ExprSpec
    */
-  size_t Hash();
+  size_t Hash() override;
 
  private:
   void Validate() override;
@@ -91,7 +101,7 @@ class WhilePattern : public PatternClause {
  public:
   using PatternClause::PatternClause;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::WHILE;
   }
 
@@ -105,7 +115,7 @@ class IfPattern : public PatternClause {
  public:
   using PatternClause::PatternClause;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::IF;
   }
 

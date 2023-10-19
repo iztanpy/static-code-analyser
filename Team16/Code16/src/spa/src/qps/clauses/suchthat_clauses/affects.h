@@ -10,7 +10,7 @@ class Affects : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::AFFECTS;
   }
 

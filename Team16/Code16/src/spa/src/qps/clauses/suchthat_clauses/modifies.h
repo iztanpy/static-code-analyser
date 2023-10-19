@@ -14,7 +14,7 @@ class ModifiesP : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::MODIFIESP;
   }
 
@@ -37,7 +37,7 @@ class ModifiesS : public SuchThatClause {
   StmtRef lhs;
   EntRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::MODIFIESS;
   }
 

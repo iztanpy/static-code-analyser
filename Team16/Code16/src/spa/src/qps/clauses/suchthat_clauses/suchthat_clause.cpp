@@ -39,7 +39,7 @@ bool SuchThatClause::are_stmt_ref_equal(const RefParam& param_1, const RefParam&
     if (are_stmt_decl(stmt_ref_1, stmt_ref_2)) {
       Declaration decl_1 = std::get<Declaration>(stmt_ref_1);
       Declaration decl_2 = std::get<Declaration>(stmt_ref_2);
-      return decl_1.equals(decl_2);
+      return decl_1 == decl_2;
     } else if (are_stmt_wildcard(stmt_ref_1, stmt_ref_2)) {
       return true;
     } else {
@@ -59,7 +59,7 @@ bool SuchThatClause::are_ent_ref_equal(const RefParam& param_1, const RefParam& 
     if (are_ent_decl(ent_ref_1, ent_ref_2)) {
       Declaration decl_1 = std::get<Declaration>(ent_ref_1);
       Declaration decl_2 = std::get<Declaration>(ent_ref_2);
-      return decl_1.equals(decl_2);
+      return decl_1 == decl_2;
     } else if (are_ent_wildcard(ent_ref_1, ent_ref_2)) {
       return true;
     } else {
@@ -101,4 +101,13 @@ size_t SuchThatClause::Hash() {
   result = result * 31 + std::hash<RefParam>{}(lhs);
   result = result * 31 + std::hash<RefParam>{}(rhs);
   return static_cast<size_t>(result);
+}
+
+bool operator==(const SuchThatClause& lhs, const SuchThatClause& rhs) {
+  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.lhs == rhs.lhs && lhs.rhs == rhs.rhs;
+}
+
+bool SuchThatClause::equals(const Clause* other) const {
+  const auto* other_clause = dynamic_cast<const SuchThatClause*>(other);
+  return other_clause != nullptr && this == other_clause;
 }

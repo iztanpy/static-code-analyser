@@ -14,7 +14,7 @@ class Calls : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::CALLS;
   }
 
@@ -37,7 +37,7 @@ class CallsT : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
-  RelRefType GetRelRef() override {
+  RelRefType GetRelRef() const override {
     return RelRefType::CALLST;
   }
 
