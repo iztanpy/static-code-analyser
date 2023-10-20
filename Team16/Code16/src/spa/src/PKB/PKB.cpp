@@ -114,9 +114,12 @@ void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<varia
         if (usesMapWithCall.find(x.first) == usesMapWithCall.end()) {
             usesMapWithCall[x.first] = x.second;
         }
+    }
+
+    for (auto const& x : usesMapWithCall) {
         auto parents = parentStore->getParents(x.first);
-        for (auto const& y : parents) {
-            usesMapWithCall[y].insert(x.second.begin(), x.second.end());
+        for (auto parent : parents) {
+            usesMapWithCall[parent].insert(x.second.begin(), x.second.end());
         }
     }
     usesStore->storeUses(usesMapWithCall);
@@ -208,9 +211,12 @@ void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifie
 
     for (auto const& x : varModifiesMap) {
         ModifiesMapWithCall[x.first].insert(x.second);
+    }
+
+    for (auto const& x : ModifiesMapWithCall) {
         auto parents = parentStore->getParents(x.first);
-        for (auto const& y : parents) {
-            ModifiesMapWithCall[y].insert(x.second);
+        for (auto parent : parents) {
+            ModifiesMapWithCall[parent].insert(x.second.begin(), x.second.end());
         }
     }
     modifiesStore->storeModifies(ModifiesMapWithCall);
