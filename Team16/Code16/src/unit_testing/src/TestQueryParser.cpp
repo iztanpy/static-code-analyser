@@ -286,7 +286,7 @@ TEST_CASE("Parser can parse multiple pattern clauses") {
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
   expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x"));
-  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "y", PartialExpr{"x+y"}));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "y", PartialExpr{"((x)+(y))"}));
   expected_clauses.insert(std::make_unique<IfPattern>(declarations[2], "z"));
 
   REQUIRE(parsed_query.selects == expected_selects);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <stack>
 #include <sstream>
 #include <vector>
 #include <unordered_set>
@@ -22,6 +23,13 @@ class QueryUtil {
    * @return True if string is a synonym, else false
    */
   static bool IsSynonym(const std::string & s);
+
+  /*!
+   * Checks if a given character is an operator
+   * @param s is the input character
+   * @return True if string is an operator, else false
+   */
+  static bool IsOperator(const char & s);
 
   /*!
    * Checks if a given string is a statement reference
@@ -167,6 +175,33 @@ class QueryUtil {
    * @return The expression between the brackets
    */
   static std::string RemoveBrackets(const std::string & s);
+
+  /*!
+   * Assigns a precedence to operators
+   * @param op
+   * @return the precedence
+   */
+  static int getPrecedence(char op);
+/*!
+ * Assigns a precedence to operators
+ * @param op1, op2 are operations to be compared
+ * @return true if op1 has precedence over op2
+ */
+  static bool hasPrecedence(char op1, char op2);
+
+  /*!
+   * Reorder the operators and operands based on priority of operators
+   * @param operators stack of operators
+   * @param operands stack of operands
+   */
+  static void processOperator(std::stack<char>& operators, std::stack<std::string>& operands);
+
+  /*!
+   * Adds parentheses for expression matching
+   * @param expression for parentheses to be added
+   * @return expression with parentheses
+   */
+  static std::string addParentheses(const std::string& expression);
 
   /*!
    * Get the expression between the brackets
