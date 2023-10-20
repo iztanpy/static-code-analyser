@@ -1,0 +1,15 @@
+2 - select all while stmts
+while w;
+Select w pattern w(_,_)
+1,2,15
+5000
+4 - select while stmts and variable pair
+while w;variable v;
+Select <w, v.varName> pattern w(v,_)
+1 x, 2 y, 15 x
+5000
+6 - select while stmts with given var
+if ifs; while w;
+Select w pattern w("x",_)
+1, 15
+5000
