@@ -72,7 +72,7 @@ class WriteFacade {
     *
     * @param varModifiesMap An unordered map of statement numbers to variables that are modified.
     */
-    void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
+    void storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap);
 
     /**
     * @brief Stores constant information in the program.

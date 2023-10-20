@@ -198,7 +198,7 @@ class ReadFacade {
   * @param variableName The variable to check for modification.
   * @return true if the statement modifies the variable, false otherwise.
   */
-  bool isModifies(statementNumber lineNumber, variable variableName);
+  bool isRelation(statementNumber lineNumber, variable variableName);
 
   /**
   * @brief Checks if any statement with the given line number modifies a variable that matches a wildcard pattern.
@@ -209,7 +209,7 @@ class ReadFacade {
   * @param wildcard A wildcard pattern to match against variables modified in the statement.
   * @return true if the statement modifies a matching variable, false otherwise.
   */
-  bool isModifies(statementNumber lineNumber, Wildcard wildcard);
+  bool isRelation(statementNumber lineNumber, Wildcard wildcard);
 
   /**
   * @brief Retrieves a set of variables modified in a specific statement with the given line number.
@@ -219,7 +219,7 @@ class ReadFacade {
   * @param line The line number of the statement to analyze.
   * @return An unordered set of variables modified in the statement.
   */
-  std::unordered_set<variable> modifies(statementNumber line);
+  std::unordered_set<variable> relates(statementNumber line);
 
   /**
   * @brief Retrieves a set of statements of a specific type that modify a particular variable.
@@ -230,7 +230,7 @@ class ReadFacade {
   * @param variableName The variable to check for modification in the specified statement type.
   * @return An unordered set of statement numbers where the specified type modifies the variable.
   */
-  std::unordered_set<statementNumber> modifies(StmtEntity type, variable variableName);
+  std::unordered_set<statementNumber> relates(StmtEntity type, variable variableName);
 
   /**
   * @brief Retrieves a set of statements of a specific type that modify a variable matching a wildcard pattern.
@@ -241,7 +241,7 @@ class ReadFacade {
   * @param wildcard A wildcard pattern to match against variables modified in the specified statement type.
   * @return An unordered set of statement numbers where the specified type modifies a matching variable.
   */
-  std::unordered_set<statementNumber> modifies(StmtEntity type, Wildcard wildcard);
+  std::unordered_set<statementNumber> relates(StmtEntity type, Wildcard wildcard);
 
   /**
   * @brief Retrieves pairs of statement numbers and variables for statements of a specific type that modify variables.
@@ -252,19 +252,19 @@ class ReadFacade {
   * @return An unordered set of pairs containing statement numbers and variables modified in the specified statement type.
   */
 
-  bool isModifies(procedure procedure, Wildcard wildcard);
+  bool isRelation(procedure procedure, Wildcard wildcard);
 
-  std::unordered_set<variable> modifies(procedure procedure);
+  std::unordered_set<variable> relates(procedure procedure);
 
-  bool isModifies(procedure procedure, variable variableName);
+  bool isRelation(procedure procedure, variable variableName);
 
-  std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
+  std::unordered_set<procedure> relatesProcedure(Wildcard wildcard);
 
-  std::unordered_set<procedure> modifiesProcedure(variable variableName);
+  std::unordered_set<procedure> relatesProcedure(variable variableName);
 
-  std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
+  std::unordered_set<std::pair<procedure, variable>, PairHash> relatesProcedure();
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> relates(StmtEntity type);
 
   // ConstantStore methods
 

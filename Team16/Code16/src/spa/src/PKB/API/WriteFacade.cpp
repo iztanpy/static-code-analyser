@@ -26,7 +26,7 @@ void WriteFacade::storeProcedures(std::set<std::string> procedures) {
 void WriteFacade::storeProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures) {
     pkb.addProcedures(procedures);
     pkb.storeUsesProcedures(procedures, pkb.getCallStar());
-    pkb.storeModifiesProcedures(procedures, pkb.getCallStar());
+    pkb.storeRelationProcedures(procedures, pkb.getCallStar());
 }
 
 void WriteFacade::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
@@ -54,12 +54,12 @@ void WriteFacade::storeCalls(std::unordered_map<procedure, std::unordered_set<pr
 }
 
 void WriteFacade::storeCallStatements(std::unordered_map<statementNumber, procedure> callStatements) {
-    pkb.storeModifiesCalls(callStatements);
+    pkb.storeRelationCalls(callStatements);
     pkb.storeUsesCalls(callStatements);
 }
 
-void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
-    pkb.storeModifies(varModifiesMap);
+void WriteFacade::storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap) {
+    pkb.storeRelation(varModifiesMap);
 }
 
 void WriteFacade::storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {

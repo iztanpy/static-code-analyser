@@ -355,43 +355,43 @@ TEST_CASE("Test modifies stores") {
 
   pkb.storeParent({{1, {2, 3}}});
 
-  pkb.storeModifies({{1, "x"}, {2, "y"}, {3, "x"}});
+  pkb.storeRelation({{1, "x"}, {2, "y"}, {3, "x"}});
 
-  REQUIRE(pkb.isModifies(1, "x"));
-  REQUIRE(pkb.isModifies(2, "y"));
-  REQUIRE(pkb.isModifies(3, "x"));
-  REQUIRE(pkb.isModifies(1, "y"));
-  REQUIRE(!pkb.isModifies(2, "x"));
+  REQUIRE(pkb.isRelation(1, "x"));
+  REQUIRE(pkb.isRelation(2, "y"));
+  REQUIRE(pkb.isRelation(3, "x"));
+  REQUIRE(pkb.isRelation(1, "y"));
+  REQUIRE(!pkb.isRelation(2, "x"));
 
   Wildcard wildcard = Wildcard();
 
-  REQUIRE(pkb.isModifies(1, wildcard));
-  REQUIRE(pkb.isModifies(2, wildcard));
-  REQUIRE(pkb.isModifies(3, wildcard));
-  REQUIRE(!pkb.isModifies(4, wildcard));
+  REQUIRE(pkb.isRelation(1, wildcard));
+  REQUIRE(pkb.isRelation(2, wildcard));
+  REQUIRE(pkb.isRelation(3, wildcard));
+  REQUIRE(!pkb.isRelation(4, wildcard));
 
   // store StmtEntity
   pkb.addStatements({{1, StmtEntity::kAssign},
                      {2, StmtEntity::kAssign},
                      {3, StmtEntity::kRead}});
 
-  REQUIRE(pkb.modifies(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.modifies(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>{2, 1});
-  REQUIRE(pkb.modifies(StmtEntity::kRead, "x") == std::unordered_set<statementNumber>{3});
-  REQUIRE(pkb.modifies(StmtEntity::kRead, "y") == std::unordered_set<statementNumber>{});
+  REQUIRE(pkb.relates(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>{1});
+  REQUIRE(pkb.relates(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>{2, 1});
+  REQUIRE(pkb.relates(StmtEntity::kRead, "x") == std::unordered_set<statementNumber>{3});
+  REQUIRE(pkb.relates(StmtEntity::kRead, "y") == std::unordered_set<statementNumber>{});
 
-  REQUIRE(pkb.modifies(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>{1, 2});
-  REQUIRE(pkb.modifies(StmtEntity::kRead, wildcard) == std::unordered_set<statementNumber>{3});
-  REQUIRE(pkb.modifies(StmtEntity::kIf, wildcard) == std::unordered_set<statementNumber>{});
+  REQUIRE(pkb.relates(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>{1, 2});
+  REQUIRE(pkb.relates(StmtEntity::kRead, wildcard) == std::unordered_set<statementNumber>{3});
+  REQUIRE(pkb.relates(StmtEntity::kIf, wildcard) == std::unordered_set<statementNumber>{});
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.modifies(StmtEntity::kAssign);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.relates(StmtEntity::kAssign);
 
   for (auto value : result) {
     REQUIRE((value.first == 1 || value.first == 2));
     REQUIRE((value.second == "x" || value.second == "y"));
   }
 
-  result = pkb.modifies(StmtEntity::kRead);
+  result = pkb.relates(StmtEntity::kRead);
 
   for (auto value : result) {
     REQUIRE((value.first == 3));
