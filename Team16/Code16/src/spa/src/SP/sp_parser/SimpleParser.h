@@ -37,6 +37,7 @@ class SimpleParser : public Parser {
     ParserFactory* factory = new ParserFactory(visitor);
     Parser* parser;
     void populatePKB();
+    void checkCalls();
 
  public:
     explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);

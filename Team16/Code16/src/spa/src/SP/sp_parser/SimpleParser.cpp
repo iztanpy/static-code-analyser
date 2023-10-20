@@ -24,8 +24,20 @@ int SimpleParser::parse(std::vector<Token>& tokens) {
         parser = factory->createParser(curr_token->tokenType, lineNumber, index);
         parser->start_parse(tokens, index);
     }
+    checkCalls();
     populatePKB();
     return index;
+}
+
+void SimpleParser::checkCalls() {
+    for (const auto& callerCallee : visitor->getCallerCalleeHashmap()) {
+        const std::unordered_set<std::string>& calleeSet = callerCallee.second;
+        for (const std::string& callee : calleeSet) {
+            if (visitor->getProcedureLabels().find(callee) == visitor->getProcedureLabels().end()) {
+                throw InvalidSemanticError();
+            }
+        }
+    }
 }
 
 void SimpleParser::populatePKB() {
@@ -47,6 +59,10 @@ void SimpleParser::populatePKB() {
   writeFacade->storeProcedures(visitor->getProcedureLineNumberHashmap());
   // Store call statements and the procedures they call
   writeFacade->storeCallStatements(visitor->getCallStatementNumberEntityHashmap());
+  std::cout << "Call statement size: " << visitor->getCallStatementNumberEntityHashmap().size() << std::endl;
+  for (auto& i : visitor->getCallStatementNumberEntityHashmap()) {
+      std::cout << "Call statement: " << i.first << " calls procedure: " << i.second << std::endl;
+  }
   // Store Follows <line, line>
   writeFacade->storeFollows(visitor->getFollowStatementNumberMap());
   // Store Variables <all var in LHS and RHS>

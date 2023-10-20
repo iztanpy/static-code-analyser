@@ -1036,7 +1036,6 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(node19->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({18}));
 }
 
-
 TEST_CASE(("Test SP: nested if/while CFG storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
@@ -1341,6 +1340,15 @@ TEST_CASE(("Test SP Control Variable storage")) {
 //    WriteFacade writeFacade(*pkb_ptr);
 //    SourceProcessor sourceProcessor(&writeFacade);
 //    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; } procedure p { x = x + 1; x = x + 2; x = x + 3; }";
+//    sourceProcessor.processSource(simpleProgram3);
+//    // check std log to see if error is logged
+//    REQUIRE(1 == 1);
+//}
+//TEST_CASE("Test Calling Non-existent Procedure") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = "procedure one { x = x + 2; call two; } procedure two { call one; call q; }";
 //    sourceProcessor.processSource(simpleProgram3);
 //    // check std log to see if error is logged
 //    REQUIRE(1 == 1);
