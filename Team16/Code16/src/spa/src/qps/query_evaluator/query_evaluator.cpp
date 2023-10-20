@@ -4,8 +4,8 @@ QueryEvaluator::QueryEvaluator(ReadFacade& pkb) : pkb(pkb) {}
 
 std::unordered_set<std::string> BlankResult(bool is_boolean_select) {
   return (is_boolean_select) ?
-         std::unordered_set < std::string > {"False"}
-                             : std::unordered_set < std::string > {};
+         std::unordered_set<std::string>{"False"}
+                             : std::unordered_set<std::string>{};
 }
 
 std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
@@ -13,21 +13,18 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
 
   ClauseGrouper clause_grouper;
 
-  while (!query.clauses.empty()) {
-    auto clause = query.clauses.begin();
-
-    bool is_boolean_clause = (*clause)->GetSynonyms().empty();
+  for (auto& clause_ptr : query.clauses) {
+    bool is_boolean_clause = clause_ptr->GetSynonyms().empty();
     if (is_boolean_clause) {
       // Evaluate boolean clauses
-      bool result = std::get<bool>((*clause)->Evaluate(pkb));
+      bool result = std::get<bool>(clause_ptr->Evaluate(pkb));
       if (!result) {
         return BlankResult(is_boolean_select);
       }
     } else {
       // Add non-boolean clauses to constraint table
-      clause_grouper.addClause(std::move(const_cast<std::unique_ptr<Clause>&>(*clause)));
+      clause_grouper.addClause(std::move(const_cast<std::unique_ptr<Clause>&>(clause_ptr)));
     }
-    query.clauses.erase(clause);
   }
 
   std::vector<ClauseGroup> clause_groups = clause_grouper.GetClauseGroupOrder();
@@ -47,6 +44,6 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
   }
 
   // If we reach here, meaning we will get non-blank result
-  return (is_boolean_select) ? std::unordered_set < std::string > {"True"}
+  return (is_boolean_select) ? std::unordered_set<std::string>{"True"}
                              : aggregate_table.Select(query.selects);
 }
