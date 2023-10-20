@@ -141,24 +141,24 @@ TEST_CASE("TEST SP-PKB Connection 2") {
     REQUIRE((!readFacade.isUses("q", "c")));
     REQUIRE((readFacade.isUses("q", "m")));
 
-    REQUIRE((readFacade.relates("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
-    REQUIRE((readFacade.relates("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
-    REQUIRE((readFacade.relates("q") == std::unordered_set<variable>({ "m" })));
+    REQUIRE((readFacade.modifies("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
+    REQUIRE((readFacade.modifies("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
+    REQUIRE((readFacade.modifies("q") == std::unordered_set<variable>({ "m" })));
 
     REQUIRE((readFacade.uses("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
     REQUIRE((readFacade.uses("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
     REQUIRE((readFacade.uses("q") == std::unordered_set<variable>({ "m" })));
 
-    REQUIRE((readFacade.relatesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
+    REQUIRE((readFacade.modifiesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
     REQUIRE((readFacade.usesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
 
-    REQUIRE((readFacade.relatesProcedure("x") == std::unordered_set<procedure>({ "main" })));
+    REQUIRE((readFacade.modifiesProcedure("x") == std::unordered_set<procedure>({ "main" })));
     REQUIRE((readFacade.usesProcedure("x") == std::unordered_set<procedure>({ "main" })));
 
-    REQUIRE((readFacade.relatesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
+    REQUIRE((readFacade.modifiesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
     REQUIRE((readFacade.usesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
 
-    REQUIRE((readFacade.relatesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
+    REQUIRE((readFacade.modifiesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
     REQUIRE((readFacade.usesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
 }
 
@@ -252,10 +252,10 @@ TEST_CASE("Test Calls ") {
     REQUIRE(readFacade.isModifies(5, "j"));
     REQUIRE(readFacade.isModifies(6, "j"));
     StmtEntity call = StmtEntity::kCall;
-    REQUIRE(readFacade.relates(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
+    REQUIRE(readFacade.modifies(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
     REQUIRE(pkb_ptr->getStatements(StmtEntity::kStmt) == std::unordered_set<statementNumber>({ 1, 2, 3, 4, 5, 6 }));
     REQUIRE(pkb_ptr->getStatements(call) == std::unordered_set<statementNumber>({ 3, 5}));
-    REQUIRE(readFacade.relates(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
+    REQUIRE(readFacade.modifies(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
 
 }
 
@@ -325,9 +325,9 @@ TEST_CASE("Test SP-PKB connection") {
 
     REQUIRE(readFacade.getVariables() == std::unordered_set<variable>({ "x", "z", "I", "y" }));
 
-    REQUIRE(readFacade.relates(1) == std::unordered_set<variable>({ "x" }));
-    REQUIRE(readFacade.relates(2) == std::unordered_set<variable>({ "x" }));
-    REQUIRE(readFacade.relates(3) == std::unordered_set<variable>({ "y" }));
+    REQUIRE(readFacade.modifies(1) == std::unordered_set<variable>({ "x" }));
+    REQUIRE(readFacade.modifies(2) == std::unordered_set<variable>({ "x" }));
+    REQUIRE(readFacade.modifies(3) == std::unordered_set<variable>({ "y" }));
 
     REQUIRE(readFacade.uses(1) == std::unordered_set<variable>({ "z", "I" }));
     REQUIRE(readFacade.uses(2) == std::unordered_set<variable>({ "x" }));

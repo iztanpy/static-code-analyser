@@ -107,15 +107,15 @@ bool ReadFacade::isModifies(statementNumber lineNumber, Wildcard wildcard) {
     return pkb.isRelation(lineNumber, wildcard);
 }
 
-std::unordered_set<variable> ReadFacade::relates(statementNumber line) {
+std::unordered_set<variable> ReadFacade::modifies(statementNumber line) {
     return pkb.relates(line);
 }
 
-std::unordered_set<statementNumber> ReadFacade::relates(StmtEntity type, variable variableName) {
+std::unordered_set<statementNumber> ReadFacade::modifies(StmtEntity type, variable variableName) {
     return pkb.relates(type, variableName);
 }
 
-std::unordered_set<statementNumber> ReadFacade::relates(StmtEntity type, Wildcard wildcard) {
+std::unordered_set<statementNumber> ReadFacade::modifies(StmtEntity type, Wildcard wildcard) {
     return pkb.relates(type, wildcard);
 }
 
@@ -123,7 +123,7 @@ bool ReadFacade::isModifies(procedure procedure, Wildcard wildcard) {
     return pkb.isRelation(procedure, wildcard);
 }
 
-std::unordered_set<variable> ReadFacade::relates(procedure procedure) {
+std::unordered_set<variable> ReadFacade::modifies(procedure procedure) {
     return pkb.relates(procedure);
 }
 
@@ -131,19 +131,19 @@ bool ReadFacade::isModifies(procedure procedure, variable variableName) {
     return pkb.isRelation(procedure, variableName);
 }
 
-std::unordered_set<procedure> ReadFacade::relatesProcedure(Wildcard wildcard) {
+std::unordered_set<procedure> ReadFacade::modifiesProcedure(Wildcard wildcard) {
     return pkb.relatesProcedure(wildcard);
 }
 
-std::unordered_set<procedure> ReadFacade::relatesProcedure(variable variableName) {
+std::unordered_set<procedure> ReadFacade::modifiesProcedure(variable variableName) {
     return pkb.relatesProcedure(variableName);
 }
 
-std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::relatesProcedure() {
+std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::modifiesProcedure() {
     return pkb.relatesProcedure();
 }
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::relates(StmtEntity type) {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::modifies(StmtEntity type) {
     return pkb.relates(type);
 }
 

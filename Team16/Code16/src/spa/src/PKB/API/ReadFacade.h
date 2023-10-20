@@ -219,7 +219,7 @@ class ReadFacade {
   * @param line The line number of the statement to analyze.
   * @return An unordered set of variables modified in the statement.
   */
-  std::unordered_set<variable> relates(statementNumber line);
+  std::unordered_set<variable> modifies(statementNumber line);
 
   /**
   * @brief Retrieves a set of statements of a specific type that modify a particular variable.
@@ -230,7 +230,7 @@ class ReadFacade {
   * @param variableName The variable to check for modification in the specified statement type.
   * @return An unordered set of statement numbers where the specified type modifies the variable.
   */
-  std::unordered_set<statementNumber> relates(StmtEntity type, variable variableName);
+  std::unordered_set<statementNumber> modifies(StmtEntity type, variable variableName);
 
   /**
   * @brief Retrieves a set of statements of a specific type that modify a variable matching a wildcard pattern.
@@ -241,7 +241,7 @@ class ReadFacade {
   * @param wildcard A wildcard pattern to match against variables modified in the specified statement type.
   * @return An unordered set of statement numbers where the specified type modifies a matching variable.
   */
-  std::unordered_set<statementNumber> relates(StmtEntity type, Wildcard wildcard);
+  std::unordered_set<statementNumber> modifies(StmtEntity type, Wildcard wildcard);
 
   /**
   * @brief Retrieves pairs of statement numbers and variables for statements of a specific type that modify variables.
@@ -254,17 +254,17 @@ class ReadFacade {
 
   bool isModifies(procedure procedure, Wildcard wildcard);
 
-  std::unordered_set<variable> relates(procedure procedure);
+  std::unordered_set<variable> modifies(procedure procedure);
 
   bool isModifies(procedure procedure, variable variableName);
 
-  std::unordered_set<procedure> relatesProcedure(Wildcard wildcard);
+  std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
 
-  std::unordered_set<procedure> relatesProcedure(variable variableName);
+  std::unordered_set<procedure> modifiesProcedure(variable variableName);
 
-  std::unordered_set<std::pair<procedure, variable>, PairHash> relatesProcedure();
+  std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> relates(StmtEntity type);
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
 
   // ConstantStore methods
 
