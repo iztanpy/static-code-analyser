@@ -19,7 +19,10 @@ enum class PQLTokenType {
   INTEGER,
   IDENT,
   PARTIALEXPR,
-  EXACTEXPR
+  EXACTEXPR,
+  SELECT_SINGLE,
+  SELECT_MULTIPLE,
+  SELECT_BOOLEAN
 };
 
 struct QueryToken {
@@ -46,6 +49,11 @@ enum class ClauseEnum {
   NONE
 };
 
+enum class SelectValueType {
+  SINGLE,
+  MUTLIPLE,
+};
+
 class QueryTokenizer {
  public:
   /*!
@@ -53,7 +61,7 @@ class QueryTokenizer {
    * @param query the string query
    * @return a TokenisedQuery
    */
-  static TokenisedQuery tokenize(const std::string& query);
+  static TokenisedQuery tokenize(const std::string & query);
 
   /*!
    * Splits sanitized query into declarations and select statements
@@ -67,7 +75,7 @@ class QueryTokenizer {
    * @param declaration_statements vector of strings to be extracted
    * @return vector of declarations
    */
-  static std::vector<Declaration> extractDeclarations(const std::vector<std::string>& declaration_statements);
+  static std::vector<Declaration> extractDeclarations(const std::vector<std::string> & declaration_statements);
 
   /*!
    * Extracts a vector of QueryTokens from select statement
@@ -75,15 +83,22 @@ class QueryTokenizer {
    * @param declarations vector of declarations
    * @return a vector of QueryTokens relevant to Select clause
    */
-  static std::vector<QueryToken> extractSelectToken(std::string& select_statement,
-                                                    std::vector<Declaration>& declarations);
+  static std::vector<QueryToken> extractSelectToken(std::string & select_statement,
+                                                    std::vector<Declaration> & declarations);
+
+  /*!
+ * Returns the starting index of the first clause
+ * @param remaining_statement is the trimmed statement from select statement
+ * @return starting index for the first clause
+ */
+  static size_t getFirstClauseIndexes(const std::string & remaining_statement);
 
   /*!
    * Returns the starting indexes of clauses
    * @param remaining_statement is the trimmed statement from select statement
    * @return a vector of starting indexes for such that and pattern clauses
    */
-  static std::vector<size_t> getClauseIndexes(const std::string& remaining_statement);
+  static std::vector<size_t> getClauseIndexes(const std::string & remaining_statement);
 
   /*!
    * Checks if the clause is able to be a such that clause or pattern clause
@@ -91,15 +106,15 @@ class QueryTokenizer {
    * @param regexPattern a regex pattern specific to such that or pattern clause
    * @return true if clause matches a such that clause or pattern clause, else false
    */
-  static bool clauseMatch(std::string& clause, const std::regex& regexPattern);
+  static bool clauseMatch(std::string & clause, const std::regex & regexPattern);
   /*!
    * Returns the LHS and RHS of relationship reference query as a pair
    * @param clause is the trimmed string from a relationship reference
    * @param declarations is the set of declared entities
    * @return the LHS and RHS as a pair
    */
-  static std::pair<QueryToken, QueryToken> getRelRefArgs(std::string& clause,
-                                                         std::vector<Declaration>& declarations);
+  static std::pair<QueryToken, QueryToken> getRelRefArgs(std::string & clause,
+                                                         std::vector<Declaration> & declarations);
 
   /*!
    * Returns the LHS and RHS of pattern clause
@@ -108,8 +123,8 @@ class QueryTokenizer {
    * @param pattern_type
    * @return the LHS and RHS as a pair
    */
-  static std::pair<QueryToken, QueryToken> getPatternArgs(std::string& clause,
-                                                          std::vector<Declaration>& declarations,
+  static std::pair<QueryToken, QueryToken> getPatternArgs(std::string & clause,
+                                                          std::vector<Declaration> & declarations,
                                                           PQLTokenType pattern_type);
 
   /*!
@@ -117,7 +132,7 @@ class QueryTokenizer {
    * @param pattern_syn to be checked
    * @return SYNONYM if it is an assign synonym, PATTERN_WHILE if it is 'while', PATTERN_IF if it is 'if'
    */
-  static PQLTokenType getPatternTokenType(std::string& pattern_syn, std::vector<Declaration>& declarations);
+  static PQLTokenType getPatternTokenType(std::string & pattern_syn, std::vector<Declaration> & declarations);
 
   /*!
    * Returns the query tokens of such that and pattern clauses
@@ -127,7 +142,7 @@ class QueryTokenizer {
    */
   static std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
   extractClauseTokens(std::string select_statement,
-                      std::vector<Declaration>& declarations);
+                      std::vector<Declaration> & declarations);
 
   /*!
    * Processes a such that clause
@@ -135,7 +150,7 @@ class QueryTokenizer {
    * @param declarations set of declared entities
    * @return a vector of such that tokens
    */
-  static std::vector<QueryToken> processSuchThatClause(std::string clause, std::vector<Declaration>& declarations);
+  static std::vector<QueryToken> processSuchThatClause(std::string clause, std::vector<Declaration> & declarations);
 
   /*!
    * Processes a pattern clause
@@ -143,5 +158,19 @@ class QueryTokenizer {
    * @param declarations set of declared entities
    * @return a vector of pattern tokens
    */
-  static std::vector<QueryToken> processPatternClause(std::string clause, std::vector<Declaration>& declarations);
+  static std::vector<QueryToken> processPatternClause(std::string clause, std::vector<Declaration> & declarations);
+
+  /*!
+   * Gets the select value type from a select clause
+   * @param select_value is the string to be processed
+   * @return the select value type
+   */
+  static SelectValueType getSelectValueType(const std::string& select_value);
+
+  /*!
+   * Removes the select clause from remaining clauses
+   * @param remaining_statement is string to be processed
+   * @return the trimmed string
+   */
+  static std::string removeSelectClause(const std::string& remaining_statement);
 };

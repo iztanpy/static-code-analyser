@@ -5,6 +5,7 @@
 #include "qps/query_parser/clause_builder/clause_director.h"
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
+#include "QueryUtil.h"
 
 ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
   ParsedQuery parsedQuery;
@@ -17,10 +18,6 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
   ClauseSet clauses;
   std::vector<Synonym> selects;
 
-  /* For now, we only have one synonym for select clause
-   * hence we can just return the first value of the vector
-   * - open to extensions in the future
-   */
   if (!selectTokens.empty()) {
     std::vector<std::unique_ptr<Clause>> selectClauses = ExtractSelectClauses(selectTokens, declarations);
 
@@ -49,6 +46,12 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
 std::vector<std::unique_ptr<Clause>> QueryParser::ExtractSelectClauses(const std::vector<QueryToken>& selectTokens,
                                                                        const std::vector<Declaration>& declarations) {
   std::vector<std::unique_ptr<Clause>> selectClauses;
+  // If it is select BOOLEAN, return empty select clause
+  if (selectTokens.size() == 1) {
+    if (QueryUtil::IsSelectBoolean(selectTokens[0].text, declarations)) {
+      return selectClauses;
+    }
+  }
   // invoke builder design pattern
   for (const QueryToken& token : selectTokens) {
     SelectClauseBuilder builder;

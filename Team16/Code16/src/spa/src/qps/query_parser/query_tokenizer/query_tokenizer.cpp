@@ -60,16 +60,81 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
   return declarations;
 }
 
+size_t QueryTokenizer::getFirstClauseIndexes(const std::string& remaining_statement) {
+  std::vector<size_t> indexes;
+  std::vector<std::regex> rgxVector = {
+      qps_constants::kSuchThatClauseRegex,
+      qps_constants::kPatternClauseRegex,
+      qps_constants::kAndClauseRegex,
+      qps_constants::kOnlySuchThat,
+      qps_constants::kOnlyPattern,
+      qps_constants::kOnlyAnd
+  };
+
+  for (const auto& rgx : rgxVector) {
+    // Create an iterator that will search for matches in the input string
+    std::sregex_iterator it(remaining_statement.begin(), remaining_statement.end(), rgx);
+    std::sregex_iterator end;
+
+    // Iterate over matches and store their starting positions
+    while (it != end) {
+      if (std::find(indexes.begin(), indexes.end(), it->position()) == indexes.end()) {
+        return it->position();
+      }
+      ++it;
+    }
+  }
+  return remaining_statement.length();  // push back to avoid out of range error
+}
+
+SelectValueType QueryTokenizer::getSelectValueType(const std::string& select_value) {
+  if (QueryUtil::IsSynonym(select_value)) {
+    return SelectValueType::SINGLE;
+  } else if (QueryUtil::IsEnclosedInTuple(select_value)) {
+    return SelectValueType::MUTLIPLE;
+  } else {
+    throw QpsSyntaxError("Invalid select clause");
+  }
+}
+
+std::vector<QueryToken> processSelectClause(std::string& select_statement, SelectValueType select_value_type) {
+  std::vector<QueryToken> results;
+  std::string select_with_tuple_removed;
+  std::vector<std::string> tuple_arguments;
+  switch (select_value_type) {
+    case SelectValueType::SINGLE:
+      results.push_back({select_statement, PQLTokenType::SYNONYM});
+      break;
+    case SelectValueType::MUTLIPLE:
+      select_with_tuple_removed = QueryUtil::RemoveTuple(select_statement);
+      tuple_arguments = string_util::SplitStringBy(',', select_with_tuple_removed);
+      for (const std::string& tuple_argument : tuple_arguments) {
+        results.push_back({tuple_argument, PQLTokenType::SYNONYM});
+      }
+      break;
+    default:
+      throw QpsSyntaxError("Invalid select clause");
+  }
+  return results;
+}
+
 std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string& select_statement,
                                                            std::vector<Declaration>& declarations) {
   std::vector<QueryToken> select_tokens;
   qps_validator::ValidateSelectStatement(select_statement);
   // remove the Select keyword
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
+  size_t first_clause_index = getFirstClauseIndexes(remaining_statement);
+  std::string select_value = string_util::Trim(remaining_statement.substr(0, first_clause_index));
+  SelectValueType select_value_type = getSelectValueType(select_value);
+  qps_validator::ValidateSelectValue(select_value, select_value_type, declarations);
   // then extract the synonym after 'Select'
-  std::string select_synonym = string_util::GetFirstWord(remaining_statement);
-  qps_validator::ValidateSelectSynonym(select_synonym, declarations);
-  select_tokens.push_back({select_synonym, PQLTokenType::SYNONYM});
+//  std::string select_synonym = string_util::GetFirstWord(remaining_statement);
+//  qps_validator::ValidateSelectSynonym(select_synonym, declarations);
+  std::vector<QueryToken> select_query_tokens = processSelectClause(select_value, select_value_type);
+  for (const QueryToken& token : select_query_tokens) {
+    select_tokens.push_back(token);
+  }
   return select_tokens;
 }
 
@@ -242,6 +307,12 @@ std::vector<QueryToken> QueryTokenizer::processPatternClause(std::string clause_
   return result;
 }
 
+std::string QueryTokenizer::removeSelectClause(const std::string& remaining_statement) {
+  size_t first_clause_index = getFirstClauseIndexes(remaining_statement);
+  std::string clauses = string_util::Trim(remaining_statement.substr(first_clause_index, remaining_statement.length()));
+  return clauses;
+}
+
 std::pair<std::vector<QueryToken>,
           std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::string select_statement,
                                                                        std::vector<Declaration>& declarations) {
@@ -250,7 +321,8 @@ std::pair<std::vector<QueryToken>,
   // remove the Select keyword (guaranteed to exist since we already checked)
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
   // remove the Select synonym
-  remaining_statement = string_util::RemoveFirstWord(remaining_statement);
+//  remaining_statement = string_util::RemoveFirstWord(remaining_statement);
+  remaining_statement = removeSelectClause(remaining_statement);
   if (remaining_statement.empty()) {
     return {such_that_tokens, pattern_tokens};
   }

@@ -13,7 +13,7 @@ void SelectSynonymSemanticHandler::setNext(std::unique_ptr<QpsValidatorHandler> 
 }
 
 void SelectSynonymSemanticHandler::handle(std::string select_synonym) {
-  if (!QueryUtil::IsInDeclarations(select_synonym, declarations)) {
+  if (!QueryUtil::IsInDeclarations(select_synonym, declarations) && select_synonym != "BOOLEAN") {
     throw QpsSemanticError("Select synonym has not been declared");
   }
   if (next) {
