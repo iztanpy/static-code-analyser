@@ -40,6 +40,7 @@ TEST_CASE("Test Next store") {
     REQUIRE(readFacade.Next(StmtEntity::kIf, Wildcard()) == std::set<statementNumber>({1,3}));
     REQUIRE(readFacade.Next(Wildcard(), StmtEntity::kIf) == std::set<statementNumber>({3}));
     REQUIRE(readFacade.Next(1, StmtEntity::kIf) == std::set<statementNumber>({3}));
+    REQUIRE(readFacade.Next(StmtEntity::kIf, 4) == std::set<statementNumber>({3}));
 }
 
 TEST_CASE("Test Next Star") {
@@ -72,5 +73,7 @@ TEST_CASE("Test Next Star") {
     REQUIRE(readFacade.NextStar(StmtEntity::kIf, Wildcard()) == std::set<statementNumber>({1,4}));
     REQUIRE(readFacade.NextStar(1, StmtEntity::kIf) == std::set<statementNumber>({4}));
     REQUIRE(readFacade.NextStar(Wildcard(), StmtEntity::kIf) == std::set<statementNumber>({4}));
-
+    REQUIRE(readFacade.NextStar(StmtEntity::kIf, 9) == std::set<statementNumber>({1,4}));
+    REQUIRE(readFacade.NextStar(StmtEntity::kIf, StmtEntity::kStmt) ==std::set<std::pair<statementNumber, statementNumber>>(
+            {{1,2}, {1,3}, {1,4}, {1,5}, {1,6}, {1,7}, {1,8}, {1,9}, {4,5}, {4,6}, {4,7}, {4,8},{4,9}}));
 }
