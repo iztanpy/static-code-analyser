@@ -203,6 +203,10 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/constraint_solver/clause_grouper.h
         src/PKB/Stores/NextStore.cpp
         src/PKB/Stores/NextStore.h
+        src/qps/query_evaluator/if_evaluator.cpp
+        src/qps/query_evaluator/if_evaluator.h
+        src/qps/query_evaluator/while_evaluator.cpp
+        src/qps/query_evaluator/while_evaluator.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
