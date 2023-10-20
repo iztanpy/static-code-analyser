@@ -30,7 +30,7 @@ class SelectClause : public Clause {
    * only has 1 synonym
    * @return a set of just 1 element
    */
-  std::unordered_set<Synonym> GetSynonyms() override;
+  std::unordered_set<Synonym> GetSynonyms() const override;
 
   /*!
    * Gets the hash of this Select clause

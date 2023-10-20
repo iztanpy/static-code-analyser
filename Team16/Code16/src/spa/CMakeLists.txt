@@ -195,6 +195,10 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/affects.h
         src/qps/qps_validator/pattern_syn_semantic_handler.cpp
         src/qps/qps_validator/pattern_syn_semantic_handler.h
+        src/qps/query_evaluator/constraint_solver/clause_group.cpp
+        src/qps/query_evaluator/constraint_solver/clause_group.h
+        src/qps/query_evaluator/constraint_solver/clause_grouper.cpp
+        src/qps/query_evaluator/constraint_solver/clause_grouper.h
         src/PKB/Stores/NextStore.cpp
         src/PKB/Stores/NextStore.h
 )
