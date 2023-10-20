@@ -15,7 +15,7 @@ bool ModifiesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader
 Constraint ModifiesEvaluator::Handle(Declaration& lhs,
                                      Declaration& rhs,
                                      ReadFacade& pkb_reader) {
-  if (lhs.equals(rhs)) {
+  if (lhs == rhs) {
     return UnaryConstraint{lhs.synonym, {}};
   }
 
@@ -24,8 +24,8 @@ Constraint ModifiesEvaluator::Handle(Declaration& lhs,
                             pkb_reader.modifiesProcedure()};
   }
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
-      = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity));
+  std::unordered_set < std::pair<statementNumber, variable>, PairHash >
+      raw_results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity));
   return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 
@@ -36,7 +36,7 @@ UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
     return {lhs.synonym, pkb_reader.modifiesProcedure(rhs)};
   }
 
-  std::unordered_set<statementNumber> results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
+  std::unordered_set < statementNumber > results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
@@ -47,7 +47,7 @@ UnaryConstraint ModifiesEvaluator::Handle(Declaration& lhs,
     return {lhs.synonym, pkb_reader.modifiesProcedure(rhs)};
   }
 
-  std::unordered_set<statementNumber> results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
+  std::unordered_set < statementNumber > results = pkb_reader.modifies(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 

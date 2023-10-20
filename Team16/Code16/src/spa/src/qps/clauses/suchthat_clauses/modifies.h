@@ -14,8 +14,12 @@ class ModifiesP : public SuchThatClause {
   EntRef lhs;
   EntRef rhs;
 
+  RelRefType GetRelRef() const override {
+    return RelRefType::MODIFIESP;
+  }
+
   ModifiesP(EntRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -33,8 +37,12 @@ class ModifiesS : public SuchThatClause {
   StmtRef lhs;
   EntRef rhs;
 
+  RelRefType GetRelRef() const override {
+    return RelRefType::MODIFIESS;
+  }
+
   ModifiesS(StmtRef lhs, EntRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

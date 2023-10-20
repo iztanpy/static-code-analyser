@@ -8,6 +8,7 @@
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 #include "utils/clauses_types.h"
+#include "qps/clauses/clause.h"
 
 /**
  * A struct that represents a parsed query.
@@ -16,5 +17,5 @@
  */
 struct ParsedQuery {
   std::vector<Synonym> selects;
-  std::vector<std::unique_ptr<Clause>> clauses;
+  ClauseSet clauses;
 };

@@ -14,7 +14,7 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
 
   std::vector<QueryToken> selectTokens = tokenised_query.select_tokens;
 
-  std::vector<std::unique_ptr<Clause>> clauses;
+  ClauseSet clauses;
   std::vector<Synonym> selects;
 
   /* For now, we only have one synonym for select clause
@@ -28,23 +28,19 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
       selects.push_back(*clause->GetSynonyms().begin());
     }
 
-    std::move(selectClauses.begin(), selectClauses.end(), std::back_inserter(clauses));
-
-    selectClauses.clear();
+    clauses.insert(std::make_move_iterator(selectClauses.begin()), std::make_move_iterator(selectClauses.end()));
   }
 
   std::vector<QueryToken> suchThatTokens = tokenised_query.such_that_tokens;
   if (!suchThatTokens.empty()) {
     std::vector<std::unique_ptr<Clause>> suchThatClauses = ExtractSuchThatClauses(suchThatTokens, declarations);
-    std::move(suchThatClauses.begin(), suchThatClauses.end(), std::back_inserter(clauses));
-    suchThatClauses.clear();
+    clauses.insert(std::make_move_iterator(suchThatClauses.begin()), std::make_move_iterator(suchThatClauses.end()));
   }
 
   std::vector<QueryToken> patternTokens = tokenised_query.pattern_tokens;
   if (!patternTokens.empty()) {
     std::vector<std::unique_ptr<Clause>> patternClauses = ExtractPatternClauses(patternTokens, declarations);
-    std::move(patternClauses.begin(), patternClauses.end(), std::back_inserter(clauses));
-    patternClauses.clear();
+    clauses.insert(std::make_move_iterator(patternClauses.begin()), std::make_move_iterator(patternClauses.end()));
   }
 
   return {selects, std::move(clauses)};

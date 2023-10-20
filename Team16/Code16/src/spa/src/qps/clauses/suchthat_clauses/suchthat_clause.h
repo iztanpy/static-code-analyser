@@ -4,6 +4,7 @@
 #include <variant>
 #include <unordered_set>
 #include <utility>
+#include <cstdint>
 
 #include "qps/declaration.h"
 #include "qps/clauses/clause.h"
@@ -20,9 +21,11 @@
  */
 class SuchThatClause : public Clause {
  public:
-  RelRefType rel_ref;  // an identifier to make things easier
   RefParam lhs;
   RefParam rhs;
+
+  SuchThatClause(RefParam lhs, RefParam rhs)
+      : lhs(std::move(lhs)), rhs(std::move(rhs)) {}
 
   /*!
    * Checks if two RefParams are equal
@@ -55,6 +58,18 @@ class SuchThatClause : public Clause {
 
   ~SuchThatClause() override = default;
 
+  /*!
+   * Functions to support hashing of clauses
+   */
+  size_t Hash() const override;
+
+  RelRefType GetRelRef() const override = 0;
+
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const SuchThatClause& lhs, const SuchThatClause& rhs);
+
  private:
   /*!
    * Validates the pattern clause semantically
@@ -62,5 +77,3 @@ class SuchThatClause : public Clause {
    */
   virtual void Validate() = 0;
 };
-
-
