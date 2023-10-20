@@ -63,8 +63,8 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/VariableStore.h
         src/PKB/Stores/ConstantStore.cpp
         src/PKB/Stores/ConstantStore.h
-        
-        
+
+
         src/PKB/Stores/AssignStore.cpp
         src/PKB/Stores/AssignStore.h
         src/PKB/Stores/StatementStore.cpp
@@ -195,6 +195,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/affects.h
         src/qps/qps_validator/pattern_syn_semantic_handler.cpp
         src/qps/qps_validator/pattern_syn_semantic_handler.h
+        src/qps/qps_validator/select_tuple_synonym_semantic_handler.cpp
+        src/qps/qps_validator/select_tuple_synonym_semantic_handler.h
         src/qps/query_evaluator/constraint_solver/clause_group.cpp
         src/qps/query_evaluator/constraint_solver/clause_group.h
         src/qps/query_evaluator/constraint_solver/clause_grouper.cpp

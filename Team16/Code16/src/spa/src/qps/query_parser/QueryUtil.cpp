@@ -43,6 +43,14 @@ bool QueryUtil::IsEnclosedInBrackets(const std::string& s) {
   return (s.size() >= 2 && s.front() == '(' && s.back() == ')');
 }
 
+bool QueryUtil::IsEnclosedInTuple(const std::string& s) {
+  return (s.size() >= 2 && s.front() == '<' && s.back() == '>');
+}
+
+bool QueryUtil::IsSelectBoolean(const std::string & s, const std::vector<Declaration>& declarations) {
+  return (s == "BOOLEAN" && !IsInDeclarations(s, declarations));
+}
+
 bool QueryUtil::IsRelRef(const std::string& s) {
   std::set<std::string> stringRelRef = RelRef::getStringRelRef();
   if (stringRelRef.find(s) != stringRelRef.end()) {
@@ -80,6 +88,10 @@ std::string QueryUtil::RemovePartialMatch(const std::string& s) {
 }
 
 std::string QueryUtil::RemoveBrackets(const std::string& s) {
+  return string_util::Trim(s.substr(1, s.length() - 2));
+}
+
+std::string QueryUtil::RemoveTuple(const std::string& s) {
   return string_util::Trim(s.substr(1, s.length() - 2));
 }
 

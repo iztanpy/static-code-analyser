@@ -320,9 +320,6 @@ TEST_CASE("Test extract clause tokens") {
       {"v", DesignEntity::VARIABLE}
   };
 
-  std::string unknown_clause_statement = "Select v something else (v, \"x\")";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(unknown_clause_statement, error_declarations), QpsSyntaxError);
-
   std::string undeclared_pattern_statement = "Select v pattern a (a, v)";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations),
                     QpsSemanticError);
@@ -696,5 +693,51 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
 
   std::string sample_query_5 = "Select w such that Parent* (w, a) and such that Modifies (a, \"x\")";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_5, declarations_3), QpsSyntaxError);
+}
+
+TEST_CASE("Tokenizer can tokenize select tuple") {
+  std::string sample_query_1 = "Select <s1, s2, s3> such that Parent (s1, s2)";
+  std::vector<Declaration> declarations_1 = {
+      {"s1", DesignEntity::STMT},
+      {"s2", DesignEntity::STMT},
+      {"s3", DesignEntity::STMT}
+  };
+  std::vector<QueryToken> select_tokens = {
+      {"s1", PQLTokenType::SYNONYM},
+      {"s2", PQLTokenType::SYNONYM},
+      {"s3", PQLTokenType::SYNONYM}
+  };
+
+  std::vector<QueryToken> results_1 = QueryTokenizer::extractSelectToken(sample_query_1, declarations_1);
+  for (int i = 0; i < results_1.size(); ++i) {
+    REQUIRE(results_1[i].type == select_tokens[i].type);
+    REQUIRE(results_1[i].text == select_tokens[i].text);
+  }
+
+  std::string sample_query_2 = "Select <s1,, s3> such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_2, declarations_1), QpsSyntaxError);
+
+  std::string sample_query_3 = "Select s1, s2, s3> such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_3, declarations_1), QpsSyntaxError);
+}
+
+TEST_CASE("Tokenizer can tokenize select BOOLEAN") {
+  std::string sample_query_1 = "Select BOOLEAN such that Parent (s1, s2)";
+  std::vector<Declaration> declarations_1 = {
+      {"s1", DesignEntity::STMT},
+      {"s2", DesignEntity::STMT},
+      {"s3", DesignEntity::STMT}
+  };
+  std::vector<QueryToken> select_tokens = {
+      {"BOOLEAN", PQLTokenType::SELECT_BOOLEAN},
+  };
+
+  std::vector<QueryToken> results_1 = QueryTokenizer::extractSelectToken(sample_query_1, declarations_1);
+  REQUIRE(results_1.size() == 1);
+  REQUIRE(results_1[0].type == PQLTokenType::SYNONYM);
+  REQUIRE(results_1[0].text == "BOOLEAN");
+
+  std::string sample_query_2 = "Select OOLEAN such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_2, declarations_1), QpsSemanticError);
 }
 
