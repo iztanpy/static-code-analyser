@@ -26,5 +26,4 @@ class ClauseGroup {
 
  private:
   std::vector<std::unique_ptr<Clause>> clauses_;
-  int score_;
 };

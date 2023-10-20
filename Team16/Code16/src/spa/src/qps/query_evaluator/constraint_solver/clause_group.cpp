@@ -1,7 +1,13 @@
 #include "qps/query_evaluator/constraint_solver/clause_group.h"
 
+// For just the average score of clauses inside
 int ClauseGroup::Score() const {
-  return score_;
+  int score = 0;
+  for (const auto& clause : clauses_) {
+    score += clause->Score();
+  }
+  if (clauses_.empty()) return 0;
+  return score / clauses_.size();
 }
 
 ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
