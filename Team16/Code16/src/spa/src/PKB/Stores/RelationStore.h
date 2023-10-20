@@ -22,61 +22,61 @@ class RelationStore {
     RelationStore();
 
     /**
-    * @brief Stores modifies relationships between statements and variables.
+    * @brief Stores unspecified relation relationships between statements and variables.
     *
-    * This method stores modifies relationships represented by an unordered map (relations), where each statement number (key)
+    * This method stores relationships represented by an unordered map (relations), where each statement number (key)
     * is associated with a set of variables (values) that are modified by that statement.
     *
     * @param relations An unordered map of statement numbers to sets of variables modified by each statement.
     */
-    void storeModifies(std::unordered_map<statementNumber, std::unordered_set<variable>> relations);
+    void storeRelation(std::unordered_map<statementNumber, std::unordered_set<variable>> relations);
 
 
-    void storeModifiesProcedures(std::unordered_map<procedure,
+    void storeRelationProcedures(std::unordered_map<procedure,
         std::pair<int, int>> procedures, std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
-    void storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls);
+    void storeRelationCalls(std::unordered_map<statementNumber, procedure> calls);
 
     /**
-    * @brief Checks if a specific statement modifies a particular variable.
+    * @brief Checks if a specific statement has a relation to a particular variable.
     *
-    * This method checks if the statement specified by 'statement' modifies the variable specified by 'variable'.
+    * This method checks if the statement specified by 'statement' has a relation to the variable specified by 'variable'.
     *
-    * @param statement The statement number to check for variable modification.
-    * @param variable The variable to check for modification by the statement.
-    * @return true if the statement modifies the variable, false otherwise.
+    * @param statement The statement number to check for variable relation.
+    * @param variable The variable to check for having a relation by the statement.
+    * @return true if the statement applies the relation on the variable, false otherwise.
     */
-    bool isModifies(statementNumber statement, variable variable);
+    bool isRelation(statementNumber statement, variable variable);
 
     /**
-    * @brief Checks if a specific statement modifies any variable.
+    * @brief Checks if a specific statement has a relation to any variable.
     *
-    * This method checks if the statement specified by 'statement' modifies any variables.
+    * This method checks if the statement specified by 'statement' relates any variables.
     *
-    * @param statement The statement number to check for variable modification.
-    * @return true if the statement modifies at least one variable, false otherwise.
+    * @param statement The statement number to check for variable relation.
+    * @return true if the statement relates to at least one variable, false otherwise.
     */
-    bool isModifies(statementNumber statement);
+    bool isRelation(statementNumber statement);
 
     /**
-    * @brief Retrieves the variables modified by a specific statement.
+    * @brief Retrieves the variables related by a specific statement.
     *
-    * This method returns an unordered set containing the variables that are modified by the statement specified by 'statement'.
+    * This method returns an unordered set containing the variables that are related by the statement specified by 'statement'.
     *
-    * @param statement The statement number for which to retrieve modified variables.
-    * @return An unordered set of variables modified by the specified statement.
+    * @param statement The statement number for which to retrieve related variables.
+    * @return An unordered set of variables related to by the specified statement.
     */
-    std::unordered_set<variable> modifies(statementNumber statement);
+    std::unordered_set<variable> relates(statementNumber statement);
 
-    bool isModifies(procedure procedure);
+    bool isRelation(procedure procedure);
 
-    std::unordered_set<variable> modifiesProcedureProc(procedure procedure);
+    std::unordered_set<variable> relatesProcedureProc(procedure procedure);
 
-    bool isModifies(procedure procedure, variable variable);
+    bool isRelation(procedure procedure, variable variable);
 
-    std::unordered_set<procedure> modifiesProcedure();
+    std::unordered_set<procedure> relatesProcedure();
 
-    std::unordered_set<procedure> modifiesProcedure(variable variable);
+    std::unordered_set<procedure> relatesProcedure(variable variable);
 
     std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedurePair();
 
@@ -88,5 +88,5 @@ class RelationStore {
     * @param variable The variable for which to find modifying statements.
     * @return An unordered set of statement numbers of statements that modify the specified variable.
     */
-    std::unordered_set<statementNumber> modifies(variable variable);
+    std::unordered_set<statementNumber> relates(variable variable);
 };

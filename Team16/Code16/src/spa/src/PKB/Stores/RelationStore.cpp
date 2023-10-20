@@ -15,7 +15,7 @@ RelationStore::RelationStore() {
     std::unordered_map<variable, std::unordered_set<procedure>> ReverseProcedureStore;
 }
 
-void RelationStore::storeModifies(std::unordered_map<statementNumber, std::unordered_set<variable>> relations) {
+void RelationStore::storeRelation(std::unordered_map<statementNumber, std::unordered_set<variable>> relations) {
     this->ForwardVariableStore = relations;
     for (auto const& x : relations) {
         for (auto const& y : x.second) {
@@ -24,7 +24,7 @@ void RelationStore::storeModifies(std::unordered_map<statementNumber, std::unord
     }
 }
 
-void RelationStore::storeModifiesProcedures(std::unordered_map<procedure,
+void RelationStore::storeRelationProcedures(std::unordered_map<procedure,
     std::pair<int, int>> procedures,
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
     for (auto const& x : procedures) {
@@ -53,7 +53,7 @@ void RelationStore::storeModifiesProcedures(std::unordered_map<procedure,
     }
 }
 
-void RelationStore::storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls) {
+void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls) {
     for (auto const& x : calls) {
         ForwardVariableStore[x.first].insert(ForwardProcedureStore[x.second].begin(),
             ForwardProcedureStore[x.second].end());
@@ -63,7 +63,7 @@ void RelationStore::storeModifiesCalls(std::unordered_map<statementNumber, proce
     }
 }
 
-bool RelationStore::isModifies(statementNumber statement, variable variable) {
+bool RelationStore::isRelation(statementNumber statement, variable variable) {
     if (ForwardVariableStore.find(statement) != ForwardVariableStore.end()) {
         if (ForwardVariableStore[statement].find(variable) != ForwardVariableStore[statement].end()) {
             return true;
@@ -72,34 +72,34 @@ bool RelationStore::isModifies(statementNumber statement, variable variable) {
     return false;
 }
 
-bool RelationStore::isModifies(statementNumber statement) {
+bool RelationStore::isRelation(statementNumber statement) {
     if (ForwardVariableStore.find(statement) != ForwardVariableStore.end()) {
         return true;
     }
     return false;
 }
 
-std::unordered_set<statementNumber> RelationStore::modifies(RelationStore::variable variable) {
+std::unordered_set<statementNumber> RelationStore::relates(RelationStore::variable variable) {
     std::unordered_set<statementNumber> statements = ReverseVariableStore[variable];
     return statements;
 }
 
-std::unordered_set<variable> RelationStore::modifies(RelationStore::statementNumber statement) {
+std::unordered_set<variable> RelationStore::relates(RelationStore::statementNumber statement) {
     return ForwardVariableStore[statement];
 }
 
-bool RelationStore::isModifies(procedure procedure) {
+bool RelationStore::isRelation(procedure procedure) {
     if (ForwardProcedureStore.find(procedure) != ForwardProcedureStore.end()) {
         return true;
     }
     return false;
 }
 
-std::unordered_set<variable> RelationStore::modifiesProcedureProc(procedure procedure) {
+std::unordered_set<variable> RelationStore::relatesProcedureProc(procedure procedure) {
     return ForwardProcedureStore[procedure];
 }
 
-bool RelationStore::isModifies(procedure procedure, variable variable) {
+bool RelationStore::isRelation(procedure procedure, variable variable) {
     if (ForwardProcedureStore.find(procedure) != ForwardProcedureStore.end()) {
         if (ForwardProcedureStore[procedure].find(variable) != ForwardProcedureStore[procedure].end()) {
             return true;
@@ -108,7 +108,7 @@ bool RelationStore::isModifies(procedure procedure, variable variable) {
     return false;
 }
 
-std::unordered_set<procedure> RelationStore::modifiesProcedure() {
+std::unordered_set<procedure> RelationStore::relatesProcedure() {
     std::unordered_set<procedure> procedures;
     for (auto const& x : ForwardProcedureStore) {
         procedures.insert(x.first);
@@ -116,7 +116,7 @@ std::unordered_set<procedure> RelationStore::modifiesProcedure() {
     return procedures;
 }
 
-std::unordered_set<procedure> RelationStore::modifiesProcedure(variable variable) {
+std::unordered_set<procedure> RelationStore::relatesProcedure(variable variable) {
     return ReverseProcedureStore[variable];
 }
 
