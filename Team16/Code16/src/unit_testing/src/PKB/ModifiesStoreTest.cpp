@@ -1,13 +1,13 @@
 #include <unordered_set>
 #include <iostream>
 #include "catch.hpp"
-#include "PKB/Stores/ModifiesStore.h"
+#include "PKB/Stores/RelationStore.h"
 
 typedef int statementNumber;
 typedef std::string variable;
 
 TEST_CASE("Test Modifies Store Add") {
-    auto modifiesStore = ModifiesStore();
+    auto modifiesStore = RelationStore();
     modifiesStore.storeModifies({{1, {"x"}}, {2, {"x", "y"}}, {3, {"x"}}});
     REQUIRE(modifiesStore.modifies(1) == std::unordered_set<variable> {"x"});
     REQUIRE(modifiesStore.modifies(2) == std::unordered_set<variable> {"x", "y"});
@@ -15,7 +15,7 @@ TEST_CASE("Test Modifies Store Add") {
 }
 
 TEST_CASE("Test getStatementThatModifies") {
-    auto modifiesStore = ModifiesStore();
+    auto modifiesStore = RelationStore();
     modifiesStore.storeModifies({{1, {"x"}}, {2, {"y"}}, {3, {"x"}}});
     std::unordered_set<statementNumber> statements = modifiesStore.modifies("x");
     REQUIRE(statements ==  std::unordered_set<statementNumber> {1,3});
@@ -35,7 +35,7 @@ TEST_CASE("Test getStatementThatModifies") {
 }
 
 TEST_CASE("Test procedure methods") {
-    auto modifiesStore = ModifiesStore();
+    auto modifiesStore = RelationStore();
     
     modifiesStore.storeModifies({ {1, {"x"}}, {2, {"y"}}, {3, {"x"}}, {5, {"a", "b"}}, {6,{"c"}}, {8, {"m"}}, {9, {"n"}} });
 

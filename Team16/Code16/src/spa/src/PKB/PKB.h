@@ -15,7 +15,7 @@
 #include "Stores/StatementStore.h"
 #include "Stores/ParentStore.h"
 #include "Stores/FollowsStore.h"
-#include "Stores/ModifiesStore.h"
+#include "Stores/RelationStore.h"
 #include "Stores/ProcedureStore.h"
 #include "Stores/IfStore.h"
 #include "Stores/WhileStore.h"
@@ -42,7 +42,7 @@ class PKB {
     std::unique_ptr<StatementStore> statementStore;
     std::unique_ptr<ParentStore> parentStore;
     std::unique_ptr<FollowsStore> followsStore;
-    std::unique_ptr<ModifiesStore> modifiesStore;
+    std::unique_ptr<RelationStore> modifiesStore;
     std::unique_ptr<ProcedureStore> procedureStore;
     std::unique_ptr<WhileStore> whileStore;
     std::unique_ptr<IfStore> ifStore;
@@ -167,9 +167,9 @@ class PKB {
     void addProcedures(std::set<procedure> procedures);
 
     /**
-    * @brief Adds procedures and thier respective start numbers and line numbers to the program's procedure store.
+    * @brief Adds procedures and their respective start numbers and line numbers to the program's procedure store.
     *
-    * This method adds procedures and thier respective start numbers and line numbers to the program's procedure store.
+    * This method adds procedures and their respective start numbers and line numbers to the program's procedure store.
     *
     * @param procedures An unordered map of procedures to pairs of start numbers and line numbers.
     */

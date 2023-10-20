@@ -5,21 +5,21 @@
 #include <utility>
 #include "utils/hash_utils.h"
 
-class ModifiesStore {
+class RelationStore {
  private:
     typedef std::string variable;
     typedef std::string procedure;
 
     typedef int statementNumber;
-    std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesVariableMap;
-    std::unordered_map<variable, std::unordered_set<statementNumber>> ModifiesVariableMapReverse;
+    std::unordered_map<statementNumber, std::unordered_set<variable>> ForwardVariableStore;
+    std::unordered_map<variable, std::unordered_set<statementNumber>> ReverseVariableStore;
 
-    std::unordered_map<procedure, std::unordered_set<variable>> ModifiesProcedureMap;
-    std::unordered_map<variable, std::unordered_set<procedure>> ModifiesProcedureMapReverse;
+    std::unordered_map<procedure, std::unordered_set<variable>> ForwardProcedureStore;
+    std::unordered_map<variable, std::unordered_set<procedure>> ReverseProcedureStore;
 
 
  public:
-    ModifiesStore();
+    RelationStore();
 
     /**
     * @brief Stores modifies relationships between statements and variables.

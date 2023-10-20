@@ -8,7 +8,7 @@ PKB::PKB() {
     statementStore = std::make_unique<StatementStore>();
     parentStore = std::make_unique<ParentStore>();
     followsStore = std::make_unique<FollowsStore>();
-    modifiesStore = std::make_unique<ModifiesStore>();
+    modifiesStore = std::make_unique<RelationStore>();
     procedureStore = std::make_unique<ProcedureStore>();
     ifStore = std::make_unique<IfStore>();
     whileStore = std::make_unique<WhileStore>();
