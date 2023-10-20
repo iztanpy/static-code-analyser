@@ -68,17 +68,67 @@ class ModifiesStore {
     */
     std::unordered_set<variable> modifies(statementNumber statement);
 
+    /**
+    * @brief Checks if a given procedure has any 'Modifies' relationships.
+    *
+    * This function checks whether the specified procedure has any 'Modifies' relationships,
+    * indicating whether it modifies any variables.
+    *
+    * @param procedure The procedure to check for 'Modifies' relationships.
+    * @return True if the procedure has 'Modifies' relationships; false otherwise.
+    */
     bool isModifies(procedure procedure);
 
+    /**
+    * @brief Retrieves a set of variables modified by a specific procedure.
+    *
+    * This function returns a set of variables that are modified by the provided procedure.
+    *
+    * @param procedure The procedure for which to retrieve modified variables.
+    * @return A set of variables modified by the specified procedure.
+    */
     std::unordered_set<variable> modifiesProcedureProc(procedure procedure);
 
+    /**
+    * @brief Checks if a given procedure modifies a specific variable.
+    *
+    * This function checks whether the specified procedure modifies the provided variable.
+    *
+    * @param procedure The procedure to check for 'Modifies' relationships.
+    * @param variable The variable to check for modification by the procedure.
+    * @return True if the procedure modifies the specified variable; false otherwise.
+    */
     bool isModifies(procedure procedure, variable variable);
 
+    /**
+    * @brief Retrieves procedures that have 'Modifies' relationships, indicating they modify variables.
+    *
+    * This function returns a set of procedures that have 'Modifies' relationships, indicating they modify variables.
+    *
+    * @return A set of procedures that have 'Modifies' relationships.
+    */
     std::unordered_set<procedure> modifiesProcedure();
 
+    /**
+    * @brief Retrieves procedures that modify a specific variable.
+    *
+    * This function returns a set of procedures that modify the provided variable.
+    *
+    * @param variable The variable to check for modification by procedures.
+    * @return A set of procedures that modify the specified variable.
+    */
     std::unordered_set<procedure> modifiesProcedure(variable variable);
 
+    /**
+    * @brief Retrieves all pairs of procedures and variables indicating 'Modifies' relationships.
+    *
+    * This function returns all pairs of procedures and variables that indicate 'Modifies' relationships.
+    *
+    * @return A set of pairs, where each pair represents a procedure and a variable (procedure, variable)
+    *         indicating the procedure modifies the variable.
+    */
     std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedurePair();
+
 
     /**
     * @brief Retrieves the statements that modify a particular variable.
