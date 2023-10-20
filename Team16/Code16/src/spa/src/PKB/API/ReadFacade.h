@@ -764,7 +764,19 @@ class ReadFacade {
  */
     bool isCall(Wildcard wildcard, procedure procedure);
 
-/**
+  /**
+  * @brief Retrieves all pairs of procedures representing the Call relationship between two specified procedures.
+  *
+  * This function returns all pairs of procedures representing the Call relationship between two specified procedures.
+  *
+  * @param procedure1 The calling procedure.
+  * @param procedure2 The called procedure.
+  * @return A set of pairs, where each pair represents a procedure that directly calls another procedure (procedure1, procedure2).
+  */
+  std::unordered_set<std::pair<procedure, procedure>, PairHash>
+  call(StmtEntity procedure1, StmtEntity procedure2);
+
+    /**
  * @brief Checks if a specific procedure calls another specific procedure.
  *
  * This function checks if a specified procedure calls another specified procedure.
@@ -797,7 +809,8 @@ class ReadFacade {
  * @return A set of pairs, where each pair represents a procedure that directly or indirectly
  *         calls another procedure (procedure1, procedure2).
  */
-    std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1, StmtEntity procedure2);
+    std::unordered_set<std::pair<procedure, procedure>, PairHash>
+    callStar(StmtEntity procedure1, StmtEntity procedure2);
 
 /**
  * @brief Retrieves procedures that have a Call* (transitive call) relationship with a procedure matching a Wildcard.

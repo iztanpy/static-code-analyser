@@ -152,7 +152,8 @@ class CallStore {
     * @return A set of pairs, where each pair represents a procedure that directly or indirectly
     *         calls another procedure (procedure1, procedure2).
     */
-    std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1, StmtEntity procedure2);
+    std::unordered_set<std::pair<procedure, procedure>, PairHash>
+    callStar(StmtEntity procedure1, StmtEntity procedure2);
 
     /**
     * @brief Retrieves procedures that have a Call* (transitive call) relationship with a procedure matching a wildcard.
