@@ -56,6 +56,16 @@ class PatternClause : public Clause {
   // Overloaded == operator
   friend bool operator==(const PatternClause& lhs, const PatternClause& rhs);
 
+  /*!
+   * Functions to support hashing of clauses
+   */
+  size_t Hash() const override;
+
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const PatternClause& lhs, const PatternClause& rhs);
+
   ~PatternClause() override = default;
 
  private:
