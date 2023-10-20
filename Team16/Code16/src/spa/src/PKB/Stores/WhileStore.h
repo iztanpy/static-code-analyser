@@ -46,5 +46,4 @@ class WhileStore {
  * @return A set of pairs, where each pair represents a while loop (statementNumber, variable).
  */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
-
 };

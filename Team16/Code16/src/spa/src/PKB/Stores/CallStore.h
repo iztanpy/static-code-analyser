@@ -248,5 +248,4 @@ class CallStore {
     *         false otherwise.
     */
     bool isCallStar(procedure p, procedure p2);
-
 };

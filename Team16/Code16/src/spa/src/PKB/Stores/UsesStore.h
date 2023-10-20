@@ -136,5 +136,4 @@ class UsesStore {
      * @return A set of pairs, where each pair represents a procedure and a variable (procedure, variable).
      */
     std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedurePair();
-
 };
