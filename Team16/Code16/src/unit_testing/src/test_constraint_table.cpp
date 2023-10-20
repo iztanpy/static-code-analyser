@@ -294,3 +294,40 @@ TEST_CASE("ConstraintTable::Select with Error when passing in non-existing ColNa
     REQUIRE(ct.Select({"c"}) == std::unordered_set<std::string>{"5"});
     REQUIRE(ct.Select({"d"}) == std::unordered_set<std::string>{"4", "2"});
 }
+
+TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
+    // Initializing the main table
+    ConstraintTable mainTable = ConstraintTable::ForTestingOnly(
+        {
+            {"a", {"1", "2"}},
+            {"b", {"3", "4"}},
+            {"c", {"5", "6"}},
+        }
+    );
+
+    // Initializing the table to be joined
+    ConstraintTable joinTable = ConstraintTable::ForTestingOnly(
+        {
+            {"d", {"7", "8", "9"}},
+            {"e", {"10", "11", "12"}},
+        }
+    );
+
+    // Joining the two tables
+    mainTable.JoinTable(joinTable);
+    Table table = mainTable.GetTableForTesting();
+
+    SECTION("Checking merged content after joining") {
+        std::vector<ColName> col_names = {"a", "b", "c", "d", "e"};  // Includes columns from both tables
+        std::vector<std::vector<Cell>> rows = {
+            {"1", "3", "5", "7", "10"},
+            {"2", "4", "6", "8", "11"},
+            {"1", "3", "5", "8", "11"},
+            {"2", "4", "6", "7", "10"},
+            {"1", "3", "5", "9", "12"},
+            {"2", "4", "6", "9", "12"},
+        };
+        REQUIRE_TABLE_CONTENT(table, col_names, rows);
+        REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    }
+}

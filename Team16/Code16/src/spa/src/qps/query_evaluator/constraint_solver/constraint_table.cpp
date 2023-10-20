@@ -2,7 +2,7 @@
 
 // TODO(phuccuongngo99): Convert these function to template and throw them into Util
 // {1, 2, 3}, 2 -> {1, 1, 2, 2, 3, 3}
-std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, int n) {
+std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, size_t n) {
     std::vector<std::string> result;
     for (const std::string& val : vec) {
         for (int i = 0; i < n; ++i) {
@@ -12,7 +12,7 @@ std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, int
     return result;
 }
 
-std::vector<std::string> RepeatVector(const std::vector<std::string>& vec, int n) {
+std::vector<std::string> RepeatVector(const std::vector<std::string>& vec, size_t n) {
     std::vector<std::string> result;
     for (int i = 0; i < n; ++i) {
         for (const std::string& val : vec) {
@@ -297,8 +297,18 @@ void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
         assert(table.find(key) == table.end());
     }
 
-    // Concatenate the maps
-    table.insert(constraint_table.table.begin(), constraint_table.table.end());
+    size_t table_len = table.begin()->second.size();
+    size_t constraint_table_len = constraint_table.table.begin()->second.size();
+
+    // Transform current table using function A
+    for (auto& [key, value] : table) {
+        value = RepeatVector(value, constraint_table_len);
+    }
+
+    // Transform values from constraint_table using function B and insert directly into table
+    for (const auto& [key, value] : constraint_table.table) {
+        table[key] = RepeatElements(value, table_len);
+    }
 }
 
 void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
