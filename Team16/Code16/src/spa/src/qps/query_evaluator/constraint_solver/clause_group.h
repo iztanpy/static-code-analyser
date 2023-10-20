@@ -19,8 +19,8 @@
 class ClauseGroup {
  public:
   explicit ClauseGroup(ClauseSet& clause_set);
-//
-//  ConstraintTable Evaluate(ReadFacade& pkb_reader);
+
+  ConstraintTable Evaluate(ReadFacade& pkb_reader) const;
 
   int Score() const;
 

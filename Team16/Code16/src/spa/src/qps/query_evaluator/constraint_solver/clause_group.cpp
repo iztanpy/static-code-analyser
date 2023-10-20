@@ -75,3 +75,15 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
   // 5. Double check that length of result vector is the same length as the input ClauseSet
   assert(clauses_.size() == originalSize);
 }
+
+ConstraintTable ClauseGroup::Evaluate(ReadFacade& pkb_reader) const {
+  ConstraintTable table;
+  for (const auto& clause : clauses_) {
+    Constraint constraint = clause->Evaluate(pkb_reader);
+    table.Solve(constraint);
+    if (!table.IsValid()) {
+      return table;
+    }
+  }
+  return table;
+}
