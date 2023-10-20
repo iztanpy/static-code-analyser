@@ -48,16 +48,11 @@ TEST_CASE("Test 4") {
   auto s1 = std::make_unique<WhilePattern>(Declaration{"p", DesignEntity::WHILE_LOOP}, Wildcard::Value);
   auto s2 = std::make_unique<WhilePattern>(Declaration{"p", DesignEntity::WHILE_LOOP}, Wildcard::Value);
 
-//  size_t hash1 = s1->Hash();
-//  size_t hash2 = s2->Hash();
-//
-//  REQUIRE(s1->equals(s2.get()));
-
   ClauseSet clause_set;
   clause_set.insert(std::move(s1));
   clause_set.insert(std::move(s2));
 
-  REQUIRE(clause_set.size() == 2);
+  REQUIRE(clause_set.size() == 1);
 }
 
 TEST_CASE("Test 5") {
@@ -66,11 +61,6 @@ TEST_CASE("Test 5") {
 
   auto s2 = std::make_unique<AssignPattern>(
       Declaration{"x", DesignEntity::ASSIGN}, Wildcard::Value, ExactExpr{"y"});
-
-//  size_t hash1 = s1->Hash();
-//  size_t hash2 = s2->Hash();
-//
-//  REQUIRE(s1->equals(s2.get()));
 
   ClauseSet clause_set;
   clause_set.insert(std::move(s1));
