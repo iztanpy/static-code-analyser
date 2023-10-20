@@ -306,6 +306,11 @@ void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
         assert(table.find(key) == table.end());
     }
 
+    if (table.empty()) {
+        table = constraint_table.table;
+        return;
+    }
+
     size_t table_len = table.begin()->second.size();
     size_t constraint_table_len = constraint_table.table.begin()->second.size();
 
