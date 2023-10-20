@@ -943,109 +943,550 @@ class PKB {
     */
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
+    /**
+    * @brief Stores a mapping of statement numbers to sets of variables for IF statements.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of variables
+    * for IF statements in the provided variableMap.
+    *
+    * @param variableMap A std::unordered_map where statementNumber is the key,
+    *                    and std::unordered_set<variable> is the associated value.
+    */
     void storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with IF statements matching the given Wildcard.
+    *
+    * This function returns a set of statement numbers corresponding to IF statements that match the provided Wildcard.
+    *
+    * @param wc The Wildcard to match IF statements against.
+    * @return A set of statement numbers corresponding to IF statements matching the Wildcard.
+    */
     std::unordered_set<statementNumber> getIf(Wildcard wc);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with IF statements containing the specified variable.
+    *
+    * This function returns a set of statement numbers corresponding to IF statements that contain the provided variable.
+    *
+    * @param v The variable to match against IF statements.
+    * @return A set of statement numbers corresponding to IF statements containing the variable.
+    */
     std::unordered_set<statementNumber> getIf(variable v);
 
+    /**
+    * @brief Retrieves all IF statements, represented as pairs of statementNumber and variable, from the data.
+    *
+    * This function retrieves all IF statements from the data and returns them as pairs of
+    * statementNumber and variable.
+    *
+    * @return A set of pairs, where each pair represents an IF statement (statementNumber, variable).
+    */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
 
+    /**
+    * @brief Stores a mapping of statement numbers to sets of variables for WHILE statements.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of variables
+    * for WHILE statements in the provided variableMap.
+    *
+    * @param variableMap A std::unordered_map where statementNumber is the key,
+    *                    and std::unordered_set<variable> is the associated value.
+    */
     void storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with WHILE statements matching the given Wildcard.
+    *
+    * This function returns a set of statement numbers corresponding to WHILE statements that match the provided Wildcard.
+    *
+    * @param wc The Wildcard to match WHILE statements against.
+    * @return A set of statement numbers corresponding to WHILE statements matching the Wildcard.
+    */
     std::unordered_set<statementNumber> getWhile(Wildcard wc);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with WHILE statements containing the specified variable.
+    *
+    * This function returns a set of statement numbers corresponding to WHILE statements that contain the provided variable.
+    *
+    * @param v The variable to match against WHILE statements.
+    * @return A set of statement numbers corresponding to WHILE statements containing the variable.
+    */
     std::unordered_set<statementNumber> getWhile(variable v);
 
+    /**
+    * @brief Retrieves all WHILE statements, represented as pairs of statementNumber and variable, from the data.
+    *
+    * This function retrieves all WHILE statements from the data and returns them as pairs of
+    * statementNumber and variable.
+    *
+    * @return A set of pairs, where each pair represents a WHILE statement (statementNumber, variable).
+    */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
+
 
     // CallStore methods
 
+    /**
+    * @brief Stores a call relationship table.
+    *
+    * This function stores a call relationship table, mapping procedures to the set of procedures they call.
+    *
+    * @param callTable An unordered_map where the key is a procedure, and the value is a set of
+    *                  procedures called by the key procedure.
+    */
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 
+    /**
+    * @brief Retrieves the Call* (transitive call) relationship table.
+    *
+    * This function returns a map representing the transitive call relationship among procedures.
+    *
+    * @return An unordered_map where the key is a procedure, and the value is a set of procedures
+    *         called directly or indirectly by the key procedure.
+    */
     std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
+    /**
+    * @brief Retrieves procedures that call a procedure matching a wildcard.
+    *
+    * This function returns procedures that call a procedure matching the provided wildcard.
+    *
+    * @param procedure The procedure to match against wildcard.
+    * @param wildcard The wildcard used to match against calling procedures.
+    * @return A set of procedures calling procedures matching the wildcard.
+    */
     std::unordered_set<procedure> call(StmtEntity procedure, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves procedures that match a wildcard and call a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that call the provided procedure.
+    *
+    * @param wildcard The wildcard used to match against called procedures.
+    * @param procedure The procedure to check for usage by procedures matching the wildcard.
+    * @return A set of procedures called by the provided procedure and matching the wildcard.
+    */
     std::unordered_set<procedure> call(Wildcard wildcard, StmtEntity procedure);
 
+    /**
+    * @brief Retrieves procedures that call a specific procedure.
+    *
+    * This function returns procedures that call the provided specific procedure.
+    *
+    * @param procedure The procedure being called.
+    * @param proc The calling procedure.
+    * @return A set of procedures calling the specified procedure.
+    */
     std::unordered_set<procedure> call(procedure procedure, StmtEntity proc);
 
+    /**
+    * @brief Retrieves procedures matching a wildcard that call a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that call the provided specific procedure.
+    *
+    * @param proc The calling procedure.
+    * @param procedure The procedure being called.
+    * @return A set of procedures matching the wildcard that call the specified procedure.
+    */
     std::unordered_set<procedure> call(StmtEntity proc, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure is called by procedures matching a wildcard.
+    *
+    * This function checks if the specified procedure is called by procedures matching the provided wildcard.
+    *
+    * @param procedure The procedure being called.
+    * @param wildcard The wildcard used to match calling procedures.
+    * @return True if the specified procedure is called by procedures matching the wildcard; false otherwise.
+    */
     bool isCall(procedure procedure, Wildcard wildcard);
 
+    /**
+    * @brief Checks if procedures matching a wildcard call a specific procedure.
+    *
+    * This function checks if procedures matching the provided wildcard call the specified procedure.
+    *
+    * @param wildcard The wildcard used to match calling procedures.
+    * @param procedure The procedure being called.
+    * @return True if procedures matching the wildcard call the specified procedure; false otherwise.
+    */
     bool isCall(Wildcard wildcard, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure calls another procedure by its name.
+    *
+    * This function checks if the specified procedure calls another procedure by its name.
+    *
+    * @param procedure The calling procedure.
+    * @param procedure2 The name of the called procedure.
+    * @return True if the calling procedure calls the specified procedure by name; false otherwise.
+    */
     bool isCall(procedure procedure, std::string procedure2);
 
+    /**
+    * @brief Checks if there is a Call relationship between two procedures matching wildcards.
+    *
+    * This function checks if there is a Call relationship between two procedures that match
+    * the provided wildcards.
+    *
+    * @param procedure The calling procedure.
+    * @param wildcard2 The wildcard for the called procedure.
+    * @return True if a Call relationship exists; false otherwise.
+    */
     bool isCall(Wildcard wildcard, Wildcard wildcard2);
 
-    std::unordered_set<std::pair<procedure, procedure>, PairHash> call(StmtEntity procedure1,
-        StmtEntity procedure2);
 
+    /**
+    * @brief Retrieves all pairs of procedures representing the Call* (transitive call) relationship between two procedures.
+    *
+    * This function returns all pairs of procedures representing the transitive Call* relationship between two specified procedures.
+    *
+    * @param procedure1 The calling procedure.
+    * @param procedure2 The called procedure.
+    * @return A set of pairs, where each pair represents a procedure that directly or indirectly
+    *         calls another procedure (procedure1, procedure2).
+    */
+    std::unordered_set<std::pair<procedure, procedure>, PairHash> call(StmtEntity procedure1, StmtEntity procedure2);
+
+    /**
+    * @brief Retrieves procedures that have a Call* (transitive call) relationship with a procedure matching a wildcard.
+    *
+    * This function returns procedures that have a transitive Call* relationship with a procedure matching the provided wildcard.
+    *
+    * @param procedure The procedure to match against wildcard.
+    * @param wildcard The wildcard used to match against procedures with transitive call relationships.
+    * @return A set of procedures that have a Call* relationship with a procedure matching the wildcard.
+    */
     std::unordered_set<procedure> callStar(StmtEntity procedure, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves procedures that match a wildcard and have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that have a transitive Call* relationship with the provided procedure.
+    *
+    * @param wildcard The wildcard used to match against procedures with transitive call relationships.
+    * @param procedure The procedure with which procedures are checked for Call* relationships.
+    * @return A set of procedures matching the wildcard that have a Call* relationship with the provided procedure.
+    */
     std::unordered_set<procedure> callStar(Wildcard wildcard, StmtEntity procedure);
 
+    /**
+    * @brief Retrieves procedures that have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function returns procedures that have a transitive Call* relationship with the provided specific procedure.
+    *
+    * @param procedure The specific procedure being called.
+    * @param proc The calling procedure.
+    * @return A set of procedures having a Call* relationship with the specified procedure.
+    */
     std::unordered_set<procedure> callStar(procedure procedure, StmtEntity proc);
 
+    /**
+    * @brief Retrieves procedures matching a wildcard that have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that have a transitive Call* relationship with the provided specific procedure.
+    *
+    * @param prc The specific procedure being called.
+    * @param procedure The calling procedure.
+    * @return A set of procedures matching the wildcard having a Call* relationship with the specified procedure.
+    */
     std::unordered_set<procedure> callStar(StmtEntity prc, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure has a Call* (transitive call) relationship with procedures matching a wildcard.
+    *
+    * This function checks if the specified procedure has a transitive Call* relationship with procedures matching the provided wildcard.
+    *
+    * @param procedure The specific procedure being called.
+    * @param wildcard The wildcard used to match calling procedures.
+    * @return True if the specified procedure has a Call* relationship with procedures matching the wildcard; false otherwise.
+    */
     bool isCallStar(procedure procedure, Wildcard wildcard);
 
+    /**
+    * @brief Checks if procedures matching a wildcard have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function checks if procedures matching the provided wildcard have a transitive Call* relationship with the specified procedure.
+    *
+    * @param wildcard The wildcard used to match calling procedures.
+    * @param procedure The specific procedure being called.
+    * @return True if procedures matching the wildcard have a Call* relationship with the specified procedure; false otherwise.
+    */
     bool isCallStar(Wildcard wildcard, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure has a Call* (transitive call) relationship with a procedure identified by its name.
+    *
+    * This function checks if the specified procedure has a transitive Call* relationship with a procedure identified by its name.
+    *
+    * @param procedure The specific procedure being called.
+    * @param procedure2 The name of the called procedure.
+    * @return True if the specified procedure has a Call* relationship with the procedure identified by its name; false otherwise.
+    */
     bool isCallStar(procedure procedure, std::string procedure2);
 
+    /**
+    * @brief Checks if there is a Call* (transitive call) relationship between two procedures matching wildcards.
+    *
+    * This function checks if there is a transitive Call* relationship between two procedures that match the provided wildcards.
+    *
+    * @param wildcard1 The wildcard for the calling procedure.
+    * @param wildcard2 The wildcard for the called procedure.
+    * @return True if a transitive Call* relationship exists; false otherwise.
+    */
     bool isCallStar(Wildcard wildcard1, Wildcard wildcard2);
 
-    std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1,
-        StmtEntity procedure2);
+
+    /**
+    * @brief Retrieves all pairs of procedures representing the Call* (transitive call) relationship between two procedures.
+    *
+    * This function returns all pairs of procedures representing the transitive Call* relationship between two specified procedures.
+    *
+    * @param procedure1 The calling procedure.
+    * @param procedure2 The called procedure.
+    * @return A set of pairs, where each pair represents a procedure that directly or indirectly
+    *         calls another procedure (procedure1, procedure2).
+    */
+    std::unordered_set<std::pair<procedure, procedure>, PairHash>
+    callStar(StmtEntity procedure1, StmtEntity procedure2);
+
 
     // Next Methods
+    /**
+    * @brief Stores a mapping of statement numbers to sets of statement numbers representing the Next relationship.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of statement numbers
+    * representing the Next relationship in the provided NextMap.
+    *
+    * @param NextMap An unordered_map where statementNumber is the key, and unordered_set<statementNumber> is the associated value.
+    */
     void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
 
+    /**
+    * @brief Stores a Control Flow Graph (CFG).
+    *
+    * This function stores a Control Flow Graph (CFG) representing the program's control flow.
+    *
+    * @param cfg The Control Flow Graph to be stored.
+    */
     void storeCfg(Cfg cfg);
 
+    /**
+    * @brief Stores a mapping of statement numbers to corresponding CFG nodes in a CFG legend.
+    *
+    * This function allows you to store a mapping of statement numbers to shared pointers to CFG nodes
+    * in the provided cfgLegend.
+    *
+    * @param cfgLegend An unordered_map where statementNumber is the key, and shared_ptr<CfgNode> is the associated value.
+    */
     void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 
+    /**
+    * @brief Retrieves pairs of statement numbers representing the Next relationship between two specified statements.
+    *
+    * This function returns pairs of statement numbers representing the Next relationship between two specified statements.
+    *
+    * @param ent1 The first statement entity.
+    * @param ent2 The second statement entity.
+    * @return A set of pairs, where each pair represents a statement number that directly follows another statement (ent1, ent2).
+    */
     std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
 
-    std::set<statementNumber> Next(StmtEntity ent, Wildcard);
+    /**
+    * @brief Retrieves statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * This function returns statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * @param ent The statement entity to match against.
+    * @param wildcard A Wildcard representing statements that immediately follow the matched entity.
+    * @return A set of statement numbers that immediately follow the specified entity.
+    */
+    std::set<statementNumber> Next(StmtEntity ent, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * This function returns statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * @param ent The statement entity to match against.
+    * @param num The statement number to match as the predecessor.
+    * @return A set of statement numbers that immediately follow the specified entity and match the specified predecessor.
+    */
     std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
 
-    std::set<statementNumber> Next(Wildcard, StmtEntity ent);
+    /**
+    * @brief Retrieves statement numbers that immediately follow a statement matching a specified entity.
+    *
+    * This function returns statement numbers that immediately follow a statement matching a specified entity.
+    *
+    * @param wildcard A Wildcard representing statements to match as predecessors.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that immediately follow statements matching the specified entity.
+    */
+    std::set<statementNumber> Next(Wildcard wildcard, StmtEntity ent);
 
+    /**
+    * @brief Retrieves statement numbers that immediately follow a specified statement entity.
+    *
+    * This function returns statement numbers that immediately follow a specified statement entity.
+    *
+    * @param num The statement number to match as the predecessor.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that immediately follow the specified entity and match the specified predecessor.
+    */
     std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
 
-    bool isNext(Wildcard, Wildcard);
 
-    bool isNext(Wildcard, statementNumber num);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two statements matching Wildcards.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two statements that match the provided Wildcards.
+    *
+    * @param wildcard1 The Wildcard for the first statement.
+    * @param wildcard2 The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNext(Wildcard wildcard1, Wildcard wildcard2);
 
-    bool isNext(statementNumber num, Wildcard);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * @param wildcard The Wildcard for the first statement.
+    * @param num The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNext(Wildcard wildcard, statementNumber num);
 
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * @param num The specific statement number for the first statement.
+    * @param wildcard The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNext(statementNumber num, Wildcard wildcard);
+
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * @param num1 The specific statement number for the first statement.
+    * @param num2 The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
     bool isNext(statementNumber num1, statementNumber num2);
 
+    /**
+    * @brief Retrieves pairs of statement numbers representing the Next* (transitive next) relationship between two specified statements.
+    *
+    * This function returns pairs of statement numbers representing the Next* relationship between two specified statements.
+    *
+    * @param ent1 The first statement entity.
+    * @param ent2 The second statement entity.
+    * @return A set of pairs, where each pair represents a statement number that directly or indirectly follows another statement (ent1, ent2).
+    */
     std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity ent1, StmtEntity ent2);
 
-    std::set<statementNumber> NextStar(StmtEntity ent, Wildcard);
+    /**
+    * @brief Retrieves statement numbers that follow a statement matching the specified entity through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a statement matching the specified entity through a Next* relationship.
+    *
+    * @param ent The statement entity to match against.
+    * @param wildcard A Wildcard representing statements that follow the matched entity through Next* relationship.
+    * @return A set of statement numbers that follow the specified entity through a Next* relationship.
+    */
+    std::set<statementNumber> NextStar(StmtEntity ent, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves statement numbers that follow a statement matching the specified entity through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a statement matching the specified entity through a Next* relationship.
+    *
+    * @param ent The statement entity to match against.
+    * @param num The statement number to match as the predecessor.
+    * @return A set of statement numbers that follow the specified entity through a Next* relationship and match the specified predecessor.
+    */
     std::set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
 
-    std::set<statementNumber> NextStar(Wildcard, StmtEntity ent);
+    /**
+    * @brief Retrieves statement numbers that follow a statement matching a Wildcard through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a statement matching a Wildcard through a Next* relationship.
+    *
+    * @param wildcard A Wildcard representing statements to match as predecessors.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that follow statements matching the specified entity through a Next* relationship.
+    */
+    std::set<statementNumber> NextStar(Wildcard wildcard, StmtEntity ent);
 
+    /**
+    * @brief Retrieves statement numbers that follow a specified statement entity through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a specified statement entity through a Next* relationship.
+    *
+    * @param num The statement number to match as the predecessor.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that follow the specified entity through a Next* relationship and match the specified predecessor.
+    */
     std::set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
 
-    bool isNextStar(Wildcard, Wildcard);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two statements matching Wildcards.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two statements that match the provided Wildcards.
+    *
+    * @param wildcard1 The Wildcard for the first statement.
+    * @param wildcard2 The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNextStar(Wildcard wildcard1, Wildcard wildcard2);
 
-    bool isNextStar(Wildcard, statementNumber num);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * @param wildcard The Wildcard for the first statement.
+    * @param num The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNextStar(Wildcard wildcard, statementNumber num);
 
-    bool isNextStar(statementNumber num, Wildcard);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * @param num The specific statement number for the first statement.
+    * @param wildcard The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNextStar(statementNumber num, Wildcard wildcard);
 
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * @param num1 The specific statement number for the first statement.
+    * @param num2 The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
     bool isNextStar(statementNumber num1, statementNumber num2);
 
+    /**
+    * @brief Clears the cache used for storing Next* (transitive next) relationships.
+    *
+    * This function clears the cache used for storing Next* relationships, allowing for recalculation when needed.
+    */
     void clearNextStarCache();
 
 
