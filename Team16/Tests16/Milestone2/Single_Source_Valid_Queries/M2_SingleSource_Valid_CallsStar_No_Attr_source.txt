@@ -1,0 +1,48 @@
+procedure one {
+    call two; 
+}
+
+procedure two {
+    x = 0;
+    i = 5;
+    while (i!=0) {
+        a = a + b;
+        call three;
+        c = b - a; }
+    if (a==1) then {
+        call call;
+        t = x+1; }
+    else {
+        z = 1; }
+    a = a + b + c;
+    a = a + 2;
+    a = a * b + z; 
+}
+
+procedure three {
+    if (v == z) then {
+        call five;
+    } else {
+        call four;
+    }
+    z = 5;
+    print v; 
+}
+
+procedure four {
+    read g;
+}
+
+procedure five {
+    read l;
+    call call;
+}
+
+procedure call {
+    print g;
+}
+
+procedure seven {
+    print g;
+    call two;
+}

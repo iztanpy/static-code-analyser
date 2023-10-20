@@ -1,50 +1,43 @@
-1 - calls star with two wdcard is true
+1 - calls with two wdcard returns true
 procedure p;
-Select p such that Calls*(_,_)
-one, two, three, four, five, call, seven
+Select p such that Calls(_,_)
+one, two, three, four, five, six, seven
 5000
-2 - calls star with one wdcard is true
+2 - calls with one wdcard returns false
 procedure p;
-Select p such that Calls*(_,"one")
+Select p such that Calls(_,"one")
 none
 5000
-3 - calls star with two and one returns false
+3 - calls with two one returns false
 procedure p;
-Select p such that Calls*("two","one")
+Select p such that Calls("two","one")
 none
 5000
-4 - calls star with cyclic call returns false
+4 - cyclic calls return false
 procedure p;
-Select p such that Calls*("one","one")
+Select p such that Calls("one","one")
 none
 5000
-4 - calls star with correct output returns print stmts
-print k;
-Select k such that Calls*("one","call")
-19, 23, 24
-5000
-6 - calls star with correct output returns read stmts
+5 - calls with one two returns false
 read r;
-Select r such that Calls*("one","two")
+Select r such that Calls("one","two")
 20, 21
 5000
-7 - nested call star returns false
+6 - nested calls return false
 procedure p1,p2,p3,p4,p5,p6;
-Select p1 such that Calls*(p1, p2) and Calls*(p2,p3) and Calls*(p3,p4) and Calls*(p4,p5) and Calls*(p5,p6) 
+Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5) and Calls(p5,p6) 
 none
 5000
-8 - calls star on the same procedure
+7 - two calls calling the same procedure
 procedure p1,p2,p3;
-Select p1 such that Calls*(p1,p2) and Calls*(p3,p2)
-one, two, three, five, seven
+Select p1 such that Calls(p1,p2) and Calls(p3,p2)
+one
 5000
-9 - calls star with unused synonym
-procedure p,q,z;
-Select z such that Calls*("two","four")
-one, two, three, four, five, call, seven
+8 - nested calls return true
+procedure p1,p2,p3,p4,p5;
+Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5)
+one,seven
 5000
-
-
 
 
 
