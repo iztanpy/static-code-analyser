@@ -31,16 +31,31 @@ UnaryConstraint NextEvaluator::Handle(Declaration& lhs, int rhs, ReadFacade& pkb
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 Constraint NextEvaluator::Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_NextT) {
-  if (lhs == rhs) {
-    return UnaryConstraint{lhs.synonym, {}};
-  }
   StmtEntity lhs_stmt_entity = ConvertToStmtEntity(lhs.design_entity);
   StmtEntity rhs_stmt_entity = ConvertToStmtEntity(rhs.design_entity);
+
+  // Next* case
   if (is_NextT) {
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> raw_results
         = pkb_reader.NextStar(lhs_stmt_entity,
                               rhs_stmt_entity);
-    return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+    // Only for Next*, there will be cases where lhs == rhs
+    if (lhs == rhs) {
+      std::unordered_set<int> unary_result;
+      for (const auto& p : raw_results) {
+        if (p.first == p.second) {
+          unary_result.insert(p.first);
+        }
+      }
+      return UnaryConstraint{lhs.synonym, EvaluatorUtil::ToStringSet(unary_result)};
+    } else {
+      return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+    }
+  }
+
+  // Next case
+  if (lhs == rhs) {
+    return UnaryConstraint{lhs.synonym, {}};
   }
   std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> raw_results
       = pkb_reader.Next(lhs_stmt_entity,
