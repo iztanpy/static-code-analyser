@@ -316,3 +316,36 @@ TEST_CASE("Parser can parse multiple different clauses") {
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }
+
+TEST_CASE("Parser can parse select BOOLEAN") {
+  std::string sample_query_1 = "assign a; while w;"
+                               "Select BOOLEAN such that Parent* (w, a)";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"w", DesignEntity::WHILE_LOOP},
+      {"a", DesignEntity::ASSIGN},
+  };
+
+  REQUIRE(parsed_query_1.selects.empty());
+}
+
+TEST_CASE("Parser can parse multiple select clauses") {
+  std::string sample_query_1 = "assign a; while w; stmt s;"
+                               "Select <w, a, s> such that Parent* (w, a)";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"w", DesignEntity::WHILE_LOOP},
+      {"a", DesignEntity::ASSIGN},
+      {"s", DesignEntity::STMT}
+  };
+
+  std::vector<Synonym> select_clauses =  {
+    declarations[0].synonym,
+    declarations[1].synonym,
+    declarations[2].synonym
+  };
+
+  for (int i = 0; i < select_clauses.size(); i++) {
+    REQUIRE(parsed_query_1.selects[i] == select_clauses[i]);
+  }
+}

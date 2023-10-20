@@ -3,7 +3,7 @@
 #include <utility>
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
-#include "qps/query_evaluator/parent_evaluator.h"
+#include "qps/query_evaluator/next_evaluator.h"
 
 class Next : public SuchThatClause {
  public:

@@ -17,6 +17,7 @@ std::unique_ptr<Clause> ClauseDirector::makeSelectClause(
       break;
     }
   }
+
   builder.setDeclaration({token.text, design_entity});
   return builder.getClause();
 }

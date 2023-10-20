@@ -8,6 +8,8 @@
 #include "qps/clauses/clause.h"
 #include "qps/clauses/pattern_clauses/pattern_validator.h"
 #include "qps/query_evaluator/assign_pattern_evaluator.h"
+#include "qps/query_evaluator/if_evaluator.h"
+#include "qps/query_evaluator/while_evaluator.h"
 #include "PKB/API/ReadFacade.h"
 #include "utils/clauses_types.h"
 #include "utils/entity_types.h"
@@ -99,8 +101,9 @@ class AssignPattern : public PatternClause {
 
 class WhilePattern : public PatternClause {
  public:
-  // TODO(phuccuongngo99): Need to call your Validator here
-  using PatternClause::PatternClause;
+  WhilePattern(Declaration syn, EntRef lhs) : PatternClause(syn, lhs) {
+    Validate();
+  }
 
   RelRefType GetRelRef() const override {
     return RelRefType::WHILE;
@@ -114,8 +117,9 @@ class WhilePattern : public PatternClause {
 
 class IfPattern : public PatternClause {
  public:
-  // TODO(phuccuongngo99): Need to call your Validator here
-  using PatternClause::PatternClause;
+  IfPattern(Declaration syn, EntRef lhs) : PatternClause(syn, lhs) {
+    Validate();
+  }
 
   RelRefType GetRelRef() const override {
     return RelRefType::IF;

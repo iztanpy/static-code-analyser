@@ -1,5 +1,6 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
+
 std::unordered_set<Synonym> PatternClause::GetSynonyms() const {
   std::unordered_set < Synonym > synonyms;
   synonyms.insert(declaration.synonym);
@@ -18,7 +19,7 @@ Constraint AssignPattern::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void AssignPattern::Validate() {
-  PatternValidator::Validate(declaration, lhs);
+  PatternValidator::ValidateAssign(declaration, lhs);
 }
 
 size_t AssignPattern::Hash() const {
@@ -37,19 +38,23 @@ bool PatternClause::equals(const Clause* other) const {
 }
 
 Constraint WhilePattern::Evaluate(ReadFacade& pkb_reader) {
-  return Constraint();
+  return std::visit([this, &pkb_reader](auto&& lhs_arg) {
+    return Constraint{WhileEvaluator::Handle(this->declaration.synonym, lhs_arg, pkb_reader)};
+  }, lhs);
 }
 
 void WhilePattern::Validate() {
-  // TODO(Cuong): validate
+  PatternValidator::ValidateWhile(declaration, lhs);
 }
 
 Constraint IfPattern::Evaluate(ReadFacade& pkb_reader) {
-  return Constraint();
+  return std::visit([this, &pkb_reader](auto&& lhs_arg) {
+    return Constraint{IfEvaluator::Handle(this->declaration.synonym, lhs_arg, pkb_reader)};
+  }, lhs);
 }
 
 void IfPattern::Validate() {
-  // TODO(Cuong): validate
+  PatternValidator::ValidateIf(declaration, lhs);
 }
 
 bool PatternClause::are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2) {
