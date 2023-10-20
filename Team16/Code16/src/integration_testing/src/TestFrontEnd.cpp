@@ -61,8 +61,8 @@ TEST_CASE("TEST SP-PKB-QPS UsesP ModifiesP") {
     sourceProcessor.processSource(simpleProgram);
     REQUIRE((readFacade.isUses("poo", "x")));
     REQUIRE((readFacade.isUses("poo", "l")));
-    REQUIRE((readFacade.isRelation("poo", "y")));
-    REQUIRE((readFacade.isRelation("poo", "k")));
+    REQUIRE((readFacade.isModifies("poo", "y")));
+    REQUIRE((readFacade.isModifies("poo", "k")));
 }
 
 TEST_CASE("TEST SP-PKB Connection 2") {
@@ -78,17 +78,17 @@ TEST_CASE("TEST SP-PKB Connection 2") {
 
     writeFacade.storeUses({ {1, {"x", "y"}}, {2, {"y", "z"}}, {5, {"a"}}, {6, {"b"}}, {7, {"c"}}, {9, {"m"}} });
 
-    writeFacade.storeRelation({ {1, {"x"}}, {2, {"y"}}, {3, {"z"}}, {5, {"a"}}, {6, {"b"}}, {7, {"c"}}, {9, {"m"}} });
+    writeFacade.storeModifies({ {1, {"x"}}, {2, {"y"}}, {3, {"z"}}, {5, {"a"}}, {6, {"b"}}, {7, {"c"}}, {9, {"m"}} });
 
     writeFacade.storeProcedures(procedures);
 
-    REQUIRE((readFacade.isRelation("main", "x")));
-    REQUIRE((readFacade.isRelation("main", "y")));
-    REQUIRE((readFacade.isRelation("main", "z")));
-    REQUIRE((readFacade.isRelation("main", "a")));
-    REQUIRE((readFacade.isRelation("main", "b")));
-    REQUIRE((readFacade.isRelation("main", "c")));
-    REQUIRE((readFacade.isRelation("main", "m")));
+    REQUIRE((readFacade.isModifies("main", "x")));
+    REQUIRE((readFacade.isModifies("main", "y")));
+    REQUIRE((readFacade.isModifies("main", "z")));
+    REQUIRE((readFacade.isModifies("main", "a")));
+    REQUIRE((readFacade.isModifies("main", "b")));
+    REQUIRE((readFacade.isModifies("main", "c")));
+    REQUIRE((readFacade.isModifies("main", "m")));
 
     REQUIRE((readFacade.isUses("main", "x")));
     REQUIRE((readFacade.isUses("main", "y")));
@@ -100,22 +100,22 @@ TEST_CASE("TEST SP-PKB Connection 2") {
 
     Wildcard w = Wildcard();
 
-    REQUIRE((readFacade.isRelation("main", w)));
-    REQUIRE((readFacade.isRelation("p", w)));
-    REQUIRE((readFacade.isRelation("q", w)));
+    REQUIRE((readFacade.isModifies("main", w)));
+    REQUIRE((readFacade.isModifies("p", w)));
+    REQUIRE((readFacade.isModifies("q", w)));
 
     REQUIRE((readFacade.isUses("main", w)));
     REQUIRE((readFacade.isUses("p", w)));
     REQUIRE((readFacade.isUses("q", w)));
     REQUIRE((!readFacade.isUses("r", w)));
 
-    REQUIRE((!readFacade.isRelation("p", "x")));
-    REQUIRE((!readFacade.isRelation("p", "y")));
-    REQUIRE((!readFacade.isRelation("p", "z")));
-    REQUIRE((readFacade.isRelation("p", "a")));
-    REQUIRE((readFacade.isRelation("p", "b")));
-    REQUIRE((readFacade.isRelation("p", "c")));
-    REQUIRE((readFacade.isRelation("p", "m")));
+    REQUIRE((!readFacade.isModifies("p", "x")));
+    REQUIRE((!readFacade.isModifies("p", "y")));
+    REQUIRE((!readFacade.isModifies("p", "z")));
+    REQUIRE((readFacade.isModifies("p", "a")));
+    REQUIRE((readFacade.isModifies("p", "b")));
+    REQUIRE((readFacade.isModifies("p", "c")));
+    REQUIRE((readFacade.isModifies("p", "m")));
 
     REQUIRE((!readFacade.isUses("p", "x")));
     REQUIRE((!readFacade.isUses("p", "y")));
@@ -125,13 +125,13 @@ TEST_CASE("TEST SP-PKB Connection 2") {
     REQUIRE((readFacade.isUses("p", "c")));
     REQUIRE((readFacade.isUses("p", "m")));
 
-    REQUIRE((!readFacade.isRelation("q", "x")));
-    REQUIRE((!readFacade.isRelation("q", "y")));
-    REQUIRE((!readFacade.isRelation("q", "z")));
-    REQUIRE((!readFacade.isRelation("q", "a")));
-    REQUIRE((!readFacade.isRelation("q", "b")));
-    REQUIRE((!readFacade.isRelation("q", "c")));
-    REQUIRE((readFacade.isRelation("q", "m")));
+    REQUIRE((!readFacade.isModifies("q", "x")));
+    REQUIRE((!readFacade.isModifies("q", "y")));
+    REQUIRE((!readFacade.isModifies("q", "z")));
+    REQUIRE((!readFacade.isModifies("q", "a")));
+    REQUIRE((!readFacade.isModifies("q", "b")));
+    REQUIRE((!readFacade.isModifies("q", "c")));
+    REQUIRE((readFacade.isModifies("q", "m")));
 
     REQUIRE((!readFacade.isUses("q", "x")));
     REQUIRE((!readFacade.isUses("q", "y")));
@@ -141,24 +141,24 @@ TEST_CASE("TEST SP-PKB Connection 2") {
     REQUIRE((!readFacade.isUses("q", "c")));
     REQUIRE((readFacade.isUses("q", "m")));
 
-    REQUIRE((readFacade.relates("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
-    REQUIRE((readFacade.relates("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
-    REQUIRE((readFacade.relates("q") == std::unordered_set<variable>({ "m" })));
+    REQUIRE((readFacade.modifies("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
+    REQUIRE((readFacade.modifies("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
+    REQUIRE((readFacade.modifies("q") == std::unordered_set<variable>({ "m" })));
 
     REQUIRE((readFacade.uses("main") == std::unordered_set<variable>({ "x", "y", "z", "a", "b", "c", "m" })));
     REQUIRE((readFacade.uses("p") == std::unordered_set<variable>({ "a", "b", "c", "m" })));
     REQUIRE((readFacade.uses("q") == std::unordered_set<variable>({ "m" })));
 
-    REQUIRE((readFacade.relatesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
+    REQUIRE((readFacade.modifiesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
     REQUIRE((readFacade.usesProcedure(w) == std::unordered_set<procedure>({ "main", "p", "q" })));
 
-    REQUIRE((readFacade.relatesProcedure("x") == std::unordered_set<procedure>({ "main" })));
+    REQUIRE((readFacade.modifiesProcedure("x") == std::unordered_set<procedure>({ "main" })));
     REQUIRE((readFacade.usesProcedure("x") == std::unordered_set<procedure>({ "main" })));
 
-    REQUIRE((readFacade.relatesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
+    REQUIRE((readFacade.modifiesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
     REQUIRE((readFacade.usesProcedure("a") == std::unordered_set<procedure>({ "main", "p" })));
 
-    REQUIRE((readFacade.relatesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
+    REQUIRE((readFacade.modifiesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
     REQUIRE((readFacade.usesProcedure("m") == std::unordered_set<procedure>({ "main", "p", "q" })));
 }
 
@@ -247,15 +247,15 @@ TEST_CASE("Test Calls ") {
     std::string simpleProgram = "procedure p {x = x + 1; y = y  + 2; call q;} procedure q {m = m + 1; call r;} procedure r { j = j + 1;}";
 
     sourceProcessor.processSource(simpleProgram);
-    REQUIRE(readFacade.isRelation(3, "m"));
-    REQUIRE(readFacade.isRelation(3, "j"));
-    REQUIRE(readFacade.isRelation(5, "j"));
-    REQUIRE(readFacade.isRelation(6, "j"));
+    REQUIRE(readFacade.isModifies(3, "m"));
+    REQUIRE(readFacade.isModifies(3, "j"));
+    REQUIRE(readFacade.isModifies(5, "j"));
+    REQUIRE(readFacade.isModifies(6, "j"));
     StmtEntity call = StmtEntity::kCall;
-    REQUIRE(readFacade.relates(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
+    REQUIRE(readFacade.modifies(call, "j") == std::unordered_set<statementNumber>({ 3, 5}));
     REQUIRE(pkb_ptr->getStatements(StmtEntity::kStmt) == std::unordered_set<statementNumber>({ 1, 2, 3, 4, 5, 6 }));
     REQUIRE(pkb_ptr->getStatements(call) == std::unordered_set<statementNumber>({ 3, 5}));
-    REQUIRE(readFacade.relates(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
+    REQUIRE(readFacade.modifies(StmtEntity::kStmt, "j") == std::unordered_set<statementNumber>({ 3, 5, 6 }));
 
 }
 
@@ -325,9 +325,9 @@ TEST_CASE("Test SP-PKB connection") {
 
     REQUIRE(readFacade.getVariables() == std::unordered_set<variable>({ "x", "z", "I", "y" }));
 
-    REQUIRE(readFacade.relates(1) == std::unordered_set<variable>({ "x" }));
-    REQUIRE(readFacade.relates(2) == std::unordered_set<variable>({ "x" }));
-    REQUIRE(readFacade.relates(3) == std::unordered_set<variable>({ "y" }));
+    REQUIRE(readFacade.modifies(1) == std::unordered_set<variable>({ "x" }));
+    REQUIRE(readFacade.modifies(2) == std::unordered_set<variable>({ "x" }));
+    REQUIRE(readFacade.modifies(3) == std::unordered_set<variable>({ "y" }));
 
     REQUIRE(readFacade.uses(1) == std::unordered_set<variable>({ "z", "I" }));
     REQUIRE(readFacade.uses(2) == std::unordered_set<variable>({ "x" }));
@@ -480,4 +480,69 @@ TEST_CASE("Selecting Assign statements") {
 
     sourceProcessor.processSource(simpleProgram);
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "1", "3" }));
+}
+
+TEST_CASE("Test call failing testcase") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+    std::string simpleProgram = R"(
+        procedure one {
+            call two;
+        }
+
+        procedure two {
+            x = 0;
+            i = 5;
+            while (i!=0) {
+                a = a + b;
+                call three;
+                c = b - a; }
+            if (a==1) then {
+                call six;
+                t = x+1; }
+            else {
+                z = 1; }
+            a = a + b + c;
+            a = a + 2;
+            a = a * b + z;
+        }
+
+        procedure three {
+            if (v == z) then {
+                call five;
+            } else {
+                call four;
+            }
+            z = 5;
+            print v;
+        }
+
+        procedure four {
+            read g;
+        }
+
+        procedure five {
+            read l;
+            call six;
+        }
+
+        procedure six {
+            print g;
+        }
+
+        procedure seven {
+            print g;
+            call two;
+        }
+     )";
+    std::string query_1 = "procedure p;Select p such that Calls(_,_)";
+    sourceProcessor.processSource(simpleProgram);
+    bool result = qps.Evaluate(query_1) == std::unordered_set<std::string>({ "five", "one", "seven", "three", "two", "four", "six" });
+
+    std::unordered_set<std::string> temp = qps.Evaluate(query_1);
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "five", "one", "seven", "three", "two", "four", "six" }));
 }

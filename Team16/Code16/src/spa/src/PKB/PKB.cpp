@@ -17,6 +17,16 @@ PKB::PKB() {
 }
 
 // AssignStore methods
+std::unordered_set<statementNumber> PKB::getCommonStatements(std::unordered_set<statementNumber> set1,
+    std::unordered_set<statementNumber> set2) {
+    std::unordered_set<statementNumber> result;
+    for (auto const& x : set1) {
+        if (set2.count(x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
                                             std::unordered_set<partialMatch>> numRHSMap,
@@ -206,7 +216,7 @@ std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard
 
 // ModifiesStore methods
 
-void PKB::storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap) {
+void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
     std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesMapWithCall;
 
     for (auto const& x : varModifiesMap) {
@@ -222,28 +232,28 @@ void PKB::storeRelation(std::unordered_map<statementNumber, variable> varModifie
     modifiesStore->storeRelation(ModifiesMapWithCall);
 }
 
-void PKB::storeRelationProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
-                                  std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
+void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+    std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
     modifiesStore->storeRelationProcedures(procedures, callTableStar);
 }
 
-void PKB::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls) {
+void PKB::storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls) {
     modifiesStore->storeRelationCalls(calls);
 }
 
-bool PKB::isRelation(statementNumber lineNumber, variable variableName) {
+bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
     return modifiesStore->isRelation(lineNumber, variableName);
 }
 
-bool PKB::isRelation(statementNumber lineNumber, Wildcard wildcard) {
+bool PKB::isModifies(statementNumber lineNumber, Wildcard wildcard) {
     return modifiesStore->isRelation(lineNumber);
 }
 
-std::unordered_set<variable> PKB::relates(statementNumber line) {
+std::unordered_set<variable> PKB::modifies(statementNumber line) {
     return this->modifiesStore->relates(line);
 }
 
-std::unordered_set<statementNumber> PKB::relates(StmtEntity type, variable variableName) {
+std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, variable variableName) {
     std::unordered_set<statementNumber> relevantStmts = statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
 
@@ -255,7 +265,7 @@ std::unordered_set<statementNumber> PKB::relates(StmtEntity type, variable varia
     return result;
 }
 
-std::unordered_set<statementNumber> PKB::relates(StmtEntity type, Wildcard wildcard) {
+std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
@@ -267,7 +277,7 @@ std::unordered_set<statementNumber> PKB::relates(StmtEntity type, Wildcard wildc
     return result;
 }
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::relates(StmtEntity type) {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies(StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
@@ -279,27 +289,27 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::relates(
     return result;
 }
 
-bool PKB::isRelation(procedure procedure, Wildcard wildcard) {
+bool PKB::isModifies(procedure procedure, Wildcard wildcard) {
     return modifiesStore->isRelation(procedure);
 }
 
-std::unordered_set<variable> PKB::relates(procedure procedure) {
+std::unordered_set<variable> PKB::modifies(procedure procedure) {
     return modifiesStore->relatesProcedureProc(procedure);
 }
 
-bool PKB::isRelation(procedure procedure, variable variableName) {
+bool PKB::isModifies(procedure procedure, variable variableName) {
     return modifiesStore->isRelation(procedure, variableName);
 }
 
-std::unordered_set<procedure> PKB::relatesProcedure(Wildcard wildcard) {
+std::unordered_set<procedure> PKB::modifiesProcedure(Wildcard wildcard) {
     return modifiesStore->relatesProcedure();
 }
 
-std::unordered_set<procedure> PKB::relatesProcedure(variable variableName) {
+std::unordered_set<procedure> PKB::modifiesProcedure(variable variableName) {
     return modifiesStore->relatesProcedure(variableName);
 }
 
-std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::relatesProcedure() {
+std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::modifiesProcedure() {
     return modifiesStore->relatesProcedurePair();
 }
 
