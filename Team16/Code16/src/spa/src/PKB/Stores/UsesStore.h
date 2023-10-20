@@ -78,15 +78,63 @@ class UsesStore {
     */
     std::unordered_set<statementNumber> uses(variable variableName);
 
+    /**
+    * @brief Checks if a given procedure uses any variables.
+    *
+    * This function checks whether the specified procedure uses any variables.
+    *
+    * @param procedure The procedure to check for variable usage.
+    * @return True if the procedure uses variables; false otherwise.
+    */
     bool isUses(procedure procedure);
 
+    /**
+     * @brief Retrieves a set of variables used by a specific procedure.
+     *
+     * This function returns a set of variables used by the provided procedure.
+     *
+     * @param procedure The procedure for which to retrieve used variables.
+     * @return A set of variables used by the specified procedure.
+     */
     std::unordered_set<variable> usesProcedureProc(procedure procedure);
 
+    /**
+     * @brief Checks if a given procedure uses a specific variable.
+     *
+     * This function checks whether the specified procedure uses the provided variable.
+     *
+     * @param procedure The procedure to check for variable usage.
+     * @param variable The variable to check for usage within the procedure.
+     * @return True if the procedure uses the specified variable; false otherwise.
+     */
     bool isUses(procedure procedure, variable variable);
 
+    /**
+     * @brief Retrieves a set of procedures that use variables.
+     *
+     * This function returns a set of procedures that use variables.
+     *
+     * @return A set of procedures that use variables.
+     */
     std::unordered_set<procedure> usesProcedure();
 
+    /**
+     * @brief Retrieves a set of procedures that use a specific variable.
+     *
+     * This function returns a set of procedures that use the provided variable.
+     *
+     * @param variable The variable to check for usage in procedures.
+     * @return A set of procedures that use the specified variable.
+     */
     std::unordered_set<procedure> usesProcedure(variable variable);
 
+    /**
+     * @brief Retrieves all pairs of procedures and variables where the procedure uses the variable.
+     *
+     * This function returns all pairs of procedures and variables where the procedure uses the variable.
+     *
+     * @return A set of pairs, where each pair represents a procedure and a variable (procedure, variable).
+     */
     std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedurePair();
+
 };
