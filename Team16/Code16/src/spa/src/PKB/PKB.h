@@ -355,7 +355,7 @@ class PKB {
     * @param line The statement number for which to retrieve modified variables.
     * @return An unordered set of variables modified by the specified statement.
     */
-    std::unordered_set<variable> relates(statementNumber line);
+    std::unordered_set<variable> modifies(statementNumber line);
 
     /**
     * @brief Retrieves statements that modify a specific variable of a given type.
@@ -366,7 +366,7 @@ class PKB {
     * @param variableName The name of the variable to search for in statement modification.
     * @return An unordered set of statement numbers that modify the specified variable of the given type.
     */
-    std::unordered_set<statementNumber> relates(StmtEntity type, variable variableName);
+    std::unordered_set<statementNumber> modifies(StmtEntity type, variable variableName);
 
     /**
     * @brief Retrieves statements that modify variables matching a wildcard pattern of a given type.
@@ -377,7 +377,7 @@ class PKB {
     * @param wildcard A wildcard pattern to match against modified variables.
     * @return An unordered set of statement numbers that modify matching variables of the given type.
     */
-    std::unordered_set<statementNumber> relates(StmtEntity type, Wildcard wildcard);
+    std::unordered_set<statementNumber> modifies(StmtEntity type, Wildcard wildcard);
 
     /**
     * @brief Retrieves pairs of statement numbers and variables for statements of a given type that represent modification relationships.
@@ -387,19 +387,19 @@ class PKB {
     * @param type The type of statement for which to retrieve modification relationships.
     * @return An unordered set of pairs representing modification relationships for statements of the specified type.
     */
-    std::unordered_set<std::pair<statementNumber, variable>, PairHash> relates(StmtEntity type);
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
 
     bool isModifies(procedure procedure, Wildcard wildcard);
 
-    std::unordered_set<variable> relates(procedure procedure);
+    std::unordered_set<variable> modifies(procedure procedure);
 
     bool isModifies(procedure procedure, variable variableName);
 
-    std::unordered_set<procedure> relatesProcedure(Wildcard wildcard);
+    std::unordered_set<procedure> modifiesProcedure(Wildcard wildcard);
 
-    std::unordered_set<procedure> relatesProcedure(variable variableName);
+    std::unordered_set<procedure> modifiesProcedure(variable variableName);
 
-    std::unordered_set<std::pair<procedure, variable>, PairHash> relatesProcedure();
+    std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
 
     // ConstantStore methods
 
