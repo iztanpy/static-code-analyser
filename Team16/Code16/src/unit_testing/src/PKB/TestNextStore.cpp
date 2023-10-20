@@ -55,6 +55,8 @@ TEST_CASE("Test NextStar Store if") {
     REQUIRE(!nextStore.isNextStar(2, 9));
     // line number 9 does not exist
     REQUIRE(!nextStore.isNextStar(8, 9));
+
+    REQUIRE(!nextStore.isNextStar(12, 14));
 }
 
 TEST_CASE("Test NextStar Store while") {
