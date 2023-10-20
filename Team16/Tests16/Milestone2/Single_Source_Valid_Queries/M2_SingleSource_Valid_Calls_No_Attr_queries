@@ -1,0 +1,52 @@
+1 - Calls(_,_) is true
+procedure p;
+Select p such that Calls(_,_)
+one, two, three, four, five, six, seven
+5000
+2 - Calls(_,"one") is false
+procedure p;
+Select p such that Calls(_,"one")
+none
+5000
+3 - Calls("two", "one") is false 
+procedure p;
+Select p such that Calls("two","one")
+none
+5000
+4 - Calls("one", "one") is false (Cyclic cycles not allowed)
+procedure p;
+Select p such that Calls("one","one")
+none
+5000
+5 - Calls("one", "two") is true
+read r;
+Select r such that Calls("one","two")
+1, 2, 23, 24
+5000
+6 - Calls("one", "two") is true
+read r;
+Select r such that Calls("one","two")
+20, 21
+5000
+7 - Nexted calls return false
+procedure p1,p2,p3,p4,p5,p6;
+Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5) and Calls(p5,p6) 
+none
+5000
+8 - Two calls calling the same procedure
+procedure p1,p2,p3;
+Select p1 such that Calls(p1,p2) and Calls(p3,p2)
+one
+5000
+9 - Nested calls return true
+procedure p1,p2,p3,p4,p5;
+Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5)
+one,seven
+5000
+
+
+
+
+
+
+
