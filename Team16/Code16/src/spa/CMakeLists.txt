@@ -63,8 +63,6 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/VariableStore.h
         src/PKB/Stores/ConstantStore.cpp
         src/PKB/Stores/ConstantStore.h
-
-
         src/PKB/Stores/AssignStore.cpp
         src/PKB/Stores/AssignStore.h
         src/PKB/Stores/StatementStore.cpp
@@ -203,6 +201,15 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/constraint_solver/clause_grouper.h
         src/PKB/Stores/NextStore.cpp
         src/PKB/Stores/NextStore.h
+        src/qps/query_evaluator/if_evaluator.cpp
+        src/qps/query_evaluator/if_evaluator.h
+        src/qps/query_evaluator/while_evaluator.cpp
+        src/qps/query_evaluator/while_evaluator.h
+        src/qps/query_evaluator/next_evaluator.cpp
+        src/qps/query_evaluator/next_evaluator.h
+        src/qps/query_evaluator/next_evaluator.cpp
+        src/qps/query_evaluator/next_evaluator.h
+        src/qps/query_evaluator/next_evaluator.cpp
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
