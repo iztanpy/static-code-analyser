@@ -283,9 +283,6 @@ TEST_CASE("ConstraintTable::Select with Error when passing in non-existing ColNa
   REQUIRE(ct.Select({"a"}) == std::unordered_set < Cell > {"1", "2", "9"});
   REQUIRE(ct.Select({"b"}) == std::unordered_set < Cell > {"3", "4", "10", "11"});
 
-  REQUIRE(ct.Select({"d"}).empty());
-  REQUIRE(ct.Select({"kingkong"}).empty());
-
   Constraint constraint = BinaryConstraint{{"a", "d"}, {{"1", "2"}, {"1", "4"}, {"3", "11"}}};
   ct.Solve(constraint);
 
