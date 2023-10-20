@@ -1255,51 +1255,241 @@ class PKB {
 
 
     // Next Methods
+    /**
+    * @brief Stores a mapping of statement numbers to sets of statement numbers representing the Next relationship.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of statement numbers
+    * representing the Next relationship in the provided NextMap.
+    *
+    * @param NextMap An unordered_map where statementNumber is the key, and unordered_set<statementNumber> is the associated value.
+    */
     void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
 
+    /**
+    * @brief Stores a Control Flow Graph (CFG).
+    *
+    * This function stores a Control Flow Graph (CFG) representing the program's control flow.
+    *
+    * @param cfg The Control Flow Graph to be stored.
+    */
     void storeCfg(Cfg cfg);
 
+    /**
+    * @brief Stores a mapping of statement numbers to corresponding CFG nodes in a CFG legend.
+    *
+    * This function allows you to store a mapping of statement numbers to shared pointers to CFG nodes
+    * in the provided cfgLegend.
+    *
+    * @param cfgLegend An unordered_map where statementNumber is the key, and shared_ptr<CfgNode> is the associated value.
+    */
     void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 
+    /**
+    * @brief Retrieves pairs of statement numbers representing the Next relationship between two specified statements.
+    *
+    * This function returns pairs of statement numbers representing the Next relationship between two specified statements.
+    *
+    * @param ent1 The first statement entity.
+    * @param ent2 The second statement entity.
+    * @return A set of pairs, where each pair represents a statement number that directly follows another statement (ent1, ent2).
+    */
     std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
 
-    std::set<statementNumber> Next(StmtEntity ent, Wildcard);
+    /**
+    * @brief Retrieves statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * This function returns statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * @param ent The statement entity to match against.
+    * @param wildcard A Wildcard representing statements that immediately follow the matched entity.
+    * @return A set of statement numbers that immediately follow the specified entity.
+    */
+    std::set<statementNumber> Next(StmtEntity ent, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * This function returns statement numbers that immediately follow a statement matching the specified entity.
+    *
+    * @param ent The statement entity to match against.
+    * @param num The statement number to match as the predecessor.
+    * @return A set of statement numbers that immediately follow the specified entity and match the specified predecessor.
+    */
     std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
 
-    std::set<statementNumber> Next(Wildcard, StmtEntity ent);
+    /**
+    * @brief Retrieves statement numbers that immediately follow a statement matching a specified entity.
+    *
+    * This function returns statement numbers that immediately follow a statement matching a specified entity.
+    *
+    * @param wildcard A Wildcard representing statements to match as predecessors.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that immediately follow statements matching the specified entity.
+    */
+    std::set<statementNumber> Next(Wildcard wildcard, StmtEntity ent);
 
+    /**
+    * @brief Retrieves statement numbers that immediately follow a specified statement entity.
+    *
+    * This function returns statement numbers that immediately follow a specified statement entity.
+    *
+    * @param num The statement number to match as the predecessor.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that immediately follow the specified entity and match the specified predecessor.
+    */
     std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
 
-    bool isNext(Wildcard, Wildcard);
 
-    bool isNext(Wildcard, statementNumber num);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two statements matching Wildcards.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two statements that match the provided Wildcards.
+    *
+    * @param wildcard1 The Wildcard for the first statement.
+    * @param wildcard2 The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNext(Wildcard wildcard1, Wildcard wildcard2);
 
-    bool isNext(statementNumber num, Wildcard);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * @param wildcard The Wildcard for the first statement.
+    * @param num The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNext(Wildcard wildcard, statementNumber num);
 
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * @param num The specific statement number for the first statement.
+    * @param wildcard The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNext(statementNumber num, Wildcard wildcard);
+
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * @param num1 The specific statement number for the first statement.
+    * @param num2 The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
     bool isNext(statementNumber num1, statementNumber num2);
 
+    /**
+    * @brief Retrieves pairs of statement numbers representing the Next* (transitive next) relationship between two specified statements.
+    *
+    * This function returns pairs of statement numbers representing the Next* relationship between two specified statements.
+    *
+    * @param ent1 The first statement entity.
+    * @param ent2 The second statement entity.
+    * @return A set of pairs, where each pair represents a statement number that directly or indirectly follows another statement (ent1, ent2).
+    */
     std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity ent1, StmtEntity ent2);
 
-    std::set<statementNumber> NextStar(StmtEntity ent, Wildcard);
+    /**
+    * @brief Retrieves statement numbers that follow a statement matching the specified entity through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a statement matching the specified entity through a Next* relationship.
+    *
+    * @param ent The statement entity to match against.
+    * @param wildcard A Wildcard representing statements that follow the matched entity through Next* relationship.
+    * @return A set of statement numbers that follow the specified entity through a Next* relationship.
+    */
+    std::set<statementNumber> NextStar(StmtEntity ent, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves statement numbers that follow a statement matching the specified entity through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a statement matching the specified entity through a Next* relationship.
+    *
+    * @param ent The statement entity to match against.
+    * @param num The statement number to match as the predecessor.
+    * @return A set of statement numbers that follow the specified entity through a Next* relationship and match the specified predecessor.
+    */
     std::set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
 
-    std::set<statementNumber> NextStar(Wildcard, StmtEntity ent);
+    /**
+    * @brief Retrieves statement numbers that follow a statement matching a Wildcard through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a statement matching a Wildcard through a Next* relationship.
+    *
+    * @param wildcard A Wildcard representing statements to match as predecessors.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that follow statements matching the specified entity through a Next* relationship.
+    */
+    std::set<statementNumber> NextStar(Wildcard wildcard, StmtEntity ent);
 
+    /**
+    * @brief Retrieves statement numbers that follow a specified statement entity through a Next* (transitive next) relationship.
+    *
+    * This function returns statement numbers that follow a specified statement entity through a Next* relationship.
+    *
+    * @param num The statement number to match as the predecessor.
+    * @param ent The statement entity to match against.
+    * @return A set of statement numbers that follow the specified entity through a Next* relationship and match the specified predecessor.
+    */
     std::set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
 
-    bool isNextStar(Wildcard, Wildcard);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two statements matching Wildcards.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two statements that match the provided Wildcards.
+    *
+    * @param wildcard1 The Wildcard for the first statement.
+    * @param wildcard2 The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNextStar(Wildcard wildcard1, Wildcard wildcard2);
 
-    bool isNextStar(Wildcard, statementNumber num);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a statement matching a Wildcard and a specific statement.
+    *
+    * @param wildcard The Wildcard for the first statement.
+    * @param num The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNextStar(Wildcard wildcard, statementNumber num);
 
-    bool isNextStar(statementNumber num, Wildcard);
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between a specific statement and a statement matching a Wildcard.
+    *
+    * @param num The specific statement number for the first statement.
+    * @param wildcard The Wildcard for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
+    bool isNextStar(statementNumber num, Wildcard wildcard);
 
+    /**
+    * @brief Checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * This function checks if there is a Next* (transitive next) relationship between two specific statements.
+    *
+    * @param num1 The specific statement number for the first statement.
+    * @param num2 The specific statement number for the second statement.
+    * @return True if a Next* relationship exists; false otherwise.
+    */
     bool isNextStar(statementNumber num1, statementNumber num2);
 
+    /**
+    * @brief Clears the cache used for storing Next* (transitive next) relationships.
+    *
+    * This function clears the cache used for storing Next* relationships, allowing for recalculation when needed.
+    */
     void clearNextStarCache();
-
-
+    
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;
 };
