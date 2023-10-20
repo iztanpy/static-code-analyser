@@ -31,4 +31,28 @@ class SelectClause : public Clause {
    * @return a set of just 1 element
    */
   std::unordered_set<Synonym> GetSynonyms() override;
+
+  /*!
+   * Gets the hash of this Select clause
+   * @return the hash of this Select clause
+   */
+  size_t Hash() const override;
+
+  /*!
+   * Checks if this Select clause is equal to another clause
+   * @param other clauses of other types
+   * @return true if they are equal, else false
+   */
+  bool equals(const Clause* other) const override;
+
+  /*!
+  * Gets the RelRefType of this clause
+  * @return
+  */
+  RelRefType GetRelRef() const override {
+    return RelRefType::SELECT;
+  }
+
+  // Overloaded == operator
+  friend bool operator==(const SelectClause& lhs, const SelectClause& rhs);
 };

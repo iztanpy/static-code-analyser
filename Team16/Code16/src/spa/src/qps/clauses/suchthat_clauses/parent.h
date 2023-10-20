@@ -14,8 +14,12 @@ class Parent : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
+  RelRefType GetRelRef() const override {
+    return RelRefType::PARENT;
+  }
+
   Parent(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -33,8 +37,12 @@ class ParentT : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
+  RelRefType GetRelRef() const override {
+    return RelRefType::PARENTT;
+  }
+
   ParentT(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

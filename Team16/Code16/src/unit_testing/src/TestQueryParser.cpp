@@ -4,6 +4,22 @@
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
 
+bool areClauseSetsEqual(const ClauseSet& lhs, const ClauseSet& rhs) {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+
+  for (const auto& lClausePtr : lhs) {
+    if (rhs.find(lClausePtr) == rhs.end()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+using ClauseSet = std::unordered_set<std::unique_ptr<Clause>, ClauseHasher, ClauseEquality>;
+
 TEST_CASE("Query Parser can extract select clause") {
   std::string sample_query = "variable v; Select v";
   TokenisedQuery tokenised_query = QueryTokenizer::tokenize(sample_query);
@@ -50,7 +66,7 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
 
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = Wildcard::Value;
-  REQUIRE(clause->syn_assignment.equals(declarations[1]));
+  REQUIRE(clause->declaration == declarations[1]);
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }
@@ -63,71 +79,59 @@ TEST_CASE("Query Parser can return a parsed query") {
       {"a", DesignEntity::ASSIGN}
   };
 
-  SelectClause expected_select_clause;
-  expected_select_clause.declaration = declarations[0];
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::vector<Synonym> expected_selects = {declarations[0].synonym};
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
 
-  EntRef expected_lhs = EntRef(declarations[0]);
-  EntRef expected_rhs = EntRef(Wildcard::Value);
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], EntRef(declarations[0]), Wildcard::Value));
 
-  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_pattern_query.clauses[0]).get());
-  auto* assign_clause = dynamic_cast<AssignPattern*>(std::move(parsed_pattern_query.clauses[1]).get());
-
-  REQUIRE(parsed_pattern_query.clauses.size() == 2);
   REQUIRE(parsed_pattern_query.selects == expected_selects);
-  REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(assign_clause->syn_assignment.equals(declarations[1]));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(assign_clause->lhs, expected_lhs));
-  REQUIRE(PatternClause::are_expr_spec_equal(assign_clause->rhs, Wildcard::Value));
+  REQUIRE(areClauseSetsEqual(parsed_pattern_query.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse Calls and Calls*") {
-  std::string sample_query_1 = "procedure p; Select p such that Calls(p, _)";
-  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
-  std::vector<Declaration> declarations = {
-      {"p", DesignEntity::PROCEDURE}
-  };
+  SECTION("Calls") {
+    std::string sample_query_1 = "procedure p; Select p such that Calls(p, _)";
+    ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
+    std::vector<Declaration> declarations = {
+        {"p", DesignEntity::PROCEDURE}
+    };
 
-  SelectClause expected_select_clause;
-  expected_select_clause.declaration = declarations[0];
+    std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::vector<Synonym> expected_selects = {declarations[0].synonym};
+    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+    expected_select_clause_ptr->declaration = declarations[0];
 
-  EntRef expected_lhs = EntRef(declarations[0]);
-  EntRef expected_rhs = EntRef(Wildcard::Value);
+    ClauseSet expected_clauses;
+    expected_clauses.insert(std::move(expected_select_clause_ptr));
+    expected_clauses.insert(std::make_unique<Calls>(EntRef(declarations[0]), Wildcard::Value));
 
-  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query.clauses[0]).get());
-  auto* calls_clause = dynamic_cast<Calls*>(std::move(parsed_query.clauses[1]).get());
+    REQUIRE(parsed_query.selects == expected_selects);
+    REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
+  }
 
-  REQUIRE(parsed_query.clauses.size() == 2);
-  REQUIRE(parsed_query.selects == expected_selects);
-  REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(calls_clause->lhs, expected_lhs));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(calls_clause->rhs, expected_rhs));
+  SECTION("Calls*") {
+    std::string sample_query = "procedure p; Select p such that Calls*(p, \"Third\")";
+    ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
+    std::vector<Declaration> declarations = {
+        {"p", DesignEntity::PROCEDURE}
+    };
 
-  std::string sample_query_2 = "procedure p; Select p such that Calls*(p, \"Third\")";
-  ParsedQuery parsed_query_2 = QueryParser::ParseTokenizedQuery(sample_query_2);
-  std::vector<Declaration> declarations_2 = {
-      {"p", DesignEntity::PROCEDURE}
-  };
+    std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  SelectClause expected_select_clause_2;
-  expected_select_clause_2.declaration = declarations_2[0];
+    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+    expected_select_clause_ptr->declaration = declarations[0];
 
-  std::vector<Synonym> expected_selects_2 = {declarations_2[0].synonym};
+    ClauseSet expected_clauses;
+    expected_clauses.insert(std::move(expected_select_clause_ptr));
+    expected_clauses.insert(std::make_unique<CallsT>(EntRef(declarations[0]), "Third"));
 
-  EntRef expected_lhs_2 = EntRef(declarations_2[0]);
-  EntRef expected_rhs_2 = EntRef("Third");
-
-  auto* select_clause_2 = dynamic_cast<SelectClause*>(std::move(parsed_query_2.clauses[0]).get());
-  auto* calls_clause_2 = dynamic_cast<CallsT*>(std::move(parsed_query_2.clauses[1]).get());
-
-  REQUIRE(parsed_query_2.clauses.size() == 2);
-  REQUIRE(parsed_query_2.selects == expected_selects_2);
-  REQUIRE(select_clause_2->equals(expected_select_clause_2));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(calls_clause_2->lhs, expected_lhs_2));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(calls_clause_2->rhs, expected_rhs_2));
+    REQUIRE(parsed_query.selects == expected_selects);
+    REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
+  }
 }
 
 TEST_CASE("Query parser throws correct errors") {
@@ -139,51 +143,44 @@ TEST_CASE("Query parser throws correct errors") {
 }
 
 TEST_CASE("Parser can parse Next and Next*") {
-  std::string sample_query_1 = "stmt s1; Select s1 such that Next(2, 3)";
-  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
-  std::vector<Declaration> declarations = {
-      {"s1", DesignEntity::STMT}
-  };
+  SECTION("Next") {
+    std::string sample_query_1 = "stmt s1; Select s1 such that Next(2, 3)";
+    ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query_1);
+    std::vector<Declaration> declarations = {
+        {"s1", DesignEntity::STMT}
+    };
+    std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  SelectClause expected_select_clause;
-  expected_select_clause.declaration = declarations[0];
+    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+    expected_select_clause_ptr->declaration = declarations[0];
 
-  std::vector<Synonym> expected_selects = {declarations[0].synonym};
+    ClauseSet expected_clauses;
+    expected_clauses.insert(std::move(expected_select_clause_ptr));
+    expected_clauses.insert(std::make_unique<Next>(2, 3));
 
-  StmtRef expected_lhs = StmtRef(2);
-  StmtRef expected_rhs = StmtRef(3);
+    REQUIRE(parsed_query.selects == expected_selects);
+    REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
+  }
 
-  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query.clauses[0]).get());
-  auto* next_clause = dynamic_cast<Next*>(std::move(parsed_query.clauses[1]).get());
+  SECTION("Next*") {
+    std::string sample_query = "procedure p; Select p such that Next*(2, 9)";
+    ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
+    std::vector<Declaration> declarations = {
+        {"p", DesignEntity::PROCEDURE}
+    };
 
-  REQUIRE(parsed_query.clauses.size() == 2);
-  REQUIRE(parsed_query.selects == expected_selects);
-  REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(next_clause->lhs, expected_lhs));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(next_clause->rhs, expected_rhs));
+    std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::string sample_query_2 = "procedure p; Select p such that Next*(2, 9)";
-  ParsedQuery parsed_query_2 = QueryParser::ParseTokenizedQuery(sample_query_2);
-  std::vector<Declaration> declarations_2 = {
-      {"p", DesignEntity::PROCEDURE}
-  };
+    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+    expected_select_clause_ptr->declaration = declarations[0];
 
-  SelectClause expected_select_clause_2;
-  expected_select_clause_2.declaration = declarations_2[0];
+    ClauseSet expected_clauses;
+    expected_clauses.insert(std::move(expected_select_clause_ptr));
+    expected_clauses.insert(std::make_unique<NextT>(2, 9));
 
-  std::vector<Synonym> expected_selects_2 = {declarations_2[0].synonym};
-
-  StmtRef expected_lhs_2 = StmtRef(2);
-  StmtRef expected_rhs_2 = StmtRef(9);
-
-  auto* select_clause_2 = dynamic_cast<SelectClause*>(std::move(parsed_query_2.clauses[0]).get());
-  auto* next_clause_2 = dynamic_cast<NextT*>(std::move(parsed_query_2.clauses[1]).get());
-
-  REQUIRE(parsed_query_2.clauses.size() == 2);
-  REQUIRE(parsed_query_2.selects == expected_selects_2);
-  REQUIRE(select_clause_2->equals(expected_select_clause_2));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(next_clause_2->lhs, expected_lhs_2));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(next_clause_2->rhs, expected_rhs_2));
+    REQUIRE(parsed_query.selects == expected_selects);
+    REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
+  }
 }
 
 TEST_CASE("Parser can parse Affects") {
@@ -193,156 +190,129 @@ TEST_CASE("Parser can parse Affects") {
       {"s1", DesignEntity::STMT}
   };
 
-  SelectClause expected_select_clause;
-  expected_select_clause.declaration = declarations[0];
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::vector<Synonym> expected_selects = {declarations[0].synonym};
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
 
-  StmtRef expected_lhs = StmtRef(2);
-  StmtRef expected_rhs = StmtRef(6);
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<Affects>(2, 6));
 
-  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query.clauses[0]).get());
-  auto* affects_clause = dynamic_cast<Affects*>(std::move(parsed_query.clauses[1]).get());
-
-  REQUIRE(parsed_query.clauses.size() == 2);
   REQUIRE(parsed_query.selects == expected_selects);
-  REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(affects_clause->lhs, expected_lhs));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(affects_clause->rhs, expected_rhs));
+  REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse while pattern") {
-  std::string sample_query_1 = "while w;\n"
-                               "Select w pattern w (\"x\", _)";
-  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::string sample_query = "while w;\n"
+                             "Select w pattern w (\"x\", _)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
   std::vector<Declaration> declarations = {
       {"w", DesignEntity::WHILE_LOOP}
   };
 
-  SelectClause expected_select_clause;
-  expected_select_clause.declaration = declarations[0];
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::vector<Synonym> expected_selects = {declarations[0].synonym};
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
 
-  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query_1.clauses[0]).get());
-  auto* while_clause = dynamic_cast<WhilePattern*>(std::move(parsed_query_1.clauses[1]).get());
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x"));
 
-  REQUIRE(parsed_query_1.clauses.size() == 2);
-  REQUIRE(parsed_query_1.selects == expected_selects);
-  REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(while_clause->syn_assignment.equals(declarations[0]));
+  REQUIRE(parsed_query.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse if pattern") {
-  std::string sample_query_1 = "if ifs;\n"
-                               "Select ifs pattern ifs (_, _, _)";
-  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::string sample_query = "if ifs;\n"
+                             "Select ifs pattern ifs (_, _, _)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
   std::vector<Declaration> declarations = {
       {"ifs", DesignEntity::IF_STMT}
   };
 
-  SelectClause expected_select_clause;
-  expected_select_clause.declaration = declarations[0];
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::vector<Synonym> expected_selects = {declarations[0].synonym};
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
 
-  auto* select_clause = dynamic_cast<SelectClause*>(std::move(parsed_query_1.clauses[0]).get());
-  auto* if_clause = dynamic_cast<IfPattern*>(std::move(parsed_query_1.clauses[1]).get());
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<IfPattern>(declarations[0], Wildcard::Value));
 
-  REQUIRE(parsed_query_1.clauses.size() == 2);
-  REQUIRE(parsed_query_1.selects == expected_selects);
-  REQUIRE(select_clause->equals(expected_select_clause));
-  REQUIRE(if_clause->syn_assignment.equals(declarations[0]));
+  REQUIRE(parsed_query.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse multiple such that clauses") {
-  std::string sample_query_1 = "assign a; while w;"
-                               "Select a such that Modifies (a, \"x\") and Parent* (w, a) and Next* (1, a)";
-  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::string sample_query = "assign a; while w;"
+                             "Select a such that Modifies (a, \"x\") and Parent* (w, a) and Next* (1, a)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
   std::vector<Declaration> declarations = {
       {"a", DesignEntity::ASSIGN},
       {"w", DesignEntity::WHILE_LOOP}
   };
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  REQUIRE(parsed_query_1.clauses.size() == 4);
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
 
-  StmtRef expected_lhs_1 = StmtRef(declarations[0]);
-  EntRef expected_rhs_1 = EntRef ("x");
-  StmtRef expected_lhs_2 = StmtRef(declarations[1]);
-  StmtRef expected_rhs_2 = StmtRef(declarations[0]);
-  StmtRef expected_lhs_3 = StmtRef(1);
-  StmtRef expected_rhs_3 = StmtRef(declarations[0]);
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<ModifiesS>(declarations[0], "x"));
+  expected_clauses.insert(std::make_unique<ParentT>(declarations[1], declarations[0]));
+  expected_clauses.insert(std::make_unique<NextT>(1, declarations[0]));
 
-  auto* clause_1 = dynamic_cast<ModifiesS*>(parsed_query_1.clauses[1].get());
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_1->lhs, expected_lhs_1));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause_1->rhs, expected_rhs_1));
-
-  auto* clause_2 = dynamic_cast<ParentT*>(parsed_query_1.clauses[2].get());
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_2->lhs, expected_lhs_2));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_2->rhs, expected_rhs_2));
-
-  auto* clause_3 = dynamic_cast<NextT*>(parsed_query_1.clauses[3].get());
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_3->lhs, expected_lhs_3));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(clause_3->rhs, expected_rhs_3));
+  REQUIRE(parsed_query.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse multiple pattern clauses") {
-  std::string sample_query_1 = "while w, w1; if ifs; assign a;"
-                               "Select w pattern w (\"x\", _) and a (\"y\", _\"x+y\"_) and ifs (\"z\", _, _)";
-  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::string sample_query = "while w, w1; if ifs; assign a;"
+                             "Select w pattern w (\"x\", _) and a (\"y\", _\"x+y\"_) and ifs (\"z\", _, _)";
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
   std::vector<Declaration> declarations = {
       {"w", DesignEntity::WHILE_LOOP},
       {"a", DesignEntity::ASSIGN},
       {"ifs", DesignEntity::IF_STMT}
   };
 
-  REQUIRE(parsed_query_1.clauses.size() == 4);
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  EntRef expected_lhs_1 = EntRef ("x");
-  auto* clause_1 = dynamic_cast<WhilePattern*>(parsed_query_1.clauses[1].get());
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause_1->lhs, expected_lhs_1));
-  REQUIRE(clause_1->syn_assignment.equals(declarations[0]));
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
 
-  EntRef expected_lhs_2 = EntRef ("y");
-  ExprSpec expected_rhs_2 = PartialExpr{"x+y"};
-  auto* clause_2 = dynamic_cast<AssignPattern*>(parsed_query_1.clauses[2].get());
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause_2->lhs, expected_lhs_2));
-  REQUIRE(PatternClause::are_expr_spec_equal(clause_2->rhs, expected_rhs_2));
-  REQUIRE(clause_2->syn_assignment.equals(declarations[1]));
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x"));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "y", PartialExpr{"x+y"}));
+  expected_clauses.insert(std::make_unique<IfPattern>(declarations[2], "z"));
 
-  EntRef expected_lhs_3 = EntRef ("z");
-  auto* clause_3 = dynamic_cast<IfPattern*>(parsed_query_1.clauses[3].get());
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause_3->lhs, expected_lhs_3));
-  REQUIRE(clause_3->syn_assignment.equals(declarations[2]));
+  REQUIRE(parsed_query.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse multiple different clauses") {
-  std::string sample_query_1 = "assign a; while w;"
+  std::string sample_query = "assign a; while w;"
                              "Select a such that Parent* (w, a) and Next* (1, a) pattern a (\"x\", _)";
-  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  ParsedQuery parsed_query = QueryParser::ParseTokenizedQuery(sample_query);
   std::vector<Declaration> declarations = {
       {"w", DesignEntity::WHILE_LOOP},
       {"a", DesignEntity::ASSIGN},
   };
 
-  REQUIRE(parsed_query_1.clauses.size() == 4);
+  std::vector<std::string> expected_selects = {declarations[1].synonym};
 
-  StmtRef expected_lhs_1 = StmtRef(declarations[0]);
-  StmtRef expected_rhs_1 = StmtRef(declarations[1]);
-  auto* such_that_clause_1 = dynamic_cast<ParentT*>(parsed_query_1.clauses[1].get());
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_1->lhs, expected_lhs_1));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_1->rhs, expected_rhs_1));
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[1];
 
-  StmtRef expected_lhs_2 = StmtRef (1);
-  StmtRef expected_rhs_2 = StmtRef(declarations[1]);
-  auto* such_that_clause_2 = dynamic_cast<NextT*>(parsed_query_1.clauses[2].get());
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_2->lhs, expected_lhs_2));
-  REQUIRE(SuchThatClause::are_stmt_ref_equal(such_that_clause_2->rhs, expected_rhs_2));
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<ParentT>(declarations[0], declarations[1]));
+  expected_clauses.insert(std::make_unique<NextT>(1, declarations[1]));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "x", Wildcard::Value));
 
-  EntRef expected_lhs_3 = EntRef ("x");
-  ExprSpec expected_rhs_3 = Wildcard::Value;
-  auto* pattern_clause_1 = dynamic_cast<AssignPattern*>(parsed_query_1.clauses[3].get());
-  REQUIRE(SuchThatClause::are_ent_ref_equal(pattern_clause_1->lhs, expected_lhs_3));
-  REQUIRE(PatternClause::are_expr_spec_equal(pattern_clause_1->rhs, expected_rhs_3));
-  REQUIRE(pattern_clause_1->syn_assignment.equals(declarations[1]));
+  REQUIRE(parsed_query.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
 }

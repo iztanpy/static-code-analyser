@@ -8,6 +8,7 @@
 #include "qps/clauses/select_clause.h"
 #include "qps/declaration.h"
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
+#include "qps/clauses/clause.h"
 
 class QueryParser {
  public:

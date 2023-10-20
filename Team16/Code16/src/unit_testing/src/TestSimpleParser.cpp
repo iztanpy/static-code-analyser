@@ -1281,11 +1281,16 @@ TEST_CASE(("Test SP Control Variable storage")) {
   });
 
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
-      std::unordered_set<std::string>>({ {1, {"x"}}, {3, {"i"}}, {5, {"x", "y"}} });
-
+      std::unordered_set<std::string>>({ {2, {"b"}}, {3, {"c", "d"}}, {4, {"e", "f"}}, {6, {"h"}}, {8, {"j"}},
+                                         {10, {"l"}}, {11, {"n"}}, {12, {"o", "p"}}, {13, {"q"}}, {15, {"s"}},
+                                         {16, {"t"}}, {17, {"v"}}, {18, {"w", "x"}}, {19, {"y", "z"}}, {21, {"aa"}},
+                                         {22, {"cc"}}, {24, {"ee", "ff"}}, {25, {"gg"}}, {26, {"ii"}},
+                                         {27, {"jj", "kk"}}, {28, {"ll"}}, {29, {"nn"}}, {30, {"oo"}},
+                                         {31, {"pp", "qq"}}, {32, {"b"}}, {33, {"ss"}} });
   REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
   REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
   REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
+  REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
