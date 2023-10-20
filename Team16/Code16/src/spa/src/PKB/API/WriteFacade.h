@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
+#include <memory>
 #include <utility>
 #include "PKB/PKB.h"
 
@@ -151,4 +152,10 @@ class WriteFacade {
     *                      and procedure is the associated value.
     */
     void storeCallStatements(std::unordered_map<statementNumber, procedure> callStatements);
+
+    void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
+
+    void storeCfg(Cfg cfg);
+
+    void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 };

@@ -13,6 +13,7 @@ PKB::PKB() {
     ifStore = std::make_unique<IfStore>();
     whileStore = std::make_unique<WhileStore>();
     callStore = std::make_unique<CallStore>();
+    nextStore = std::make_unique<NextStore>();
 }
 
 // AssignStore methods
@@ -786,3 +787,169 @@ std::unordered_set<statementNumber> PKB::getWhile(variable v) {
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllWhile() {
     return whileStore->getAllWhile();
 }
+
+void PKB::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
+    nextStore->storeNext(NextMap);
+}
+
+void PKB::storeCfg(Cfg cfg) {
+    nextStore->storeCfg(cfg);
+}
+
+void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+    nextStore->storeCfgLegend(cfgLegend);
+}
+
+std::set<std::pair<statementNumber, statementNumber>> PKB::Next(StmtEntity ent1, StmtEntity ent2) {
+    std::set<std::pair<statementNumber, statementNumber>> result;
+    std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(ent1);
+    std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(ent2);
+    for (auto const& x : relevantStmts1) {
+        for (auto const& y : relevantStmts2) {
+            if (this->nextStore->isNext(x, y)) {
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(StmtEntity ent, Wildcard) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(x, Wildcard())) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(StmtEntity ent, statementNumber num) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(x, num)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(Wildcard, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(Wildcard(), x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(statementNumber num, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(num, x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+bool PKB::isNext(Wildcard, Wildcard) {
+    return nextStore->isNext(Wildcard(), Wildcard());
+}
+
+bool PKB::isNext(Wildcard, statementNumber num) {
+    return nextStore->isNext(Wildcard(), num);
+}
+
+bool PKB::isNext(statementNumber num, Wildcard) {
+    return nextStore->isNext(num, Wildcard());
+}
+
+bool PKB::isNext(statementNumber num1, statementNumber num2) {
+    return nextStore->isNext(num1, num2);
+}
+
+std::set<std::pair<statementNumber, statementNumber>> PKB::NextStar(StmtEntity ent1, StmtEntity ent2) {
+    std::set<std::pair<statementNumber, statementNumber>> result;
+    std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(ent1);
+    std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(ent2);
+    for (auto const& x : relevantStmts1) {
+        for (auto const& y : relevantStmts2) {
+            if (this->nextStore->isNextStar(x, y)) {
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
+}
+
+
+std::set<statementNumber> PKB::NextStar(StmtEntity ent, Wildcard) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(x, Wildcard())) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::NextStar(StmtEntity ent, statementNumber num) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(x, num)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::NextStar(Wildcard, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(Wildcard(), x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::NextStar(statementNumber num, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(num, x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+bool PKB::isNextStar(Wildcard, Wildcard) {
+    return nextStore->isNextStar(Wildcard(), Wildcard());
+}
+
+bool PKB::isNextStar(Wildcard, statementNumber num) {
+    return nextStore->isNextStar(Wildcard(), num);
+}
+
+bool PKB::isNextStar(statementNumber num, Wildcard) {
+    return nextStore->isNextStar(num, Wildcard());
+}
+
+bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
+    return nextStore->isNextStar(num1, num2);
+}
+
+void PKB::clearNextStarCache() {
+    nextStore->clearCache();
+}
+

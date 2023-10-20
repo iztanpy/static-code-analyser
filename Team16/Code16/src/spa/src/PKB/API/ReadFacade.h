@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <set>
 #include <utility>
 #include "PKB/PKB.h"
 #include "utils/entity_types.h"
@@ -945,4 +946,40 @@ class ReadFacade {
  * @return A set of pairs, where each pair represents a WHILE statement (statementNumber, variable).
  */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
+
+  std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
+
+  std::set<statementNumber> Next(StmtEntity ent, Wildcard);
+
+  std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
+
+  std::set<statementNumber> Next(Wildcard, StmtEntity ent);
+
+  std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
+
+  bool isNext(Wildcard, Wildcard);
+
+  bool isNext(Wildcard, statementNumber num);
+
+  bool isNext(statementNumber num, Wildcard);
+
+  bool isNext(statementNumber num1, statementNumber num2);
+
+  std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity ent1, StmtEntity ent2);
+
+  std::set<statementNumber> NextStar(StmtEntity ent, Wildcard);
+
+  std::set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
+
+  std::set<statementNumber> NextStar(Wildcard, StmtEntity ent);
+
+  std::set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
+
+  bool isNextStar(Wildcard, Wildcard);
+
+  bool isNextStar(Wildcard, statementNumber num);
+
+  bool isNextStar(statementNumber num, Wildcard);
+
+  bool isNextStar(statementNumber num1, statementNumber num2);
 };
