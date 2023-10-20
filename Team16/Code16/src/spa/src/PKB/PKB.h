@@ -1489,7 +1489,8 @@ class PKB {
     * This function clears the cache used for storing Next* relationships, allowing for recalculation when needed.
     */
     void clearNextStarCache();
-    
+
+
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;
 };
