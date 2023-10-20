@@ -61,7 +61,7 @@ class ConstraintTable {
    * @return ConstraintTable for unit test or integration test, not to be used in main code
    */
   static ConstraintTable ForTestingOnly(const Table& mock_table) {
-    return ConstraintTable(mock_table);
+      return ConstraintTable(mock_table);
   }
 
  private:
