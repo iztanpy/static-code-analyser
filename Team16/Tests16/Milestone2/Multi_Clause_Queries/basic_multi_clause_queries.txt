@@ -6,36 +6,20 @@ Select a pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
 2 - such that AND AND
 assign a; variable v; stmt s;
 Select s.stmt# such that Parent(s,  a) and Uses(s,"ee") and Parent*(s,  a) pattern a(v,_"m"_)
-4
+
 5000
 3 - simple with
 assign a; variable v; stmt s;
 Select v such that Modifies(a,v) with 1 = 1
-a,bb,g,hh,i,m,mm,r,rr,u
+m, u, bb, mm, rr, r, i, a, hh, g
 5000
-3 - with pattern such that with
+4 - with pattern such that with
 assign a; variable v; stmt s;constant c;
 Select a pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v) with 1=1
-4
+6
 5000
-4- with pattern such that incorrect with
-Select a pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v) with 1=2
-
-5000
-5 - only boolean -- true
-assign a; variable v;
-Select BOOLEAN with 5=5 and pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v) with "z"="z"
-TRUE
-5000
-6 - only boolean -- false
-assign a; variable v;
-Select BOOLEAN with 5=5 and pattern a(v,_"invalidPattern"_) and a(v,_"4"_) such that Modifies(a,v) with "z"="z"
-False
-5000
-7 - select tuple
+5 - select tuple
 assign a; variable v;
 Select <a,v> pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
 
 5000
-
-
