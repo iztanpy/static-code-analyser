@@ -48,4 +48,7 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   for (const std::string& result : raw_results) {
     results.push_back(result);
   }
+
+  // at the end of the query clear the Next Star cache?
+  this->pkb_ptr->clearNextStarCache();
 }
