@@ -29,7 +29,7 @@ class Clause {
    * Gets the synonyms involved in this clause.
    * @return the synonyms involved in this clause
    */
-  virtual std::unordered_set<Synonym> GetSynonyms() = 0;
+  virtual std::unordered_set<Synonym> GetSynonyms() const = 0;
 
   /*!
    * Checks if this clause is equal to another clause.
@@ -50,7 +50,7 @@ class Clause {
    * Gets the score of this clause.
    * @return the score of this clause
    */
-  int Score() {
+  int Score() const {
     return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size());
   }
 };

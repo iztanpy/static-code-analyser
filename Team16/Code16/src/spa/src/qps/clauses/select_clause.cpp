@@ -8,7 +8,7 @@ Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
   return SelectEvaluator::Evaluate(declaration, pkb_reader);
 }
 
-std::unordered_set<Synonym> SelectClause::GetSynonyms() {
+std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
   return {declaration.synonym};
 }
 
