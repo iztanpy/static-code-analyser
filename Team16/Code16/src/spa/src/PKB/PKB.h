@@ -334,7 +334,7 @@ class PKB {
     * @param variableName The name of the variable to check for modification.
     * @return true if the statement modifies the variable, false otherwise.
     */
-    bool isRelation(statementNumber lineNumber, variable variableName);
+    bool isModifies(statementNumber lineNumber, variable variableName);
 
     /**
     * @brief Checks if a specific statement modifies variables matching a wildcard pattern.
@@ -345,7 +345,7 @@ class PKB {
     * @param wildcard A wildcard pattern to match against modified variables.
     * @return true if the statement modifies matching variables, false otherwise.
     */
-    bool isRelation(statementNumber lineNumber, Wildcard wildcard);
+    bool isModifies(statementNumber lineNumber, Wildcard wildcard);
 
     /**
     * @brief Retrieves variables modified by a specific statement.
@@ -389,11 +389,11 @@ class PKB {
     */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> relates(StmtEntity type);
 
-    bool isRelation(procedure procedure, Wildcard wildcard);
+    bool isModifies(procedure procedure, Wildcard wildcard);
 
     std::unordered_set<variable> relates(procedure procedure);
 
-    bool isRelation(procedure procedure, variable variableName);
+    bool isModifies(procedure procedure, variable variableName);
 
     std::unordered_set<procedure> relatesProcedure(Wildcard wildcard);
 

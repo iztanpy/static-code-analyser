@@ -241,11 +241,11 @@ void PKB::storeModifiesCalls(std::unordered_map<statementNumber, procedure> call
     modifiesStore->storeRelationCalls(calls);
 }
 
-bool PKB::isRelation(statementNumber lineNumber, variable variableName) {
+bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
     return modifiesStore->isRelation(lineNumber, variableName);
 }
 
-bool PKB::isRelation(statementNumber lineNumber, Wildcard wildcard) {
+bool PKB::isModifies(statementNumber lineNumber, Wildcard wildcard) {
     return modifiesStore->isRelation(lineNumber);
 }
 
@@ -289,7 +289,7 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::relates(
     return result;
 }
 
-bool PKB::isRelation(procedure procedure, Wildcard wildcard) {
+bool PKB::isModifies(procedure procedure, Wildcard wildcard) {
     return modifiesStore->isRelation(procedure);
 }
 
@@ -297,7 +297,7 @@ std::unordered_set<variable> PKB::relates(procedure procedure) {
     return modifiesStore->relatesProcedureProc(procedure);
 }
 
-bool PKB::isRelation(procedure procedure, variable variableName) {
+bool PKB::isModifies(procedure procedure, variable variableName) {
     return modifiesStore->isRelation(procedure, variableName);
 }
 
