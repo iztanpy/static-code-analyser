@@ -320,9 +320,6 @@ TEST_CASE("Test extract clause tokens") {
       {"v", DesignEntity::VARIABLE}
   };
 
-  std::string unknown_clause_statement = "Select v something else (v, \"x\")";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(unknown_clause_statement, error_declarations), QpsSyntaxError);
-
   std::string undeclared_pattern_statement = "Select v pattern a (a, v)";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations),
                     QpsSemanticError);

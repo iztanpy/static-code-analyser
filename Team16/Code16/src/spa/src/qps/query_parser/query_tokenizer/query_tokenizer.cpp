@@ -79,12 +79,15 @@ size_t QueryTokenizer::getFirstClauseIndexes(const std::string& remaining_statem
     // Iterate over matches and store their starting positions
     while (it != end) {
       if (std::find(indexes.begin(), indexes.end(), it->position()) == indexes.end()) {
-        return it->position();
+        indexes.push_back(it->position());
       }
       ++it;
     }
   }
-  return remaining_statement.length();  // push back to avoid out of range error
+  indexes.push_back(remaining_statement.length());
+  sort(indexes.begin(), indexes.end());
+
+  return indexes[0];
 }
 
 SelectValueType QueryTokenizer::getSelectValueType(const std::string& select_value) {
