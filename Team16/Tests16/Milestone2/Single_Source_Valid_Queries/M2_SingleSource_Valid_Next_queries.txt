@@ -1,0 +1,80 @@
+1 - Next(WILDCARD, WILDCARD)
+while w;
+Select w such that Next(_,_)
+15
+5000
+2 - Next(WILDCARD, INT) is true
+while w;
+Select w such that Next(_,5)
+15
+5000
+3 - Next(WILDCARD, INT) is false
+while w;
+Select w such that Next(_,1)
+none
+5000
+4 - Next(INT, WILDCARD) is true
+if ifs;
+Select ifs such that Next(5,_)
+1,2,7,9
+5000
+5 - Next(INT, WILDCARD) is false
+while w;
+Select w such that Next(40,_)
+none
+5000
+6 - Next(INT, INT) returns true
+constant c;
+Select c.value such that Next(17, 15)
+0,1,2,3,4,5,6,7,8,9
+5000
+7 - Next(INT, INT) returns false
+assign a;
+Select a such that Next(1, 10)
+none
+5000
+8 - Next(INT, INT) returns false
+while w;
+Select w such that Next(4,6)
+none
+5000
+9 - Next(ENT, WILDCARD) is true
+assign a;
+Select a such that Next(a,_)
+3,4,5,6,8,10,11,12,13,14,16,17
+5000
+10 - Next(ENT, ENT) is true
+assign a; if ifs;
+Select <ifs, a> such that Next(a,ifs)
+6 7, 8 9
+5000
+11 - Next(ENT, ENT) is false
+if ifs;
+Select ifs such that Next(ifs, ifs)
+none
+5000
+12 - Next(ENT, INT) is true
+assign a;
+Select a such that Next(a,14)
+11, 13
+5000
+13 - Next(INT, ENT) is true
+assign a;
+Select a such that Next(5,a)
+6
+5000
+14 - Next(INT, ENT) is false
+while w;
+Select w such that Next(2,w)
+none
+5000
+15 - Next(WILDCARD, ENT) is true
+while w;
+Select w such that Next(_,ifs)
+2,7,9
+5000
+16 - Next(WILDCARD, ENT) is false
+print p;
+Select p such that Next(_,p)
+none
+5000
