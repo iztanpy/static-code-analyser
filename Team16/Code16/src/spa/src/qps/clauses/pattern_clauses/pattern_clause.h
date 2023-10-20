@@ -44,7 +44,7 @@ class PatternClause : public Clause {
    * Gets the synonyms used in this Pattern clause.
    * @return a set of elements
    */
-  std::unordered_set<Synonym> GetSynonyms() override;
+  std::unordered_set<Synonym> GetSynonyms() const override;
 
   /*!
    * Functions to support hashing of clauses
