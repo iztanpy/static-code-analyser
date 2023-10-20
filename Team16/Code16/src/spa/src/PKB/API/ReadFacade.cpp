@@ -405,23 +405,23 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::g
     return pkb.getAllWhile();
 }
 
-std::set<std::pair<statementNumber, statementNumber>> ReadFacade::Next(StmtEntity ent1, StmtEntity ent2) {
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> ReadFacade::Next(StmtEntity ent1, StmtEntity ent2) {
     return pkb.Next(ent1, ent2);
 }
 
-std::set<statementNumber> ReadFacade::Next(StmtEntity ent, Wildcard) {
+std::unordered_set<statementNumber> ReadFacade::Next(StmtEntity ent, Wildcard) {
     return pkb.Next(ent, Wildcard());
 }
 
-std::set<statementNumber> ReadFacade::Next(StmtEntity ent, statementNumber num) {
+std::unordered_set<statementNumber> ReadFacade::Next(StmtEntity ent, statementNumber num) {
     return pkb.Next(ent, num);
 }
 
-std::set<statementNumber> ReadFacade::Next(Wildcard, StmtEntity ent) {
+std::unordered_set<statementNumber> ReadFacade::Next(Wildcard, StmtEntity ent) {
     return pkb.Next(Wildcard(), ent);
 }
 
-std::set<statementNumber> ReadFacade::Next(statementNumber num, StmtEntity ent) {
+std::unordered_set<statementNumber> ReadFacade::Next(statementNumber num, StmtEntity ent) {
     return pkb.Next(num, ent);
 }
 
@@ -441,23 +441,23 @@ bool ReadFacade::isNext(statementNumber num1, statementNumber num2) {
     return pkb.isNext(num1, num2);
 }
 
-std::set<std::pair<statementNumber, statementNumber>> ReadFacade::NextStar(StmtEntity ent1, StmtEntity ent2) {
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> ReadFacade::NextStar(StmtEntity ent1, StmtEntity ent2) {
     return pkb.NextStar(ent1, ent2);
 }
 
-std::set<statementNumber> ReadFacade::NextStar(StmtEntity ent, Wildcard) {
+std::unordered_set<statementNumber> ReadFacade::NextStar(StmtEntity ent, Wildcard) {
     return pkb.NextStar(ent, Wildcard());
 }
 
-std::set<statementNumber> ReadFacade::NextStar(StmtEntity ent, statementNumber num) {
+std::unordered_set<statementNumber> ReadFacade::NextStar(StmtEntity ent, statementNumber num) {
     return pkb.NextStar(ent, num);
 }
 
-std::set<statementNumber> ReadFacade::NextStar(Wildcard, StmtEntity ent) {
+std::unordered_set<statementNumber> ReadFacade::NextStar(Wildcard, StmtEntity ent) {
     return pkb.NextStar(Wildcard(), ent);
 }
 
-std::set<statementNumber> ReadFacade::NextStar(statementNumber num, StmtEntity ent) {
+std::unordered_set<statementNumber> ReadFacade::NextStar(statementNumber num, StmtEntity ent) {
     return pkb.NextStar(num, ent);
 }
 

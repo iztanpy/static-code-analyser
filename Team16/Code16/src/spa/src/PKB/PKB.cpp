@@ -806,8 +806,8 @@ void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<Cfg
     nextStore->storeCfgLegend(cfgLegend);
 }
 
-std::set<std::pair<statementNumber, statementNumber>> PKB::Next(StmtEntity ent1, StmtEntity ent2) {
-    std::set<std::pair<statementNumber, statementNumber>> result;
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::Next(StmtEntity ent1, StmtEntity ent2) {
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
     std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(ent1);
     std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(ent2);
     for (auto const& x : relevantStmts1) {
@@ -820,8 +820,8 @@ std::set<std::pair<statementNumber, statementNumber>> PKB::Next(StmtEntity ent1,
     return result;
 }
 
-std::set<statementNumber> PKB::Next(StmtEntity ent, Wildcard) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::Next(StmtEntity ent, Wildcard) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNext(x, Wildcard())) {
@@ -831,8 +831,8 @@ std::set<statementNumber> PKB::Next(StmtEntity ent, Wildcard) {
     return result;
 }
 
-std::set<statementNumber> PKB::Next(StmtEntity ent, statementNumber num) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::Next(StmtEntity ent, statementNumber num) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNext(x, num)) {
@@ -842,8 +842,8 @@ std::set<statementNumber> PKB::Next(StmtEntity ent, statementNumber num) {
     return result;
 }
 
-std::set<statementNumber> PKB::Next(Wildcard, StmtEntity ent) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::Next(Wildcard, StmtEntity ent) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNext(Wildcard(), x)) {
@@ -853,8 +853,8 @@ std::set<statementNumber> PKB::Next(Wildcard, StmtEntity ent) {
     return result;
 }
 
-std::set<statementNumber> PKB::Next(statementNumber num, StmtEntity ent) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::Next(statementNumber num, StmtEntity ent) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNext(num, x)) {
@@ -880,8 +880,8 @@ bool PKB::isNext(statementNumber num1, statementNumber num2) {
     return nextStore->isNext(num1, num2);
 }
 
-std::set<std::pair<statementNumber, statementNumber>> PKB::NextStar(StmtEntity ent1, StmtEntity ent2) {
-    std::set<std::pair<statementNumber, statementNumber>> result;
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::NextStar(StmtEntity ent1, StmtEntity ent2) {
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> result;
     std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(ent1);
     std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(ent2);
     for (auto const& x : relevantStmts1) {
@@ -895,8 +895,8 @@ std::set<std::pair<statementNumber, statementNumber>> PKB::NextStar(StmtEntity e
 }
 
 
-std::set<statementNumber> PKB::NextStar(StmtEntity ent, Wildcard) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::NextStar(StmtEntity ent, Wildcard) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNextStar(x, Wildcard())) {
@@ -906,8 +906,8 @@ std::set<statementNumber> PKB::NextStar(StmtEntity ent, Wildcard) {
     return result;
 }
 
-std::set<statementNumber> PKB::NextStar(StmtEntity ent, statementNumber num) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::NextStar(StmtEntity ent, statementNumber num) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNextStar(x, num)) {
@@ -917,8 +917,8 @@ std::set<statementNumber> PKB::NextStar(StmtEntity ent, statementNumber num) {
     return result;
 }
 
-std::set<statementNumber> PKB::NextStar(Wildcard, StmtEntity ent) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::NextStar(Wildcard, StmtEntity ent) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNextStar(Wildcard(), x)) {
@@ -928,8 +928,8 @@ std::set<statementNumber> PKB::NextStar(Wildcard, StmtEntity ent) {
     return result;
 }
 
-std::set<statementNumber> PKB::NextStar(statementNumber num, StmtEntity ent) {
-    std::set<statementNumber> result;
+std::unordered_set<statementNumber> PKB::NextStar(statementNumber num, StmtEntity ent) {
+    std::unordered_set<statementNumber> result;
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
     for (auto const& x : relevantStmts) {
         if (this->nextStore->isNextStar(num, x)) {

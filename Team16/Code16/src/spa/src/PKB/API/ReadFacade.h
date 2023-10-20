@@ -960,15 +960,15 @@ class ReadFacade {
  */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
 
-  std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
+  std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> Next(StmtEntity ent1, StmtEntity ent2);
 
-  std::set<statementNumber> Next(StmtEntity ent, Wildcard);
+  std::unordered_set<statementNumber> Next(StmtEntity ent, Wildcard);
 
-  std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
+  std::unordered_set<statementNumber> Next(StmtEntity ent, statementNumber num);
 
-  std::set<statementNumber> Next(Wildcard, StmtEntity ent);
+  std::unordered_set<statementNumber> Next(Wildcard, StmtEntity ent);
 
-  std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
+  std::unordered_set<statementNumber> Next(statementNumber num, StmtEntity ent);
 
   bool isNext(Wildcard, Wildcard);
 
@@ -978,15 +978,15 @@ class ReadFacade {
 
   bool isNext(statementNumber num1, statementNumber num2);
 
-  std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity ent1, StmtEntity ent2);
+  std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> NextStar(StmtEntity ent1, StmtEntity ent2);
 
-  std::set<statementNumber> NextStar(StmtEntity ent, Wildcard);
+  std::unordered_set<statementNumber> NextStar(StmtEntity ent, Wildcard);
 
-  std::set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
+  std::unordered_set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
 
-  std::set<statementNumber> NextStar(Wildcard, StmtEntity ent);
+  std::unordered_set<statementNumber> NextStar(Wildcard, StmtEntity ent);
 
-  std::set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
+  std::unordered_set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
 
   bool isNextStar(Wildcard, Wildcard);
 

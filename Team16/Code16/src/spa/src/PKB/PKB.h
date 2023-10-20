@@ -1292,7 +1292,7 @@ class PKB {
     * @param ent2 The second statement entity.
     * @return A set of pairs, where each pair represents a statement number that directly follows another statement (ent1, ent2).
     */
-    std::set<std::pair<statementNumber, statementNumber>> Next(StmtEntity ent1, StmtEntity ent2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> Next(StmtEntity ent1, StmtEntity ent2);
 
     /**
     * @brief Retrieves statement numbers that immediately follow a statement matching the specified entity.
@@ -1303,7 +1303,7 @@ class PKB {
     * @param wildcard A Wildcard representing statements that immediately follow the matched entity.
     * @return A set of statement numbers that immediately follow the specified entity.
     */
-    std::set<statementNumber> Next(StmtEntity ent, Wildcard wildcard);
+    std::unordered_set<statementNumber> Next(StmtEntity ent, Wildcard wildcard);
 
     /**
     * @brief Retrieves statement numbers that immediately follow a statement matching the specified entity.
@@ -1314,7 +1314,7 @@ class PKB {
     * @param num The statement number to match as the predecessor.
     * @return A set of statement numbers that immediately follow the specified entity and match the specified predecessor.
     */
-    std::set<statementNumber> Next(StmtEntity ent, statementNumber num);
+    std::unordered_set<statementNumber> Next(StmtEntity ent, statementNumber num);
 
     /**
     * @brief Retrieves statement numbers that immediately follow a statement matching a specified entity.
@@ -1325,7 +1325,7 @@ class PKB {
     * @param ent The statement entity to match against.
     * @return A set of statement numbers that immediately follow statements matching the specified entity.
     */
-    std::set<statementNumber> Next(Wildcard wildcard, StmtEntity ent);
+    std::unordered_set<statementNumber> Next(Wildcard wildcard, StmtEntity ent);
 
     /**
     * @brief Retrieves statement numbers that immediately follow a specified statement entity.
@@ -1336,7 +1336,7 @@ class PKB {
     * @param ent The statement entity to match against.
     * @return A set of statement numbers that immediately follow the specified entity and match the specified predecessor.
     */
-    std::set<statementNumber> Next(statementNumber num, StmtEntity ent);
+    std::unordered_set<statementNumber> Next(statementNumber num, StmtEntity ent);
 
 
     /**
@@ -1392,7 +1392,7 @@ class PKB {
     * @param ent2 The second statement entity.
     * @return A set of pairs, where each pair represents a statement number that directly or indirectly follows another statement (ent1, ent2).
     */
-    std::set<std::pair<statementNumber, statementNumber>> NextStar(StmtEntity ent1, StmtEntity ent2);
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> NextStar(StmtEntity ent1, StmtEntity ent2);
 
     /**
     * @brief Retrieves statement numbers that follow a statement matching the specified entity through a Next* (transitive next) relationship.
@@ -1403,7 +1403,7 @@ class PKB {
     * @param wildcard A Wildcard representing statements that follow the matched entity through Next* relationship.
     * @return A set of statement numbers that follow the specified entity through a Next* relationship.
     */
-    std::set<statementNumber> NextStar(StmtEntity ent, Wildcard wildcard);
+    std::unordered_set<statementNumber> NextStar(StmtEntity ent, Wildcard wildcard);
 
     /**
     * @brief Retrieves statement numbers that follow a statement matching the specified entity through a Next* (transitive next) relationship.
@@ -1414,7 +1414,7 @@ class PKB {
     * @param num The statement number to match as the predecessor.
     * @return A set of statement numbers that follow the specified entity through a Next* relationship and match the specified predecessor.
     */
-    std::set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
+    std::unordered_set<statementNumber> NextStar(StmtEntity ent, statementNumber num);
 
     /**
     * @brief Retrieves statement numbers that follow a statement matching a Wildcard through a Next* (transitive next) relationship.
@@ -1425,7 +1425,7 @@ class PKB {
     * @param ent The statement entity to match against.
     * @return A set of statement numbers that follow statements matching the specified entity through a Next* relationship.
     */
-    std::set<statementNumber> NextStar(Wildcard wildcard, StmtEntity ent);
+    std::unordered_set<statementNumber> NextStar(Wildcard wildcard, StmtEntity ent);
 
     /**
     * @brief Retrieves statement numbers that follow a specified statement entity through a Next* (transitive next) relationship.
@@ -1436,7 +1436,7 @@ class PKB {
     * @param ent The statement entity to match against.
     * @return A set of statement numbers that follow the specified entity through a Next* relationship and match the specified predecessor.
     */
-    std::set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
+    std::unordered_set<statementNumber> NextStar(statementNumber num, StmtEntity ent);
 
     /**
     * @brief Checks if there is a Next* (transitive next) relationship between two statements matching Wildcards.
