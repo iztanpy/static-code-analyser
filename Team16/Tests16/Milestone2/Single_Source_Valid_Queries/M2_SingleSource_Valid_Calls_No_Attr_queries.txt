@@ -21,32 +21,20 @@ none
 5 - Calls("one", "two") is true
 read r;
 Select r such that Calls("one","two")
-1, 2, 23, 24
-5000
-6 - Calls("one", "two") is true
-read r;
-Select r such that Calls("one","two")
 20, 21
 5000
-7 - Nexted calls return false
+6 - Nexted calls return false
 procedure p1,p2,p3,p4,p5,p6;
-Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5) and Calls(p5,p6) 
+Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5) and Calls(p5,p6)
 none
 5000
-8 - Two calls calling the same procedure
+7 - Two calls calling the same procedure
 procedure p1,p2,p3;
 Select p1 such that Calls(p1,p2) and Calls(p3,p2)
-one
+one, seven
 5000
-9 - Nested calls return true
+8 - Nested calls return true
 procedure p1,p2,p3,p4,p5;
 Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5)
 one,seven
 5000
-
-
-
-
-
-
-
