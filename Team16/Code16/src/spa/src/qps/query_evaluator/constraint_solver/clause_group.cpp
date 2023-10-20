@@ -59,7 +59,6 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
 
     if (it != clauseSet.end()) {
       clauses_.push_back(std::move(const_cast<std::unique_ptr<Clause>&>(*it)));
-      clauseSet.erase(it);
     }
 
     // 4. Look up the HashMap, add all connected Clause to candidates PQ.
