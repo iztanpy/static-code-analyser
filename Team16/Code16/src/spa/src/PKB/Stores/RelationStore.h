@@ -78,7 +78,7 @@ class RelationStore {
 
     std::unordered_set<procedure> relatesProcedure(variable variable);
 
-    std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedurePair();
+    std::unordered_set<std::pair<procedure, variable>, PairHash> relatesProcedurePair();
 
     /**
     * @brief Retrieves the statements that modify a particular variable.

@@ -120,7 +120,7 @@ std::unordered_set<procedure> RelationStore::relatesProcedure(variable variable)
     return ReverseProcedureStore[variable];
 }
 
-std::unordered_set<std::pair<procedure, variable>, PairHash> RelationStore::modifiesProcedurePair() {
+std::unordered_set<std::pair<procedure, variable>, PairHash> RelationStore::relatesProcedurePair() {
     std::unordered_set<std::pair<procedure, variable>, PairHash> pairs;
     for (auto const& x : ForwardProcedureStore) {
         for (auto const& y : x.second) {

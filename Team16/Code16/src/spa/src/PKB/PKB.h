@@ -10,7 +10,6 @@
 #include <memory>
 #include "Stores/VariableStore.h"
 #include "Stores/AssignStore.h"
-#include "Stores/UsesStore.h"
 #include "Stores/ConstantStore.h"
 #include "Stores/StatementStore.h"
 #include "Stores/ParentStore.h"
@@ -37,7 +36,7 @@ class PKB {
  private:
     std::unique_ptr<AssignStore> assignStore;
     std::unique_ptr<VariableStore> variableStore;
-    std::unique_ptr<UsesStore> usesStore;
+    std::unique_ptr<RelationStore> usesStore;
     std::unique_ptr<ConstantStore> constantStore;
     std::unique_ptr<StatementStore> statementStore;
     std::unique_ptr<ParentStore> parentStore;

@@ -63,8 +63,8 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/VariableStore.h
         src/PKB/Stores/ConstantStore.cpp
         src/PKB/Stores/ConstantStore.h
-        src/PKB/Stores/UsesStore.cpp
-        src/PKB/Stores/UsesStore.h
+        
+        
         src/PKB/Stores/AssignStore.cpp
         src/PKB/Stores/AssignStore.h
         src/PKB/Stores/StatementStore.cpp

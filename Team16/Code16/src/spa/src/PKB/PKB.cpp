@@ -3,7 +3,7 @@
 PKB::PKB() {
     assignStore = std::make_unique<AssignStore>();
     variableStore = std::make_unique<VariableStore>();
-    usesStore = std::make_unique<UsesStore>();
+    usesStore = std::make_unique<RelationStore>();
     constantStore = std::make_unique<ConstantStore>();
     statementStore = std::make_unique<StatementStore>();
     parentStore = std::make_unique<ParentStore>();
@@ -122,35 +122,35 @@ void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<varia
             usesMapWithCall[parent].insert(x.second.begin(), x.second.end());
         }
     }
-    usesStore->storeUses(usesMapWithCall);
+    usesStore->storeRelation(usesMapWithCall);
 }
 
 void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
-    usesStore->storeUsesProcedures(procedures, callTableStar);
+    usesStore->storeRelationProcedures(procedures, callTableStar);
 }
 
 void PKB::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
-    usesStore->storeUsesCalls(calls);
+    usesStore->storeRelationCalls(calls);
 }
 
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
-    return usesStore->isUses(lineNumber, variableName);
+    return usesStore->isRelation(lineNumber, variableName);
 }
 
 bool PKB::isUses(statementNumber lineNumber, Wildcard wildcard) {
-    return usesStore->isUses(lineNumber);
+    return usesStore->isRelation(lineNumber);
 }
 
 std::unordered_set<variable> PKB::uses(statementNumber line) {
-    return usesStore->uses(line);
+    return usesStore->relates(line);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
-        std::unordered_set<variable> variablesUsed = this->usesStore->uses(x);
+        std::unordered_set<variable> variablesUsed = this->usesStore->relates(x);
         for (auto const& y : variablesUsed) {
             result.insert(std::make_pair(x, y));
         }
@@ -159,34 +159,34 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(Stm
 }
 
 bool PKB::isUses(procedure procedure, Wildcard wildcard) {
-    return usesStore->isUses(procedure);
+    return usesStore->isRelation(procedure);
 }
 
 std::unordered_set<variable> PKB::uses(procedure procedure) {
-    return usesStore->usesProcedureProc(procedure);
+    return usesStore->relatesProcedureProc(procedure);
 }
 
 bool PKB::isUses(procedure procedure, variable variableName) {
-    return usesStore->isUses(procedure, variableName);
+    return usesStore->isRelation(procedure, variableName);
 }
 
 std::unordered_set<procedure> PKB::usesProcedure(Wildcard wildcard) {
-    return usesStore->usesProcedure();
+    return usesStore->relatesProcedure();
 }
 
 std::unordered_set<procedure> PKB::usesProcedure(variable variableName) {
-    return usesStore->usesProcedure(variableName);
+    return usesStore->relatesProcedure(variableName);
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::usesProcedure() {
-    return usesStore->usesProcedurePair();
+    return usesStore->relatesProcedurePair();
 }
 
 std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->usesStore->uses(x).count(variableName)) {
+        if (this->usesStore->relates(x).count(variableName)) {
             result.insert(x);
         }
     }
@@ -197,7 +197,7 @@ std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->usesStore->uses(x).size() > 0) {
+        if (this->usesStore->relates(x).size() > 0) {
             result.insert(x);
         }
     }
@@ -300,7 +300,7 @@ std::unordered_set<procedure> PKB::relatesProcedure(variable variableName) {
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::relatesProcedure() {
-    return modifiesStore->modifiesProcedurePair();
+    return modifiesStore->relatesProcedurePair();
 }
 
 // ConstantStore methods
