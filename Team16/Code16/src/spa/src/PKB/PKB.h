@@ -942,65 +942,314 @@ class PKB {
     */
     bool isFollowStar(Wildcard wildcard, Wildcard wildcard2);
 
+    /**
+    * @brief Stores a mapping of statement numbers to sets of variables for IF statements.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of variables
+    * for IF statements in the provided variableMap.
+    *
+    * @param variableMap A std::unordered_map where statementNumber is the key,
+    *                    and std::unordered_set<variable> is the associated value.
+    */
     void storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with IF statements matching the given Wildcard.
+    *
+    * This function returns a set of statement numbers corresponding to IF statements that match the provided Wildcard.
+    *
+    * @param wc The Wildcard to match IF statements against.
+    * @return A set of statement numbers corresponding to IF statements matching the Wildcard.
+    */
     std::unordered_set<statementNumber> getIf(Wildcard wc);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with IF statements containing the specified variable.
+    *
+    * This function returns a set of statement numbers corresponding to IF statements that contain the provided variable.
+    *
+    * @param v The variable to match against IF statements.
+    * @return A set of statement numbers corresponding to IF statements containing the variable.
+    */
     std::unordered_set<statementNumber> getIf(variable v);
 
+    /**
+    * @brief Retrieves all IF statements, represented as pairs of statementNumber and variable, from the data.
+    *
+    * This function retrieves all IF statements from the data and returns them as pairs of
+    * statementNumber and variable.
+    *
+    * @return A set of pairs, where each pair represents an IF statement (statementNumber, variable).
+    */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllIf();
 
+    /**
+    * @brief Stores a mapping of statement numbers to sets of variables for WHILE statements.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of variables
+    * for WHILE statements in the provided variableMap.
+    *
+    * @param variableMap A std::unordered_map where statementNumber is the key,
+    *                    and std::unordered_set<variable> is the associated value.
+    */
     void storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with WHILE statements matching the given Wildcard.
+    *
+    * This function returns a set of statement numbers corresponding to WHILE statements that match the provided Wildcard.
+    *
+    * @param wc The Wildcard to match WHILE statements against.
+    * @return A set of statement numbers corresponding to WHILE statements matching the Wildcard.
+    */
     std::unordered_set<statementNumber> getWhile(Wildcard wc);
 
+    /**
+    * @brief Retrieves a set of statement numbers associated with WHILE statements containing the specified variable.
+    *
+    * This function returns a set of statement numbers corresponding to WHILE statements that contain the provided variable.
+    *
+    * @param v The variable to match against WHILE statements.
+    * @return A set of statement numbers corresponding to WHILE statements containing the variable.
+    */
     std::unordered_set<statementNumber> getWhile(variable v);
 
+    /**
+    * @brief Retrieves all WHILE statements, represented as pairs of statementNumber and variable, from the data.
+    *
+    * This function retrieves all WHILE statements from the data and returns them as pairs of
+    * statementNumber and variable.
+    *
+    * @return A set of pairs, where each pair represents a WHILE statement (statementNumber, variable).
+    */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
+
 
     // CallStore methods
 
+    /**
+    * @brief Stores a call relationship table.
+    *
+    * This function stores a call relationship table, mapping procedures to the set of procedures they call.
+    *
+    * @param callTable An unordered_map where the key is a procedure, and the value is a set of
+    *                  procedures called by the key procedure.
+    */
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 
+    /**
+    * @brief Retrieves the Call* (transitive call) relationship table.
+    *
+    * This function returns a map representing the transitive call relationship among procedures.
+    *
+    * @return An unordered_map where the key is a procedure, and the value is a set of procedures
+    *         called directly or indirectly by the key procedure.
+    */
     std::unordered_map<procedure, std::unordered_set<procedure>> getCallStar();
 
+    /**
+    * @brief Retrieves procedures that call a procedure matching a wildcard.
+    *
+    * This function returns procedures that call a procedure matching the provided wildcard.
+    *
+    * @param procedure The procedure to match against wildcard.
+    * @param wildcard The wildcard used to match against calling procedures.
+    * @return A set of procedures calling procedures matching the wildcard.
+    */
     std::unordered_set<procedure> call(StmtEntity procedure, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves procedures that match a wildcard and call a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that call the provided procedure.
+    *
+    * @param wildcard The wildcard used to match against called procedures.
+    * @param procedure The procedure to check for usage by procedures matching the wildcard.
+    * @return A set of procedures called by the provided procedure and matching the wildcard.
+    */
     std::unordered_set<procedure> call(Wildcard wildcard, StmtEntity procedure);
 
+    /**
+    * @brief Retrieves procedures that call a specific procedure.
+    *
+    * This function returns procedures that call the provided specific procedure.
+    *
+    * @param procedure The procedure being called.
+    * @param proc The calling procedure.
+    * @return A set of procedures calling the specified procedure.
+    */
     std::unordered_set<procedure> call(procedure procedure, StmtEntity proc);
 
+    /**
+    * @brief Retrieves procedures matching a wildcard that call a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that call the provided specific procedure.
+    *
+    * @param proc The calling procedure.
+    * @param procedure The procedure being called.
+    * @return A set of procedures matching the wildcard that call the specified procedure.
+    */
     std::unordered_set<procedure> call(StmtEntity proc, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure is called by procedures matching a wildcard.
+    *
+    * This function checks if the specified procedure is called by procedures matching the provided wildcard.
+    *
+    * @param procedure The procedure being called.
+    * @param wildcard The wildcard used to match calling procedures.
+    * @return True if the specified procedure is called by procedures matching the wildcard; false otherwise.
+    */
     bool isCall(procedure procedure, Wildcard wildcard);
 
+    /**
+    * @brief Checks if procedures matching a wildcard call a specific procedure.
+    *
+    * This function checks if procedures matching the provided wildcard call the specified procedure.
+    *
+    * @param wildcard The wildcard used to match calling procedures.
+    * @param procedure The procedure being called.
+    * @return True if procedures matching the wildcard call the specified procedure; false otherwise.
+    */
     bool isCall(Wildcard wildcard, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure calls another procedure by its name.
+    *
+    * This function checks if the specified procedure calls another procedure by its name.
+    *
+    * @param procedure The calling procedure.
+    * @param procedure2 The name of the called procedure.
+    * @return True if the calling procedure calls the specified procedure by name; false otherwise.
+    */
     bool isCall(procedure procedure, std::string procedure2);
 
+    /**
+    * @brief Checks if there is a Call relationship between two procedures matching wildcards.
+    *
+    * This function checks if there is a Call relationship between two procedures that match
+    * the provided wildcards.
+    *
+    * @param procedure The calling procedure.
+    * @param wildcard2 The wildcard for the called procedure.
+    * @return True if a Call relationship exists; false otherwise.
+    */
     bool isCall(Wildcard wildcard, Wildcard wildcard2);
 
-    std::unordered_set<std::pair<procedure, procedure>, PairHash> call(StmtEntity procedure1,
-        StmtEntity procedure2);
 
+    /**
+    * @brief Retrieves all pairs of procedures representing the Call* (transitive call) relationship between two procedures.
+    *
+    * This function returns all pairs of procedures representing the transitive Call* relationship between two specified procedures.
+    *
+    * @param procedure1 The calling procedure.
+    * @param procedure2 The called procedure.
+    * @return A set of pairs, where each pair represents a procedure that directly or indirectly
+    *         calls another procedure (procedure1, procedure2).
+    */
+    std::unordered_set<std::pair<procedure, procedure>, PairHash> call(StmtEntity procedure1, StmtEntity procedure2);
+
+    /**
+    * @brief Retrieves procedures that have a Call* (transitive call) relationship with a procedure matching a wildcard.
+    *
+    * This function returns procedures that have a transitive Call* relationship with a procedure matching the provided wildcard.
+    *
+    * @param procedure The procedure to match against wildcard.
+    * @param wildcard The wildcard used to match against procedures with transitive call relationships.
+    * @return A set of procedures that have a Call* relationship with a procedure matching the wildcard.
+    */
     std::unordered_set<procedure> callStar(StmtEntity procedure, Wildcard wildcard);
 
+    /**
+    * @brief Retrieves procedures that match a wildcard and have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that have a transitive Call* relationship with the provided procedure.
+    *
+    * @param wildcard The wildcard used to match against procedures with transitive call relationships.
+    * @param procedure The procedure with which procedures are checked for Call* relationships.
+    * @return A set of procedures matching the wildcard that have a Call* relationship with the provided procedure.
+    */
     std::unordered_set<procedure> callStar(Wildcard wildcard, StmtEntity procedure);
 
+    /**
+    * @brief Retrieves procedures that have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function returns procedures that have a transitive Call* relationship with the provided specific procedure.
+    *
+    * @param procedure The specific procedure being called.
+    * @param proc The calling procedure.
+    * @return A set of procedures having a Call* relationship with the specified procedure.
+    */
     std::unordered_set<procedure> callStar(procedure procedure, StmtEntity proc);
 
+    /**
+    * @brief Retrieves procedures matching a wildcard that have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function returns procedures matching a wildcard that have a transitive Call* relationship with the provided specific procedure.
+    *
+    * @param prc The specific procedure being called.
+    * @param procedure The calling procedure.
+    * @return A set of procedures matching the wildcard having a Call* relationship with the specified procedure.
+    */
     std::unordered_set<procedure> callStar(StmtEntity prc, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure has a Call* (transitive call) relationship with procedures matching a wildcard.
+    *
+    * This function checks if the specified procedure has a transitive Call* relationship with procedures matching the provided wildcard.
+    *
+    * @param procedure The specific procedure being called.
+    * @param wildcard The wildcard used to match calling procedures.
+    * @return True if the specified procedure has a Call* relationship with procedures matching the wildcard; false otherwise.
+    */
     bool isCallStar(procedure procedure, Wildcard wildcard);
 
+    /**
+    * @brief Checks if procedures matching a wildcard have a Call* (transitive call) relationship with a specific procedure.
+    *
+    * This function checks if procedures matching the provided wildcard have a transitive Call* relationship with the specified procedure.
+    *
+    * @param wildcard The wildcard used to match calling procedures.
+    * @param procedure The specific procedure being called.
+    * @return True if procedures matching the wildcard have a Call* relationship with the specified procedure; false otherwise.
+    */
     bool isCallStar(Wildcard wildcard, procedure procedure);
 
+    /**
+    * @brief Checks if a specific procedure has a Call* (transitive call) relationship with a procedure identified by its name.
+    *
+    * This function checks if the specified procedure has a transitive Call* relationship with a procedure identified by its name.
+    *
+    * @param procedure The specific procedure being called.
+    * @param procedure2 The name of the called procedure.
+    * @return True if the specified procedure has a Call* relationship with the procedure identified by its name; false otherwise.
+    */
     bool isCallStar(procedure procedure, std::string procedure2);
 
+    /**
+    * @brief Checks if there is a Call* (transitive call) relationship between two procedures matching wildcards.
+    *
+    * This function checks if there is a transitive Call* relationship between two procedures that match the provided wildcards.
+    *
+    * @param wildcard1 The wildcard for the calling procedure.
+    * @param wildcard2 The wildcard for the called procedure.
+    * @return True if a transitive Call* relationship exists; false otherwise.
+    */
     bool isCallStar(Wildcard wildcard1, Wildcard wildcard2);
 
-    std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1,
-        StmtEntity procedure2);
+
+    /**
+    * @brief Retrieves all pairs of procedures representing the Call* (transitive call) relationship between two procedures.
+    *
+    * This function returns all pairs of procedures representing the transitive Call* relationship between two specified procedures.
+    *
+    * @param procedure1 The calling procedure.
+    * @param procedure2 The called procedure.
+    * @return A set of pairs, where each pair represents a procedure that directly or indirectly
+    *         calls another procedure (procedure1, procedure2).
+    */
+    std::unordered_set<std::pair<procedure, procedure>, PairHash> callStar(StmtEntity procedure1, StmtEntity procedure2);
+
 
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;
