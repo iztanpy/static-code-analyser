@@ -5,7 +5,7 @@ Constraint Next::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void Next::Validate() {
-  // TODO(Cuong): implement validate method call
+  SuchThatValidator::ValidateBothStmt(lhs, rhs);
 }
 
 Constraint NextT::Evaluate(ReadFacade& pkb_reader) {
@@ -13,5 +13,5 @@ Constraint NextT::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void NextT::Validate() {
-  // TODO(Cuong): implement validate method call
+  SuchThatValidator::ValidateBothStmt(lhs, rhs);
 }

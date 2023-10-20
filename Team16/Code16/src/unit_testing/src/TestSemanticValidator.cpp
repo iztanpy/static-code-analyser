@@ -73,14 +73,14 @@ TEST_CASE("Parent::Parent", "[Parent]") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     StmtRef stmt_ref2(1);
     REQUIRE_THROWS_AS(Parent(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Parent(stmt_ref1, stmt_ref2), "[ParentFollows] Invalid LHS synonym");
+    REQUIRE_THROWS_WITH(Parent(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
     REQUIRE_THROWS_AS(ParentT(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(ParentT(stmt_ref1, stmt_ref2), "[ParentFollows] Invalid RHS synonym");
+    REQUIRE_THROWS_WITH(ParentT(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
   }
 }
 
@@ -89,14 +89,14 @@ TEST_CASE("Follows::Follows", "[Follows]") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::VARIABLE});
     StmtRef stmt_ref2(1);
     REQUIRE_THROWS_AS(Follows(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Follows(stmt_ref1, stmt_ref2), "[ParentFollows] Invalid LHS synonym");
+    REQUIRE_THROWS_WITH(Follows(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::CONSTANT});
     REQUIRE_THROWS_AS(FollowsT(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(FollowsT(stmt_ref1, stmt_ref2), "[ParentFollows] Invalid RHS synonym");
+    REQUIRE_THROWS_WITH(FollowsT(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
   }
 }
 
@@ -167,5 +167,27 @@ TEST_CASE("AssignPattern::AssignPattern", "[AssignPattern]") {
     EntRef ent_ref(Declaration{"a", DesignEntity::VARIABLE});
     ExactExpr expr_spec({"x"});
     REQUIRE_NOTHROW(AssignPattern(syn, ent_ref, expr_spec));
+  }
+}
+
+TEST_CASE("Next::Next", "[Next]") {
+  SECTION("Constructor throws semantic error") {
+    StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
+    StmtRef stmt_ref2(1);
+    REQUIRE_THROWS_AS(Next(stmt_ref1, stmt_ref2), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Next(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+  }
+
+  SECTION("Constructor throws semantic error") {
+    StmtRef stmt_ref1(Wildcard::Value);
+    StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
+    REQUIRE_THROWS_AS(NextT(stmt_ref1, stmt_ref2), QpsSemanticError);
+    REQUIRE_THROWS_WITH(NextT(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+  }
+
+  SECTION("Constructor not throwing semantic error") {
+    StmtRef stmt_ref1(Wildcard::Value);
+    StmtRef stmt_ref2(Declaration{"x", DesignEntity::STMT});
+    REQUIRE_NOTHROW(NextT(stmt_ref1, stmt_ref2));
   }
 }
