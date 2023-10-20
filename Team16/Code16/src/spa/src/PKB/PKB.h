@@ -51,6 +51,9 @@ class PKB {
  public:
     PKB();
 
+    // General methods
+    std::unordered_set<statementNumber> getCommonStatements(std::unordered_set<statementNumber> set1, std::unordered_set<statementNumber> set2);
+
     // AssignStore methods
 
     /**
@@ -314,12 +317,12 @@ class PKB {
     *
     * @param varModifiesMap An unordered map of statement numbers to variables that are modified.
     */
-    void storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap);
+    void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
 
-    void storeRelationProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+    void storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
         std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
-    void storeRelationCalls(std::unordered_map<statementNumber, procedure> calls);
+    void storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls);
 
     /**
     * @brief Checks if a specific statement modifies a given variable.

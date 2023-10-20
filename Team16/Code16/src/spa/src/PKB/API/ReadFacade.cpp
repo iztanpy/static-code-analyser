@@ -99,11 +99,11 @@ std::unordered_set<std::pair<procedure, variable>, PairHash> ReadFacade::usesPro
     return pkb.usesProcedure();
 }
 
-bool ReadFacade::isRelation(statementNumber lineNumber, variable variableName) {
+bool ReadFacade::isModifies(statementNumber lineNumber, variable variableName) {
     return pkb.isRelation(lineNumber, variableName);
 }
 
-bool ReadFacade::isRelation(statementNumber lineNumber, Wildcard wildcard) {
+bool ReadFacade::isModifies(statementNumber lineNumber, Wildcard wildcard) {
     return pkb.isRelation(lineNumber, wildcard);
 }
 
@@ -119,7 +119,7 @@ std::unordered_set<statementNumber> ReadFacade::relates(StmtEntity type, Wildcar
     return pkb.relates(type, wildcard);
 }
 
-bool ReadFacade::isRelation(procedure procedure, Wildcard wildcard) {
+bool ReadFacade::isModifies(procedure procedure, Wildcard wildcard) {
     return pkb.isRelation(procedure, wildcard);
 }
 
@@ -127,7 +127,7 @@ std::unordered_set<variable> ReadFacade::relates(procedure procedure) {
     return pkb.relates(procedure);
 }
 
-bool ReadFacade::isRelation(procedure procedure, variable variableName) {
+bool ReadFacade::isModifies(procedure procedure, variable variableName) {
     return pkb.isRelation(procedure, variableName);
 }
 

@@ -355,7 +355,7 @@ TEST_CASE("Test modifies stores") {
 
   pkb.storeParent({{1, {2, 3}}});
 
-  pkb.storeRelation({{1, "x"}, {2, "y"}, {3, "x"}});
+  pkb.storeModifies({{1, "x"}, {2, "y"}, {3, "x"}});
 
   REQUIRE(pkb.isRelation(1, "x"));
   REQUIRE(pkb.isRelation(2, "y"));

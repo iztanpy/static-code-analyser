@@ -17,6 +17,15 @@ PKB::PKB() {
 }
 
 // AssignStore methods
+std::unordered_set<statementNumber> PKB::getCommonStatements(std::unordered_set<statementNumber> set1, std::unordered_set<statementNumber> set2) {
+   std::unordered_set<statementNumber> result;
+   for (auto const& x : set1) {
+       if (set2.count(x)) {
+            result.insert(x);
+       }
+   }
+   return result;
+}
 
 void PKB::setAssignments(std::unordered_map<statementNumber,
     std::unordered_set<partialMatch>> numRHSMap,
@@ -206,7 +215,7 @@ std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard
 
 // ModifiesStore methods
 
-void PKB::storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap) {
+void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
     std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesMapWithCall;
 
     for (auto const& x : varModifiesMap) {
@@ -222,12 +231,12 @@ void PKB::storeRelation(std::unordered_map<statementNumber, variable> varModifie
     modifiesStore->storeRelation(ModifiesMapWithCall);
 }
 
-void PKB::storeRelationProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
     modifiesStore->storeRelationProcedures(procedures, callTableStar);
 }
 
-void PKB::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls) {
+void PKB::storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls) {
     modifiesStore->storeRelationCalls(calls);
 }
 

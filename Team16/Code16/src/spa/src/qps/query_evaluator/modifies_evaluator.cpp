@@ -5,11 +5,11 @@ UnaryConstraint ModifiesEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade&
 }
 
 bool ModifiesEvaluator::Handle(int lhs, Wildcard& rhs, ReadFacade& pkb_reader) {
-  return pkb_reader.isRelation(lhs, rhs);
+  return pkb_reader.isModifies(lhs, rhs);
 }
 
 bool ModifiesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader) {
-  return pkb_reader.isRelation(lhs, rhs);
+  return pkb_reader.isModifies(lhs, rhs);
 }
 
 Constraint ModifiesEvaluator::Handle(Declaration& lhs,
@@ -75,9 +75,9 @@ UnaryConstraint ModifiesEvaluator::Handle(std::string& lhs_procname,
 }
 
 bool ModifiesEvaluator::Handle(std::string& lhs_proc_name, Wildcard& rhs, ReadFacade& pkb_reader) {
-  return pkb_reader.isRelation(lhs_proc_name, rhs);
+  return pkb_reader.isModifies(lhs_proc_name, rhs);
 }
 
 bool ModifiesEvaluator::Handle(std::string& lhs_proc_name, std::string& rhs, ReadFacade& pkb_reader) {
-  return pkb_reader.isRelation(lhs_proc_name, rhs);
+  return pkb_reader.isModifies(lhs_proc_name, rhs);
 }

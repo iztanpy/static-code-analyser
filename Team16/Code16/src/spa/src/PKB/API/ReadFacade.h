@@ -198,7 +198,7 @@ class ReadFacade {
   * @param variableName The variable to check for modification.
   * @return true if the statement modifies the variable, false otherwise.
   */
-  bool isRelation(statementNumber lineNumber, variable variableName);
+  bool isModifies(statementNumber lineNumber, variable variableName);
 
   /**
   * @brief Checks if any statement with the given line number modifies a variable that matches a wildcard pattern.
@@ -209,7 +209,7 @@ class ReadFacade {
   * @param wildcard A wildcard pattern to match against variables modified in the statement.
   * @return true if the statement modifies a matching variable, false otherwise.
   */
-  bool isRelation(statementNumber lineNumber, Wildcard wildcard);
+  bool isModifies(statementNumber lineNumber, Wildcard wildcard);
 
   /**
   * @brief Retrieves a set of variables modified in a specific statement with the given line number.
@@ -252,11 +252,11 @@ class ReadFacade {
   * @return An unordered set of pairs containing statement numbers and variables modified in the specified statement type.
   */
 
-  bool isRelation(procedure procedure, Wildcard wildcard);
+  bool isModifies(procedure procedure, Wildcard wildcard);
 
   std::unordered_set<variable> relates(procedure procedure);
 
-  bool isRelation(procedure procedure, variable variableName);
+  bool isModifies(procedure procedure, variable variableName);
 
   std::unordered_set<procedure> relatesProcedure(Wildcard wildcard);
 
