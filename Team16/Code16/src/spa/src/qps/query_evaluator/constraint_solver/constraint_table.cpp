@@ -35,6 +35,23 @@ std::vector<T> SelectByIndex(const std::vector<T>& vec, const std::vector<std::s
     return result;
 }
 
+std::string RowToString(const Table& table,
+                        int row_index,
+                        const std::vector<std::string>& keys) {
+    std::string result;
+    for (const auto& key : keys) {
+        // Check if the key exists in the map and the row_index is valid
+        if (table.count(key) && row_index < table.at(key).size()) {
+            // Add space separator if result is not empty
+            if (!result.empty()) {
+                result += " ";
+            }
+            result += table.at(key)[row_index];
+        }
+    }
+    return result;
+}
+
 ConstraintTable::ConstraintTable() {
     table = {};
     has_at_least_one_false_constraint = false;
@@ -108,16 +125,8 @@ std::unordered_set<std::string> ConstraintTable::Select(const std::vector<ColNam
 
     size_t length = table.at(selects[0]).size();
     for (size_t i = 0; i < length; ++i) {
-        std::stringstream ss;
-        for (size_t j = 0; j < selects.size(); ++j) {
-            ss << table.at(selects[j])[i];
-            if (j < selects.size() - 1) {
-                ss << " ";
-            }
-        }
-        result.insert(ss.str());
+        result.insert(RowToString(table, i, selects));
     }
-
     return result;
 }
 
@@ -314,13 +323,33 @@ void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
 void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
     // Create an unordered_set from the vector
     std::unordered_set<ColName> col_set(col_names.begin(), col_names.end());
+    std::vector<ColName> dedup_colnames(col_set.begin(), col_set.end());
 
-    // Iterate through the map and remove keys that are not in the set
+    std::unordered_set<std::string> seen_rows;
+
     for (auto it = table.begin(); it != table.end();) {
         if (col_set.find(it->first) == col_set.end()) {
-            it = table.erase(it);
+            it = table.erase(it);  // erase returns the iterator to the next element
         } else {
             ++it;
         }
     }
+
+    Table result;
+    for (const auto& [colname, _] : table) {
+        result[colname] = {};
+    }
+
+    size_t table_len = table.begin()->second.size();
+    for (size_t i = 0; i < table_len; ++i) {
+        std::string row = RowToString(table, i, dedup_colnames);
+        if (seen_rows.find(row) == seen_rows.end()) {
+            seen_rows.insert(row);
+            for (const auto& [colname, values] : table) {
+                result[colname].push_back(values[i]);
+            }
+        }
+    }
+
+    table = std::move(result);
 }

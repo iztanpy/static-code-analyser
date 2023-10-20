@@ -315,9 +315,9 @@ TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
 
     // Joining the two tables
     mainTable.JoinTable(joinTable);
-    Table table = mainTable.GetTableForTesting();
 
     SECTION("Checking merged content after joining") {
+        Table table = mainTable.GetTableForTesting();
         std::vector<ColName> col_names = {"a", "b", "c", "d", "e"};  // Includes columns from both tables
         std::vector<std::vector<Cell>> rows = {
             {"1", "3", "5", "7", "10"},
@@ -326,6 +326,19 @@ TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
             {"2", "4", "6", "7", "10"},
             {"1", "3", "5", "9", "12"},
             {"2", "4", "6", "9", "12"},
+        };
+        REQUIRE_TABLE_CONTENT(table, col_names, rows);
+        REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    }
+
+    mainTable.Filter({"a", "b"});
+
+    SECTION("Checking filtered content") {
+        Table table = mainTable.GetTableForTesting();
+        std::vector<ColName> col_names = {"a", "b"};  // Includes columns from both tables
+        std::vector<std::vector<Cell>> rows = {
+            {"1", "3"},
+            {"2", "4"},
         };
         REQUIRE_TABLE_CONTENT(table, col_names, rows);
         REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
