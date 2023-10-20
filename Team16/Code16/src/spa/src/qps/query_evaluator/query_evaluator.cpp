@@ -4,7 +4,7 @@ QueryEvaluator::QueryEvaluator(ReadFacade& pkb) : pkb(pkb) {}
 
 std::unordered_set<std::string> BlankResult(bool is_boolean_select) {
   return (is_boolean_select) ?
-         std::unordered_set<std::string>{"False"}
+         std::unordered_set<std::string>{"FALSE"}
                              : std::unordered_set<std::string>{};
 }
 
@@ -44,6 +44,6 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
   }
 
   // If we reach here, meaning we will get non-blank result
-  return (is_boolean_select) ? std::unordered_set<std::string>{"True"}
+  return (is_boolean_select) ? std::unordered_set<std::string>{"TRUE"}
                              : aggregate_table.Select(query.selects);
 }

@@ -205,9 +205,6 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/if_evaluator.h
         src/qps/query_evaluator/while_evaluator.cpp
         src/qps/query_evaluator/while_evaluator.h
-        src/qps/query_evaluator/next_evaluator.cpp
-        src/qps/query_evaluator/next_evaluator.h
-        src/qps/query_evaluator/next_evaluator.cpp
         src/qps/query_evaluator/next_evaluator.h
         src/qps/query_evaluator/next_evaluator.cpp
 )
