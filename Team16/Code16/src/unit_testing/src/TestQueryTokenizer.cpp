@@ -596,12 +596,105 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations_1), QpsSemanticError);
 }
 
-TEST_CASE("Debug") {
-  std::string sample_query_1 = "Select w pattern w( v, \"x\")";
+TEST_CASE("Tokeniser can tokenise multiple clauses") {
+  std::string sample_query_1 = "Select w pattern w (\"x\", _) and w1 (\"y\", _)";
+
   std::vector<Declaration> declarations_1 = {
       {"w", DesignEntity::WHILE_LOOP},
-      {"v", DesignEntity::VARIABLE}
+      {"w1", DesignEntity::WHILE_LOOP},
   };
 
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1), QpsSemanticError);
+  std::vector<QueryToken> pattern_tokens =  {
+      {"w", PQLTokenType::PATTERN_WHILE},
+      {"x", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD},
+      {"w1", PQLTokenType::PATTERN_WHILE},
+      {"y", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  REQUIRE(results_1.second.size() == 6);
+
+  for (int i = 0; i < 6; i++) {
+    REQUIRE(results_1.second[i].text == pattern_tokens[i].text);
+    REQUIRE(results_1.second[i].type == pattern_tokens[i].type);
+  }
+
+  std::string sample_query_2 = "Select w pattern w (\"x\", _) and w1 (\"y\", _) and w2 (\"z\", _)";
+
+  std::vector<Declaration> declarations_2 = {
+      {"w", DesignEntity::WHILE_LOOP},
+      {"w1", DesignEntity::WHILE_LOOP},
+      {"w2", DesignEntity::WHILE_LOOP}
+  };
+
+  std::vector<QueryToken> pattern_tokens_2 =  {
+      {"w", PQLTokenType::PATTERN_WHILE},
+      {"x", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD},
+      {"w1", PQLTokenType::PATTERN_WHILE},
+      {"y", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD},
+      {"w2", PQLTokenType::PATTERN_WHILE},
+      {"z", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
+
+  REQUIRE(results_2.second.size() == 9);
+
+  for (int i = 0; i < 9; i++) {
+    REQUIRE(results_2.second[i].text == pattern_tokens_2[i].text);
+    REQUIRE(results_2.second[i].type == pattern_tokens_2[i].type);
+  }
+
+  std::string sample_query_3 = "Select w pattern w (\"x\", _) such that Parent* (w, a) and Modifies (a, \"x\")";
+
+  std::vector<Declaration> declarations_3 = {
+      {"w", DesignEntity::WHILE_LOOP},
+      {"a", DesignEntity::ASSIGN},
+  };
+
+  std::vector<QueryToken> such_that_tokens_3 = {
+      {"Parent*", PQLTokenType::RELREF},
+      {"w", PQLTokenType::SYNONYM},
+      {"a", PQLTokenType::SYNONYM},
+      {"Modifies", PQLTokenType::RELREF},
+      {"a", PQLTokenType::SYNONYM},
+      {"x", PQLTokenType::IDENT}
+  };
+
+  std::vector<QueryToken> pattern_tokens_3 =  {
+      {"w", PQLTokenType::PATTERN_WHILE},
+      {"x", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_3 = QueryTokenizer::extractClauseTokens(sample_query_3, declarations_3);
+
+  REQUIRE(results_3.first.size() == 6);
+  REQUIRE(results_3.second.size() == 3);
+
+  for (int i = 0; i < 6; i++) {
+    REQUIRE(results_3.first[i].text == such_that_tokens_3[i].text);
+    REQUIRE(results_3.first[i].type == such_that_tokens_3[i].type);
+  }
+
+  for (int i = 0; i < 3; i++) {
+    REQUIRE(results_3.second[i].text == pattern_tokens_3[i].text);
+    REQUIRE(results_3.second[i].type == pattern_tokens_3[i].type);
+  }
+
+  std::string sample_query_4 = "Select w pattern w (\"x\", _) and pattern w1 (\"y\", _) and w2 (\"z\", _)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_4, declarations_3), QpsSyntaxError);
+
+  std::string sample_query_5 = "Select w such that Parent* (w, a) and such that Modifies (a, \"x\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_5, declarations_3), QpsSyntaxError);
 }
+

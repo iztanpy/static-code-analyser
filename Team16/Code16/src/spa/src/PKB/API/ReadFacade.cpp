@@ -1,6 +1,3 @@
-#include <iostream>
-#include <unordered_set>
-
 #include "PKB/API/ReadFacade.h"
 
 ReadFacade::ReadFacade(PKB& pkb) : pkb(pkb) {}
@@ -406,6 +403,78 @@ std::unordered_set<statementNumber> ReadFacade::getWhile(variable v) {
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> ReadFacade::getAllWhile() {
     return pkb.getAllWhile();
+}
+
+std::set<std::pair<statementNumber, statementNumber>> ReadFacade::Next(StmtEntity ent1, StmtEntity ent2) {
+    return pkb.Next(ent1, ent2);
+}
+
+std::set<statementNumber> ReadFacade::Next(StmtEntity ent, Wildcard) {
+    return pkb.Next(ent, Wildcard());
+}
+
+std::set<statementNumber> ReadFacade::Next(StmtEntity ent, statementNumber num) {
+    return pkb.Next(ent, num);
+}
+
+std::set<statementNumber> ReadFacade::Next(Wildcard, StmtEntity ent) {
+    return pkb.Next(Wildcard(), ent);
+}
+
+std::set<statementNumber> ReadFacade::Next(statementNumber num, StmtEntity ent) {
+    return pkb.Next(num, ent);
+}
+
+bool ReadFacade::isNext(Wildcard, Wildcard) {
+    return pkb.isNext(Wildcard(), Wildcard());
+}
+
+bool ReadFacade::isNext(Wildcard, statementNumber num) {
+    return pkb.isNext(Wildcard(), num);
+}
+
+bool ReadFacade::isNext(statementNumber num, Wildcard) {
+    return pkb.isNext(num, Wildcard());
+}
+
+bool ReadFacade::isNext(statementNumber num1, statementNumber num2) {
+    return pkb.isNext(num1, num2);
+}
+
+std::set<std::pair<statementNumber, statementNumber>> ReadFacade::NextStar(StmtEntity ent1, StmtEntity ent2) {
+    return pkb.NextStar(ent1, ent2);
+}
+
+std::set<statementNumber> ReadFacade::NextStar(StmtEntity ent, Wildcard) {
+    return pkb.NextStar(ent, Wildcard());
+}
+
+std::set<statementNumber> ReadFacade::NextStar(StmtEntity ent, statementNumber num) {
+    return pkb.NextStar(ent, num);
+}
+
+std::set<statementNumber> ReadFacade::NextStar(Wildcard, StmtEntity ent) {
+    return pkb.NextStar(Wildcard(), ent);
+}
+
+std::set<statementNumber> ReadFacade::NextStar(statementNumber num, StmtEntity ent) {
+    return pkb.NextStar(num, ent);
+}
+
+bool ReadFacade::isNextStar(Wildcard, Wildcard) {
+    return pkb.isNextStar(Wildcard(), Wildcard());
+}
+
+bool ReadFacade::isNextStar(Wildcard, statementNumber num) {
+    return pkb.isNextStar(Wildcard(), num);
+}
+
+bool ReadFacade::isNextStar(statementNumber num, Wildcard) {
+    return pkb.isNextStar(num, Wildcard());
+}
+
+bool ReadFacade::isNextStar(statementNumber num1, statementNumber num2) {
+    return pkb.isNextStar(num1, num2);
 }
 
 

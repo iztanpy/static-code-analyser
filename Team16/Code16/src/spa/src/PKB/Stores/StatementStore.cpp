@@ -36,3 +36,7 @@ std::unordered_set<statementNumber> StatementStore::getAllStatements() {
     }
     return statements;
 }
+
+bool StatementStore::isPresent(statementNumber statement) {
+    return this->statementMap.find(statement) != this->statementMap.end();
+}

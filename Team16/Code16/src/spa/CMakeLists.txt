@@ -116,6 +116,9 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ElseParser.h
         src/SP/sp_parser/CloseBraceParser.cpp
         src/SP/sp_parser/CloseBraceParser.h
+        src/SP/sp_cfg/Cfg.cpp
+        src/SP/sp_cfg/Cfg.h
+        src/SP/sp_cfg/CfgNode.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -196,6 +199,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/constraint_solver/clause_group.h
         src/qps/query_evaluator/constraint_solver/clause_grouper.cpp
         src/qps/query_evaluator/constraint_solver/clause_grouper.h
+        src/PKB/Stores/NextStore.cpp
+        src/PKB/Stores/NextStore.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

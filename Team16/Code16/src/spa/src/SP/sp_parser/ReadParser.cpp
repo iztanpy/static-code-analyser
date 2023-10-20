@@ -44,6 +44,7 @@ int ReadParser::parse(std::vector<Token>& tokens) {
     std::shared_ptr<TNode> root = TNodeFactory::createNode(read, lineNumber);
     designExtractor->extractDesign(root, visitor);
     followsStatementStack.top().insert(lineNumber);
+    Cfg::handleStatement(lineNumber);
 
     lineNumber++;
 

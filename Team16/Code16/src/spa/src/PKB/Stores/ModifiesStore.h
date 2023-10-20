@@ -35,6 +35,8 @@ class ModifiesStore {
     void storeModifiesProcedures(std::unordered_map<procedure,
         std::pair<int, int>> procedures, std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
+    void storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls);
+
     /**
     * @brief Checks if a specific statement modifies a particular variable.
     *

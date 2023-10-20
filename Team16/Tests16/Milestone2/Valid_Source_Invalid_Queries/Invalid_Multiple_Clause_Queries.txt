@@ -1,0 +1,135 @@
+1 - and followed by such that
+assign a; while w;
+Select a such that Parent* (w, a) and Modifies (a, "x") and such that Parent* (1, a)
+SyntaxError
+5000
+2 - and followed by  pattern
+assign a; while w;
+Select a such that Parent* (w, a) and pattern a ("x", _) such that Parent*(1, a)
+SyntaxError
+5000
+4 - pattern followed by  and such that
+assign a; while w;
+Select a such that Parent* (w, a) pattern a ("x", _) and Parent*(1, a)
+SyntaxError
+5000
+6 - such that followed by  and pattern
+assign a; while w;
+Select a such that Parent* (w, a) and a ("x", _)
+SyntaxError
+5000
+9 - extra semicolon
+assign a; while w;
+Select a such that Parent* (w, a) ; and Modifies (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+10 - extra character
+assign a; while w;
+Select a such that Parent* (w, a) and Modifies (a, "x") and <Parent*(1, a)
+SyntaxError
+5000
+11 - extra char at end
+assign a; while w;
+Select a such that Parent* (w, a) and Modifies (a, "x") and Parent*(1, a) and
+SyntaxError
+5000
+12 - extra clause markers and
+assign a; while w;
+Select a such that Parent* (w, a) such that and Modifies (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+13 - extra clause markers pattern
+assign a; while w;
+Select a such that Parent* (w, a) pattern and Modifies (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+14 - extra clause markers such that
+assign a; while w;
+Select a such that such that Parent* (w, a) and Modifies (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+16 - misspelled clause indicators such that
+assign a; while w;
+Select a such tha Parent(w, a) and Modifies (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+17 - misspelled clause indicators pattern
+assign a; while w;
+Select a patter a(_,_) such that Modifies (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+20 - misspelling in such that Modifie
+assign a; while w;
+Select a pattern a(_,_) such that Modifie (a, "x") and Parent*(1, a)
+SyntaxError
+5000
+21 - extra comma in clause pattern
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent*(1, a) pattern a(_,,_)
+SyntaxError
+5000
+22 - extra bracket in clause
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent*(1, a)) pattern a(_,_)
+SyntaxError
+5000
+23 - missing opening bracket in pattern clause
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent*(1, a) pattern a_,_)
+SyntaxError
+5000
+24 - missing opening bracket in clause
+assign a; while w;
+Select a such that Modifiesa, "x") and Parent*(1, a) pattern a(_,_)
+SyntaxError
+5000
+25 - missing comma in clause
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent*(1, a) pattern a(__)
+SyntaxError
+5000
+26 - missing comma in clause
+assign a; while w;
+Select a such that Modifies(a "x") and Parent*(1, a) pattern a(_,_)
+SyntaxError
+5000
+43 - missing closing bracket in clause
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent*(1, a pattern a(_,_)
+SyntaxError
+5000
+44 - missing closing bracket in clause
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent*(1, a) pattern a(_,_
+SyntaxError
+5000
+46 - extra arguments
+assign a; while w;
+Select a such that Parent* (w,a,a)
+SyntaxError
+5000
+47 - extra characters in arguments
+assign a; while w;
+Select a such that Parent* (w,a,)
+SyntaxError
+5000
+48 - extra characters in arguments
+assign a; while w;
+Select a such that Parent* (,w,a)
+SyntaxError
+5000
+49 - missing clause indicators such that
+assign a; while w;
+Select a Modifies(a, "x") and Parent*(1, a) pattern a(_,_)
+SyntaxError
+5000
+50 - missing clause indicators pattern
+assign a; while w;
+Select a such that Modifies(a, "x") such that Parent*(1, a) a(_,_)
+SyntaxError
+5000
+52 - missing clause indicators and
+assign a; while w;
+Select a such that Modifies(a, "x") Parent(3, 1) pattern a(_,_)
+SyntaxError
+5000
