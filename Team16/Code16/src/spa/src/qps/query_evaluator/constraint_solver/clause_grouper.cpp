@@ -13,11 +13,9 @@ std::vector<ClauseGroup> ClauseGrouper::GetClauseGroupOrder() {
 
   std::unordered_map<Synonym, ClauseSet> synonymToClauses;
 
-  while (!clauses_.empty()) {
-    auto it = clauses_.begin();
-    Synonym root = Find(*(*it)->GetSynonyms().begin());
-    synonymToClauses[root].insert(std::move(const_cast<std::unique_ptr<Clause>&>(*it)));
-    clauses_.erase(it);
+  for (auto& clause_ptr : clauses_) {
+    Synonym root = Find(*clause_ptr->GetSynonyms().begin());
+    synonymToClauses[root].insert(std::move(const_cast<std::unique_ptr<Clause>&>(clause_ptr)));
   }
 
   // Convert ClauseSet to ClauseGroup
