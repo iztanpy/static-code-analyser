@@ -297,16 +297,54 @@ class PKB {
     */
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> uses(StmtEntity type);
 
+    /**
+    * Check if a given procedure uses variables that match a wildcard pattern.
+    *
+    * @param procedure The procedure to check for variable usage.
+    * @param wildcard The wildcard pattern to match against variable names.
+    * @return True if the procedure uses variables matching the wildcard; otherwise, false.
+    */
     bool isUses(procedure procedure, Wildcard wildcard);
 
+    /**
+     * Retrieve a set of variables that a procedure uses.
+     *
+     * @param procedure The procedure for which to retrieve used variables.
+     * @return An unordered set of variables used by the procedure.
+     */
     std::unordered_set<variable> uses(procedure procedure);
 
+    /**
+     * Check if a given procedure uses a specific variable.
+     *
+     * @param procedure The procedure to check for variable usage.
+     * @param variableName The variable to check for usage.
+     * @return True if the procedure uses the specified variable; otherwise, false.
+     */
     bool isUses(procedure procedure, variable variableName);
 
+    /**
+     * Retrieve a set of procedures that use variables matching a wildcard pattern.
+     *
+     * @param wildcard The wildcard pattern to match against variable names.
+     * @return An unordered set of procedures using variables matching the wildcard.
+     */
     std::unordered_set<procedure> usesProcedure(Wildcard wildcard);
 
+    /**
+     * Retrieve a set of procedures that use a specific variable.
+     *
+     * @param variableName The variable to check for usage.
+     * @return An unordered set of procedures using the specified variable.
+     */
     std::unordered_set<procedure> usesProcedure(variable variableName);
 
+    /**
+     * Retrieve a set of pairs consisting of a procedure and a variable, indicating
+     * which procedures use which variables.
+     *
+     * @return An unordered set of pairs representing procedure-variable usage.
+     */
     std::unordered_set<std::pair<procedure, variable>, PairHash> usesProcedure();
 
     // ModifiesStore methods
