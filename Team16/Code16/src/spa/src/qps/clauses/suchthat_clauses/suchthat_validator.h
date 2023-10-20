@@ -14,7 +14,7 @@ struct SuchThatValidator {
 
   inline static const std::unordered_set<DesignEntity> kUsesModifiesValidRhs = {DesignEntity::VARIABLE};
 
-  inline static const std::unordered_set<DesignEntity> kParentFollowsValidRhsLhs =
+  inline static const std::unordered_set<DesignEntity> kValidStmt =
       {DesignEntity::STMT, DesignEntity::ASSIGN, DesignEntity::READ, DesignEntity::PRINT, DesignEntity::IF_STMT,
        DesignEntity::WHILE_LOOP, DesignEntity::CALL};
 
@@ -26,7 +26,7 @@ struct SuchThatValidator {
    * @param rhs is the left hand side of the Parent/Follow clause
    * Will throw QpsSemanticError if the Parent/Follow clause is invalid
    */
-  static void ValidateParentFollows(StmtRef lhs, StmtRef rhs);
+  static void ValidateBothStmt(StmtRef lhs, StmtRef rhs);
 
   /*!
    * Validates Uses and Modifies clause
