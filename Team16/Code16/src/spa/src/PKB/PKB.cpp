@@ -17,14 +17,15 @@ PKB::PKB() {
 }
 
 // AssignStore methods
-std::unordered_set<statementNumber> PKB::getCommonStatements(std::unordered_set<statementNumber> set1, std::unordered_set<statementNumber> set2) {
-   std::unordered_set<statementNumber> result;
-   for (auto const& x : set1) {
-       if (set2.count(x)) {
+std::unordered_set<statementNumber> PKB::getCommonStatements(std::unordered_set<statementNumber> set1,
+    std::unordered_set<statementNumber> set2) {
+    std::unordered_set<statementNumber> result;
+    for (auto const& x : set1) {
+        if (set2.count(x)) {
             result.insert(x);
-       }
-   }
-   return result;
+        }
+    }
+    return result;
 }
 
 void PKB::setAssignments(std::unordered_map<statementNumber,

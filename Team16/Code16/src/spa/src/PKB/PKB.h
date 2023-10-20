@@ -52,7 +52,8 @@ class PKB {
     PKB();
 
     // General methods
-    std::unordered_set<statementNumber> getCommonStatements(std::unordered_set<statementNumber> set1, std::unordered_set<statementNumber> set2);
+    std::unordered_set<statementNumber> getCommonStatements(std::unordered_set<statementNumber> set1,
+        std::unordered_set<statementNumber> set2);
 
     // AssignStore methods
 
