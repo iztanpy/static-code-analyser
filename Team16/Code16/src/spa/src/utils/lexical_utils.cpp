@@ -60,7 +60,7 @@ bool lexical_utils::IsTerm(std::string str) {
     } else if (c == ')') {
       bracketCount--;
       if (bracketCount > 0) {
-        return false; // More closing brackets than opening brackets
+        return false;  // More closing brackets than opening brackets
       }
     }
 
@@ -85,7 +85,7 @@ bool lexical_utils::IsExpr(std::string str) {
     } else if (c == ')') {
       bracketCount--;
       if (bracketCount > 0) {
-        return false; // More closing brackets than opening brackets
+        return false;  // More closing brackets than opening brackets
       }
     }
 
