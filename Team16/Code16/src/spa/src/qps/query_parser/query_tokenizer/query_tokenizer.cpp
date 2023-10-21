@@ -121,19 +121,47 @@ std::vector<QueryToken> processSelectClause(std::string& select_statement, Selec
   return results;
 }
 
+std::string QueryTokenizer::removeResultClause(std::string& select_statement) {
+  std::string modifiedQuery = select_statement;
+  if (std::regex_search(select_statement, qps_constants::kTupleRegex)) {
+    // Replace the result-cl with an empty string
+    modifiedQuery = std::regex_replace(select_statement, qps_constants::kTupleRegex, "");
+  } else {
+    // either a BOOLEAN or synonym
+    modifiedQuery = string_util::RemoveFirstWord(select_statement);
+  }
+  // Remove any extra spaces or whitespace characters
+  modifiedQuery = std::regex_replace(modifiedQuery, std::regex("\\s+"), " ");
+  return modifiedQuery;
+}
+
+std::string QueryTokenizer::removeAfterResultClause(std::string& select_statement) {
+  std::string preservedResultClause = select_statement;
+  std::smatch match;
+  if (std::regex_search(select_statement, match,qps_constants::kTupleRegex)) {
+    preservedResultClause = match[0];
+  } else {
+    // either a BOOLEAN or synonym
+    preservedResultClause = string_util::GetFirstWord(select_statement);
+  }
+  // Remove any extra spaces or whitespace characters
+  preservedResultClause = std::regex_replace(preservedResultClause, std::regex("\\s+"), " ");
+  return preservedResultClause;
+}
+
 std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string& select_statement,
                                                            std::vector<Declaration>& declarations) {
   std::vector<QueryToken> select_tokens;
   qps_validator::ValidateSelectStatement(select_statement);
   // remove the Select keyword
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
-  size_t first_clause_index = getFirstClauseIndexes(remaining_statement);
-  std::string select_value = string_util::Trim(remaining_statement.substr(0, first_clause_index));
+  // get the remaining statement and validate it
+  std::string statement_after_res_cl = QueryTokenizer::removeResultClause(remaining_statement);
+  qps_validator::ValidateStatementAfterResClause(statement_after_res_cl);
+  std::string select_value = QueryTokenizer::removeAfterResultClause(remaining_statement);
   SelectValueType select_value_type = getSelectValueType(select_value);
   qps_validator::ValidateSelectValue(select_value, select_value_type, declarations);
   // then extract the synonym after 'Select'
-//  std::string select_synonym = string_util::GetFirstWord(remaining_statement);
-//  qps_validator::ValidateSelectSynonym(select_synonym, declarations);
   std::vector<QueryToken> select_query_tokens = processSelectClause(select_value, select_value_type);
   for (const QueryToken& token : select_query_tokens) {
     select_tokens.push_back(token);
@@ -327,7 +355,7 @@ std::pair<std::vector<QueryToken>,
   std::string remaining_statement = string_util::RemoveFirstWord(select_statement);
   // remove the Select synonym
 //  remaining_statement = string_util::RemoveFirstWord(remaining_statement);
-  remaining_statement = removeSelectClause(remaining_statement);
+  remaining_statement = string_util::Trim(QueryTokenizer::removeResultClause(remaining_statement));
   if (remaining_statement.empty()) {
     return {such_that_tokens, pattern_tokens};
   }

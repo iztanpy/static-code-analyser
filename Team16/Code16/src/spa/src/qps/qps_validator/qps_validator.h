@@ -164,4 +164,11 @@ void ValidateSelectValue(std::string& select_value,
  * @throws QpsSyntaxError if there are missing arguments or synonyms are invalid
  */
 void ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations);
+
+/*!
+ * Validates the statements after result clause in select statement
+ * @param remaining_statement to be validated
+ * @throws QpsSyntaxError if statement cannot match pattern or such that clause
+ */
+void ValidateStatementAfterResClause(std::string& remaining_statement);
 }  // namespace qps_validator

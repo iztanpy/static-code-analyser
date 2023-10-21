@@ -173,4 +173,18 @@ class QueryTokenizer {
    * @return the trimmed string
    */
   static std::string removeSelectClause(const std::string& remaining_statement);
+
+  /*!
+   * Removes the tuple or first word from a select clause
+   * @param select_statement to be processed
+   * @return the trimmed select clause
+   */
+  static std::string removeResultClause(std::string& select_statement);
+
+  /*!
+   * Preserves the result clause of the select clause
+   * @param select_statement to be processed
+   * @return the preserved result clause
+   */
+  static std::string removeAfterResultClause(std::string& select_statement);
 };

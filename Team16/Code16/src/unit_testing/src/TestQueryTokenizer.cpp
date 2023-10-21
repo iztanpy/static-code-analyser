@@ -315,13 +315,11 @@ TEST_CASE("Test extract clause tokens") {
   REQUIRE(results_2.second[2].type == expected_2.second[2].type);
   REQUIRE(results_2.first.empty());
 
-  QpsSyntaxError unknown_clause_error = QpsSyntaxError("Invalid clause expressions");
-  QpsSyntaxError undeclared_pattern_error = QpsSyntaxError("Invalid argument for RHS of pattern clause");
   std::vector<Declaration> error_declarations = {
       {"v", DesignEntity::VARIABLE}
   };
 
-  std::string undeclared_pattern_statement = "Select v pattern a (a, v)";
+  std::string undeclared_pattern_statement = "Select v pattern a (a, \"v\")";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations),
                     QpsSemanticError);
 }

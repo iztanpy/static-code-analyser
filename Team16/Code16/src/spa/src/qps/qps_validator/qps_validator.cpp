@@ -180,3 +180,12 @@ void qps_validator::ValidateSelectValue(std::string & select_value,
       throw QpsSyntaxError("Invalid select type");
   }
 }
+
+void qps_validator::ValidateStatementAfterResClause(std::string & remaining_statement) {
+  if (!remaining_statement.empty()) {
+    if (!QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kPatternClauseRegex)
+        && !QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kSuchThatClauseRegex)) {
+      throw QpsSyntaxError("Invalid syntax after Select synonym");
+    }
+  }
+}
