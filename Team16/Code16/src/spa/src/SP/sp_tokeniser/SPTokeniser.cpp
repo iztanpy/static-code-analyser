@@ -125,7 +125,6 @@ std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
     std::stack<char> braceStack;
 
     for (const std::string& line : lines) {
-        std::string test = line;
         TokenType matchedType = TokenType::kUnknownTokenType;
         std::string matchedValue;
         std::pair<TokenType, std::string> result = matchRegex(line);
