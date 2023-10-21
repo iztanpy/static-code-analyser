@@ -155,12 +155,14 @@ class Runner:
 
 
 if __name__ == "__main__":
+    FOLDERS = ["Milestone1", "Milestone2"]
+
     start_time = time.time()
     runner = Runner()
-    runner.execute("Milestone1")
-    runner.execute("Milestone2")
+    for folder in FOLDERS:
+        runner.execute(folder)
 
-    print(f"Test statistics:")
+    print(f"Test statistics for {FOLDERS}:")
     print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")
     print(f"Total failed tests: {runner.TOTAL_FAILED_TESTS}")
     print(f"Total timeout tests: {runner.TOTAL_TIMEOUT_TESTS}")
