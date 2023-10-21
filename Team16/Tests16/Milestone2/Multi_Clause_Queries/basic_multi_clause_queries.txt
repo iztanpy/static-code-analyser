@@ -5,7 +5,7 @@ Select a pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
 5000
 2 - such that AND AND
 assign a; variable v; stmt s;
-Select s.stmt# such that Parent(s,  a) and Uses(s,"ee") and Parent*(s,  a) pattern a(v,_"m"_)
+Select s such that Parent(s,  a) and Uses(s,"ee") and Parent*(s,  a) pattern a(v,_"m"_)
 
 5000
 3 - simple with
