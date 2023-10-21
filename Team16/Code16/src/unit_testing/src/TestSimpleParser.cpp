@@ -813,7 +813,7 @@ TEST_CASE(("Test Uses: SP Assignment statement partial RHS pattern")) {
   std::string simpleProgram = R"(
       procedure p {
         a = ((x + 1) * ((y / 5 + 1)));
-        while ((i == x + 1)) {
+        while (i == x + 1) {
           if ((i == i) && (y >= (x + 1) * wee % 5)) then {
             kay = five / 9 - var;
           }
@@ -1346,6 +1346,33 @@ TEST_CASE(("Test SP Control Variable storage")) {
 //    WriteFacade writeFacade(*pkb_ptr);
 //    SourceProcessor sourceProcessor(&writeFacade);
 //    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; } procedure p { x = x + 1; x = x + 2; x = x + 3; }";
+//    sourceProcessor.processSource(simpleProgram3);
+//    // check std log to see if error is logged
+//    REQUIRE(1 == 1);
+//}
+//TEST_CASE("Test Calling Non-existent Procedure") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = "procedure one { x = x + 2; call two; } procedure two { call one; call q; }";
+//    sourceProcessor.processSource(simpleProgram3);
+//    // check std log to see if error is logged
+//    REQUIRE(1 == 1);
+//}
+//TEST_CASE("Test invlaid dunno why") {
+//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+//    WriteFacade writeFacade(*pkb_ptr);
+//    SourceProcessor sourceProcessor(&writeFacade);
+//    std::string simpleProgram3 = R"(
+//        procedure Four {
+//            if ((x % 2) + y == a + b) then {
+//                else = else + then;
+//            } else {
+//                print apple;
+//            }
+//
+//        }
+//    )";
 //    sourceProcessor.processSource(simpleProgram3);
 //    // check std log to see if error is logged
 //    REQUIRE(1 == 1);

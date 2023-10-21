@@ -20,9 +20,12 @@ int WhileParser::parse(std::vector<Token>& tokens) {
     parentStatementStack.push(lineNumber);
     controlStructureStack.push("while");
 
-    index++;
-
+    // Set up ParseUtils
     ParseUtils::setValues(index, lineNumber);
+    ParseUtils::setUpCondIndexMap(tokens);
+    index++;
+    ParseUtils::setValues(index, lineNumber);
+
     std::shared_ptr<TNode> whileCondNode = ParseUtils::parseCondExpression(tokens);
     index = ParseUtils::getIndex();
     whileNode->addChild(whileCondNode);

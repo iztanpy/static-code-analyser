@@ -19,9 +19,12 @@ int IfParser::parse(std::vector<Token>& tokens) {
   parentStatementStack.push(lineNumber);
   Parser::controlStructureStack.push("if");
 
-  index++;
-
+  // Set up ParseUtils
   ParseUtils::setValues(index, lineNumber);
+  ParseUtils::setUpCondIndexMap(tokens);
+  index++;
+  ParseUtils::setValues(index, lineNumber);
+
   std::shared_ptr<TNode> ifCondNode = ParseUtils::parseCondExpression(tokens);
   index = ParseUtils::getIndex();
   ifNode->addChild(ifCondNode);

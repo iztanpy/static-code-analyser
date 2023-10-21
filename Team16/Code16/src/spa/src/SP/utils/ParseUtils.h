@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <stack>
 
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
@@ -34,6 +36,7 @@ class ParseUtils {
   inline static std::string procedureName;
   static EntityMap entityMap;
   static void setUpEntityMap();
+  static std::unordered_map<int, std::vector<int>> condIndexMap;
 
  public:
  /**
@@ -130,4 +133,6 @@ class ParseUtils {
    * @return A shared pointer to the parsed relational factor node.
    */
   static std::shared_ptr<TNode> parseRelFactor(const std::vector<Token>& tokens);
+  static void setUpCondIndexMap(const std::vector<Token>& tokens);
+  static bool validCondExpression(const std::vector<Token>& tokens);
 };
