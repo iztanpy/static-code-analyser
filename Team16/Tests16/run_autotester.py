@@ -16,6 +16,7 @@ class Runner:
     SUCCESS_EXIT_CODE = 0
     FAILURE_CLOSING_TAG = '</failed>'
     SUCCESS_TAG = '<passed/>'
+    TIMEOUT_TAG = '<timeout/>'
     PASS_DIRECTORY = os.path.join(os.getcwd(), "Pass")
     FAIL_DIRECTORY = os.path.join(os.getcwd(), "Fail")
     TEMP_XML_FILENAME = "temp.xml"
@@ -25,6 +26,7 @@ class Runner:
         self.TOTAL_TESTS = 0
         self.TOTAL_PASSED_TESTS = 0
         self.TOTAL_FAILED_TESTS = 0
+        self.TOTAL_TIMEOUT_TESTS = 0
         self.make_result_directory()
 
     @staticmethod
@@ -88,12 +90,14 @@ class Runner:
             counts = Counter(output.split())
             passed_tests = counts[self.SUCCESS_TAG]
             failed_tests = counts[self.FAILURE_CLOSING_TAG]
+            timeout_tests = counts[self.TIMEOUT_TAG]
 
-        self.TOTAL_TESTS += (passed_tests + failed_tests)
+        self.TOTAL_TESTS += (passed_tests + failed_tests + timeout_tests)
         self.TOTAL_PASSED_TESTS += passed_tests
         self.TOTAL_FAILED_TESTS += failed_tests
+        self.TOTAL_TIMEOUT_TESTS += timeout_tests
 
-        if failed_tests > 0:
+        if failed_tests > 0 or timeout_tests > 0:
             destination = os.path.join(self.FAIL_DIRECTORY, relative_path)
         else:
             destination = os.path.join(self.PASS_DIRECTORY, relative_path)
@@ -104,11 +108,11 @@ class Runner:
         shutil.move(output_xml, os.path.join(destination, f"{test_name}out.xml"))
         shutil.copy("analysis.xsl", destination)
 
-        return f"\nTest passed: {passed_tests}\nTest failed: {failed_tests}\n"
+        return f"\nTest passed: {passed_tests}\nTest failed: {failed_tests}\nTest timeout: {timeout_tests}\n"
 
     import subprocess
 
-# ...
+    # ...
 
     def execute_autotester(self, autotester_filepath, parameters, redirect_output):
         source, query, test_name, relative_path = parameters
@@ -139,8 +143,6 @@ class Runner:
 
         return f"Execution completed for {test_name[:-1]} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
 
-
-
     def execute(self, folder_to_test_in, redirect_output=True):
         autotester_filepath = self.find_autotester_executable()
         parameters = self.get_autotester_parameters(folder_to_test_in)
@@ -153,17 +155,20 @@ class Runner:
 
 
 if __name__ == "__main__":
+    FOLDERS = ["Milestone1", "Milestone2"]
+
     start_time = time.time()
     runner = Runner()
-    runner.execute("Milestone1")
-    runner.execute("Milestone2")
+    for folder in FOLDERS:
+        runner.execute(folder)
 
-    print(f"Test statistics:")
+    print(f"Test statistics for {FOLDERS}:")
     print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")
     print(f"Total failed tests: {runner.TOTAL_FAILED_TESTS}")
+    print(f"Total timeout tests: {runner.TOTAL_TIMEOUT_TESTS}")
     print(f"Total tests: {runner.TOTAL_TESTS}")
 
     print(f"Total time taken: {time.time() - start_time:.4f} seconds")
 
-    if runner.TOTAL_FAILED_TESTS > 0:
-        raise Exception("Some tests failed!")
+    if runner.TOTAL_FAILED_TESTS > 0 or runner.TOTAL_TIMEOUT_TESTS > 0:
+        raise Exception("Some tests failed or timed out!")

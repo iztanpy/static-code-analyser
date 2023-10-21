@@ -90,11 +90,11 @@ std::shared_ptr<TNode> ParseUtils::parseTerm(const std::vector<Token>& tokens) {
 std::shared_ptr<TNode> ParseUtils::parseFactor(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> node = nullptr;
   if (tokens[index].tokenType == TokenType::kSepOpenParen) {
-    node = TNodeFactory::createNode(tokens[index], lineNumber);
+//    node = TNodeFactory::createNode(tokens[index], lineNumber);
     incrementIndex();
-    std::shared_ptr<TNode> childNode = nullptr;
-    childNode = parseExpression(tokens);
-    node->addChild(childNode);
+//    std::shared_ptr<TNode> childNode = nullptr;
+    node = parseExpression(tokens);
+//    node->addChild(childNode);
     if (tokens[index].tokenType != TokenType::kSepCloseParen) {
       throw InvalidSyntaxError();
     }

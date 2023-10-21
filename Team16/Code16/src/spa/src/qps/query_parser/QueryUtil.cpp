@@ -1,4 +1,5 @@
 #include <set>
+#include <stack>
 #include <string>
 #include "QueryUtil.h"
 #include "qps/constants.h"
@@ -140,4 +141,95 @@ bool QueryUtil::IsInDeclarations(const std::string& s, const std::vector<Declara
     }
   }
   return false;
+}
+
+bool QueryUtil::IsOperator(const char & c) {
+  return c == '+' || c == '-' || c == '*' || c == '/' || c =='%';
+}
+
+int QueryUtil::getPrecedence(char op) {
+  if (op == '+' || op == '-') {
+    return 1;
+  } else if (op == '*' || op == '/' || op == '%') {
+    return 2;
+  }
+  return 0;  // Default for non-operators
+}
+
+bool QueryUtil::hasPrecedence(char op1, char op2) {
+  int prec_1 = getPrecedence(op1);
+  int prec_2 = getPrecedence(op2);
+  if (prec_1 == prec_2) {
+    return true;  // Left-associative operators have the same precedence
+  }
+  return prec_1 < prec_2;
+}
+
+void QueryUtil::processOperator(std::stack<char>& operators, std::stack<std::string>& operands) {
+  char op = operators.top();
+  operators.pop();
+  std::string rightOperand = operands.top();
+  operands.pop();
+  std::string leftOperand = operands.top();
+  operands.pop();
+  operands.push("(" + leftOperand + op + rightOperand + ")");
+}
+
+std::string bracket_variables(char c) {
+  std::string result;
+  result += "(";
+  result += std::string(1, c);
+  result += ")";
+  return result;
+}
+
+std::string bracket_variables(std::string s) {
+  std::string result;
+  result += "(";
+  result += s;
+  result += ")";
+  return result;
+}
+
+std::string QueryUtil::addParentheses(const std::string& expression) {
+  std::string input = expression;
+  std::stack<char> operators;
+  std::stack<std::string> operands;
+  std::stack<char> brackets;
+  std::vector<std::string> output;
+  std::string currentStr;
+
+  for (char c : input) {
+    if (isalnum(c)) {
+      currentStr += c;
+    } else {
+      if (!currentStr.empty()) {
+        operands.push(bracket_variables(currentStr));
+        currentStr.clear();
+      }
+      if (c == '(') {
+        operators.push(c);
+      } else if (c == ')') {
+        while (!operators.empty() && operators.top() != '(') {
+          processOperator(operators, operands);
+        }
+        operators.pop();  // Pop the opening parenthesis
+      } else if (IsOperator(c)) {
+        while (!operators.empty() && hasPrecedence(c, operators.top())) {
+          processOperator(operators, operands);
+        }
+        operators.push(c);
+      }
+    }
+  }
+  if (!currentStr.empty()) {
+    operands.push(bracket_variables(currentStr));
+    currentStr.clear();
+  }
+
+  while (!operators.empty()) {
+    processOperator(operators, operands);
+  }
+
+  return operands.top();
 }

@@ -255,6 +255,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
   } else {
     std::string remove_wildcard = string_util::Trim(right_hand_side.substr(1, right_hand_side.length() - 2));
     std::string remove_quotations = QueryUtil::RemoveQuotations(remove_wildcard);
+    remove_quotations = QueryUtil::addParentheses(remove_quotations);
     right_token = {remove_quotations, PQLTokenType::PARTIALEXPR};
   }
 
