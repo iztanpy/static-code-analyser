@@ -27,6 +27,7 @@ class Runner:
         self.TOTAL_PASSED_TESTS = 0
         self.TOTAL_FAILED_TESTS = 0
         self.TOTAL_TIMEOUT_TESTS = 0
+        self.AUTOTESTER_FAIL = 0
         self.make_result_directory()
 
     @staticmethod
@@ -39,17 +40,16 @@ class Runner:
         # Our Team16 directory is the parent directory of the current working directory
         team_code_dir = os.path.dirname(os.getcwd())
 
-        executable_path = None
+        paths = [os.path.join(root, file) for root, _, files in os.walk(team_code_dir) for file in files if
+                 file == file_name]
 
-        for root, dirs, files in os.walk(team_code_dir):
-            for file in files:
-                if file == file_name:
-                    executable_path = os.path.join(root, file)
+        if len(paths) > 1:
+            raise ValueError(f"More than 1 of {file_name} found in {team_code_dir} folder")
 
-        if executable_path is None:
+        if len(paths) == 0:
             raise Exception(f"Unable to find {file_name} in {team_code_dir} folder")
 
-        return executable_path
+        return paths[0]
 
     def make_result_directory(self):
         for path in [self.PASS_DIRECTORY, self.FAIL_DIRECTORY]:
@@ -132,6 +132,7 @@ class Runner:
                 error_message = result.stderr
 
                 if exit_code != self.SUCCESS_EXIT_CODE:
+                    self.AUTOTESTER_FAIL += 1
                     return f"Execution failed for {test_name[:-1]} with exit code: {exit_code}\nError Message: {error_message}"
         else:
             result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -166,9 +167,10 @@ if __name__ == "__main__":
     print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")
     print(f"Total failed tests: {runner.TOTAL_FAILED_TESTS}")
     print(f"Total timeout tests: {runner.TOTAL_TIMEOUT_TESTS}")
+    print(f"Total autotester fail: {runner.AUTOTESTER_FAIL}")
     print(f"Total tests: {runner.TOTAL_TESTS}")
 
     print(f"Total time taken: {time.time() - start_time:.4f} seconds")
 
-    if runner.TOTAL_FAILED_TESTS > 0 or runner.TOTAL_TIMEOUT_TESTS > 0:
-        raise Exception("Some tests failed or timed out!")
+    if runner.TOTAL_FAILED_TESTS > 0 or runner.AUTOTESTER_FAIL > 0 or runner.TOTAL_TIMEOUT_TESTS > 0:
+        raise Exception("Some tests failed, timed out or source couldn't be parsed!")
