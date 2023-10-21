@@ -27,10 +27,10 @@ procedure Four {
         }
         x = 2;
         while (x == 2) {
-	  if (x % 2 + y + 8) == (a + b + c)) then {
-             else = else + then; 
+      if (x == 6) then {
+             else = else + then;
           } else {
-	      print apple;
-	  }
-        } 
+          print apple;
+          }
+      }
  }
