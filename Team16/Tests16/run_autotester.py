@@ -108,7 +108,7 @@ class Runner:
 
     import subprocess
 
-# ...
+    # ...
 
     def execute_autotester(self, autotester_filepath, parameters, redirect_output):
         source, query, test_name, relative_path = parameters
@@ -138,8 +138,6 @@ class Runner:
                 return f"Execution failed for {test_name[:-1]} with exit code: {exit_code}\nError Message: {error_message}"
 
         return f"Execution completed for {test_name[:-1]} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
-
-
 
     def execute(self, folder_to_test_in, redirect_output=True):
         autotester_filepath = self.find_autotester_executable()
