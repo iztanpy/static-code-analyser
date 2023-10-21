@@ -99,15 +99,16 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
 
+  std::string processed_right_hand_side = string_util::RemoveSpacesFromExpr(right_hand_side);
   // RHS can only be these 3 types regardless of pattern synonym
-  if (!QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
-      && !QueryUtil::IsExactExpressionSpecification(right_hand_side)
-      && !QueryUtil::IsWildcard(right_hand_side)) {
+  if (!QueryUtil::IsPartialMatchExpressionSpecification(processed_right_hand_side)
+      && !QueryUtil::IsExactExpressionSpecification(processed_right_hand_side)
+      && !QueryUtil::IsWildcard(processed_right_hand_side)) {
     throw QpsSyntaxError("Invalid argument for RHS pattern clause");
   }
 
-  if (QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
-      || QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
+  if (QueryUtil::IsPartialMatchExpressionSpecification((processed_right_hand_side))
+      || QueryUtil::IsExactExpressionSpecification(processed_right_hand_side)) {
     if (pattern_type == PQLTokenType::PATTERN_IF) {
       throw QpsSyntaxError("Invalid if pattern syntax");
     } else if (pattern_type == PQLTokenType::PATTERN_WHILE) {
@@ -177,5 +178,14 @@ void qps_validator::ValidateSelectValue(std::string & select_value,
       break;
     default:
       throw QpsSyntaxError("Invalid select type");
+  }
+}
+
+void qps_validator::ValidateStatementAfterResClause(std::string & remaining_statement) {
+  if (!remaining_statement.empty()) {
+    if (!QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kPatternClauseRegex)
+        && !QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kSuchThatClauseRegex)) {
+      throw QpsSyntaxError("Invalid syntax after Select synonym");
+    }
   }
 }

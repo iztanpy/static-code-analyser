@@ -28,4 +28,6 @@ const std::regex kAndClauseRegex("and [A-Za-z]");
 const std::regex kOnlySuchThat("such that$");
 const std::regex kOnlyPattern("pattern$");
 const std::regex kOnlyAnd("and$");
+
+const std::regex kTupleRegex("<[^>]+>");
 }  // namespace qps_constants
