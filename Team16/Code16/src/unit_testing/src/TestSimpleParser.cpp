@@ -1283,6 +1283,42 @@ TEST_CASE(("Test SP Control Variable storage")) {
   REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
   REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
+TEST_CASE("Test complicated conditionals") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+        procedure Four {
+            while (   !(  ( (a + b) || (!(   (b / (c + 3)) >= else * else  ))) && ((y) == (1 + ((3 * 1))/ d))  )  ) {
+                a = 1;
+            }
+            if ((x % 2) + y == a + b) then {
+                else = else + then;
+            } else {
+                print apple;
+            }
+
+        }
+    )";
+    sourceProcessor.processSource(simpleProgram3);
+
+    std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
+        { {2, "a"}, {4, "else"} });
+
+    std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getWhileControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getIfControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> whileMaperes =
+        std::unordered_map<int, std::unordered_set<std::string>>({{{1,{"a", "b", "c", "else", "y", "d"}}}});
+    std::unordered_map<int, std::unordered_set<std::string>> ifMapers =
+        std::unordered_map<int, std::unordered_set<std::string>>({{3, {"x", "y", "a", "b"}}});
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
+        std::unordered_map<int, std::unordered_set<std::string>>({{
+            {1, {"a", "b", "c", "else", "y", "d"}}, {3, {"x", "y", "a", "b"}}, {4, {"else", "then"}}, {5, {"apple"}}}});
+    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
+    REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+}
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -1346,24 +1382,6 @@ TEST_CASE(("Test SP Control Variable storage")) {
 //    WriteFacade writeFacade(*pkb_ptr);
 //    SourceProcessor sourceProcessor(&writeFacade);
 //    std::string simpleProgram3 = "procedure one { x = x + 2; call two; } procedure two { call one; call q; }";
-//    sourceProcessor.processSource(simpleProgram3);
-//    // check std log to see if error is logged
-//    REQUIRE(1 == 1);
-//}
-//TEST_CASE("Test invlaid dunno why") {
-//    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
-//    SourceProcessor sourceProcessor(&writeFacade);
-//    std::string simpleProgram3 = R"(
-//        procedure Four {
-//            if ((x % 2) + y == a + b) then {
-//                else = else + then;
-//            } else {
-//                print apple;
-//            }
-//
-//        }
-//    )";
 //    sourceProcessor.processSource(simpleProgram3);
 //    // check std log to see if error is logged
 //    REQUIRE(1 == 1);

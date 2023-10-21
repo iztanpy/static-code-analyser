@@ -195,7 +195,7 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
 std::shared_ptr<TNode> ParseUtils::parseRelExpression(const std::vector<Token>& tokens) {
   std::shared_ptr<TNode> tree = parseRelFactor(tokens);
 
-  while (ParseUtils::isRelFactorOperator(tokens[index])) {
+  if (ParseUtils::isRelFactorOperator(tokens[index])) {
     std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
     operatorNode->addChild(tree);
     incrementIndex();
