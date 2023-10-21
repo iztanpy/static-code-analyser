@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
 #include <stack>
 
 // Headers from "SP" subdirectory
