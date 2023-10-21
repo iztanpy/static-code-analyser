@@ -5,7 +5,7 @@ Select w pattern w(_,_)
 5000
 4 - select while pairs
 while w;variable v;
-Select <w, v.varName> pattern w(v,_)
+Select <w, v> pattern w(v,_)
 1 x, 2 y, 15 x
 5000
 6 - select while stmts with specified var

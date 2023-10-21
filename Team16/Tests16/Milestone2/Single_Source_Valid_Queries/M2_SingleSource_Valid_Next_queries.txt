@@ -41,7 +41,7 @@ Select a such that Next(a,_)
 9 - Next(ENT, ENT) is true
 assign a; if ifs;
 Select <ifs, a> such that Next(a,ifs)
-7, 6, 9, 8
+7 6, 9 8
 5000
 10 - Next(ENT, ENT) is false
 if ifs;
