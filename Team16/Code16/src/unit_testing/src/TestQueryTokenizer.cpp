@@ -4,6 +4,7 @@
 #include "qps/qps_errors/qps_syntax_error.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/string_utils.h"
+#include "qps/query_parser/QueryUtil.h"
 
 TEST_CASE("Test split query") {
   std::string sample_query_1 = "variable v; Select v";
@@ -208,7 +209,7 @@ TEST_CASE("Test get pattern arguments") {
                                                                           PQLTokenType::SYNONYM);
   std::pair<QueryToken, QueryToken> expected_args = {
       {"s", PQLTokenType::SYNONYM},
-      {"x+y", PQLTokenType::PARTIALEXPR}
+      {"((x)+(y))", PQLTokenType::PARTIALEXPR}
   };
   REQUIRE(args.first.type == expected_args.first.type);
   REQUIRE(args.first.text == expected_args.first.text);
@@ -373,7 +374,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<QueryToken> pattern_tokens = {
       {"a1", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
-      {"abc+cde%fgh", PQLTokenType::PARTIALEXPR}
+      {"((abc)+((cde)%(fgh)))", PQLTokenType::PARTIALEXPR}
   };
 
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
@@ -741,3 +742,45 @@ TEST_CASE("Tokenizer can tokenize select BOOLEAN") {
   REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_2, declarations_1), QpsSemanticError);
 }
 
+
+TEST_CASE("Test add parentheses for expressions") {
+  std::string sample_query_1 = "x+y+z";
+  std::string processed_expr = QueryUtil::addParentheses(sample_query_1);
+  REQUIRE(processed_expr == "(((x)+(y))+(z))");
+
+  std::string sample_query_2 = "(((x)))";
+  std::string processed_expr_2 = QueryUtil::addParentheses(sample_query_2);
+  REQUIRE(processed_expr_2 == "(x)");
+
+  std::string sample_query_3 = "(x+y*z)";
+  std::string processed_expr_3 = QueryUtil::addParentheses(sample_query_3);
+  REQUIRE(processed_expr_3 == "((x)+((y)*(z)))");
+
+  std::string sample_query_4 = "(((x+y*z)))";
+  std::string processed_expr_4 = QueryUtil::addParentheses(sample_query_4);
+  REQUIRE(processed_expr_4 == "((x)+((y)*(z)))");
+
+  std::string sample_query_5 = "(x+y*(z-y*x)) ";
+  std::string processed_expr_5 = QueryUtil::addParentheses(sample_query_5);
+  REQUIRE(processed_expr_5 == "((x)+((y)*((z)-((y)*(x)))))");
+
+  std::string sample_query_6 = "(((x+y))) ";
+  std::string processed_expr_6 = QueryUtil::addParentheses(sample_query_6);
+  REQUIRE(processed_expr_6 == "((x)+(y))");
+
+  std::string sample_query_7 = "(((x))+y*((z)-y*(x))) ";
+  std::string processed_expr_7 = QueryUtil::addParentheses(sample_query_7);
+  REQUIRE(processed_expr_7 == "((x)+((y)*((z)-((y)*(x)))))");
+
+  std::string sample_query_8 = "k-1+i*3/2";
+  std::string processed_expr_8 = QueryUtil::addParentheses(sample_query_8);
+  REQUIRE(processed_expr_8 == "(((k)-(1))+(((i)*(3))/(2)))");
+
+  std::string sample_query_9 = "x%10";
+  std::string processed_expr_9 = QueryUtil::addParentheses(sample_query_9);
+  REQUIRE(processed_expr_9 == "((x)%(10))");
+
+  std::string sample_query_10 = "abc+cde%fgh";
+  std::string processed_expr_10 = QueryUtil::addParentheses(sample_query_10);
+  REQUIRE(processed_expr_10 == "((abc)+((cde)%(fgh)))");
+}

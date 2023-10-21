@@ -39,11 +39,11 @@ TEST_CASE("TEST Assign Pattern Partial Match") {
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> empty = {};
   sourceProcessor.processSource(simpleProgram);
 
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"v"}) == result);
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"x*y"}) == result);
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"v+x"}) == empty);
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"v+x*y"}) == result);
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"y+z*t"}) == empty);
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"x*y+z*t"}) == empty);
-  REQUIRE(readFacade.getAssignPair(PartialExpr{"v+x*y+z*t"}) == result);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"(v)"}) == result);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"((x)*(y))"}) == result);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"((v)+(x))"}) == empty);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"((v)+((x)*(y)))"}) == result);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"((y)+((z)*(t)))"}) == empty);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"((x)*((y)+((z)*(t))))"}) == empty);
+  REQUIRE(readFacade.getAssignPair(PartialExpr{"(((v)+((x)*(y)))+((z)*(t)))"}) == result);
 }
