@@ -12,20 +12,20 @@
 #include "SP/SourceProcessor.h"
 
 void parse(SourceProcessor& sp, std::string filename) {
-  std::ifstream file(filename);
-  std::string file_contents;
+    std::ifstream file(filename);
+    std::string file_contents;
 
-  if (!file.is_open()) {
-    std::cerr << "Error: Unable to open file " << filename << std::endl;
-  }
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file " << filename << std::endl;
+    }
 
-  std::string input;
-  std::string line;
-  while (std::getline(file, line)) {
-    /*    std::cout << "TEST" << std::endl;*/
-    input += line;
-  }
-  sp.processSource(input);
+    std::string input;
+    std::string line;
+    while (std::getline(file, line)) {
+        /*    std::cout << "TEST" << std::endl;*/
+        input += line;
+    }
+    sp.processSource(input);
 }
 
 //TEST_CASE("Test Local") {
@@ -45,4 +45,3 @@ void parse(SourceProcessor& sp, std::string filename) {
 //
 //  REQUIRE(results == std::unordered_set<std::string>({"i", "x", "y", "z"}));
 //}
-                          "        while (3 == 4) {\n"
