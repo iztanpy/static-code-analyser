@@ -280,17 +280,67 @@ TEST_CASE("ConstraintTable::Select with Error when passing in non-existing ColNa
       }
   );
 
-  REQUIRE(ct.Select("a") == std::unordered_set<Cell>{"1", "2", "9"});
-  REQUIRE(ct.Select("b") == std::unordered_set<Cell>{"3", "4", "10", "11"});
+  REQUIRE(ct.Select({"a"}) == std::unordered_set<std::string>{"1", "2", "9"});
+  REQUIRE(ct.Select({"a", "a"}) == std::unordered_set<std::string>{"1 1", "2 2", "9 9"});
+  REQUIRE(ct.Select({"b"}) == std::unordered_set<std::string>{"3", "4", "10", "11"});
 
-  REQUIRE(ct.Select("d").empty());
-  REQUIRE(ct.Select("kingkong").empty());
+  REQUIRE(ct.Select({"b", "a", "b"}) == std::unordered_set<std::string>{"3 1 3", "4 2 4", "10 2 10", "11 9 11"});
 
   Constraint constraint = BinaryConstraint{{"a", "d"}, {{"1", "2"}, {"1", "4"}, {"3", "11"}}};
   ct.Solve(constraint);
 
-  REQUIRE(ct.Select("a") == std::unordered_set<Cell>{"1"});
-  REQUIRE(ct.Select("b") == std::unordered_set<Cell>{"3"});
-  REQUIRE(ct.Select("c") == std::unordered_set<Cell>{"5"});
-  REQUIRE(ct.Select("d") == std::unordered_set<Cell>{"4", "2"});
+  REQUIRE(ct.Select({"a"}) == std::unordered_set<std::string>{"1"});
+  REQUIRE(ct.Select({"b"}) == std::unordered_set<std::string>{"3"});
+  REQUIRE(ct.Select({"c"}) == std::unordered_set<std::string>{"5"});
+  REQUIRE(ct.Select({"d"}) == std::unordered_set<std::string>{"4", "2"});
+}
+
+TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
+  // Initializing the main table
+  ConstraintTable mainTable = ConstraintTable::ForTestingOnly(
+      {
+          {"a", {"1", "2"}},
+          {"b", {"3", "4"}},
+          {"c", {"5", "6"}},
+      }
+  );
+
+  // Initializing the table to be joined
+  ConstraintTable joinTable = ConstraintTable::ForTestingOnly(
+      {
+          {"d", {"7", "8", "9"}},
+          {"e", {"10", "11", "12"}},
+      }
+  );
+
+  // Joining the two tables
+  mainTable.JoinTable(joinTable);
+
+  SECTION("Checking merged content after joining") {
+    Table table = mainTable.GetTableForTesting();
+    std::vector<ColName> col_names = {"a", "b", "c", "d", "e"};  // Includes columns from both tables
+    std::vector<std::vector<Cell>> rows = {
+        {"1", "3", "5", "7", "10"},
+        {"2", "4", "6", "8", "11"},
+        {"1", "3", "5", "8", "11"},
+        {"2", "4", "6", "7", "10"},
+        {"1", "3", "5", "9", "12"},
+        {"2", "4", "6", "9", "12"},
+    };
+    REQUIRE_TABLE_CONTENT(table, col_names, rows);
+    REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+  }
+
+  mainTable.Filter({"a", "b"});
+
+  SECTION("Checking filtered content") {
+    Table table = mainTable.GetTableForTesting();
+    std::vector<ColName> col_names = {"a", "b"};  // Includes columns from both tables
+    std::vector<std::vector<Cell>> rows = {
+        {"1", "3"},
+        {"2", "4"},
+    };
+    REQUIRE_TABLE_CONTENT(table, col_names, rows);
+    REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+  }
 }

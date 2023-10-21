@@ -481,3 +481,68 @@ TEST_CASE("Selecting Assign statements") {
     sourceProcessor.processSource(simpleProgram);
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "1", "3" }));
 }
+
+TEST_CASE("Test call failing testcase") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+    std::string simpleProgram = R"(
+        procedure one {
+            call two;
+        }
+
+        procedure two {
+            x = 0;
+            i = 5;
+            while (i!=0) {
+                a = a + b;
+                call three;
+                c = b - a; }
+            if (a==1) then {
+                call six;
+                t = x+1; }
+            else {
+                z = 1; }
+            a = a + b + c;
+            a = a + 2;
+            a = a * b + z;
+        }
+
+        procedure three {
+            if (v == z) then {
+                call five;
+            } else {
+                call four;
+            }
+            z = 5;
+            print v;
+        }
+
+        procedure four {
+            read g;
+        }
+
+        procedure five {
+            read l;
+            call six;
+        }
+
+        procedure six {
+            print g;
+        }
+
+        procedure seven {
+            print g;
+            call two;
+        }
+     )";
+    std::string query_1 = "procedure p;Select p such that Calls(_,_)";
+    sourceProcessor.processSource(simpleProgram);
+    bool result = qps.Evaluate(query_1) == std::unordered_set<std::string>({ "five", "one", "seven", "three", "two", "four", "six" });
+
+    std::unordered_set<std::string> temp = qps.Evaluate(query_1);
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "five", "one", "seven", "three", "two", "four", "six" }));
+}

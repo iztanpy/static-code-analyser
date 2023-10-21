@@ -7,7 +7,7 @@ Constraint Parent::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void Parent::Validate() {
-  SuchThatValidator::ValidateParentFollows(lhs, rhs);
+  SuchThatValidator::ValidateBothStmt(lhs, rhs);
 }
 
 Constraint ParentT::Evaluate(ReadFacade& pkb_reader) {
@@ -17,5 +17,5 @@ Constraint ParentT::Evaluate(ReadFacade& pkb_reader) {
 }
 
 void ParentT::Validate() {
-  SuchThatValidator::ValidateParentFollows(lhs, rhs);
+  SuchThatValidator::ValidateBothStmt(lhs, rhs);
 }

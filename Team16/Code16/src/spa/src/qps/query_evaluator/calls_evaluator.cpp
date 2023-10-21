@@ -1,7 +1,7 @@
 #include "qps/query_evaluator/calls_evaluator.h"
 
 Constraint CallsEvaluator::Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader, bool is_CallT) {
-  if (lhs.equals(rhs)) {
+  if (lhs == rhs) {
     return UnaryConstraint{lhs.synonym, {}};
   }
   StmtEntity lhs_stmt_entity = ConvertToStmtEntity(lhs.design_entity);

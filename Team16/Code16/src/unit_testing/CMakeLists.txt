@@ -11,7 +11,7 @@ add_executable(unit_testing ${srcs}
         src/PKB/FollowsStoreTest.cpp
         src/PKB/ParentsStoreTest.cpp
         src/PKB/ModifiesStoreTest.cpp
-        src/PKB/UsesStoreTest.cpp
+        
         src/PKB/AssignStoreTest.cpp
         src/PKB/StatementStoreTest.cpp
         src/TestWhileParser.cpp
@@ -20,7 +20,8 @@ add_executable(unit_testing ${srcs}
         src/TestWhileParser.cpp
         src/PKB/ProcedureStoreTest.cpp 
         src/PKB/CallStoreTest.cpp
-        src/PKB/TestNextStore.cpp)
+        src/PKB/TestNextStore.cpp
+        src/TestClauseSet.cpp)
 
 target_link_libraries(unit_testing spa)
 

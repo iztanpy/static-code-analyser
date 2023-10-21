@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <cassert>
 #include <utility>
+#include <sstream>
 
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/query_evaluator/constraint_solver/constraint_table.h"
@@ -14,6 +15,10 @@
 class ConstraintTable {
  public:
   ConstraintTable();
+
+  void JoinTable(const ConstraintTable& constraint_table);
+
+  void Filter(const std::vector<ColName>& col_names);
 
   /*!
    * @brief Adds a new constraint to the constraint table.
@@ -39,7 +44,7 @@ class ConstraintTable {
    * @param col_name
    * @return A set of all values of the specified column.
    */
-  std::unordered_set<std::string> Select(const ColName& col_name);
+  std::unordered_set<std::string> Select(const std::vector<ColName>& selects);
 
   /*!
    * @return all availables column names in the constraint table
@@ -56,7 +61,7 @@ class ConstraintTable {
    * @return ConstraintTable for unit test or integration test, not to be used in main code
    */
   static ConstraintTable ForTestingOnly(const Table& mock_table) {
-    return ConstraintTable(mock_table);
+      return ConstraintTable(mock_table);
   }
 
  private:

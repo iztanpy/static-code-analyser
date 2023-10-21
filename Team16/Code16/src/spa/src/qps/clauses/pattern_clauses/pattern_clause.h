@@ -8,6 +8,8 @@
 #include "qps/clauses/clause.h"
 #include "qps/clauses/pattern_clauses/pattern_validator.h"
 #include "qps/query_evaluator/assign_pattern_evaluator.h"
+#include "qps/query_evaluator/if_evaluator.h"
+#include "qps/query_evaluator/while_evaluator.h"
 #include "PKB/API/ReadFacade.h"
 #include "utils/clauses_types.h"
 #include "utils/entity_types.h"
@@ -17,6 +19,14 @@
  */
 class PatternClause : public Clause {
  public:
+  /*!
+   * Pattern clause are in the format syn_assignment(lhs, rhs)
+   */
+  Declaration declaration;
+  EntRef lhs;
+
+  PatternClause(Declaration declaration, EntRef lhs) : declaration(declaration), lhs(lhs) {}
+
   /*!
    * Checks if two expression-specs are equal
    * @param expr_1 first expression-spec
@@ -36,7 +46,17 @@ class PatternClause : public Clause {
    * Gets the synonyms used in this Pattern clause.
    * @return a set of elements
    */
-  std::unordered_set<Synonym> GetSynonyms() override;
+  std::unordered_set<Synonym> GetSynonyms() const override;
+
+  /*!
+   * Functions to support hashing of clauses
+   */
+  size_t Hash() const override;
+
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const PatternClause& lhs, const PatternClause& rhs);
 
   ~PatternClause() override = default;
 
@@ -46,26 +66,34 @@ class PatternClause : public Clause {
    * Will throw QpsSemanticError if the clause is initialized with invalid arguments
    */
   virtual void Validate() = 0;
-
-  /*!
-   * Pattern clause are in the format syn_assignment(lhs, rhs)
-   */
-  Declaration syn_assignment;
-  EntRef lhs;
+  RelRefType GetRelRef() const override = 0;
 };
 
 class AssignPattern : public PatternClause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
   ExprSpec rhs;
 
-  AssignPattern(Declaration syn_assignment, EntRef lhs, ExprSpec rhs)
-      : syn_assignment(syn_assignment), lhs(lhs), rhs(rhs) {
+  RelRefType GetRelRef() const override {
+    return RelRefType::ASSIGN;
+  }
+
+  AssignPattern(Declaration syn, EntRef lhs, ExprSpec rhs)
+      : PatternClause(syn, lhs), rhs(rhs) {
     Validate();
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
+
+  bool equals(const Clause* other) const override;
+
+  // Overloaded == operator
+  friend bool operator==(const AssignPattern& lhs, const AssignPattern& rhs);
+
+  /*!
+   * Functions to support hashing of assign pattern
+   * because it has an extra field ExprSpec
+   */
+  size_t Hash() const override;
 
  private:
   void Validate() override;
@@ -73,11 +101,12 @@ class AssignPattern : public PatternClause {
 
 class WhilePattern : public PatternClause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
-
-  WhilePattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
+  WhilePattern(Declaration syn, EntRef lhs) : PatternClause(syn, lhs) {
     Validate();
+  }
+
+  RelRefType GetRelRef() const override {
+    return RelRefType::WHILE;
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;
@@ -88,11 +117,12 @@ class WhilePattern : public PatternClause {
 
 class IfPattern : public PatternClause {
  public:
-  Declaration syn_assignment;
-  EntRef lhs;
-
-  IfPattern(Declaration syn_assignment, EntRef lhs) : syn_assignment(syn_assignment), lhs(lhs) {
+  IfPattern(Declaration syn, EntRef lhs) : PatternClause(syn, lhs) {
     Validate();
+  }
+
+  RelRefType GetRelRef() const override {
+    return RelRefType::IF;
   }
 
   Constraint Evaluate(ReadFacade& pkb_reader) override;

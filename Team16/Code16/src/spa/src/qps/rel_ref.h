@@ -2,6 +2,7 @@
 
 #include <string>
 #include <set>
+#include <cassert>
 
 enum class RelRefType {
   FOLLOWS,
@@ -16,7 +17,11 @@ enum class RelRefType {
   CALLST,
   NEXT,
   NEXTT,
-  AFFECTS
+  AFFECTS,
+  SELECT,
+  ASSIGN,
+  WHILE,
+  IF,
 };
 
 class RelRef {
@@ -33,11 +38,19 @@ class RelRef {
    * @param relRef_str the string representation
    * @return a relationship reference from string representation
    */
-  static RelRefType fromString(const std::string & relRef_str);
+  static RelRefType fromString(const std::string& relRef_str);
 
   /*!
    * Returns a set of string representations of the relationship references
    * @return the set of string representations of the relationship references
    */
   static std::set<std::string> getStringRelRef();
+
+  /*!
+   * Return score of clause. The lower the score, the higher the priority
+   * @param rel_ref
+   * @param num_synonym
+   * @return
+   */
+  static int getClauseScore(RelRefType rel_ref, int num_synonym);
 };
