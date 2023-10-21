@@ -33,7 +33,11 @@ void SimpleParser::checkCalls() {
     for (const auto& callerCallee : visitor->getCallerCalleeHashmap()) {
         const std::unordered_set<std::string>& calleeSet = callerCallee.second;
         for (const std::string& callee : calleeSet) {
-            if (visitor->getProcedureLabels().find(callee) == visitor->getProcedureLabels().end()) {
+            // Check if callee exists in procedureLabels
+            std::string test = callee;
+            std::set<std::string> procLabels = visitor->getProcedureLabels();
+            int count = procLabels.count(callee);
+            if (procLabels.count(callee) == 0) {
                 throw InvalidSemanticError();
             }
         }
