@@ -249,7 +249,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
 
   if (QueryUtil::IsWildcard(right_hand_side)) {
     right_token = {right_hand_side, PQLTokenType::WILDCARD};
-  } else if (QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
+  } else if (QueryUtil::IsExactExpressionSpecification(string_util::RemoveSpacesFromExpr(right_hand_side))) {
     std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
     right_token = {remove_quotations, PQLTokenType::EXACTEXPR};
   } else {

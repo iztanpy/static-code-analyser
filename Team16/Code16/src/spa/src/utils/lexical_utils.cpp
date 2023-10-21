@@ -37,42 +37,66 @@ bool lexical_utils::IsSynonym(std::string str) {
 
 // ai-gen start(gpt3, 1)
 bool lexical_utils::IsFactor(std::string str) {
-  // Check if the string is a factor (var_name, const_value, or '(' expr ')')
-  return IsName(str) || IsInteger(str) || (
-          (str.size() >= 2 && str.front() == '(' && str.back() == ')'
-          && IsExpr(str.substr(1, str.size() - 2))));
+  if (str.empty()) {
+    return false;
+  }
+
+  if (str.front() == '(' && str.back() == ')') {
+    std::string innerExpr = str.substr(1, str.size() - 2);
+    return IsExpr(innerExpr);
+  }
+
+  return IsName(str) || IsInteger(str);
 }
 
 bool lexical_utils::IsTerm(std::string str) {
-  if (IsFactor(str)) {
-    return true;
-  } else {
-    // Check if the string is a term (term '*' factor, term '/' factor, term '%' factor, or factor)
-    size_t pos = str.find_last_of("*/%");
-    if (pos != std::string::npos) {
-      std::string left = str.substr(0, pos);
-      std::string right = str.substr(pos + 1);
+  int len = str.length();
+  int bracketCount = 0;
+
+  for (int i = len - 1; i >= 0; --i) {
+    char c = str[i];
+    if (c == '(') {
+      bracketCount++;
+    } else if (c == ')') {
+      bracketCount--;
+      if (bracketCount > 0) {
+        return false; // More closing brackets than opening brackets
+      }
+    }
+
+    if (bracketCount == 0 && (c == '*' || c == '/' || c == '%')) {
+      std::string left = str.substr(0, i);
+      std::string right = str.substr(i + 1);
       return IsTerm(left) && IsFactor(right);
-    } else {
-      return IsFactor(str);
     }
   }
+
+  return IsFactor(str);
 }
 
 bool lexical_utils::IsExpr(std::string str) {
-  if (IsTerm(str)) {
-    return true;
-  } else {
-    // Check if the string is an expression (expr '+' term, expr '-' term, term)
-    size_t pos = str.find_last_of("+-");
-    if (pos != std::string::npos) {
-      std::string left = str.substr(0, pos);
-      std::string right = str.substr(pos + 1);
+  int len = str.length();
+  int bracketCount = 0;
+
+  for (int i = len - 1; i >= 0; --i) {
+    char c = str[i];
+    if (c == '(') {
+      bracketCount++;
+    } else if (c == ')') {
+      bracketCount--;
+      if (bracketCount > 0) {
+        return false; // More closing brackets than opening brackets
+      }
+    }
+
+    if (bracketCount == 0 && (c == '+' || c == '-')) {
+      std::string left = str.substr(0, i);
+      std::string right = str.substr(i + 1);
       return IsExpr(left) && IsTerm(right);
-    } else {
-      return IsTerm(str);
     }
   }
+
+  return IsTerm(str);
 }
 // ai-gen end
 

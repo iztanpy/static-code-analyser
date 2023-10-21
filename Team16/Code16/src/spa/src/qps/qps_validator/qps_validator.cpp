@@ -99,15 +99,16 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
   }
 
+  std::string processed_right_hand_side = string_util::RemoveSpacesFromExpr(right_hand_side);
   // RHS can only be these 3 types regardless of pattern synonym
-  if (!QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
-      && !QueryUtil::IsExactExpressionSpecification(right_hand_side)
-      && !QueryUtil::IsWildcard(right_hand_side)) {
+  if (!QueryUtil::IsPartialMatchExpressionSpecification(processed_right_hand_side)
+      && !QueryUtil::IsExactExpressionSpecification(processed_right_hand_side)
+      && !QueryUtil::IsWildcard(processed_right_hand_side)) {
     throw QpsSyntaxError("Invalid argument for RHS pattern clause");
   }
 
-  if (QueryUtil::IsPartialMatchExpressionSpecification((right_hand_side))
-      || QueryUtil::IsExactExpressionSpecification(right_hand_side)) {
+  if (QueryUtil::IsPartialMatchExpressionSpecification((processed_right_hand_side))
+      || QueryUtil::IsExactExpressionSpecification(processed_right_hand_side)) {
     if (pattern_type == PQLTokenType::PATTERN_IF) {
       throw QpsSyntaxError("Invalid if pattern syntax");
     } else if (pattern_type == PQLTokenType::PATTERN_WHILE) {

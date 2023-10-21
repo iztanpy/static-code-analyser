@@ -41,7 +41,9 @@ void ClauseArgsSyntaxHandler::handle(std::string clause, PQLTokenType pattern_ty
     if (argument.empty()) {
       throw QpsSyntaxError("Missing arguments");
     }
-    if (!QueryUtil::IsEntRef(argument) && !QueryUtil::IsWildcard(argument) && !QueryUtil::IsExprSpec(argument)) {
+    if (!QueryUtil::IsEntRef(argument)
+    && !QueryUtil::IsWildcard(argument)
+    && !QueryUtil::IsExprSpec(string_util::RemoveSpacesFromExpr(argument))) {
       throw QpsSyntaxError("Arguments do not follow grammar rules");
     }
   }
