@@ -63,10 +63,6 @@ void SimpleParser::populatePKB() {
   writeFacade->storeProcedures(visitor->getProcedureLineNumberHashmap());
   // Store call statements and the procedures they call
   writeFacade->storeCallStatements(visitor->getCallStatementNumberEntityHashmap());
-  std::cout << "Call statement size: " << visitor->getCallStatementNumberEntityHashmap().size() << std::endl;
-  for (auto& i : visitor->getCallStatementNumberEntityHashmap()) {
-      std::cout << "Call statement: " << i.first << " calls procedure: " << i.second << std::endl;
-  }
   // Store Follows <line, line>
   writeFacade->storeFollows(visitor->getFollowStatementNumberMap());
   // Store Variables <all var in LHS and RHS>
