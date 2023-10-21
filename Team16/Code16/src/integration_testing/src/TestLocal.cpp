@@ -45,3 +45,4 @@ void parse(SourceProcessor& sp, std::string filename) {
 //
 //  REQUIRE(results == std::unordered_set<std::string>({"i", "x", "y", "z"}));
 //}
+                          "        while (3 == 4) {\n"

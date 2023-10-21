@@ -28,7 +28,48 @@ print coffee;
 Select coffee such that Next*(19,17) and Next*(16,22)
 24
 5000
+7 - Next*(WILDCARD, WILDCARD)
+while w;
+Select w such that Next*(_,_)
+21, 17
+5000
+8 - Next*(WILDCARD, INT) is true
+while w;
+Select w such that Next*(_,5)
+21, 17
+5000
+9 - Next*(WILDCARD, INT) is false
+while w;
+Select w such that Next*(_,1)
 
+5000
+10 - Next*(INT, WILDCARD) is true
+if ifs;
+Select ifs such that Next*(5,_)
+22, 11, 9, 4, 3
+5000
+11 - Next*(INT, WILDCARD) is false
+while w;
+Select w such that Next*(40,_)
 
-
-
+5000
+12 - Next*(INT, INT) returns false
+assign a;
+Select a such that Next*(1, 10)
+23, 19, 20, 18, 14, 15, 12, 13, 10, 8, 5, 1, 7, 16, 6
+5000
+13 - Next*(INT, INT) returns false
+while w;
+Select w such that Next*(4,6)
+21, 17
+5000
+14 - Next*(ENT, WILDCARD) is true
+assign a;
+Select a such that Next*(a,_)
+19, 20, 18, 14, 1, 5, 7, 15, 13, 12, 16, 6, 10, 8, 23
+5000
+15 - Next*(ENT, ENT) is false
+if ifs;
+Select ifs such that Next*(ifs, ifs)
+22
+5000
