@@ -21,7 +21,6 @@ class ReadTNode;
 class CallTNode;
 class PrintTNode;
 class IfTNode;
-class ParenthesisTNode;
 
 
 /**
@@ -177,15 +176,6 @@ class Visitor {
      * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
      */
     virtual void visit(const CallTNode* node, std::string& key) = 0;
-    /**
-     * @brief Visits a ParenthesisTNode in the AST.
-     *
-     * This method is called when traversing a ParenthesisTNode in the Abstract Syntax Tree (AST).
-     *
-     * @param node Pointer to the ParenthesisTNode being visited.
-     * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
-     */
-    virtual void visit(const ParenthesisTNode* node, std::string& key) = 0;
 
   // Procedure
   std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
@@ -481,5 +471,4 @@ class ASTVisitor : public Visitor {
   void visit(const PrintTNode* node, std::string& key) override;
   void visit(const IfTNode* node, std::string& key) override;
   void visit(const CallTNode* node, std::string& key) override;
-  void visit(const ParenthesisTNode* node, std::string& key) override;
 };
