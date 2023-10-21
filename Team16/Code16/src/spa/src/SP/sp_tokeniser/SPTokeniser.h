@@ -13,6 +13,8 @@
 #include <stack>
 #include <unordered_set>
 #include <map>
+#include <stdio.h>
+#include <ctype.h>
 
 /**
  * @class SPtokeniser
