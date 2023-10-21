@@ -53,8 +53,10 @@ TEST_CASE("Test NextStar Store if") {
     REQUIRE(nextStore.isNextStar(2, 8));
     // line number 9 does not exist
     REQUIRE(!nextStore.isNextStar(2, 9));
-    // line number 9 does not exist
-    REQUIRE(!nextStore.isNextStar(8, 9));
+    // line number 10 does not exist
+    REQUIRE(!nextStore.isNextStar(10, 5));
+    // both line numbers do not exist
+    REQUIRE(!nextStore.isNextStar(12, 14));
 }
 
 TEST_CASE("Test NextStar Store while") {
@@ -83,6 +85,8 @@ TEST_CASE("Test NextStar Store while") {
     REQUIRE(!nextStore.isNextStar(3, 4));
     // line number 8 and 9 does not exist
     REQUIRE(!nextStore.isNextStar(8, 9));
+    // line number 15
+    REQUIRE(!nextStore.isNextStar(15, 3));
 }
 
 TEST_CASE("If else in a while loop") {
