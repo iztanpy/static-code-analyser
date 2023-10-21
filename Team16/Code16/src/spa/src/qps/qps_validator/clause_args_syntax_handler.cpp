@@ -41,6 +41,9 @@ void ClauseArgsSyntaxHandler::handle(std::string clause, PQLTokenType pattern_ty
     if (argument.empty()) {
       throw QpsSyntaxError("Missing arguments");
     }
+    if (!QueryUtil::IsEntRef(argument) && !QueryUtil::IsWildcard(argument) && !QueryUtil::IsExprSpec(argument)) {
+      throw QpsSyntaxError("Arguments do not follow grammar rules");
+    }
   }
   if (arguments.size() != 2 && arguments.size() != 3) {
     throw QpsSyntaxError("Must have 2 or 3 arguments");

@@ -274,9 +274,9 @@ PQLTokenType QueryTokenizer::getPatternTokenType(std::string & pattern_syn, std:
   switch (synonym_declaration.design_entity) {
     case DesignEntity::WHILE_LOOP: return PQLTokenType::PATTERN_WHILE;
     case DesignEntity::IF_STMT: return PQLTokenType::PATTERN_IF;
-    case DesignEntity::ASSIGN: return PQLTokenType::SYNONYM;
+    case DesignEntity::ASSIGN:
     default:
-      throw QpsSemanticError("Synonym not declared");
+      return PQLTokenType::SYNONYM;;
   }
 }
 
@@ -300,12 +300,13 @@ std::vector<QueryToken> QueryTokenizer::processPatternClause(std::string clause_
   std::vector<QueryToken> result;
   qps_validator::ValidateNonEmptyClause(clause_with_pattern_removed);
   std::string pattern_syn = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
-  qps_validator::ValidatePatternSynonym(pattern_syn, declarations);
-  PQLTokenType pattern_type = getPatternTokenType(pattern_syn, declarations);
-  result.push_back({pattern_syn, pattern_type});
+  PQLTokenType pattern_type = getPatternTokenType(pattern_syn, declarations);  // throws semantic error
+
 
   std::string pattern_arg = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
   std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg, declarations, pattern_type);
+  qps_validator::ValidatePatternSynonym(pattern_syn, declarations);
+  result.push_back({pattern_syn, pattern_type});
   result.push_back(pattern_args.first);
   result.push_back(pattern_args.second);
   return result;
