@@ -25,13 +25,13 @@ Select r such that Calls("one","two")
 5000
 6 - nested calls return false
 procedure p1,p2,p3,p4,p5,p6;
-Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5) and Calls(p5,p6) 
+Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5) and Calls(p5,p6)
 none
 5000
 7 - two calls calling the same procedure
 procedure p1,p2,p3;
 Select p1 such that Calls(p1,p2) and Calls(p3,p2)
-one
+seven, one, five, three, two
 5000
 8 - nested calls return true
 procedure p1,p2,p3,p4,p5;
@@ -41,17 +41,17 @@ one,seven
 9 - nested calls returns triplet results
 procedure p1,p2,p3;
 Select <p1,p2,p3> such that Calls(p1, p2) and Calls(p2,p3)
-one two three, one two six, two three four, two three five, seven two three, seven two six 
+two three four, seven two six, three five six, one two six, two three five, seven two three, one two three
 5000
 10 - regular call return tupled results
 procedure calls, called;
 Select <calls, called> such that Calls(calls, called)
-one two, two three, two six, three four, three five, five six, seven two
+seven two, five six, one two, two three, three four, two six, three five
 5000
 11 - valid ill formated query returns all call statements
 call c;
 Select                c such                   that     Calls(                  seven,                   two)
-1, 6, 9, 18, 19, 23, 26
+SemanticError
 5000
 12 - select all procedures that call procedure "six"
 procedure p1;
@@ -66,13 +66,5 @@ one, seven
 14 - call procedure with weird characters
 procedure p1;
 Select p1 such that Calls(p1,"@@@@@@@@@@@@@@@@")
-none
+SyntaxError
 5000
-
-
-
-
-
-
-
-
