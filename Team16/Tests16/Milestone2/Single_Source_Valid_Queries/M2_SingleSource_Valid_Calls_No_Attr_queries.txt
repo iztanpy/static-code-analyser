@@ -53,12 +53,12 @@ call c;
 Select                c such                   that     Calls(                  seven,                   two)
 SemanticError
 5000
-12 - select all procedures that call procedure "six"
+12 - select all procedures that call procedure [six]
 procedure p1;
 Select p1 such that Calls(p1,"six")
 two, five
 5000
-13 - select all procedures that call procedure "two"
+13 - select all procedures that call procedure [two]
 procedure p1;
 Select p1 such that Calls(p1,"two")
 one, seven
