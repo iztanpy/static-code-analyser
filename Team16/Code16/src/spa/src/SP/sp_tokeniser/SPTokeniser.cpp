@@ -60,7 +60,7 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
     std::string line;
 
     std::unordered_set<char> delimiters = {';', '{', '}', '+', '-', '=', '(', ')', '*', '/', '%', '<', '>', '&', '|',
-                                           '!', ' ', '\t', '\r', '\v', '\f'};
+                                           '!', ' ', '\t', '\r', '\v', '\f', '\0'};
 
     // Iterate through each character in the line
     while (std::getline(iss, line)) {
@@ -83,7 +83,7 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
             if (!curr_word.empty()) result.push_back(curr_word);
             // include delimiters (excluding whitespaces) as tokens
             auto delimiterItr = delimiters.find(curr_char);
-            if (delimiterItr != delimiters.end() &&  *delimiterItr != ' ') {
+            if (delimiterItr != delimiters.end() &&  !isspace(*delimiterItr) && *delimiterItr != '\0') {
                 curr_word = curr_char;
                 // check if next char is a two-char operator
                 if (word_char_index + 1 < line.length()) {

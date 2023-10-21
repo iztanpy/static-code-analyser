@@ -39,7 +39,6 @@ Token token1 = Token(constantType, "1");
 Token tokenEnd = Token(endType);
 Token tokenRead = Token(readType);
 
-
 TEST_CASE("Test Hardcore Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
@@ -100,21 +99,29 @@ TEST_CASE("Test Sample Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram3 = R"(procedure Second {
+    std::string simpleProgram3 = R"(procedure 
+                               Second
+                     {
         x = 0;
         i = 5;
-        while (i!=0) {
-            x = x + 2*y;
+        while
+           (i
+             !=0) {
+            x =
+              x + 2*y;
             read a;
-            i = i - 1;
+            i = i 
+                  - 1;
         }
         if (x==1) then {
             x = x+1;
         } else {
             z = 1;
         }
-        z = z + x + i;
-        y = z + 2;
+        z = z 
+             + x + i;
+        y = z 
+                + 2;
         x = x * y + z;
       })";
     sourceProcessor.processSource(simpleProgram3);
@@ -141,11 +148,17 @@ TEST_CASE("Test Complicated Next") {
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = R"(procedure Second {
         while (x==0) {
-            if (x==1) then {
-                help = help +1; 
+            if (x==1) 
+                                            then {
+                help 
+                 =
+                   help +1
+                ; 
             } else {
-                if (x == 2) then {
-                     help = help +1; 
+                if (x == 2)
+               then {
+                     help =
+                     help +1; 
                      help = help +2; 
                      help = help +3;
                 } 
