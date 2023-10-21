@@ -4,6 +4,7 @@
 #include "qps/qps_errors/qps_syntax_error.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/string_utils.h"
+#include "qps/query_parser/QueryUtil.h"
 
 TEST_CASE("Test split query") {
   std::string sample_query_1 = "variable v; Select v";
@@ -42,8 +43,8 @@ TEST_CASE("Test extract declarations") {
       {"v", DesignEntity::VARIABLE},
       {"a", DesignEntity::ASSIGN}
   };
-  REQUIRE(declarations[0].equals(expected_declarations[0]));
-  REQUIRE(declarations[1].equals(expected_declarations[1]));
+  REQUIRE(declarations[0] == expected_declarations[0]);
+  REQUIRE(declarations[1] == expected_declarations[1]);
 
   QpsSyntaxError invalid_entity_error = QpsSyntaxError("Design entity is not valid");
   QpsSyntaxError missing_synonym_error = QpsSyntaxError("Missing synonyms for design entity");
@@ -208,7 +209,7 @@ TEST_CASE("Test get pattern arguments") {
                                                                           PQLTokenType::SYNONYM);
   std::pair<QueryToken, QueryToken> expected_args = {
       {"s", PQLTokenType::SYNONYM},
-      {"x+y", PQLTokenType::PARTIALEXPR}
+      {"((x)+(y))", PQLTokenType::PARTIALEXPR}
   };
   REQUIRE(args.first.type == expected_args.first.type);
   REQUIRE(args.first.text == expected_args.first.text);
@@ -320,9 +321,6 @@ TEST_CASE("Test extract clause tokens") {
       {"v", DesignEntity::VARIABLE}
   };
 
-  std::string unknown_clause_statement = "Select v something else (v, \"x\")";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(unknown_clause_statement, error_declarations), QpsSyntaxError);
-
   std::string undeclared_pattern_statement = "Select v pattern a (a, v)";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations),
                     QpsSemanticError);
@@ -376,7 +374,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<QueryToken> pattern_tokens = {
       {"a1", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
-      {"abc+cde%fgh", PQLTokenType::PARTIALEXPR}
+      {"((abc)+((cde)%(fgh)))", PQLTokenType::PARTIALEXPR}
   };
 
   std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
@@ -596,12 +594,193 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations_1), QpsSemanticError);
 }
 
-TEST_CASE("Debug") {
-  std::string sample_query_1 = "Select w pattern w( v, \"x\")";
+TEST_CASE("Tokeniser can tokenise multiple clauses") {
+  std::string sample_query_1 = "Select w pattern w (\"x\", _) and w1 (\"y\", _)";
+
   std::vector<Declaration> declarations_1 = {
       {"w", DesignEntity::WHILE_LOOP},
-      {"v", DesignEntity::VARIABLE}
+      {"w1", DesignEntity::WHILE_LOOP},
   };
 
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1), QpsSemanticError);
+  std::vector<QueryToken> pattern_tokens =  {
+      {"w", PQLTokenType::PATTERN_WHILE},
+      {"x", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD},
+      {"w1", PQLTokenType::PATTERN_WHILE},
+      {"y", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  REQUIRE(results_1.second.size() == 6);
+
+  for (int i = 0; i < 6; i++) {
+    REQUIRE(results_1.second[i].text == pattern_tokens[i].text);
+    REQUIRE(results_1.second[i].type == pattern_tokens[i].type);
+  }
+
+  std::string sample_query_2 = "Select w pattern w (\"x\", _) and w1 (\"y\", _) and w2 (\"z\", _)";
+
+  std::vector<Declaration> declarations_2 = {
+      {"w", DesignEntity::WHILE_LOOP},
+      {"w1", DesignEntity::WHILE_LOOP},
+      {"w2", DesignEntity::WHILE_LOOP}
+  };
+
+  std::vector<QueryToken> pattern_tokens_2 =  {
+      {"w", PQLTokenType::PATTERN_WHILE},
+      {"x", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD},
+      {"w1", PQLTokenType::PATTERN_WHILE},
+      {"y", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD},
+      {"w2", PQLTokenType::PATTERN_WHILE},
+      {"z", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
+
+  REQUIRE(results_2.second.size() == 9);
+
+  for (int i = 0; i < 9; i++) {
+    REQUIRE(results_2.second[i].text == pattern_tokens_2[i].text);
+    REQUIRE(results_2.second[i].type == pattern_tokens_2[i].type);
+  }
+
+  std::string sample_query_3 = "Select w pattern w (\"x\", _) such that Parent* (w, a) and Modifies (a, \"x\")";
+
+  std::vector<Declaration> declarations_3 = {
+      {"w", DesignEntity::WHILE_LOOP},
+      {"a", DesignEntity::ASSIGN},
+  };
+
+  std::vector<QueryToken> such_that_tokens_3 = {
+      {"Parent*", PQLTokenType::RELREF},
+      {"w", PQLTokenType::SYNONYM},
+      {"a", PQLTokenType::SYNONYM},
+      {"Modifies", PQLTokenType::RELREF},
+      {"a", PQLTokenType::SYNONYM},
+      {"x", PQLTokenType::IDENT}
+  };
+
+  std::vector<QueryToken> pattern_tokens_3 =  {
+      {"w", PQLTokenType::PATTERN_WHILE},
+      {"x", PQLTokenType::IDENT},
+      {"_", PQLTokenType::WILDCARD}
+  };
+
+  std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
+      results_3 = QueryTokenizer::extractClauseTokens(sample_query_3, declarations_3);
+
+  REQUIRE(results_3.first.size() == 6);
+  REQUIRE(results_3.second.size() == 3);
+
+  for (int i = 0; i < 6; i++) {
+    REQUIRE(results_3.first[i].text == such_that_tokens_3[i].text);
+    REQUIRE(results_3.first[i].type == such_that_tokens_3[i].type);
+  }
+
+  for (int i = 0; i < 3; i++) {
+    REQUIRE(results_3.second[i].text == pattern_tokens_3[i].text);
+    REQUIRE(results_3.second[i].type == pattern_tokens_3[i].type);
+  }
+
+  std::string sample_query_4 = "Select w pattern w (\"x\", _) and pattern w1 (\"y\", _) and w2 (\"z\", _)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_4, declarations_3), QpsSyntaxError);
+
+  std::string sample_query_5 = "Select w such that Parent* (w, a) and such that Modifies (a, \"x\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_5, declarations_3), QpsSyntaxError);
+}
+
+TEST_CASE("Tokenizer can tokenize select tuple") {
+  std::string sample_query_1 = "Select <s1, s2, s3> such that Parent (s1, s2)";
+  std::vector<Declaration> declarations_1 = {
+      {"s1", DesignEntity::STMT},
+      {"s2", DesignEntity::STMT},
+      {"s3", DesignEntity::STMT}
+  };
+  std::vector<QueryToken> select_tokens = {
+      {"s1", PQLTokenType::SYNONYM},
+      {"s2", PQLTokenType::SYNONYM},
+      {"s3", PQLTokenType::SYNONYM}
+  };
+
+  std::vector<QueryToken> results_1 = QueryTokenizer::extractSelectToken(sample_query_1, declarations_1);
+  for (int i = 0; i < results_1.size(); ++i) {
+    REQUIRE(results_1[i].type == select_tokens[i].type);
+    REQUIRE(results_1[i].text == select_tokens[i].text);
+  }
+
+  std::string sample_query_2 = "Select <s1,, s3> such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_2, declarations_1), QpsSyntaxError);
+
+  std::string sample_query_3 = "Select s1, s2, s3> such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_3, declarations_1), QpsSyntaxError);
+}
+
+TEST_CASE("Tokenizer can tokenize select BOOLEAN") {
+  std::string sample_query_1 = "Select BOOLEAN such that Parent (s1, s2)";
+  std::vector<Declaration> declarations_1 = {
+      {"s1", DesignEntity::STMT},
+      {"s2", DesignEntity::STMT},
+      {"s3", DesignEntity::STMT}
+  };
+  std::vector<QueryToken> select_tokens = {
+      {"BOOLEAN", PQLTokenType::SELECT_BOOLEAN},
+  };
+
+  std::vector<QueryToken> results_1 = QueryTokenizer::extractSelectToken(sample_query_1, declarations_1);
+  REQUIRE(results_1.size() == 1);
+  REQUIRE(results_1[0].type == PQLTokenType::SYNONYM);
+  REQUIRE(results_1[0].text == "BOOLEAN");
+
+  std::string sample_query_2 = "Select OOLEAN such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_2, declarations_1), QpsSemanticError);
+}
+
+
+TEST_CASE("Test add parentheses for expressions") {
+  std::string sample_query_1 = "x+y+z";
+  std::string processed_expr = QueryUtil::addParentheses(sample_query_1);
+  REQUIRE(processed_expr == "(((x)+(y))+(z))");
+
+  std::string sample_query_2 = "(((x)))";
+  std::string processed_expr_2 = QueryUtil::addParentheses(sample_query_2);
+  REQUIRE(processed_expr_2 == "(x)");
+
+  std::string sample_query_3 = "(x+y*z)";
+  std::string processed_expr_3 = QueryUtil::addParentheses(sample_query_3);
+  REQUIRE(processed_expr_3 == "((x)+((y)*(z)))");
+
+  std::string sample_query_4 = "(((x+y*z)))";
+  std::string processed_expr_4 = QueryUtil::addParentheses(sample_query_4);
+  REQUIRE(processed_expr_4 == "((x)+((y)*(z)))");
+
+  std::string sample_query_5 = "(x+y*(z-y*x)) ";
+  std::string processed_expr_5 = QueryUtil::addParentheses(sample_query_5);
+  REQUIRE(processed_expr_5 == "((x)+((y)*((z)-((y)*(x)))))");
+
+  std::string sample_query_6 = "(((x+y))) ";
+  std::string processed_expr_6 = QueryUtil::addParentheses(sample_query_6);
+  REQUIRE(processed_expr_6 == "((x)+(y))");
+
+  std::string sample_query_7 = "(((x))+y*((z)-y*(x))) ";
+  std::string processed_expr_7 = QueryUtil::addParentheses(sample_query_7);
+  REQUIRE(processed_expr_7 == "((x)+((y)*((z)-((y)*(x)))))");
+
+  std::string sample_query_8 = "k-1+i*3/2";
+  std::string processed_expr_8 = QueryUtil::addParentheses(sample_query_8);
+  REQUIRE(processed_expr_8 == "(((k)-(1))+(((i)*(3))/(2)))");
+
+  std::string sample_query_9 = "x%10";
+  std::string processed_expr_9 = QueryUtil::addParentheses(sample_query_9);
+  REQUIRE(processed_expr_9 == "((x)%(10))");
+
+  std::string sample_query_10 = "abc+cde%fgh";
+  std::string processed_expr_10 = QueryUtil::addParentheses(sample_query_10);
+  REQUIRE(processed_expr_10 == "((abc)+((cde)%(fgh)))");
 }

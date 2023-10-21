@@ -2,7 +2,6 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers}
         src/qps/query_parser/parsed_query.h
-        src/qps/declaration.cpp
         src/qps/declaration.h
         src/qps/design_entity.cpp
         src/qps/design_entity.h
@@ -64,15 +63,15 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/VariableStore.h
         src/PKB/Stores/ConstantStore.cpp
         src/PKB/Stores/ConstantStore.h
-        src/PKB/Stores/UsesStore.cpp
-        src/PKB/Stores/UsesStore.h
+
+
         src/PKB/Stores/AssignStore.cpp
         src/PKB/Stores/AssignStore.h
         src/PKB/Stores/StatementStore.cpp
         src/PKB/Stores/StatementStore.h
         src/PKB/Stores/AssignStore.cpp
-        src/PKB/Stores/ModifiesStore.cpp
-        src/PKB/Stores/ModifiesStore.h
+        src/PKB/Stores/RelationStore.cpp
+        src/PKB/Stores/RelationStore.h
         src/PKB/Stores/FollowsStore.cpp
         src/PKB/Stores/FollowsStore.h
         src/PKB/Stores/CallStore.h
@@ -117,6 +116,9 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ElseParser.h
         src/SP/sp_parser/CloseBraceParser.cpp
         src/SP/sp_parser/CloseBraceParser.h
+        src/SP/sp_cfg/Cfg.cpp
+        src/SP/sp_cfg/Cfg.h
+        src/SP/sp_cfg/CfgNode.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -193,6 +195,14 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/suchthat_clauses/affects.h
         src/qps/qps_validator/pattern_syn_semantic_handler.cpp
         src/qps/qps_validator/pattern_syn_semantic_handler.h
+        src/qps/qps_validator/select_tuple_synonym_semantic_handler.cpp
+        src/qps/qps_validator/select_tuple_synonym_semantic_handler.h
+        src/qps/query_evaluator/constraint_solver/clause_group.cpp
+        src/qps/query_evaluator/constraint_solver/clause_group.h
+        src/qps/query_evaluator/constraint_solver/clause_grouper.cpp
+        src/qps/query_evaluator/constraint_solver/clause_grouper.h
+        src/PKB/Stores/NextStore.cpp
+        src/PKB/Stores/NextStore.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

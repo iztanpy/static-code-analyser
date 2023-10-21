@@ -7,6 +7,7 @@ import glob
 import time
 import shutil
 from collections import Counter
+import subprocess
 
 
 class Runner:
@@ -103,25 +104,42 @@ class Runner:
         shutil.move(output_xml, os.path.join(destination, f"{test_name}out.xml"))
         shutil.copy("analysis.xsl", destination)
 
-        total_tests = passed_tests + failed_tests
+        return f"\nTest passed: {passed_tests}\nTest failed: {failed_tests}\n"
 
-        return f"\nPass: {passed_tests}/{total_tests}\nFail: {failed_tests}/{total_tests}\n"
+    import subprocess
+
+# ...
 
     def execute_autotester(self, autotester_filepath, parameters, redirect_output):
         source, query, test_name, relative_path = parameters
+
+        # Wrap file paths with spaces in double quotes
+        autotester_filepath = f'"{autotester_filepath}"'
+        source = f'"{source}"'
+        query = f'"{query}"'
 
         command = [autotester_filepath, source, query, self.TEMP_XML_FILENAME]
         command = self.make_path_suitable(" ".join(command))
 
         if redirect_output:
-            exit_code = os.system(command + f" > {self.LOG_FILE}")
-        else:
-            exit_code = os.system(command)
+            with open(self.LOG_FILE, 'w') as log_file:
+                result = subprocess.run(command, shell=True, stdout=log_file, stderr=subprocess.PIPE, text=True)
+                exit_code = result.returncode
+                error_message = result.stderr
 
-        if exit_code != self.SUCCESS_EXIT_CODE:
-            return f"Execution failed for {test_name[:-1]} with exit code: {exit_code}"
+                if exit_code != self.SUCCESS_EXIT_CODE:
+                    return f"Execution failed for {test_name[:-1]} with exit code: {exit_code}\nError Message: {error_message}"
+        else:
+            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            exit_code = result.returncode
+            error_message = result.stderr
+
+            if exit_code != self.SUCCESS_EXIT_CODE:
+                return f"Execution failed for {test_name[:-1]} with exit code: {exit_code}\nError Message: {error_message}"
 
         return f"Execution completed for {test_name[:-1]} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
+
+
 
     def execute(self, folder_to_test_in, redirect_output=True):
         autotester_filepath = self.find_autotester_executable()
@@ -140,11 +158,12 @@ if __name__ == "__main__":
     runner.execute("Milestone1")
     runner.execute("Milestone2")
 
-    print(f"Test results")
-    print(f"Pass: {runner.TOTAL_PASSED_TESTS}/{runner.TOTAL_TESTS}")
-    print(f"Fail: {runner.TOTAL_FAILED_TESTS}/{runner.TOTAL_TESTS}")
+    print(f"Test statistics:")
+    print(f"Total passed tests: {runner.TOTAL_PASSED_TESTS}")
+    print(f"Total failed tests: {runner.TOTAL_FAILED_TESTS}")
+    print(f"Total tests: {runner.TOTAL_TESTS}")
 
-    print(f"Wall time: {time.time() - start_time:.2f} sec")
+    print(f"Total time taken: {time.time() - start_time:.4f} seconds")
 
     if runner.TOTAL_FAILED_TESTS > 0:
         raise Exception("Some tests failed!")

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <stack>
 #include <sstream>
 #include <vector>
 #include <unordered_set>
@@ -22,6 +23,13 @@ class QueryUtil {
    * @return True if string is a synonym, else false
    */
   static bool IsSynonym(const std::string & s);
+
+  /*!
+   * Checks if a given character is an operator
+   * @param s is the input character
+   * @return True if string is an operator, else false
+   */
+  static bool IsOperator(const char & s);
 
   /*!
    * Checks if a given string is a statement reference
@@ -97,12 +105,27 @@ class QueryUtil {
  */
   static bool IsEnclosedInWildcard(const std::string & s);
 
-  /*!
-* Checks if a string is enclosed with brackets
-* @param s is the input string
-* @return True if string is enclosed with brackets, else false
+/*!
+  * Checks if a string is enclosed with brackets
+  * @param s is the input string
+  * @return True if string is enclosed with brackets, else false
 */
   static bool IsEnclosedInBrackets(const std::string & s);
+
+  /*!
+   * Checks if a string is enclosed with tuple for select clause
+   * @param s is the input string
+   * @return True if the string is enclosed with tuple, else false
+   */
+  static bool IsEnclosedInTuple(const std::string & s);
+
+  /*!
+   * Checks if a string is BOOLEAN
+   * @param s is the input string
+   * @param declarations is the set of declarations
+   * @return True if the string is BOOLEAN, else false
+   */
+  static bool IsSelectBoolean(const std::string & s, const std::vector<Declaration> & declarations);
 
   /*!
    * Checks if a string is a relationship reference
@@ -147,9 +170,43 @@ class QueryUtil {
   static std::string RemovePartialMatch(const std::string & partial_match_string);
 
   /*!
- * Get the expression between the brackets
- * @param s
- * @return The expression between the brackets
- */
+   * Get the expression between the brackets
+   * @param s
+   * @return The expression between the brackets
+   */
   static std::string RemoveBrackets(const std::string & s);
+
+  /*!
+   * Assigns a precedence to operators
+   * @param op
+   * @return the precedence
+   */
+  static int getPrecedence(char op);
+/*!
+ * Assigns a precedence to operators
+ * @param op1, op2 are operations to be compared
+ * @return true if op1 has precedence over op2
+ */
+  static bool hasPrecedence(char op1, char op2);
+
+  /*!
+   * Reorder the operators and operands based on priority of operators
+   * @param operators stack of operators
+   * @param operands stack of operands
+   */
+  static void processOperator(std::stack<char>& operators, std::stack<std::string>& operands);
+
+  /*!
+   * Adds parentheses for expression matching
+   * @param expression for parentheses to be added
+   * @return expression with parentheses
+   */
+  static std::string addParentheses(const std::string& expression);
+
+  /*!
+   * Get the expression between the brackets
+   * @param s
+   * @return The expression between the brackets
+   */
+  static std::string RemoveTuple(const std::string & s);
 };

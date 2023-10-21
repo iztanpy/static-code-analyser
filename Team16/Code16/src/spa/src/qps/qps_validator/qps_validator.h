@@ -131,4 +131,37 @@ void ValidateNonEmptyClause(const std::string & clause_with_keyword_removed);
  * @throws QpsSyntaxError if it is not a relation reference
  */
 void ValidateRelRef(const std::string & rel_ref);
+
+/*!
+ * Validates that and clause is not the first clause
+ * @param prev_clause to be validated
+ * @throws QpsSyntaxError if and is the first clause
+ */
+void ValidateAndIsNotFirstClause(ClauseEnum prev_clause);
+
+/*!
+ * Validates that and is not followed by such that or pattern
+ * @param curr_clause to be validated
+ * @throws QpsSyntaxError if and is followed by such that or pattern
+ */
+void ValidateAndClause(std::string& curr_clause);
+
+/*!
+ * Validates the select string
+ * @param select_value string to be validated
+ * @param select_value_type type of select value
+ * @param declarations set of declarations
+ * @throws QpsSyntaxError if the select value is wrong syntactically
+ */
+void ValidateSelectValue(std::string& select_value,
+                         SelectValueType select_value_type,
+                         std::vector<Declaration> & declarations);
+
+/*!
+ * Validates the arguments in the tuple
+ * @param select_value string of tuple to be validated
+ * @param declarations set of declarations
+ * @throws QpsSyntaxError if there are missing arguments or synonyms are invalid
+ */
+void ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations);
 }  // namespace qps_validator

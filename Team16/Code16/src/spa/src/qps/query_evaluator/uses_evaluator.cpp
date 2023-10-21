@@ -15,7 +15,7 @@ bool UsesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader) {
 Constraint UsesEvaluator::Handle(Declaration& lhs,
                                  Declaration& rhs,
                                  ReadFacade& pkb_reader) {
-  if (lhs.equals(rhs)) {
+  if (lhs == rhs) {
     return UnaryConstraint{lhs.synonym, {}};
   }
 
@@ -23,10 +23,10 @@ Constraint UsesEvaluator::Handle(Declaration& lhs,
     return BinaryConstraint{{lhs.synonym, rhs.synonym},
                             pkb_reader.usesProcedure()};
   }
-
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
-      = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity));
-  return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+  std::unordered_set < std::pair<statementNumber, variable>, PairHash >
+      raw_results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity));
+  return BinaryConstraint{{lhs.synonym, rhs.synonym},
+                          EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
@@ -36,7 +36,8 @@ UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
     return {lhs.synonym, pkb_reader.usesProcedure(rhs)};
   }
 
-  std::unordered_set<statementNumber> results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
+  std::unordered_set < statementNumber > results =
+      pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
@@ -46,7 +47,7 @@ UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
   if (lhs.design_entity == DesignEntity::PROCEDURE) {
     return {lhs.synonym, pkb_reader.usesProcedure(rhs)};
   }
-  std::unordered_set<statementNumber> results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
+  std::unordered_set < statementNumber > results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 

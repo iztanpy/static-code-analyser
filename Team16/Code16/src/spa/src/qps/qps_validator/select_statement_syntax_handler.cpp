@@ -20,7 +20,7 @@ void SelectStatementSyntaxHandler::handle(std::string select_statement) {
   }
 
   // remove the synonym and check if it can still be a such that / pattern clause
-  std::string synonym_removed_statement = string_util::RemoveFirstWord(remaining_statement);
+  std::string synonym_removed_statement = QueryTokenizer::removeSelectClause(remaining_statement);
   bool statement_can_match_clause =
       QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kSuchThatClauseRegex) ||
           QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kPatternClauseRegex);

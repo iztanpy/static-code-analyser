@@ -43,6 +43,7 @@ int PrintParser::parse(std::vector<Token>& tokens) {
     std::shared_ptr<TNode> root = TNodeFactory::createNode(print, lineNumber);
     designExtractor->extractDesign(root, visitor);
     followsStatementStack.top().insert(lineNumber);
+    Cfg::handleStatement(lineNumber);
 
     lineNumber++;
     return index;

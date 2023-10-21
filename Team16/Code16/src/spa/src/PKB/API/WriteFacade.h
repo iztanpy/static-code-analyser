@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
+#include <memory>
 #include <utility>
 #include "PKB/PKB.h"
 
@@ -71,7 +72,7 @@ class WriteFacade {
     *
     * @param varModifiesMap An unordered map of statement numbers to variables that are modified.
     */
-    void storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap);
+    void storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap);
 
     /**
     * @brief Stores constant information in the program.
@@ -109,8 +110,52 @@ class WriteFacade {
     */
     void storeFollows(std::unordered_map<statementNumber, statementNumber> map);
 
+    /**
+    * @brief Stores a mapping of statement numbers to sets of variables for WHILE statements.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of variables
+    * for WHILE statements in the provided variableMap.
+    *
+    * @param variableMap A std::unordered_map where statementNumber is the key,
+    *                    and std::unordered_set<variable> is the associated value.
+    */
     void storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
 
+    /**
+    * @brief Stores a mapping of statement numbers to sets of variables for IF statements.
+    *
+    * This function allows you to store a mapping of statement numbers to sets of variables
+    * for IF statements in the provided variableMap.
+    *
+    * @param variableMap A std::unordered_map where statementNumber is the key,
+    *                    and std::unordered_set<variable> is the associated value.
+    */
     void storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap);
+
+    /**
+    * @brief Stores a call relationship table.
+    *
+    * This function stores a call relationship table, mapping procedures to the set of procedures they call.
+    *
+    * @param callTable An unordered_map where the key is a procedure, and the value is a set of
+    *                  procedures called by the key procedure.
+    */
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
+
+    /**
+    * @brief Stores a mapping of statement numbers to procedures for CALL statements.
+    *
+    * This function allows you to store a mapping of statement numbers to procedures
+    * for CALL statements in the provided callStatements.
+    *
+    * @param callStatements A std::unordered_map where statementNumber is the key,
+    *                      and procedure is the associated value.
+    */
+    void storeCallStatements(std::unordered_map<statementNumber, procedure> callStatements);
+
+    void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
+
+    void storeCfg(Cfg cfg);
+
+    void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 };

@@ -48,6 +48,7 @@ int IfParser::parse(std::vector<Token>& tokens) {
   followsStatementStack.top().insert(lineNumber);
   std::set<int> ifFollowsSet;
   followsStatementStack.push(ifFollowsSet);
+  Cfg::handleIfStatement(lineNumber);
 
   currIfDepth++;
   lineNumber++;

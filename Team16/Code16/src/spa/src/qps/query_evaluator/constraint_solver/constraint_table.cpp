@@ -94,19 +94,35 @@ void ConstraintTable::Solve(Constraint& constraint) {
   }, constraint);
 }
 
-std::unordered_set<std::string> ConstraintTable::Select(const ColName& col_name) {
-  // TODO(phuccuongngo99): The default behaviour is return empty when col_name
-  // is not found. Think clearly about this in the future
-  if (table.find(col_name) == table.end()) {
-    return {};
+std::unordered_set<std::string> ConstraintTable::Select(const std::vector<ColName>& selects) {
+  // Ensure all keys in the vector are in the map
+  for (const auto& key : selects) {
+    assert(table.find(key) != table.end() && "Key not found in map");
   }
 
-  // TODO(phuccuongngo99): Do deduplication here for mutliple select in the future
-  return {table[col_name].begin(), table[col_name].end()};
+  std::unordered_set < std::string > result;
+
+  if (selects.empty()) {
+    return result;
+  }
+
+  size_t length = table.at(selects[0]).size();
+  for (size_t i = 0; i < length; ++i) {
+    std::stringstream ss;
+    for (size_t j = 0; j < selects.size(); ++j) {
+      ss << table.at(selects[j])[i];
+      if (j < selects.size() - 1) {
+        ss << ", ";
+      }
+    }
+    result.insert(ss.str());
+  }
+
+  return result;
 }
 
 std::unordered_set<ColName> ConstraintTable::AvailableColName() {
-  std::unordered_set<ColName> result;
+  std::unordered_set < ColName > result;
   for (const auto& [col_name, _] : table) {
     result.insert(col_name);
   }
@@ -175,7 +191,7 @@ void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing
   assert(table.find(existing_constraint.col_name) != table.end() && "Existing ColName not found in the table!");
 
   ColName existing_header = existing_constraint.col_name;
-  std::unordered_set<Cell> filter_values = existing_constraint.values;
+  std::unordered_set < Cell > filter_values = existing_constraint.values;
 
   std::vector<std::size_t> filter_indices;
   std::vector<Cell>& existing_values = table[existing_header];
@@ -222,7 +238,7 @@ void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existi
 void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint) {
   ColName existing_colname;
   ColName new_colname;
-  std::unordered_map<Cell, std::unordered_set<Cell>> new_values;
+  std::unordered_map < Cell, std::unordered_set < Cell >> new_values;
 
   if (table.find(constraint.pair_col_names.first) != table.end()
       && table.find(constraint.pair_col_names.second) == table.end()
@@ -261,7 +277,7 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
     Cell existing_value = existing_col[i];
 
     if (new_values.find(existing_value) != new_values.end()) {
-      std::unordered_set<Cell> new_col_values = new_values[existing_value];
+      std::unordered_set < Cell > new_col_values = new_values[existing_value];
 
       for (const auto& new_col_value : new_col_values) {
         for (const auto& [current_colname, values] : table) {
@@ -273,4 +289,28 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
   }
 
   table = std::move(result);
+}
+
+void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
+  // Assert that there's no overlap between the ColNames
+  for (const auto& [key, _] : constraint_table.table) {
+    assert(table.find(key) == table.end());
+  }
+
+  // Concatenate the maps
+  table.insert(constraint_table.table.begin(), constraint_table.table.end());
+}
+
+void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
+  // Create an unordered_set from the vector
+  std::unordered_set < ColName > col_set(col_names.begin(), col_names.end());
+
+  // Iterate through the map and remove keys that are not in the set
+  for (auto it = table.begin(); it != table.end();) {
+    if (col_set.find(it->first) == col_set.end()) {
+      it = table.erase(it);
+    } else {
+      ++it;
+    }
+  }
 }

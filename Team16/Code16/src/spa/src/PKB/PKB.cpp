@@ -3,16 +3,17 @@
 PKB::PKB() {
     assignStore = std::make_unique<AssignStore>();
     variableStore = std::make_unique<VariableStore>();
-    usesStore = std::make_unique<UsesStore>();
+    usesStore = std::make_unique<RelationStore>();
     constantStore = std::make_unique<ConstantStore>();
     statementStore = std::make_unique<StatementStore>();
     parentStore = std::make_unique<ParentStore>();
     followsStore = std::make_unique<FollowsStore>();
-    modifiesStore = std::make_unique<ModifiesStore>();
+    modifiesStore = std::make_unique<RelationStore>();
     procedureStore = std::make_unique<ProcedureStore>();
     ifStore = std::make_unique<IfStore>();
     whileStore = std::make_unique<WhileStore>();
     callStore = std::make_unique<CallStore>();
+    nextStore = std::make_unique<NextStore>();
 }
 
 // AssignStore methods
@@ -113,36 +114,43 @@ void PKB::storeUses(std::unordered_map<statementNumber, std::unordered_set<varia
         if (usesMapWithCall.find(x.first) == usesMapWithCall.end()) {
             usesMapWithCall[x.first] = x.second;
         }
+    }
+
+    for (auto const& x : usesMapWithCall) {
         auto parents = parentStore->getParents(x.first);
-        for (auto const& y : parents) {
-            usesMapWithCall[y].insert(x.second.begin(), x.second.end());
+        for (auto parent : parents) {
+            usesMapWithCall[parent].insert(x.second.begin(), x.second.end());
         }
     }
-    usesStore->storeUses(usesMapWithCall);
+    usesStore->storeRelation(usesMapWithCall);
 }
 
 void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
-    usesStore->storeUsesProcedures(procedures, callTableStar);
+    usesStore->storeRelationProcedures(procedures, callTableStar);
+}
+
+void PKB::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
+    usesStore->storeRelationCalls(calls);
 }
 
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
-    return usesStore->isUses(lineNumber, variableName);
+    return usesStore->isRelation(lineNumber, variableName);
 }
 
 bool PKB::isUses(statementNumber lineNumber, Wildcard wildcard) {
-    return usesStore->isUses(lineNumber);
+    return usesStore->isRelation(lineNumber);
 }
 
 std::unordered_set<variable> PKB::uses(statementNumber line) {
-    return usesStore->uses(line);
+    return usesStore->relates(line);
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
-        std::unordered_set<variable> variablesUsed = this->usesStore->uses(x);
+        std::unordered_set<variable> variablesUsed = this->usesStore->relates(x);
         for (auto const& y : variablesUsed) {
             result.insert(std::make_pair(x, y));
         }
@@ -151,34 +159,34 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::uses(Stm
 }
 
 bool PKB::isUses(procedure procedure, Wildcard wildcard) {
-    return usesStore->isUses(procedure);
+    return usesStore->isRelation(procedure);
 }
 
 std::unordered_set<variable> PKB::uses(procedure procedure) {
-    return usesStore->usesProcedureProc(procedure);
+    return usesStore->relatesProcedureProc(procedure);
 }
 
 bool PKB::isUses(procedure procedure, variable variableName) {
-    return usesStore->isUses(procedure, variableName);
+    return usesStore->isRelation(procedure, variableName);
 }
 
 std::unordered_set<procedure> PKB::usesProcedure(Wildcard wildcard) {
-    return usesStore->usesProcedure();
+    return usesStore->relatesProcedure();
 }
 
 std::unordered_set<procedure> PKB::usesProcedure(variable variableName) {
-    return usesStore->usesProcedure(variableName);
+    return usesStore->relatesProcedure(variableName);
 }
 
 std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::usesProcedure() {
-    return usesStore->usesProcedurePair();
+    return usesStore->relatesProcedurePair();
 }
 
 std::unordered_set<statementNumber> PKB::uses(StmtEntity type, variable variableName) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->usesStore->uses(x).count(variableName)) {
+        if (this->usesStore->relates(x).count(variableName)) {
             result.insert(x);
         }
     }
@@ -189,7 +197,7 @@ std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->usesStore->uses(x).size() > 0) {
+        if (this->usesStore->relates(x).size() > 0) {
             result.insert(x);
         }
     }
@@ -198,55 +206,60 @@ std::unordered_set<statementNumber> PKB::uses(StmtEntity type, Wildcard wildcard
 
 // ModifiesStore methods
 
-void PKB::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
+void PKB::storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap) {
     std::unordered_map<statementNumber, std::unordered_set<variable>> ModifiesMapWithCall;
 
     for (auto const& x : varModifiesMap) {
         ModifiesMapWithCall[x.first].insert(x.second);
+    }
+
+    for (auto const& x : ModifiesMapWithCall) {
         auto parents = parentStore->getParents(x.first);
-        for (auto const& y : parents) {
-            ModifiesMapWithCall[y].insert(x.second);
+        for (auto parent : parents) {
+            ModifiesMapWithCall[parent].insert(x.second.begin(), x.second.end());
         }
     }
-    modifiesStore->storeModifies(ModifiesMapWithCall);
+    modifiesStore->storeRelation(ModifiesMapWithCall);
 }
 
-void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
+void PKB::storeRelationProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures,
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar) {
-    modifiesStore->storeModifiesProcedures(procedures, callTableStar);
+    modifiesStore->storeRelationProcedures(procedures, callTableStar);
 }
 
-bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
-    return modifiesStore->isModifies(lineNumber, variableName);
+void PKB::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls) {
+    modifiesStore->storeRelationCalls(calls);
 }
 
-bool PKB::isModifies(statementNumber lineNumber, Wildcard wildcard) {
-    return modifiesStore->isModifies(lineNumber);
+bool PKB::isRelation(statementNumber lineNumber, variable variableName) {
+    return modifiesStore->isRelation(lineNumber, variableName);
 }
 
-std::unordered_set<variable> PKB::modifies(statementNumber line) {
-    return this->modifiesStore->modifies(line);
+bool PKB::isRelation(statementNumber lineNumber, Wildcard wildcard) {
+    return modifiesStore->isRelation(lineNumber);
 }
 
-std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, variable variableName) {
+std::unordered_set<variable> PKB::relates(statementNumber line) {
+    return this->modifiesStore->relates(line);
+}
+
+std::unordered_set<statementNumber> PKB::relates(StmtEntity type, variable variableName) {
     std::unordered_set<statementNumber> relevantStmts = statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
 
     for (auto const& stmt : relevantStmts) {
-        const std::unordered_set<variable>& modifiedVariables = modifiesStore->modifies(stmt);
-        if (modifiedVariables.find(variableName) != modifiedVariables.end()) {
+        if (modifiesStore->isRelation(stmt, variableName)) {
             result.insert(stmt);
         }
     }
-
     return result;
 }
 
-std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, Wildcard wildcard) {
+std::unordered_set<statementNumber> PKB::relates(StmtEntity type, Wildcard wildcard) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<statementNumber> result;
     for (auto const& x : relevantStmts) {
-        if (this->modifiesStore->modifies(x).empty()) {
+        if (this->modifiesStore->relates(x).empty()) {
             continue;
         }
         result.insert(x);
@@ -254,11 +267,11 @@ std::unordered_set<statementNumber> PKB::modifies(StmtEntity type, Wildcard wild
     return result;
 }
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies(StmtEntity type) {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::relates(StmtEntity type) {
     std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(type);
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
     for (auto const& x : relevantStmts) {
-        std::unordered_set<variable> variablesModified = this->modifiesStore->modifies(x);
+        std::unordered_set<variable> variablesModified = this->modifiesStore->relates(x);
         for (auto const& y : variablesModified) {
             result.insert(std::make_pair(x, y));
         }
@@ -266,28 +279,28 @@ std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::modifies
     return result;
 }
 
-bool PKB::isModifies(procedure procedure, Wildcard wildcard) {
-    return modifiesStore->isModifies(procedure);
+bool PKB::isRelation(procedure procedure, Wildcard wildcard) {
+    return modifiesStore->isRelation(procedure);
 }
 
-std::unordered_set<variable> PKB::modifies(procedure procedure) {
-    return modifiesStore->modifiesProcedureProc(procedure);
+std::unordered_set<variable> PKB::relates(procedure procedure) {
+    return modifiesStore->relatesProcedureProc(procedure);
 }
 
-bool PKB::isModifies(procedure procedure, variable variableName) {
-    return modifiesStore->isModifies(procedure, variableName);
+bool PKB::isRelation(procedure procedure, variable variableName) {
+    return modifiesStore->isRelation(procedure, variableName);
 }
 
-std::unordered_set<procedure> PKB::modifiesProcedure(Wildcard wildcard) {
-    return modifiesStore->modifiesProcedure();
+std::unordered_set<procedure> PKB::relatesProcedure(Wildcard wildcard) {
+    return modifiesStore->relatesProcedure();
 }
 
-std::unordered_set<procedure> PKB::modifiesProcedure(variable variableName) {
-    return modifiesStore->modifiesProcedure(variableName);
+std::unordered_set<procedure> PKB::relatesProcedure(variable variableName) {
+    return modifiesStore->relatesProcedure(variableName);
 }
 
-std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::modifiesProcedure() {
-    return modifiesStore->modifiesProcedurePair();
+std::unordered_set<std::pair<procedure, variable>, PairHash> PKB::relatesProcedure() {
+    return modifiesStore->relatesProcedurePair();
 }
 
 // ConstantStore methods
@@ -780,3 +793,169 @@ std::unordered_set<statementNumber> PKB::getWhile(variable v) {
 std::unordered_set<std::pair<statementNumber, variable>, PairHash> PKB::getAllWhile() {
     return whileStore->getAllWhile();
 }
+
+void PKB::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
+    nextStore->storeNext(NextMap);
+}
+
+void PKB::storeCfg(Cfg cfg) {
+    nextStore->storeCfg(cfg);
+}
+
+void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+    nextStore->storeCfgLegend(cfgLegend);
+}
+
+std::set<std::pair<statementNumber, statementNumber>> PKB::Next(StmtEntity ent1, StmtEntity ent2) {
+    std::set<std::pair<statementNumber, statementNumber>> result;
+    std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(ent1);
+    std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(ent2);
+    for (auto const& x : relevantStmts1) {
+        for (auto const& y : relevantStmts2) {
+            if (this->nextStore->isNext(x, y)) {
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(StmtEntity ent, Wildcard) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(x, Wildcard())) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(StmtEntity ent, statementNumber num) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(x, num)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(Wildcard, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(Wildcard(), x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::Next(statementNumber num, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNext(num, x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+bool PKB::isNext(Wildcard, Wildcard) {
+    return nextStore->isNext(Wildcard(), Wildcard());
+}
+
+bool PKB::isNext(Wildcard, statementNumber num) {
+    return nextStore->isNext(Wildcard(), num);
+}
+
+bool PKB::isNext(statementNumber num, Wildcard) {
+    return nextStore->isNext(num, Wildcard());
+}
+
+bool PKB::isNext(statementNumber num1, statementNumber num2) {
+    return nextStore->isNext(num1, num2);
+}
+
+std::set<std::pair<statementNumber, statementNumber>> PKB::NextStar(StmtEntity ent1, StmtEntity ent2) {
+    std::set<std::pair<statementNumber, statementNumber>> result;
+    std::unordered_set<statementNumber> relevantStmts1 = this->statementStore->getStatements(ent1);
+    std::unordered_set<statementNumber> relevantStmts2 = this->statementStore->getStatements(ent2);
+    for (auto const& x : relevantStmts1) {
+        for (auto const& y : relevantStmts2) {
+            if (this->nextStore->isNextStar(x, y)) {
+                result.insert(std::make_pair(x, y));
+            }
+        }
+    }
+    return result;
+}
+
+
+std::set<statementNumber> PKB::NextStar(StmtEntity ent, Wildcard) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(x, Wildcard())) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::NextStar(StmtEntity ent, statementNumber num) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(x, num)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::NextStar(Wildcard, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(Wildcard(), x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+std::set<statementNumber> PKB::NextStar(statementNumber num, StmtEntity ent) {
+    std::set<statementNumber> result;
+    std::unordered_set<statementNumber> relevantStmts = this->statementStore->getStatements(ent);
+    for (auto const& x : relevantStmts) {
+        if (this->nextStore->isNextStar(num, x)) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+bool PKB::isNextStar(Wildcard, Wildcard) {
+    return nextStore->isNextStar(Wildcard(), Wildcard());
+}
+
+bool PKB::isNextStar(Wildcard, statementNumber num) {
+    return nextStore->isNextStar(Wildcard(), num);
+}
+
+bool PKB::isNextStar(statementNumber num, Wildcard) {
+    return nextStore->isNextStar(num, Wildcard());
+}
+
+bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
+    return nextStore->isNextStar(num1, num2);
+}
+
+void PKB::clearNextStarCache() {
+    nextStore->clearCache();
+}
+

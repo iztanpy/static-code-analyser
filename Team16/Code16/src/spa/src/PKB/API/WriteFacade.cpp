@@ -1,6 +1,3 @@
-#include <unordered_map>
-#include <set>
-
 #include "PKB/API/WriteFacade.h"
 
 WriteFacade::WriteFacade(PKB& pkb) : pkb(pkb) {}
@@ -29,7 +26,7 @@ void WriteFacade::storeProcedures(std::set<std::string> procedures) {
 void WriteFacade::storeProcedures(std::unordered_map<procedure, std::pair<int, int>> procedures) {
     pkb.addProcedures(procedures);
     pkb.storeUsesProcedures(procedures, pkb.getCallStar());
-    pkb.storeModifiesProcedures(procedures, pkb.getCallStar());
+    pkb.storeRelationProcedures(procedures, pkb.getCallStar());
 }
 
 void WriteFacade::storeUses(std::unordered_map<statementNumber, std::unordered_set<variable>> varUsesMap) {
@@ -56,8 +53,13 @@ void WriteFacade::storeCalls(std::unordered_map<procedure, std::unordered_set<pr
     pkb.storeCalls(callTable);
 }
 
-void WriteFacade::storeModifies(std::unordered_map<statementNumber, variable> varModifiesMap) {
-    pkb.storeModifies(varModifiesMap);
+void WriteFacade::storeCallStatements(std::unordered_map<statementNumber, procedure> callStatements) {
+    pkb.storeRelationCalls(callStatements);
+    pkb.storeUsesCalls(callStatements);
+}
+
+void WriteFacade::storeRelation(std::unordered_map<statementNumber, variable> varModifiesMap) {
+    pkb.storeRelation(varModifiesMap);
 }
 
 void WriteFacade::storeWhile(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
@@ -66,5 +68,17 @@ void WriteFacade::storeWhile(std::unordered_map<statementNumber, std::unordered_
 
 void WriteFacade::storeIf(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
     pkb.storeIf(variableMap);
+}
+
+void WriteFacade::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
+    pkb.storeNext(NextMap);
+}
+
+void WriteFacade::storeCfg(Cfg cfg) {
+    pkb.storeCfg(cfg);
+}
+
+void WriteFacade::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+    pkb.storeCfgLegend(cfgLegend);
 }
 

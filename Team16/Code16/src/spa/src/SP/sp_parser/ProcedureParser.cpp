@@ -1,8 +1,9 @@
 #include "ProcedureParser.h"
 
+#include <utility>
+
 int ProcedureParser::parse(std::vector<Token>& tokens) {
     if (isParsingProcedure) throw InvalidSyntaxError();
-
     // validate procedure declaration: procedure (already validated), name, open brace
     if (Parser::index + 2 > tokens.size()) {
         return -1;
@@ -38,6 +39,7 @@ int ProcedureParser::parse(std::vector<Token>& tokens) {
     // set current procedure name
     ParseUtils::setProcedureName(procedure.value);
     std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, lineNumber);
+    addCfgNodeToMap(procedure.value, Cfg::rootCfgNode);
 
     // set root node
     designExtractor->extractDesign(root, visitor);
@@ -49,4 +51,8 @@ int ProcedureParser::parse(std::vector<Token>& tokens) {
     followsStatementStack.push(procedureFollowsSet);
     isParsingProcedure = true;
     return Parser::index;
+}
+
+void ProcedureParser::addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<CfgNode> cfgNode) {
+    Parser::cfgNodeMap[procedureName] = std::move(cfgNode);
 }
