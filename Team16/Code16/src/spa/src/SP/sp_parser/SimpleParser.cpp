@@ -80,9 +80,9 @@ void SimpleParser::populatePKB() {
   // Store if control variables
   writeFacade->storeIf(visitor->getIfControlVarMap());
   // Store Next
-//  writeFacade->storeNext(getNextStatementMap());
-  // Store CFG root nodes
+  writeFacade->storeNext(getNextStatementMap());
+//   Store CFG root nodes
 //  writeFacade->storeCfg(getCfgNodesMap());
-  // Store CFG legend
-//  writeFacade->storeCfgLegend(getStmtNumberToCfgNodeHashmap());
+//   Store CFG legend
+  writeFacade->storeCfgLegend(getStmtNumberToCfgNodeHashmap());
 }
