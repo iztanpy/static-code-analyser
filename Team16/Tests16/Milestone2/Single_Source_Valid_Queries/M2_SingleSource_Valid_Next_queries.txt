@@ -11,7 +11,7 @@ Select w such that Next(_,5)
 3 - Next(WILDCARD, INT) is false
 while w;
 Select w such that Next(_,1)
-
+none
 5000
 4 - Next(INT, WILDCARD) is true
 if ifs;
@@ -21,17 +21,17 @@ Select ifs such that Next(5,_)
 5 - Next(INT, WILDCARD) is false
 while w;
 Select w such that Next(40,_)
-
+none
 5000
 6 - Next(INT, INT) returns false
 assign a;
 Select a such that Next(1, 10)
-
+none
 5000
 7 - Next(INT, INT) returns false
 while w;
 Select w such that Next(4,6)
-
+none
 5000
 8 - Next(ENT, WILDCARD) is true
 assign a;
@@ -46,7 +46,7 @@ Select <ifs, a> such that Next(a,ifs)
 10 - Next(ENT, ENT) is false
 if ifs;
 Select ifs such that Next(ifs, ifs)
-
+none
 5000
 11 - Next(ENT, INT) is true
 assign a;
@@ -61,7 +61,7 @@ Select a such that Next(5,a)
 13 - Next(INT, ENT) is false
 while w;
 Select w such that Next(2,w)
-
+none
 5000
 14 - Next(WILDCARD, ENT) is true
 while w;
@@ -71,3 +71,5 @@ SemanticError
 15 - Next(WILDCARD, ENT) is false
 print p;
 Select p such that Next(_,p)
+none
+5000
