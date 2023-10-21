@@ -49,6 +49,9 @@ void Cfg::handleWhileStatement(int stmtNumber) {
 }
 
 void Cfg::handleEndProcedureStatement() {
+    while (!nextParentStack.empty()) {
+        nextParentStack.pop();
+    }
     rootCfgNode = std::make_shared<CfgNode>();
     currNode = rootCfgNode;
 }

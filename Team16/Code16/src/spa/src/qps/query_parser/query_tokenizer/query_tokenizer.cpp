@@ -334,7 +334,7 @@ std::pair<std::vector<QueryToken>,
   std::vector<size_t> clause_beginning_indexes = getClauseIndexes(remaining_statement);
   clause_beginning_indexes.push_back(remaining_statement.length());  // push back to avoid out of range error
 
-  ClauseEnum prev_clause = ClauseEnum::NONE; // initialize prev clause to none
+  ClauseEnum prev_clause = ClauseEnum::NONE;  // initialize prev clause to none
   std::string curr_clause;
   size_t start_index = 0;
 
