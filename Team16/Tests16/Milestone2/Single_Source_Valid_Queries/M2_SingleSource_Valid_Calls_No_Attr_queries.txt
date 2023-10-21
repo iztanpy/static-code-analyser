@@ -38,6 +38,37 @@ procedure p1,p2,p3,p4,p5;
 Select p1 such that Calls(p1, p2) and Calls(p2,p3) and Calls(p3,p4) and Calls(p4,p5)
 one,seven
 5000
+9 - nested calls returns triplet results
+procedure p1,p2,p3;
+Select <p1,p2,p3> such that Calls(p1, p2) and Calls(p2,p3)
+one two three, one two six, two three four, two three five, seven two three, seven two six 
+5000
+10 - regular call return tupled results
+procedure calls, called;
+Select <calls, called> such that Calls(calls, called)
+one two, two three, two six, three four, three five, five six, seven two
+5000
+11 - valid ill formated query returns all call statements
+call c;
+Select                c such                   that     Calls(                  seven,                   two)
+1, 6, 9, 18, 19, 23, 26
+5000
+12 - select all procedures that call procedure "six"
+procedure p1;
+Select p1 such that Calls(p1,"six")
+two, five
+5000
+13 - select all procedures that call procedure "two"
+procedure p1;
+Select p1 such that Calls(p1,"two")
+one, seven
+5000
+14 - call procedure with weird characters
+procedure p1;
+Select p1 such that Calls(p1,"@@@@@@@@@@@@@@@@")
+none
+5000
+
 
 
 
