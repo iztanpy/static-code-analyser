@@ -50,30 +50,21 @@ std::set<std::string> RelRef::getStringRelRef() {
 }
 
 int RelRef::getClauseScore(RelRefType rel_ref, int num_synonym) {
-  static const int kSynonymPenalty = 1;
+  static const int kSynonymPenalty = 8;
   static const std::map<RelRefType, int> kClauseScore = {
-      // SelectClause
-      {RelRefType::SELECT, 4},
-
-      // SuchThatClause
-      {RelRefType::FOLLOWS, 4},
-      {RelRefType::FOLLOWST, 4},
-      {RelRefType::MODIFIESS, 4},
-      {RelRefType::MODIFIESP, 4},
-      {RelRefType::PARENTT, 4},
-      {RelRefType::PARENT, 4},
-      {RelRefType::USESS, 4},
-      {RelRefType::USESP, 4},
-      {RelRefType::CALLS, 4},
-      {RelRefType::CALLST, 4},
-      {RelRefType::NEXT, 4},
-      {RelRefType::NEXTT, 4},
-      {RelRefType::AFFECTS, 4},
-
-      // PatternClause
-      {RelRefType::ASSIGN, 4},
-      {RelRefType::WHILE, 4},
-      {RelRefType::IF, 4}
+      {RelRefType::NEXT, 1}, {RelRefType::FOLLOWS, 1},
+      {RelRefType::CALLS, 2}, {RelRefType::CALLST, 2},
+      {RelRefType::PARENT, 3},
+      {RelRefType::FOLLOWST, 4}, {RelRefType::PARENTT, 4},
+      {RelRefType::MODIFIESS, 5},
+      {RelRefType::MODIFIESP, 6},
+      {RelRefType::WHILE, 7}, {RelRefType::IF, 7},
+      {RelRefType::ASSIGN, 8},
+      {RelRefType::USESS, 9},
+      {RelRefType::SELECT, 10},
+      {RelRefType::USESP, 11},
+      {RelRefType::NEXTT, 20},
+      {RelRefType::AFFECTS, 25},
   };
 
   assert((num_synonym == 1 || num_synonym == 2) && "[num_synonym] can only be 1 or 2");
