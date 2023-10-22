@@ -55,7 +55,8 @@ void RelationStore::storeRelationProcedures(std::unordered_map<procedure,
     }
 }
 
-void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls, std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap) {
+void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls,
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap) {
     for (auto const& x : calls) {
         if (ForwardProcedureStore[x.second].size() > 0) {
             ForwardVariableStore[x.first].insert(ForwardProcedureStore[x.second].begin(),
@@ -74,11 +75,12 @@ void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, proce
                 }
             }
         }
+     
     }
 
     for (auto const& x : calls) {
         for (auto parent : callsParentMap[x.first]) {
-            if (ForwardVariableStore[parent].size() > 0) {
+            if (ForwardVariableStore[x.first].size() > 0) {
                 ForwardVariableStore[parent].insert(ForwardProcedureStore[x.second].begin(),
                     ForwardProcedureStore[x.second].end());
                 for (auto const& y : ForwardProcedureStore[x.second]) {

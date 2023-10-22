@@ -141,7 +141,6 @@ void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>>
 }
 
 void PKB::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
-
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap;
 
     for (auto const& x : calls) {
