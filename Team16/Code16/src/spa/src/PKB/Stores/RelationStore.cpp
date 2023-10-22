@@ -80,6 +80,7 @@ bool RelationStore::isRelation(statementNumber statement) {
             return true;
         }
     }
+    return false;
 }
 
 std::unordered_set<statementNumber> RelationStore::relates(RelationStore::variable variable) {
