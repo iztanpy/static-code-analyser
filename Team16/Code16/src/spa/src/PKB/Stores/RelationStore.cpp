@@ -75,7 +75,6 @@ void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, proce
                 }
             }
         }
-     
     }
 
     for (auto const& x : calls) {
