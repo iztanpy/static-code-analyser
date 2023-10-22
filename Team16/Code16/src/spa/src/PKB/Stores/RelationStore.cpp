@@ -36,9 +36,11 @@ void RelationStore::storeRelationProcedures(std::unordered_map<procedure,
                 }
             }
         }
-        ForwardProcedureStore[x.first] = variables;
-        for (auto const& y : variables) {
-            ReverseProcedureStore[y].insert(x.first);
+        if (variables.size() > 0) {
+            ForwardProcedureStore[x.first] = variables;
+            for (auto const& y : variables) {
+                ReverseProcedureStore[y].insert(x.first);
+            }
         }
     }
     for (auto const& x : callTableStar) {
@@ -74,9 +76,10 @@ bool RelationStore::isRelation(statementNumber statement, variable variable) {
 
 bool RelationStore::isRelation(statementNumber statement) {
     if (ForwardVariableStore.find(statement) != ForwardVariableStore.end()) {
-        return true;
+        if (ForwardVariableStore[statement].size() > 0) {
+            return true;
+        }
     }
-    return false;
 }
 
 std::unordered_set<statementNumber> RelationStore::relates(RelationStore::variable variable) {
@@ -90,7 +93,9 @@ std::unordered_set<variable> RelationStore::relates(RelationStore::statementNumb
 
 bool RelationStore::isRelation(procedure procedure) {
     if (ForwardProcedureStore.find(procedure) != ForwardProcedureStore.end()) {
-        return true;
+        if (ForwardProcedureStore[procedure].size() > 0) {
+            return true;
+        }
     }
     return false;
 }
