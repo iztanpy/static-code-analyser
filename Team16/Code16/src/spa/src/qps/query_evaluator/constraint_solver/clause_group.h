@@ -18,10 +18,23 @@
 
 class ClauseGroup {
  public:
+  /*!
+   * Constructs a ClauseGroup from a ClauseSet
+   * @param clause_set
+   */
   explicit ClauseGroup(ClauseSet& clause_set);
 
+  /*!
+   * Evaluates clauses within the ClauseGroup and return the ConstraintTable of result
+   * @param pkb_reader
+   * @return ConstraintTable of result
+   */
   ConstraintTable Evaluate(ReadFacade& pkb_reader) const;
 
+  /*!
+   * Returns the score of the ClauseGroup calculated from the scores of its clauses
+   * @return int score
+   */
   int Score() const;
 
  private:

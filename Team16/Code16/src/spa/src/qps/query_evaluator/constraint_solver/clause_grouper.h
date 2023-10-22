@@ -11,7 +11,17 @@
 
 class ClauseGrouper {
  public:
+  /*!
+   * Adds a clause to the ClauseGrouper
+   * @param clause - unary or binary clause, will raise assert error if binary clause
+   * is passed in
+   */
   void addClause(std::unique_ptr<Clause> clause);
+
+  /*!
+   * Returns a vector of ClauseGroup in the order of evaluation according to ClauseGroup::Score()
+   * @return vector of ClauseGroup
+   */
   std::vector<ClauseGroup> GetClauseGroupOrder();
 
  private:
