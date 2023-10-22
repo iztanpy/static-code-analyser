@@ -1,14 +1,14 @@
 1 - extra character after BOOLEAN
 
-Select BOOLEAN <
+Select BOOLEAN >
 SyntaxError
 5000
-2 - wrong casing of BOOLEAN
+2 - mispelled BOOLEAN throws semantic
 
 Select BOOLEAn
 SemanticError
 5000
-3 - misspelling of BOOLEAN
+3 - misspelled BOOLEAN throws semantic
 
 Select BOOLEANs
 SemanticError
@@ -18,98 +18,98 @@ SemanticError
 Select <BOOLEAN
 SyntaxError
 5000
-5 - undeclared BOOLEAN syn in tuple
+5 - undeclared BOOLEAN syn
 
 Select <BOOLEAN>
 SemanticError
 5000
-6 - extra ; before BOOLEAN
-
-Select ;BOOLEAN
-SyntaxError
-5000
-7 - extra letter before BOOLEAN
+6 - extra character before BOOLEAN
 
 Select a BOOLEAN
 SyntaxError
 5000
-8 - extra clause indicator before BOOLEAN
+7 - pattern before BOOLEAN
 
 Select pattern BOOLEAN
 SyntaxError
 5000
-9 - extra characters in a larger query
+8 - extra characters
 assign a; while w;
-Select <    BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select <    BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-10 - extra characters in a larger query
+9 - extra characters
 assign a; while w;
-Select <BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select <BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-11 - extra characters in a larger query
+10 - extra characters
 assign a; while w; variable Boolean;
-Select BOOLEAN  > such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN  > such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-12 - extra characters in a larger query
+11 - extra characters
 assign a; while w; variable Boolean;
-Select BOOLEAN> such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN> such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-13 - extra characters in a larger query
+12 - extra characters
 assign a; while w; variable Boolean;
-Select  BOOLEAN ;    such that Modifies (a, "x") and Parent* (w, a)
+Select  BOOLEAN ;    such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-14 - misspelling in a larger query
+13 - mispelled BOOLEAN
 assign a; while w; variable Boolean;
-Select      BOOLEANN  such that Modifies (a, "x") and Parent* (w, a)
+Select      BOOLEANN  such that Modifies (a, "y") and Parent* (w, a)
 SemanticError
 5000
-15 - misspelling in a larger query
+14 - mispelled BOOLEAN
 assign a; while w; variable Boolean;
-Select BBOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select BBBBBBOOOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SemanticError
 5000
-16 - wrong declarations -- misspelled
+15 - invalid declaration entity
 assign a; whil w;
-Select BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-17 - wrong declarations -- missing semicolon
+16 - missing semicolon
 assign a; while w
-Select BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-18 - wrong declarations -- missing comma
+17 - missing comma
 assign a a1; while w;
-Select BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-19 - wrong declarations -- missing comma and semicolon
+18 - missing comma and semicolon
 assign a while w
-Select BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-20 - missing Select
+19 - missing Select
 assign a; while w;
-BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-21 - misspell Select
+20 - misspelled Select
 assign a; while w;
-Selects BOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+Selects BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-22 - no spacing between Select
+21 - no spacing
 assign a; while w;
-SelectBOOLEAN such that Modifies (a, "x") and Parent* (w, a)
+SelectBOOLEAN such that Modifies (a, "y") and Parent* (w, a)
 SyntaxError
 5000
-23 - extra clause indicator -- with
+22 - extra clause indicator
 assign a; while w;
-Select BOOLEAN with such that Modifies (a, "x") and Parent* (w, a)
+Select BOOLEAN pattern such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+23 - semicolon before BOOLEAN
+
+Select ;BOOLEAN
 SyntaxError
 5000
