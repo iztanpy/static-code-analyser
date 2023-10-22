@@ -35,7 +35,8 @@ class RelationStore {
     void storeRelationProcedures(std::unordered_map<procedure,
         std::pair<int, int>> procedures, std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar);
 
-    void storeRelationCalls(std::unordered_map<statementNumber, procedure> calls);
+    void storeRelationCalls(std::unordered_map<statementNumber, procedure> calls,
+        std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap);
 
     /**
     * @brief Checks if a specific statement has a relation to a particular variable.

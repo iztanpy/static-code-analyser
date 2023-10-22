@@ -71,10 +71,10 @@ Select c such that Uses(c, "n")
 15 - Test all with modifies
 stmt s;
 Select s such that Modifies(s, "m")
-5, 11
+5, 11, 3, 4
 5000
 16 - Test all with uses
 stmt s;
 Select s such that Uses(s, "ss")
-7, 20, 33
+7, 20, 33, 18, 19
 5000
