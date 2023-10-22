@@ -16,8 +16,16 @@ class ConstraintTable {
  public:
   ConstraintTable();
 
+  /*!
+   * @brief Join two constraint tables together
+   * @param constraint_table
+   */
   void JoinTable(const ConstraintTable& constraint_table);
 
+  /*!
+   * @brief Filters the constraint table by the specified column names.
+   * @param col_names
+   */
   void Filter(const std::vector<ColName>& col_names);
 
   /*!
@@ -61,7 +69,7 @@ class ConstraintTable {
    * @return ConstraintTable for unit test or integration test, not to be used in main code
    */
   static ConstraintTable ForTestingOnly(const Table& mock_table) {
-      return ConstraintTable(mock_table);
+    return ConstraintTable(mock_table);
   }
 
  private:

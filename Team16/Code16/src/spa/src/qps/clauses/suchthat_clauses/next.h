@@ -5,6 +5,9 @@
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
 #include "qps/query_evaluator/next_evaluator.h"
 
+/*!
+ * Represents a Next clause in a query according to PQL grammar
+ */
 class Next : public SuchThatClause {
  public:
   StmtRef lhs;
@@ -25,6 +28,9 @@ class Next : public SuchThatClause {
   void Validate() override;
 };
 
+/*!
+ * Represents a Next* clause in a query according to PQL grammar
+ */
 class NextT : public SuchThatClause {
  public:
   StmtRef lhs;
