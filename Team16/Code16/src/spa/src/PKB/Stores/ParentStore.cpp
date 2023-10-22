@@ -20,10 +20,10 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
   }
 
   for (const auto& [node, children] : ParentMap) {
-      for (auto child: children) {
+      for (auto child : children) {
           auto set = std::unordered_set<int>();
           set.insert(node);
-          appendOne(set,child);
+          appendOne(set, child);
       }
   }
   for (const auto& [node, children] : ParentStarMap) {
