@@ -1,64 +1,64 @@
-1 - extra closing
+1 - extra closing tuple
 assign a; while w;
 Select <a,w>    > such that Parent* (w, a)
 SyntaxError
 5000
-2 - extra opening
+2 - extra opening tuple
 assign a; while w;
 Select <<a,w> such that Parent* (w, a)
 SyntaxError
 5000
-3 - extra comma
-assign a; while w;
-Select <a,,w> such that Parent* (w, a)
-SyntaxError
-5000
-4 - no comma
-assign a; while w;
-Select <a w> such that Parent* (w, a)
-SyntaxError
-5000
-5 - no opening
-assign a; while w;
-Select a,w> such that Parent* (w, a)
-SyntaxError
-5000
-6 - no closing
-assign a; while w;
-Select <a,w such that Parent* (w, a)
-SyntaxError
-5000
-7 - no opening or closing
-assign a; while w;
-Select a,w such that Parent* (w, a)
-SyntaxError
-5000
-8 - extra character with random spacing
-assign a; while w;
-Select <    a   ,  w >    > such that Parent* (w, a)
-SyntaxError
-5000
-9 - extra character with random spacing
-assign a; while w;
-Select <    <a   ,  w> such that Parent* (w, a)
-SyntaxError
-5000
-14 - no space between select
-assign a; while w; read r; procedure p;
-Select<a,w,p,r> such that Parent* (w, a)
-SyntaxError
-5000
-20 - extra closing
+3 - extra closing
 assign a; while w; read r; procedure p;
 Select <a,>w,r> such that Parent* (w, a)
 SyntaxError
 5000
-21 - extra closing
+4 - extra closing
 assign a; while w; read r; procedure p;
 Select <a,w>,r> such that Parent* (w, a)
 SyntaxError
 5000
-22 - extra opening
+5 - extra comma in tuple
+assign a; while w;
+Select <a,,w> such that Parent* (w, a)
+SyntaxError
+5000
+6 - missing comma in tuple
+assign a; while w;
+Select <a w> such that Parent* (w, a)
+SyntaxError
+5000
+7 - no opening tuple
+assign a; while w;
+Select a,w> such that Parent* (w, a)
+SyntaxError
+5000
+8 - no closing tuple
+assign a; while w;
+Select <a,w such that Parent* (w, a)
+SyntaxError
+5000
+9 - no opening or closing tuples
+assign a; while w;
+Select a,w such that Parent* (w, a)
+SyntaxError
+5000
+10 - extra character with random spacing
+assign a; while w;
+Select <    a   ,  w >    > such that Parent* (w, a)
+SyntaxError
+5000
+11 - extra character with random spacing
+assign a; while w;
+Select <    <a   ,  w> such that Parent* (w, a)
+SyntaxError
+5000
+12 - no space between select and tuple
+assign a; while w; read r; procedure p;
+Select<a,w,p,r> such that Parent* (w, a)
+SyntaxError
+5000
+13 - extra tuple in tuple
 assign a; while w; read r; procedure p;
 Select <a,<w,r> such that Parent* (w, a)
 SyntaxError

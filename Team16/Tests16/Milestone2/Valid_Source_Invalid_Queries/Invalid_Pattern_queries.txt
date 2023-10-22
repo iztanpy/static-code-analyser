@@ -3,27 +3,22 @@ assign a; variable v;
 Select a pattern a( v, "  x  + ")
 SyntaxError
 5000
-2 - invalid arg1 syn
+2 - invalid argument synonym
 assign a; variable v;
 Select a pattern a( 1v, "  x ")
 SyntaxError
 5000
-3 - invalid syn
+3 - invalid pattern synonym
 assign a; variable v;
 Select a pattern 1a( v, "  x  ")
 SyntaxError
 5000
-4 - arg1 is int
+4 - arg is stmt ref
 assign a; variable v;
 Select a pattern a( 1, "  x  ")
 SyntaxError
 5000
-5 - invalid ident
-assign a; variable v;
-Select a pattern a( "1x", "  x  ")
-SyntaxError
-5000
-6 - invalid name in expr
+6 - invalid factor in expr
 assign a; variable v;
 Select a pattern a( v, "  1x  ")
 SyntaxError
@@ -36,6 +31,11 @@ SyntaxError
 8 - invalid expression spec
 assign a; variable v;
 Select a pattern a( v, __)
+SyntaxError
+5000
+5 - invalid IDENT
+assign a; variable v;
+Select a pattern a( "1x", "  x  ")
 SyntaxError
 5000
 9 - empty expr
@@ -143,13 +143,23 @@ while w; variable v;
 Select w pattern w( v, "x")
 SemanticError
 5000
-30 - semantic error, syn not assign/while entity
+30 - semantic error, syn not declared
+while w; variable v;
+Select w pattern w( v, _) and Uses("x", _)
+SemanticError
+5000
+31 - semantic error, syn not assign/while entity
 stmt s; variable v;
 Select s pattern s( v, _)
 SemanticError
 5000
-31 - semantic error, arg1 not variable entity
+32 - semantic error, arg1 not variable entity
 assign a; print v;
 Select a pattern a( v, _)
 SemanticError
+5000
+33 - syntax error
+assign a; variable v;
+Select a pattern a( v, _) and Uses(1, _)
+SyntaxError
 5000
