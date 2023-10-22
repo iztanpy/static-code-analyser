@@ -19,7 +19,6 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
     }
   }
 
-  // ai-gen start (gpt3, 1)
   for (const auto& [node, children] : ParentMap) {
       for (auto child: children) {
           auto set = std::unordered_set<int>();
@@ -32,7 +31,6 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
       ParentStarMapReverse[child].insert(node);
     }
   }
-  // ai-gen end
 }
 
 void ParentStore::appendOne(std::unordered_set<int> parents, int num2) {
