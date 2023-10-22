@@ -55,12 +55,36 @@ void RelationStore::storeRelationProcedures(std::unordered_map<procedure,
     }
 }
 
-void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls) {
+void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls, std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap) {
     for (auto const& x : calls) {
-        ForwardVariableStore[x.first].insert(ForwardProcedureStore[x.second].begin(),
-            ForwardProcedureStore[x.second].end());
-        for (auto const& y : ForwardProcedureStore[x.second]) {
-            ReverseVariableStore[y].insert(x.first);
+        if (ForwardProcedureStore[x.second].size() > 0) {
+            ForwardVariableStore[x.first].insert(ForwardProcedureStore[x.second].begin(),
+                ForwardProcedureStore[x.second].end());
+            for (auto const& y : ForwardProcedureStore[x.second]) {
+                ReverseVariableStore[y].insert(x.first);
+            }
+
+            for (auto parent : callsParentMap[x.first]) {
+                if (ForwardVariableStore[parent].size() > 0) {
+                    ForwardVariableStore[parent].insert(ForwardProcedureStore[x.second].begin(),
+                                               ForwardProcedureStore[x.second].end());
+                    for (auto const& y : ForwardProcedureStore[x.second]) {
+                        ReverseVariableStore[y].insert(parent);
+                    }
+                }
+            }
+        }
+    }
+
+    for (auto const& x : calls) {
+        for (auto parent : callsParentMap[x.first]) {
+            if (ForwardVariableStore[parent].size() > 0) {
+                ForwardVariableStore[parent].insert(ForwardProcedureStore[x.second].begin(),
+                    ForwardProcedureStore[x.second].end());
+                for (auto const& y : ForwardProcedureStore[x.second]) {
+                    ReverseVariableStore[y].insert(parent);
+                }
+            }
         }
     }
 }

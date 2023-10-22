@@ -141,7 +141,17 @@ void PKB::storeUsesProcedures(std::unordered_map<procedure, std::pair<int, int>>
 }
 
 void PKB::storeUsesCalls(std::unordered_map<statementNumber, procedure> calls) {
-    usesStore->storeRelationCalls(calls);
+
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap;
+
+    for (auto const& x : calls) {
+        std::unordered_set<statementNumber> parents = parentStore->getParents(x.first);
+
+        if (parents.size() > 0) {
+            callsParentMap[x.first].insert(parents.begin(), parents.end());
+        }
+    }
+    usesStore->storeRelationCalls(calls, callsParentMap);
 }
 
 bool PKB::isUses(statementNumber lineNumber, variable variableName) {
@@ -238,7 +248,16 @@ void PKB::storeModifiesProcedures(std::unordered_map<procedure, std::pair<int, i
 }
 
 void PKB::storeModifiesCalls(std::unordered_map<statementNumber, procedure> calls) {
-    modifiesStore->storeRelationCalls(calls);
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> callsParentMap;
+    for (auto const& x : calls) {
+        std::unordered_set<statementNumber> parents = parentStore->getParents(x.first);
+
+        if (parents.size() > 0) {
+            callsParentMap[x.first].insert(parents.begin(), parents.end());
+        }
+    }
+
+    modifiesStore->storeRelationCalls(calls, callsParentMap);
 }
 
 bool PKB::isModifies(statementNumber lineNumber, variable variableName) {
