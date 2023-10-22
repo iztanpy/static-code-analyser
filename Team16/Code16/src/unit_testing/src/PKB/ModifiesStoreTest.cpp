@@ -90,3 +90,42 @@ TEST_CASE("Test procedure methods") {
     REQUIRE((modifiesStore.relatesProcedure("z") == std::unordered_set<std::string>{}));
 }
 
+TEST_CASE("Test getStatementThatModifies 2") {
+    auto modifiesStore = RelationStore();
+    modifiesStore.storeRelation({ {1, {"x"}}, {2, {"y"}}, {3, {}}, {4, {"x"}}, {5, {}}, {8, {"a"}} });
+    modifiesStore.storeRelationProcedures({ {"First", {1, 4}}, {"Second", {5, 7}} , {"Third", {8, 9}} }, { {"First", {"Second", "Third"}}, {"Second", {}} });
+
+
+    std::unordered_set<statementNumber> statements = modifiesStore.relates("x");
+    REQUIRE(statements ==  std::unordered_set<statementNumber> {1,4});
+    statements = modifiesStore.relates("y");
+    REQUIRE(statements ==  std::unordered_set<statementNumber> {2});
+
+    REQUIRE(modifiesStore.isRelation(1, "x"));
+    REQUIRE(modifiesStore.isRelation(2, "y"));
+    REQUIRE(!modifiesStore.isRelation(3, "x"));
+    REQUIRE(!modifiesStore.isRelation(1, "y"));
+    REQUIRE(!modifiesStore.isRelation(2, "x"));
+
+    REQUIRE(modifiesStore.isRelation(1));
+    REQUIRE(modifiesStore.isRelation(2));
+    REQUIRE(!modifiesStore.isRelation(3));
+    REQUIRE(modifiesStore.isRelation(4));
+    REQUIRE(!modifiesStore.isRelation(5));
+    REQUIRE(!modifiesStore.isRelation(6));
+
+    REQUIRE((modifiesStore.relatesProcedureProc("First") == std::unordered_set<std::string>{"x", "y", "a"}));
+    REQUIRE((modifiesStore.relatesProcedureProc("Second") == std::unordered_set<std::string>{}));
+    REQUIRE((modifiesStore.relatesProcedureProc("Third") == std::unordered_set<std::string>{"a"}));
+
+    REQUIRE((modifiesStore.isRelation("First", "x")));
+    REQUIRE((modifiesStore.isRelation("First", "y")));
+    REQUIRE((modifiesStore.isRelation("First", "a")));
+
+    REQUIRE((!modifiesStore.isRelation("Second")));
+    REQUIRE((!modifiesStore.isRelation("Fourth")));
+    REQUIRE((modifiesStore.isRelation("First")));
+    REQUIRE((modifiesStore.isRelation("Third")));
+
+}
+

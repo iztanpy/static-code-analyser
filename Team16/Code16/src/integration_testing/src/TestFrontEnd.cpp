@@ -482,6 +482,36 @@ TEST_CASE("Selecting Assign statements") {
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "1", "3" }));
 }
 
+TEST_CASE("Test failing modifies testcase") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+    std::string simpleProgram = R"(procedure q {
+                                      call reader;
+                                      if (a==1+3) then {
+                                        a = a + 1; }
+                                      else {
+                                        z = p + x; } }
+
+                                    procedure reader {
+                                      read c;
+                                      print d; }
+
+                                    procedure hobbs {
+                                      print a;
+                                      print b; })";
+
+    std::string query_1 = "variable v; Select v such that Modifies(\"printResults\", _)";
+    sourceProcessor.processSource(simpleProgram);
+    std::unordered_set<std::string> temp = qps.Evaluate(query_1);
+    Wildcard w = Wildcard();
+    std::unordered_set<std::string> modifies = readFacade.modifiesProcedure("q");
+
+    REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({}));
+}
+
 TEST_CASE("Test call failing testcase") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
