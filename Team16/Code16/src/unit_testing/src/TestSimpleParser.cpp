@@ -526,12 +526,22 @@ TEST_CASE(("Test Conditional Tokens Retrieval1")) {
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = R"(
         procedure Main {
-            while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((0))))))))))))))){
+            while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((e))))))))))))))){
                 x = 1;
             }
         }
     )";
     sourceProcessor.processSource(simpleProgram2);
+
+    std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap = {
+        {1, {"x", "temp", "e"}}
+    };
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getWhileControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
+        std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "temp", "e"}}});
+
+    REQUIRE(whileControlVarMap == res);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
     REQUIRE(1 == 1);
 }
 
@@ -539,11 +549,19 @@ TEST_CASE(("Test Conditional Tokens Retrieval2")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
-  std::string simpleProgram3 = "procedure q { while ((x != 1) || (y != 1)) { read x; } }";
+  std::string simpleProgram3 = "procedure q { while (    (  ((((((a + b))/c + e*j)) != 1) && (  (((((z + 2)/0)*u)) > e) || (z > n)   )) || (  !((c > nb ) || (!(z < w)))  )  )  || (!(b > n))  ) { read x; } }";
   sourceProcessor.processSource(simpleProgram3);
   REQUIRE(1 == 1);
 }
 
+TEST_CASE(("Test Conditional Tokens Retrievale2")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = "procedure q { while ( (a > nb) || ( c < j)  ) { read x; } }";
+    sourceProcessor.processSource(simpleProgram3);
+    REQUIRE(1 == 1);
+}
 TEST_CASE(("Test Conditional Tokens Retrieval3")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
