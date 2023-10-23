@@ -44,7 +44,7 @@ TEST_CASE("Test Hardcore Next") {
     WriteFacade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = R"(procedure Four {
-        if (x == 0) then {
+        if ((a+b)||((x == 1)&&(x==2))) then {
             if (x == 1) then {
                 x = 1;
                 x = 2;
@@ -524,8 +524,24 @@ TEST_CASE(("Test Conditional Tokens Retrieval1")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram2 = "procedure p { while ((x == 1) || (x==2))  { read x; } }";
+    std::string simpleProgram2 = R"(
+        procedure Main {
+            while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((e))))))))))))))){
+                x = 1;
+            }
+        }
+    )";
     sourceProcessor.processSource(simpleProgram2);
+
+    std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap = {
+        {1, {"x", "temp", "e"}}
+    };
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getWhileControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
+        std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "temp", "e"}}});
+
+    REQUIRE(whileControlVarMap == res);
+    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
     REQUIRE(1 == 1);
 }
 
@@ -533,11 +549,19 @@ TEST_CASE(("Test Conditional Tokens Retrieval2")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
-  std::string simpleProgram3 = "procedure q { while ((x != 1) || (y != 1)) { read x; } }";
+  std::string simpleProgram3 = "procedure q { while (    (  ((((((a + b))/c + e*j)) != 1) && (  (((((z + 2)/0)*u)) > e) || (z > n)   )) || (  !((c > nb ) || (!(z < w)))  )  )  || (!(b > n))  ) { read x; } }";
   sourceProcessor.processSource(simpleProgram3);
   REQUIRE(1 == 1);
 }
 
+TEST_CASE(("Test Conditional Tokens Retrievale2")) {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    auto writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = "procedure q { while ( (a > nb) || ( c < j)  ) { read x; } }";
+    sourceProcessor.processSource(simpleProgram3);
+    REQUIRE(1 == 1);
+}
 TEST_CASE(("Test Conditional Tokens Retrieval3")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   auto writeFacade = WriteFacade(*pkb_ptr);
@@ -1331,6 +1355,49 @@ TEST_CASE("Test complicated conditionals") {
     REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
     REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
     REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+}
+TEST_CASE("Test valid complicated conditionals for bug fix") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    WriteFacade writeFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    std::string simpleProgram3 = R"(
+        procedure Four {
+            while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((0))))))))))))))) {
+                a = 1;
+            }
+            if ((x % 2) + y == a + b) then {
+                else = else + then;
+            } else {
+                print apple;
+            }
+
+        }
+    )";
+    sourceProcessor.processSource(simpleProgram3);
+    std::string simpleProgram4 = R"(
+        procedure Five {
+            while (! ((1==0) && (1==0))) {
+                a = 1;
+            }
+            if ((x % 2) + y == a + b) then {
+                else = else + then;
+            } else {
+                print apple;
+            }
+            if ((a == y) || ((z < 5) && ((c == 3) || (d == 4)))) then {
+                a = a+ b; 
+            } else {
+               read apple;
+            }
+             while (        (1 + (2 - (3 * (4 / (5 % ((6)))))))   &&(    (x < y)||(  (x > y) && (x == y)  )   )       ) {
+                test = test + 1;
+            }
+
+       
+
+        }
+    )";
+    sourceProcessor.processSource(simpleProgram4);
 }
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
