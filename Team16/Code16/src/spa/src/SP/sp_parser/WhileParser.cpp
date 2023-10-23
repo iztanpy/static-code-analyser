@@ -1,7 +1,7 @@
 // ai-gen start (gpt3, 2)
 #include "WhileParser.h"
 
-int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
+int WhileParser::parse(std::vector<Token>& tokens) {
     // Validate that statement has at least 6 tokens (min: while ( a ) { })
     if (tokens.size() - index < 5) {
       return -1;
@@ -15,9 +15,17 @@ int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
     if (tokens[index].tokenType != TokenType::kSepOpenParen) {
         throw InvalidSyntaxError();
     }
-    index++;
 
+    // Add to stacks
+    parentStatementStack.push(lineNumber);
+    controlStructureStack.push("while");
+
+    // Set up ParseUtils
     ParseUtils::setValues(index, lineNumber);
+    ParseUtils::setUpCondIndexMap(tokens);
+    index++;
+    ParseUtils::setValues(index, lineNumber);
+
     std::shared_ptr<TNode> whileCondNode = ParseUtils::parseCondExpression(tokens);
     index = ParseUtils::getIndex();
     whileNode->addChild(whileCondNode);
@@ -35,19 +43,11 @@ int WhileParser::parse(std::vector<Token>& tokens, int curr_index) {
     index++;
 
     designExtractor->extractDesign(whileNode, visitor);
-
+    followsStatementStack.top().insert(lineNumber);
+    std::set<int> whileFollowsSet;
+    followsStatementStack.push(whileFollowsSet);
+    Cfg::handleWhileStatement(lineNumber);
+    currWhileDepth++;
+    lineNumber++;
     return index;
-}
-
-int WhileParser::getLineNumber() {
-    return lineNumber;
-}
-void WhileParser::setLineNumber(int newLineNumber) {
-    lineNumber = newLineNumber;
-}
-int WhileParser::getIndex() {
-    return index;
-}
-void WhileParser::setIndex(int newIndex) {
-    index = newIndex;
 }

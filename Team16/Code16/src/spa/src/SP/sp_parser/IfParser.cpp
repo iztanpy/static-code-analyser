@@ -1,6 +1,6 @@
 #include "IfParser.h"
 
-int IfParser::parse(std::vector<Token>& tokens, int curr_index) {
+int IfParser::parse(std::vector<Token>& tokens) {
   // Validate that statement has at least 9 tokens (min: If ( a ) { } else { } )
   if (tokens.size() - index < 8) {
     return -1;
@@ -14,9 +14,17 @@ int IfParser::parse(std::vector<Token>& tokens, int curr_index) {
   if (tokens[index].tokenType != TokenType::kSepOpenParen) {
     throw InvalidSyntaxError();
   }
-  index++;
 
+  // Add to stacks
+  parentStatementStack.push(lineNumber);
+  Parser::controlStructureStack.push("if");
+
+  // Set up ParseUtils
   ParseUtils::setValues(index, lineNumber);
+  ParseUtils::setUpCondIndexMap(tokens);
+  index++;
+  ParseUtils::setValues(index, lineNumber);
+
   std::shared_ptr<TNode> ifCondNode = ParseUtils::parseCondExpression(tokens);
   index = ParseUtils::getIndex();
   ifNode->addChild(ifCondNode);
@@ -40,19 +48,12 @@ int IfParser::parse(std::vector<Token>& tokens, int curr_index) {
   index++;
 
   designExtractor->extractDesign(ifNode, visitor);
+  followsStatementStack.top().insert(lineNumber);
+  std::set<int> ifFollowsSet;
+  followsStatementStack.push(ifFollowsSet);
+  Cfg::handleIfStatement(lineNumber);
 
+  currIfDepth++;
+  lineNumber++;
   return index;
-}
-
-int IfParser::getLineNumber() {
-    return lineNumber;
-}
-void IfParser::setLineNumber(int newLineNumber) {
-    lineNumber = newLineNumber;
-}
-int IfParser::getIndex() {
-    return index;
-}
-void IfParser::setIndex(int newIndex) {
-    index = newIndex;
 }

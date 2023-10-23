@@ -1,14 +1,14 @@
 #include "ReadParser.h"
 
-int ReadParser::parse(std::vector<Token>& tokens, int curr_index) {
+int ReadParser::parse(std::vector<Token>& tokens) {
     // Check if there are enough tokens for a valid read statement
-    if (curr_index + 3 > tokens.size()) {
+    if (index + 3 > tokens.size()) {
         return -1;
     }
 
     // Validate read name
-    Token readNameToken = tokens[curr_index + 1];
-    Token semicolonToken = tokens[curr_index + 2];
+    Token readNameToken = tokens[index + 1];
+    Token semicolonToken = tokens[index + 2];
 
     // Define the set of valid keyword token types
     std::unordered_set<TokenType> validKeywords = {
@@ -36,19 +36,17 @@ int ReadParser::parse(std::vector<Token>& tokens, int curr_index) {
     }
 
     // Update the value of the 'read' token to match the read name
-    Token read = tokens[curr_index];
+    Token read = tokens[index];
     read.value = readNameToken.value;
 
     // Update the current index and create the AST node
-    curr_index = curr_index + 3;
+    index = index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(read, lineNumber);
     designExtractor->extractDesign(root, visitor);
-    return curr_index;
-}
-int ReadParser::getLineNumber() {
-    return lineNumber;
-}
-void ReadParser::setLineNumber(int newLineNumber) {
-    lineNumber = newLineNumber;
-}
+    followsStatementStack.top().insert(lineNumber);
+    Cfg::handleStatement(lineNumber);
 
+    lineNumber++;
+
+  return index;
+}

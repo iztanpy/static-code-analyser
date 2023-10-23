@@ -12,12 +12,17 @@ enum class PQLTokenType {
   DECLARATION,
   SELECT,
   SUCH_THAT,
-  PATTERN,
+  PATTERN_WHILE,
+  PATTERN_IF,
   WILDCARD,
   RELREF,
   INTEGER,
   IDENT,
-  PARTIALEXPR
+  PARTIALEXPR,
+  EXACTEXPR,
+  SELECT_SINGLE,
+  SELECT_MULTIPLE,
+  SELECT_BOOLEAN
 };
 
 struct QueryToken {
@@ -36,6 +41,17 @@ struct QueryStructure {
   QueryStructure(std::vector<std::string> declaration_statements, std::string select_statement);
   std::vector<std::string> declaration_statements;
   std::string select_statement;
+};
+
+enum class ClauseEnum {
+  PATTERN,
+  SUCH_THAT,
+  NONE
+};
+
+enum class SelectValueType {
+  SINGLE,
+  MUTLIPLE,
 };
 
 class QueryTokenizer {
@@ -68,7 +84,14 @@ class QueryTokenizer {
    * @return a vector of QueryTokens relevant to Select clause
    */
   static std::vector<QueryToken> extractSelectToken(std::string & select_statement,
-                                                    const std::vector<Declaration> & declarations);
+                                                    std::vector<Declaration> & declarations);
+
+  /*!
+ * Returns the starting index of the first clause
+ * @param remaining_statement is the trimmed statement from select statement
+ * @return starting index for the first clause
+ */
+  static size_t getFirstClauseIndexes(const std::string & remaining_statement);
 
   /*!
    * Returns the starting indexes of clauses
@@ -91,16 +114,25 @@ class QueryTokenizer {
    * @return the LHS and RHS as a pair
    */
   static std::pair<QueryToken, QueryToken> getRelRefArgs(std::string & clause,
-                                                         const std::vector<Declaration> & declarations);
+                                                         std::vector<Declaration> & declarations);
 
   /*!
    * Returns the LHS and RHS of pattern clause
    * @param clause is the trimmed string from pattern clause
    * @param declarations is the set of declared entities
+   * @param pattern_type
    * @return the LHS and RHS as a pair
    */
   static std::pair<QueryToken, QueryToken> getPatternArgs(std::string & clause,
-                                                          const std::vector<Declaration> & declarations);
+                                                          std::vector<Declaration> & declarations,
+                                                          PQLTokenType pattern_type);
+
+  /*!
+   * Gets the PQLTokenType of a pattern
+   * @param pattern_syn to be checked
+   * @return SYNONYM if it is an assign synonym, PATTERN_WHILE if it is 'while', PATTERN_IF if it is 'if'
+   */
+  static PQLTokenType getPatternTokenType(std::string & pattern_syn, std::vector<Declaration> & declarations);
 
   /*!
    * Returns the query tokens of such that and pattern clauses
@@ -110,5 +142,49 @@ class QueryTokenizer {
    */
   static std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
   extractClauseTokens(std::string select_statement,
-                      const std::vector<Declaration> & declarations);
+                      std::vector<Declaration> & declarations);
+
+  /*!
+   * Processes a such that clause
+   * @param clause string to be processed
+   * @param declarations set of declared entities
+   * @return a vector of such that tokens
+   */
+  static std::vector<QueryToken> processSuchThatClause(std::string clause, std::vector<Declaration> & declarations);
+
+  /*!
+   * Processes a pattern clause
+   * @param clause string to be processed
+   * @param declarations set of declared entities
+   * @return a vector of pattern tokens
+   */
+  static std::vector<QueryToken> processPatternClause(std::string clause, std::vector<Declaration> & declarations);
+
+  /*!
+   * Gets the select value type from a select clause
+   * @param select_value is the string to be processed
+   * @return the select value type
+   */
+  static SelectValueType getSelectValueType(const std::string& select_value);
+
+  /*!
+   * Removes the select clause from remaining clauses
+   * @param remaining_statement is string to be processed
+   * @return the trimmed string
+   */
+  static std::string removeSelectClause(const std::string& remaining_statement);
+
+  /*!
+   * Removes the tuple or first word from a select clause
+   * @param select_statement to be processed
+   * @return the trimmed select clause
+   */
+  static std::string removeResultClause(std::string& select_statement);
+
+  /*!
+   * Preserves the result clause of the select clause
+   * @param select_statement to be processed
+   * @return the preserved result clause
+   */
+  static std::string removeAfterResultClause(std::string& select_statement);
 };

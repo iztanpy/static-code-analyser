@@ -1,0 +1,27 @@
+procedure Four {
+    while (x == 0) {
+        while (y == 1) {
+            x = 1;
+            x = 2;
+        }
+        x = 3;
+        x = 4;
+        if (z == 5) then {
+            x = 8;
+            if (a == 6) then {
+                x = 7;
+                y = 2;
+            } else {
+                x = 8;
+                x = 9;
+            }
+            x = 9;
+        } else {
+            while (x == 0) {
+                x = 1;
+                x = 2;
+            }
+        }
+    }
+    x = 2;
+}

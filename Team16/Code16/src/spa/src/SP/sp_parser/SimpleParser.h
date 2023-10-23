@@ -9,14 +9,7 @@
 #include <stack>
 
 // Headers from "SP" subdirectory
-#include "SP/sp_parser/AssignmentParser.h"
-#include "SP/sp_parser/ReadParser.h"
-#include "SP/sp_parser/ProcedureParser.h"
-#include "SP/sp_parser/Parser.h"
-#include "SP/sp_parser/WhileParser.h"
-#include "SP/sp_parser/IfParser.h"
-#include "SP/sp_parser/PrintParser.h"
-#include "SP/sp_parser/CallParser.h"
+#include "SP/sp_parser/ParserFactory.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
@@ -27,6 +20,8 @@
 class DesignExtractor;  // Forward declaration
 class AssignmentParser;
 class WhileParser;
+class ParserFactory;
+class Parser;
 
  /**
   * @class SimpleParser
@@ -39,23 +34,13 @@ class SimpleParser : public Parser {
  private:
     WriteFacade* writeFacade;
     ASTVisitor* visitor;
-    int lineNumber = 1;
-    int nestingLevel = 0;
-    int currWhileDepth;
-    int currIfDepth;
-    bool isParsingProcedure;
+    ParserFactory* factory = new ParserFactory(visitor);
+    Parser* parser;
+    void populatePKB();
+    void checkCalls();
 
  public:
     explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
-    int parse(std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
-    AssignmentParser* assignmentParser = new AssignmentParser(visitor);
-    ProcedureParser* procedureParser = new ProcedureParser(visitor);
-    ReadParser* readParser = new ReadParser(visitor);
-    WhileParser* whileParser = new WhileParser(visitor);
-    PrintParser* printParser = new PrintParser(visitor);
-    IfParser* ifParser = new IfParser(visitor);
-    CallParser* callParser = new CallParser(visitor);
-    void insertFollowsHashMap(std::set<int> followsSet);
 };
-

@@ -19,37 +19,32 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
     }
   }
 
-  // ai-gen start (gpt3, 1)
   for (const auto& [node, children] : ParentMap) {
-    std::unordered_set<int> visited;
-    std::unordered_set<int> stack;
-    visited.insert(node);
-    stack.insert(children.begin(), children.end());
-
-    while (!stack.empty()) {
-      int current = *stack.begin();
-      stack.erase(stack.begin());
-
-      if (visited.find(current) == visited.end()) {
-        ParentStarMap[node].insert(current);
-        visited.insert(current);
-        for (int child : ParentMap[current]) {
-          if (visited.find(child) == visited.end()) {
-            stack.insert(child);
-          }
-        }
+      for (auto child : children) {
+          auto set = std::unordered_set<int>();
+          set.insert(node);
+          appendOne(set, child);
       }
-    }
   }
   for (const auto& [node, children] : ParentStarMap) {
     for (int child : children) {
       ParentStarMapReverse[child].insert(node);
     }
   }
+}
 
-
-
-  // ai-gen end
+void ParentStore::appendOne(std::unordered_set<int> parents, int num2) {
+    for (int num : parents) {
+        // if num is not in ParentStarMap
+        if (ParentStarMap.find(num) == ParentStarMap.end()) {
+            ParentStarMap[num] = std::unordered_set<int>();
+        }
+        ParentStarMap[num].insert(num2);
+    }
+    parents.insert(num2);
+    for (int child : ParentMap[num2]) {
+        appendOne(parents, child);
+    }
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildren(statementNumber statement) {
@@ -105,4 +100,3 @@ std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(state
 std::unordered_set<ParentStore::statementNumber> ParentStore::getParents(statementNumber statement) {
   return this->ParentStarMapReverse[statement];
 }
-

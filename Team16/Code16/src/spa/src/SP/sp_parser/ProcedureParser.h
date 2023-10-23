@@ -10,13 +10,15 @@
 // Headers from "SP" subdirectory
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
-#include "SP/DesignExtractor.h"
-#include "SP/sp_parser/Parser.h"
+#include "Parser.h"
+#include "SP/utils/ParseUtils.h"
+#include "SP/sp_cfg/CfgNode.h"
 
 // Headers from other directories
 #include "PKB/PKB.h"
 #include "utils/Error.h"
 
+class DesignExtractor;
 /**
  * @class ProcedureParser
  * @brief A concrete subclass of Parser specialized for parsing procedure statements.
@@ -41,7 +43,8 @@ class ProcedureParser : public Parser {
      * @param curr_index The current index in the token vector where parsing should start.
      * @return The index in the token vector after parsing the procedure statement.
      */
-    int parse(std::vector<Token>& tokens, int curr_index) override;
+    int parse(std::vector<Token>& tokens) override;
+    static void addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<CfgNode> cfgNode);
     ASTVisitor* visitor;
 };
 

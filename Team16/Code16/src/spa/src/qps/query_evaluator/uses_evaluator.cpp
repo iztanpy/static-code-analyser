@@ -15,25 +15,39 @@ bool UsesEvaluator::Handle(int lhs, std::string& rhs, ReadFacade& pkb_reader) {
 Constraint UsesEvaluator::Handle(Declaration& lhs,
                                  Declaration& rhs,
                                  ReadFacade& pkb_reader) {
-  if (lhs.equals(rhs)) {
-    return false;
+  if (lhs == rhs) {
+    return UnaryConstraint{lhs.synonym, {}};
   }
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> raw_results
-      = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity));
-  return BinaryConstraint{{lhs.synonym, rhs.synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+
+  if (lhs.design_entity == DesignEntity::PROCEDURE) {
+    return BinaryConstraint{{lhs.synonym, rhs.synonym},
+                            pkb_reader.usesProcedure()};
+  }
+  std::unordered_set < std::pair<statementNumber, variable>, PairHash >
+      raw_results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity));
+  return BinaryConstraint{{lhs.synonym, rhs.synonym},
+                          EvaluatorUtil::ToStringPairSet(raw_results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
                                       Wildcard& rhs,
                                       ReadFacade& pkb_reader) {
-  std::unordered_set<statementNumber> results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
+  if (lhs.design_entity == DesignEntity::PROCEDURE) {
+    return {lhs.synonym, pkb_reader.usesProcedure(rhs)};
+  }
+
+  std::unordered_set < statementNumber > results =
+      pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint UsesEvaluator::Handle(Declaration& lhs,
                                       std::string& rhs,
                                       ReadFacade& pkb_reader) {
-  std::unordered_set<statementNumber> results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
+  if (lhs.design_entity == DesignEntity::PROCEDURE) {
+    return {lhs.synonym, pkb_reader.usesProcedure(rhs)};
+  }
+  std::unordered_set < statementNumber > results = pkb_reader.uses(ConvertToStmtEntity(lhs.design_entity), rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
@@ -57,13 +71,13 @@ bool UsesEvaluator::Handle(Wildcard& lhs, std::string& rhs, ReadFacade& pkb_read
 UnaryConstraint UsesEvaluator::Handle(std::string& lhs_procname,
                                       Declaration& rhs,
                                       ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not required by Milestone1");
+  return {rhs.synonym, pkb_reader.uses(lhs_procname)};
 }
 
 bool UsesEvaluator::Handle(std::string& lhs_proc_name, Wildcard& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not required by Milestone1");
+  return pkb_reader.isUses(lhs_proc_name, rhs);
 }
 
 bool UsesEvaluator::Handle(std::string& lhs_proc_name, std::string& rhs, ReadFacade& pkb_reader) {
-  throw QpsSemanticError("[Uses] Not required by Milestone1");
+  return pkb_reader.isUses(lhs_proc_name, rhs);
 }

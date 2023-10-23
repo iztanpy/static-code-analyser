@@ -12,6 +12,9 @@
 #include <utility>
 #include <stack>
 #include <unordered_set>
+#include <map>
+#include <stdio.h>
+#include <ctype.h>
 
 /**
  * @class SPtokeniser
@@ -40,4 +43,37 @@ class SPtokeniser {
      * @return A vector of `Token` structures representing individual tokens.
      */
     std::vector<struct Token> tokenise(const std::string& input);
+    /**
+      * @brief Checks the brace stack and adds tokens.
+      *
+      * This method checks the brace stack to ensure balanced parentheses and braces and adds the corresponding tokens
+      * to the provided vector of tokens.
+      *
+      * @param braceStack A stack of characters representing open braces and parentheses.
+      * @param tokens A vector of tokens where tokens are added if balanced.
+      * @param matchedType The token type of the current token.
+      * @param matchedValue The matched value of the current token.
+    */
+    void checkBraceStack(std::stack<char>& braceStack, std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue); 
+    /**
+     * @brief Matches a regular expression and returns the token type and value.
+     *
+     * This method matches a regular expression against a given line of code and returns a pair containing the token type
+     * and the matched value.
+     *
+     * @param line The line of code to match against.
+     * @return A pair containing the token type and the matched value.
+     */
+    std::pair<TokenType, std::string> matchRegex(const std::string& line);
+    /**
+      * @brief Checks the validity of a literal and adds it to tokens.
+      *
+      * This method checks if a matched literal is valid and adds it to the provided vector of tokens. It ensures that
+      * literals do not start with a digit, indicating a valid name.
+      *
+      * @param tokens A vector of tokens where valid literals are added.
+      * @param matchedType The token type of the current token.
+      * @param matchedValue The matched value of the current token.
+     */
+    void checkValidLiteral(std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue);
 };

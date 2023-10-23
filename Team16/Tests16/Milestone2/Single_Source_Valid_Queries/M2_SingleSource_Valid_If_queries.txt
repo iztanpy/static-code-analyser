@@ -1,0 +1,15 @@
+1 - select all if
+if ifs;
+Select ifs pattern ifs(_,_,_)
+1,2,7,9
+5000
+2 - select if pairs
+if ifs;variable v;
+Select <ifs, v> pattern ifs(v,_,_)
+1 x,2 y,7 z,9 a
+5000
+3 - select if stmts with specified var
+if ifs; while w;
+Select ifs pattern ifs("x",_,_)
+1
+5000

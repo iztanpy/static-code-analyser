@@ -1,0 +1,95 @@
+1 - LHS synonym, RHS wildcard
+assign a; variable v;
+Select a pattern a(v, _)
+4, 3, 8, 13, 27, 11, 6, 31, 18, 17, 15, 24, 2, 14, 9, 22, 25, 26, 7, 1, 5
+5000
+2 - LHS synonym, RHS wildcard
+assign a; variable v;
+Select v pattern a(v, _)
+i, t, x, y, z
+5000
+3 - LHS wildcard, RHS wildcard
+assign a; while w;
+Select w pattern a(_, _)
+23, 30, 10
+5000
+4 - LHS string, RHS wildcard
+assign a; while w;
+Select a pattern a("x", _)
+2, 1, 18, 27, 11, 3, 4
+5000
+5 - LHS synonym, RHS exact match
+assign a; variable v;
+Select a pattern a(v, "z")
+8, 18
+5000
+6 - LHS synonym, RHS exact match
+assign a; variable v;
+Select v pattern a(v, "z+1-x")
+i, t
+5000
+7 - LHS synonym, RHS exact match
+assign a; variable v;
+Select v pattern a(v, "z +1 -x")
+i, t
+5000
+8 - LHS synonym, RHS exact match negative test
+assign a; variable v;
+Select v pattern a(v, "p")
+none
+5000
+9 - LHS wildcard, RHS exact match
+assign a;
+Select a pattern a(_, "z")
+8, 18
+5000
+10 - LHS wildcard, RHS exact match
+assign a;
+Select a pattern a( _, "k /(     5 + 5) * i")
+27
+5000
+11 - LHS string, RHS exact match
+assign a;
+Select a pattern a("i", "z +1 -x")
+9
+5000
+12 - LHS synonym, RHS partial match
+assign a; variable v;
+Select v pattern a(v, _"1+ i"_)
+x, y
+5000
+13 - LHS synonym, RHS partial match
+assign a; variable v;
+Select a pattern a(v, _"k -    1"_)
+3, 7, 5, 4, 2, 31
+5000
+14 - LHS synonym, RHS partial match 1 variable
+assign a; variable v;
+Select a pattern a(v, _"i"_)
+3, 15, 17, 7, 1, 5, 6, 2, 22, 27, 4, 25
+5000
+15 - LHS synonym, RHS partial match
+assign a; variable v;
+Select a pattern a(v, _"3/2"_)
+4
+5000
+16 - LHS string, RHS partial match 1 variable
+assign a; variable v;
+Select a pattern a("x", _"i"_)
+3, 4, 2, 1, 27
+5000
+17 - LHS wildcard, RHS partial match complex expression
+assign a;
+Select a pattern a(_, _"(1 + i) * 3 / 2"_)
+1
+5000
+18 - LHS wildcard, RHS partial match complex expression
+assign a; variable v;
+Select a pattern a(_, _"k - 1 + i * 3 / 2"_)
+7, 2, 3
+5000
+19 - LHS wildcard, RHS partial match
+assign a; variable v;
+Select a pattern a(_, _"x%10"_)
+25
+5000

@@ -1,0 +1,25 @@
+1 - pattern AND AND
+assign a; variable v; stmt s;
+Select a pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
+6
+5000
+2 - such that AND AND
+assign a; variable v; stmt s;
+Select s such that Parent(s,  a) and Uses(s,"ee") and Parent*(s,  a) pattern a(v,_"m"_)
+
+5000
+3 - simple with
+assign a; variable v; stmt s;
+Select v such that Modifies(a,v)
+m, u, bb, mm, rr, r, i, a, hh, g
+5000
+4 - with pattern such that with
+assign a; variable v; stmt s;constant c;
+Select a pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
+6
+5000
+5 - select tuple
+assign a; variable v;
+Select <a,v> pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
+6 g
+5000

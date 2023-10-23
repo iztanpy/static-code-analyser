@@ -1,69 +1,26 @@
 #include "AssignmentParser.h"
 
-void AssignmentParser::incrementIndex() {
-  index++;
-}
-
-std::shared_ptr<TNode> AssignmentParser::parseExpression(const std::vector<Token>& tokens) {
-  std::shared_ptr<TNode> tree = parseTerm(tokens);
-  while (ParseUtils::isPlusOrMinus(tokens[index])) {
-    std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
-    operatorNode->addChild(tree);
-    incrementIndex();
-    std::shared_ptr<TNode> rhs = parseTerm(tokens);
-    operatorNode->addChild(rhs);
-    tree = operatorNode;
-  }
-
-  return tree;
-}
-
-std::shared_ptr<TNode> AssignmentParser::parseTerm(const std::vector<Token>& tokens) {
-  std::shared_ptr<TNode> tree = parseFactor(tokens);
-  while (ParseUtils::isMultiplyDivideOrModulo(tokens[index])) {
-    std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
-    operatorNode->addChild(tree);
-    incrementIndex();
-    std::shared_ptr<TNode> rhs = parseFactor(tokens);
-    operatorNode->addChild(rhs);
-    tree = operatorNode;
-  }
-
-  return tree;
-}
-
-std::shared_ptr<TNode> AssignmentParser::parseFactor(const std::vector<Token>& tokens) {
-  std::shared_ptr<TNode> node = nullptr;
-  if (tokens[index].tokenType == TokenType::kSepOpenParen) {
-    incrementIndex();
-    node = parseExpression(tokens);
-    if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw InvalidSyntaxError();
+int AssignmentParser::parse(std::vector<Token>& tokens) {
+    // check if is assignment
+    if (tokens.size() - index < 2) {
+      return -1;
     }
-    incrementIndex();
-    return node;
-  } else {
-    if (ParseUtils::isVarOrConst(tokens[index])) {
-      node = TNodeFactory::createNode(tokens[index], lineNumber);
-      incrementIndex();
+    Token next_token = tokens.at(index + 1);
+
+    if (next_token.tokenType != TokenType::kEntityAssign) {
+      convertVarToEntity(&tokens[index]);
+      return index;
     }
-  }
 
-  if (node == nullptr) {
-    throw InvalidSyntaxError();
-  }
-
-  return node;
-}
-
-int AssignmentParser::parse(std::vector<Token>& tokens, int curr_index) {
-    // Validate that statement has at least 4 tokens (min: lhs = rhs ;)
-    if (tokens.size() - index < 3) {
+    // Validate that statement has at least 4 tokens (min: read a; lhs = rhs ;)
+    if (tokens.size() - index < 4) {
         return -1;
     }
 
     std::shared_ptr<TNode> lhs = TNodeFactory::createNode(tokens[index], lineNumber);
-    std::shared_ptr<TNode> assignNode = TNodeFactory::createNode(tokens[index + 1], lineNumber);
+    std::shared_ptr<AssignTNode> assignNode =
+          std::dynamic_pointer_cast<AssignTNode>(TNodeFactory::createNode(tokens[index + 1], lineNumber));
+    int RHSStart = index + 2;
     assignNode->addChild(lhs);
     incrementIndex();
     incrementIndex();
@@ -75,22 +32,23 @@ int AssignmentParser::parse(std::vector<Token>& tokens, int curr_index) {
     if (tokens[index].tokenType != TokenType::kSepSemicolon) {
         return -1;
     }
+    int RHSEnd = index;
+    std::string fullRHS;
+    for (int i = RHSStart; i < RHSEnd; i++) {
+        fullRHS += tokens[i].value;
+    }
+    assignNode->setFullRHS(fullRHS);
     index += 1;
     designExtractor->extractDesign(assignNode, visitor);
-
+    followsStatementStack.top().insert(lineNumber);
+    Cfg::handleStatement(lineNumber);
+    lineNumber++;
     return index;
 }
 
-int AssignmentParser::getLineNumber() {
-    return lineNumber;
+void AssignmentParser::convertVarToEntity(Token* token) {
+  TokenType newTokenType = ParseUtils::convertLiteralToEntity(token->getValue());
+  std::string newValue = token->getValue();
+  Token newToken{ newTokenType, newValue };
+  *token = newToken;
 }
-void AssignmentParser::setLineNumber(int newLineNumber) {
-    lineNumber = newLineNumber;
-}
-int AssignmentParser::getIndex() {
-    return index;
-}
-void AssignmentParser::setIndex(int newIndex) {
-    index = newIndex;
-}
-

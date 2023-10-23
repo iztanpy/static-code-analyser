@@ -1,7 +1,25 @@
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
+#include "utils/string_utils.h"
+#include "qps/query_parser/QueryUtil.h"
 
-void PatternClauseBuilder::setSynAssignment(Declaration declaration) {
-  syn_assignment = std::move(declaration);
+void PatternClauseBuilder::setPatternType(const QueryToken& token, const std::vector<Declaration>& declarations) {
+  switch (token.type) {
+    case PQLTokenType::PATTERN_IF:pattern_type = PatternType::kIf;
+      break;
+    case PQLTokenType::PATTERN_WHILE:pattern_type = PatternType::kWhile;
+      break;
+    case PQLTokenType::SYNONYM:pattern_type = PatternType::kAssignSyn;
+      break;
+    default:
+      throw QpsSyntaxError("Invalid Pattern");
+  }
+
+  for (const Declaration& declaration : declarations) {
+    if (declaration.synonym == token.text) {
+      syn_assignment = declaration;
+      break;
+    }
+  }
 }
 
 void PatternClauseBuilder::setLhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
@@ -23,25 +41,33 @@ void PatternClauseBuilder::setLhs(const QueryToken& param, const std::vector<Dec
 }
 
 void PatternClauseBuilder::setRhs(const QueryToken& param, const std::vector<Declaration>& declarations) {
-  rhs_type = param.type;
   switch (param.type) {
     // these 2 are cases for expression and partial expressions
-    case PQLTokenType::IDENT:
-    case PQLTokenType::PARTIALEXPR:rhs = param.text;  // e.g. "x + y" or _"x + y"
+    case PQLTokenType::EXACTEXPR:rhs = ExactExpr{string_util::RemoveSpacesFromExpr(param.text)};
+      break;
+    case PQLTokenType::PARTIALEXPR:rhs = PartialExpr{string_util::RemoveSpacesFromExpr(param.text)};
       break;
     case PQLTokenType::WILDCARD:rhs = Wildcard::Value;
       break;
     default: throw QpsSyntaxError("Syntax error");
   }
 }
+
 std::unique_ptr<PatternClause> PatternClauseBuilder::getClause() const {
-  if (std::holds_alternative<Wildcard>(rhs) && rhs_type == PQLTokenType::WILDCARD) {
-    return std::make_unique<WildCardPattern>(syn_assignment, lhs, std::get<Wildcard>(rhs));
-  } else if (std::holds_alternative<std::string>(rhs) && rhs_type == PQLTokenType::IDENT) {
-    return std::make_unique<ExactPattern>(syn_assignment, lhs, std::get<std::string>(rhs));
-  } else if (std::holds_alternative<std::string>(rhs) && rhs_type == PQLTokenType::PARTIALEXPR) {
-    return std::make_unique<PartialPattern>(syn_assignment, lhs, std::get<std::string>(rhs));
-  } else {
-    throw QpsSyntaxError("Syntax error");
-  }
+  switch (pattern_type) {
+    case PatternType::kWhile:
+      return std::make_unique<WhilePattern>(syn_assignment, lhs);
+    case PatternType::kIf:
+      return std::make_unique<IfPattern>(syn_assignment, lhs);
+    case PatternType::kAssignSyn:
+      if (std::holds_alternative<Wildcard>(rhs)
+          || std::holds_alternative<ExactExpr>(rhs)
+          || std::holds_alternative<PartialExpr>(rhs)) {
+        return std::make_unique<AssignPattern>(syn_assignment, lhs, rhs);
+      } else {
+        throw QpsSyntaxError("Syntax error");
+      }
+    default:
+      throw QpsSyntaxError("Invalid Pattern");
+    }
 }

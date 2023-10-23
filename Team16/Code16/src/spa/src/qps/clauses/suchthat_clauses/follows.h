@@ -14,8 +14,12 @@ class Follows : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
+  RelRefType GetRelRef() const override {
+    return RelRefType::FOLLOWS;
+  }
+
   Follows(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -33,8 +37,12 @@ class FollowsT : public SuchThatClause {
   StmtRef lhs;
   StmtRef rhs;
 
+  RelRefType GetRelRef() const override {
+    return RelRefType::FOLLOWST;
+  }
+
   FollowsT(StmtRef lhs, StmtRef rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

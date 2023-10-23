@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <set>
+#include <utility>
 
 #include "SP/TNode.h"
 #include "utils/entity_types.h"
@@ -178,12 +179,16 @@ class Visitor {
 
   // Procedure
   std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
+
   // Uses
-  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSPatternMap;
+  std::unordered_map<int, std::unordered_set<std::string>> assignLinePartialRHSPatternMap;
   std::unordered_map<int, std::string> usesLineLHSMap;
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
-  // to remove
-  std::unordered_map<int, std::unordered_set<std::string>> usesStatementNumberHashmap;
+  std::unordered_map<int, std::string> assignLineFullRHSMap;
+
+  // Control Variables
+  std::unordered_map<int, std::unordered_set<std::string>> ifControlVarMap;
+  std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap;
 
   // Modifies
   std::unordered_map<int, std::string> modifiesMap;
@@ -194,13 +199,56 @@ class Visitor {
   // Follows
   std::unordered_map<int, int> followStatementNumberHashmap;
 
+  // Calls
+  std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap;
+  std::unordered_map<int, std::string> callStatementNumberEntityHashmap;
+
   // Other
   std::unordered_map<int, StmtEntity> statementTypesMap;
   std::unordered_set<std::string> variables;
   std::unordered_set<std::string> constants;
+  std::unordered_map<std::string, std::pair<int, int>> procedureLineNumberHashmap;
+
+
 
   std::set<std::string> procedureLabels;
   std::string currKey;
+
+
+   /**
+    * @brief Get the starting to ending line numbers of a particular procedure. 
+    *
+    * This method returns an unordered map that associates procedure names with its starting to ending line numbers.
+    *
+    * @return An unordered map where keys are procedure names, and values are a tuple of statement numbers.
+    */
+    std::unordered_map<std::string, std::pair<int, int>> getProcedureLineNumberHashmap() const {
+      return procedureLineNumberHashmap;
+    }
+
+    void setProcedureLineNumberMap(std::string procedureName, int statementNumber) {
+        if (procedureLineNumberHashmap[procedureName].first) {
+            procedureLineNumberHashmap[procedureName].second = statementNumber;
+        } else {
+            procedureLineNumberHashmap[procedureName].first = statementNumber;
+        }
+    }
+
+    std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap() const {
+      return callerCalleeHashmap;
+    }
+
+    void setCallerCalleeMap(std::string caller, std::string callee) {
+        callerCalleeHashmap[caller].insert(callee);
+    }
+
+    std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap() const {
+        return callStatementNumberEntityHashmap;
+    }
+
+    void setCallStatementNumberEntityHashmap(int statementNumber, std::string entityName) {
+        callStatementNumberEntityHashmap[statementNumber] = entityName;
+    }
 
     /**
      * @brief Get the mapping of procedure names to the statement numbers where they are defined.
@@ -214,17 +262,6 @@ class Visitor {
         return procedureStatementNumberHashmap;
     }
     /**
-     * @brief Get the mapping of statement numbers to the set of variables used in those statements.
-     *
-     * This method returns an unordered map that associates statement numbers with sets of variable names
-     * that are used in those statements.
-     *
-     * @return An unordered map where keys are statement numbers, and values are sets of variable names.
-     */
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesStatementNumberHashmap() const {
-        return usesStatementNumberHashmap;
-    }
-    /**
      * @brief Get the mapping of statement numbers to patterns of right-hand-side expressions used in those statements.
      *
      * This method returns an unordered map that associates statement numbers with sets of patterns representing
@@ -232,8 +269,43 @@ class Visitor {
      *
      * @return An unordered map where keys are statement numbers, and values are sets of right-hand-side patterns.
      */
-    std::unordered_map<int, std::unordered_set<std::string>> getUsesLineRHSPatternMap() const {
-        return usesLineRHSPatternMap;
+    std::unordered_map<int, std::unordered_set<std::string>> getAssignLinePartialRHSPatternMap() const {
+        return assignLinePartialRHSPatternMap;
+    }
+    /**
+     * @brief Get the mapping of statement numbers to right-hand-side of assignment statements.
+     *
+     * This method returns an unordered map that associates statement numbers with the right-hand-side of assignment
+     * statements.
+     *
+     * @return An unordered map where keys are statement numbers, and values are the right-hand-side of the statement.
+     */
+    std::unordered_map<int, std::string> getAssignLineFullRHSMap() const {
+        return assignLineFullRHSMap;
+    }
+    /**
+     * @brief Get the mapping of statement numbers to control variables of if conditional statements.
+     *
+     * This method returns an unordered map that associates statement numbers with the control variables of if
+     * conditional statements.
+     *
+     * @return An unordered map where keys are statement numbers, and values are the control variables of if
+     * conditional statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getIfControlVarMap() const {
+        return ifControlVarMap;
+    }
+    /**
+     * @brief Get the mapping of statement numbers to control variables of while conditional statements.
+     *
+     * This method returns an unordered map that associates statement numbers with the control variables of while
+     * conditional statements.
+     *
+     * @return An unordered map where keys are statement numbers, and values are the control variables of while
+     * conditional statements.
+     */
+    std::unordered_map<int, std::unordered_set<std::string>> getWhileControlVarMap() const {
+        return whileControlVarMap;
     }
     /**
      * @brief Get the mapping of statement numbers to variables modified in those statements.

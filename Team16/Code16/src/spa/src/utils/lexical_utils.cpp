@@ -30,24 +30,75 @@ bool lexical_utils::IsIdent(std::string str) {
   }
   return true;
 }
-// TODO(Su Mian): need to check for complex expressions
-// bool lexical_utils::IsExpr(std::string str) {
-//  std::vector<std::string> split_by_plus = string_util::SplitStringBy('+', str);
-//  std::vector<std::string> split_by_minus = string_util::SplitStringBy('-', str);
-//  if (split_by_minus.size() == 1 && split_by_plus.size() == 1) {
-//    // expression does not have + or -
-//    return IsTerm(str);
-//  }
-//
-//}
-//
-// bool lexical_utils::IsFactor(std::string str) {
-//  if (str[0] == qps_constants::kOpenBracket && str[str.length() - 1] == qps_constants::kCloseBracket) {
-//    return IsExpr(str.substr(1, str.length() - 2));
-//  } else {
-//    return IsName(str) || IsInteger(str);
-//  }
-//}
+
+bool lexical_utils::IsSynonym(std::string str) {
+  return lexical_utils::IsIdent(str);
+}
+
+// ai-gen start(gpt3, 1)
+bool lexical_utils::IsFactor(std::string str) {
+  if (str.empty()) {
+    return false;
+  }
+
+  if (str.front() == '(' && str.back() == ')') {
+    std::string innerExpr = str.substr(1, str.size() - 2);
+    return IsExpr(innerExpr);
+  }
+
+  return IsName(str) || IsInteger(str);
+}
+
+bool lexical_utils::IsTerm(std::string str) {
+  int len = str.length();
+  int bracketCount = 0;
+
+  for (int i = len - 1; i >= 0; --i) {
+    char c = str[i];
+    if (c == '(') {
+      bracketCount++;
+    } else if (c == ')') {
+      bracketCount--;
+      if (bracketCount > 0) {
+        return false;  // More closing brackets than opening brackets
+      }
+    }
+
+    if (bracketCount == 0 && (c == '*' || c == '/' || c == '%')) {
+      std::string left = str.substr(0, i);
+      std::string right = str.substr(i + 1);
+      return IsTerm(left) && IsFactor(right);
+    }
+  }
+
+  return IsFactor(str);
+}
+
+bool lexical_utils::IsExpr(std::string str) {
+  int len = str.length();
+  int bracketCount = 0;
+
+  for (int i = len - 1; i >= 0; --i) {
+    char c = str[i];
+    if (c == '(') {
+      bracketCount++;
+    } else if (c == ')') {
+      bracketCount--;
+      if (bracketCount > 0) {
+        return false;  // More closing brackets than opening brackets
+      }
+    }
+
+    if (bracketCount == 0 && (c == '+' || c == '-')) {
+      std::string left = str.substr(0, i);
+      std::string right = str.substr(i + 1);
+      return IsExpr(left) && IsTerm(right);
+    }
+  }
+
+  return IsTerm(str);
+}
+// ai-gen end
 
 bool lexical_utils::IsName(std::string str) {
   str = string_util::Trim(str);

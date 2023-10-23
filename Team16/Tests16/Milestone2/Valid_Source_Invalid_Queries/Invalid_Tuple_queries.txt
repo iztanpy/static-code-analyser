@@ -1,0 +1,65 @@
+1 - extra closing tuple
+assign a; while w;
+Select <a,w>    > such that Parent* (w, a)
+SyntaxError
+5000
+2 - extra opening tuple
+assign a; while w;
+Select <<a,w> such that Parent* (w, a)
+SyntaxError
+5000
+3 - extra closing
+assign a; while w; read r; procedure p;
+Select <a,>w,r> such that Parent* (w, a)
+SyntaxError
+5000
+4 - extra closing
+assign a; while w; read r; procedure p;
+Select <a,w>,r> such that Parent* (w, a)
+SyntaxError
+5000
+5 - extra comma in tuple
+assign a; while w;
+Select <a,,w> such that Parent* (w, a)
+SyntaxError
+5000
+6 - missing comma in tuple
+assign a; while w;
+Select <a w> such that Parent* (w, a)
+SyntaxError
+5000
+7 - no opening tuple
+assign a; while w;
+Select a,w> such that Parent* (w, a)
+SyntaxError
+5000
+8 - no closing tuple
+assign a; while w;
+Select <a,w such that Parent* (w, a)
+SyntaxError
+5000
+9 - no opening or closing tuples
+assign a; while w;
+Select a,w such that Parent* (w, a)
+SyntaxError
+5000
+10 - extra character with random spacing
+assign a; while w;
+Select <    a   ,  w >    > such that Parent* (w, a)
+SyntaxError
+5000
+11 - extra character with random spacing
+assign a; while w;
+Select <    <a   ,  w> such that Parent* (w, a)
+SyntaxError
+5000
+12 - no space between select and tuple
+assign a; while w; read r; procedure p;
+Select<a,w,p,r> such that Parent* (w, a)
+SyntaxError
+5000
+13 - extra tuple in tuple
+assign a; while w; read r; procedure p;
+Select <a,<w,r> such that Parent* (w, a)
+SyntaxError
+5000

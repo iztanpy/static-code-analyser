@@ -3,8 +3,26 @@
 
 TNode::TNode(int statementNumber) : statementNumber(statementNumber) {}
 
+void ProcedureTNode::setEndStatementNumber(int statementNumber) {
+  if (endStatementNumber == -1) {
+    endStatementNumber = statementNumber;
+  }
+}
+
+int ProcedureTNode::getStartStatementNumber() const {
+  return startStatementNumber;
+}
+
 void ProcedureTNode::accept(ASTVisitor *visitor, std::string& key) const {
     visitor->visit(this, key);
+}
+
+void AssignTNode::setFullRHS(const std::string& rhs) {
+    fullRHS = rhs;
+}
+
+std::string AssignTNode::getFullRHS() const {
+    return fullRHS;
 }
 
 void AssignTNode::accept(ASTVisitor *visitor, std::string& key) const {
@@ -66,4 +84,3 @@ void IfTNode::accept(ASTVisitor* visitor, std::string& key) const {
 void CallTNode::accept(ASTVisitor* visitor, std::string& key) const {
     visitor->visit(this, key);
 }
-

@@ -1,0 +1,115 @@
+1 - extra character after BOOLEAN
+
+Select BOOLEAN >
+SyntaxError
+5000
+2 - mispelled BOOLEAN throws semantic
+
+Select BOOLEAn
+SemanticError
+5000
+3 - misspelled BOOLEAN throws semantic
+
+Select BOOLEANs
+SemanticError
+5000
+4 - extra character before BOOLEAN
+
+Select <BOOLEAN
+SyntaxError
+5000
+5 - undeclared BOOLEAN syn
+
+Select <BOOLEAN>
+SemanticError
+5000
+6 - extra character before BOOLEAN
+
+Select a BOOLEAN
+SyntaxError
+5000
+7 - pattern before BOOLEAN
+
+Select pattern BOOLEAN
+SyntaxError
+5000
+8 - extra characters
+assign a; while w;
+Select <    BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+9 - extra characters
+assign a; while w;
+Select <BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+10 - extra characters
+assign a; while w; variable Boolean;
+Select BOOLEAN  > such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+11 - extra characters
+assign a; while w; variable Boolean;
+Select BOOLEAN> such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+12 - extra characters
+assign a; while w; variable Boolean;
+Select  BOOLEAN ;    such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+13 - mispelled BOOLEAN
+assign a; while w; variable Boolean;
+Select      BOOLEANN  such that Modifies (a, "y") and Parent* (w, a)
+SemanticError
+5000
+14 - mispelled BOOLEAN
+assign a; while w; variable Boolean;
+Select BBBBBBOOOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SemanticError
+5000
+15 - invalid declaration entity
+assign a; whil w;
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+16 - missing semicolon
+assign a; while w
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+17 - missing comma
+assign a a1; while w;
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+18 - missing comma and semicolon
+assign a while w
+Select BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+19 - missing Select
+assign a; while w;
+BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+20 - misspelled Select
+assign a; while w;
+Selects BOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+21 - no spacing
+assign a; while w;
+SelectBOOLEAN such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+22 - extra clause indicator
+assign a; while w;
+Select BOOLEAN pattern such that Modifies (a, "y") and Parent* (w, a)
+SyntaxError
+5000
+23 - semicolon before BOOLEAN
+
+Select ;BOOLEAN
+SyntaxError
+5000

@@ -1,12 +1,15 @@
 #include "ProcedureParser.h"
 
-int ProcedureParser::parse(std::vector<Token>& tokens, int curr_index) {
+#include <utility>
+
+int ProcedureParser::parse(std::vector<Token>& tokens) {
+    if (isParsingProcedure) throw InvalidSyntaxError();
     // validate procedure declaration: procedure (already validated), name, open brace
-    if (curr_index + 2 > tokens.size()) {
+    if (Parser::index + 2 > tokens.size()) {
         return -1;
     }
     // validate procedure name
-    Token procedureNameToken = tokens[curr_index + 1];
+    Token procedureNameToken = tokens[Parser::index + 1];
     // check if name is keyword
     std::unordered_set<TokenType> keywords = { TokenType::kEntityAssign, TokenType::kEntityProcedure,
                                                TokenType::kEntityRead, TokenType::kEntityPrint,
@@ -25,20 +28,31 @@ int ProcedureParser::parse(std::vector<Token>& tokens, int curr_index) {
     }
 
     // validate procedure open brace
-    size_t openBracesIndex = curr_index + 2;
+    size_t openBracesIndex = Parser::index + 2;
     if (tokens[openBracesIndex].tokenType != TokenType::kSepOpenBrace) {
         return -1;
     }
 
     // build procedure ast
-    Token procedure = tokens[curr_index];
+    Token procedure = tokens[Parser::index];
     procedure.value = procedureNameToken.value;
-    std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, 0);
+    // set current procedure name
+    ParseUtils::setProcedureName(procedure.value);
+    std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, lineNumber);
+    addCfgNodeToMap(procedure.value, Cfg::rootCfgNode);
 
     // set root node
     designExtractor->extractDesign(root, visitor);
 
 
-    curr_index = curr_index + 3;
-    return curr_index;
+    Parser::index = Parser::index + 3;
+
+    std::set<int> procedureFollowsSet;
+    followsStatementStack.push(procedureFollowsSet);
+    isParsingProcedure = true;
+    return Parser::index;
+}
+
+void ProcedureParser::addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<CfgNode> cfgNode) {
+    Parser::cfgNodeMap[procedureName] = std::move(cfgNode);
 }

@@ -2,37 +2,48 @@
 
 QueryEvaluator::QueryEvaluator(ReadFacade& pkb) : pkb(pkb) {}
 
-std::unordered_set<std::string> QueryEvaluator::Evaluate(const ParsedQuery& query) {
-  // Get the list of result from this select first
-  SelectClause select_clause = query.select;
-  std::unordered_set<std::string> select_results = select_clause.Evaluate(pkb).values;
+std::unordered_set<std::string> BlankResult(bool is_boolean_select) {
+  return (is_boolean_select) ?
+         std::unordered_set<std::string>{"FALSE"}
+                             : std::unordered_set<std::string>{};
+}
 
-  ConstraintTable constraint_table;
+std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
+  bool is_boolean_select = query.selects.empty();
 
-  // Evaluate such-that clauses
-  for (const auto& clausePtr : query.such_that_clauses) {
-    Constraint constraint = clausePtr->Evaluate(pkb);
-    constraint_table.Solve(constraint);
-    if (!constraint_table.IsValid()) {
-      return {};
+  ClauseGrouper clause_grouper;
+
+  for (auto& clause_ptr : query.clauses) {
+    bool is_boolean_clause = clause_ptr->GetSynonyms().empty();
+    if (is_boolean_clause) {
+      // Evaluate boolean clauses
+      bool result = std::get<bool>(clause_ptr->Evaluate(pkb));
+      if (!result) {
+        return BlankResult(is_boolean_select);
+      }
+    } else {
+      // Add non-boolean clauses to constraint table
+      clause_grouper.addClause(std::move(const_cast<std::unique_ptr<Clause>&>(clause_ptr)));
     }
   }
 
-  // Evaluate pattern clauses
-  for (const auto& clausePtr : query.pattern_clauses) {
-    Constraint constraint = clausePtr->Evaluate(pkb);
-    constraint_table.Solve(constraint);
-    if (!constraint_table.IsValid()) {
-      return {};
+  std::vector<ClauseGroup> clause_groups = clause_grouper.GetClauseGroupOrder();
+  ConstraintTable aggregate_table;
+
+  for (const auto& clause_group : clause_groups) {
+    ConstraintTable table = clause_group.Evaluate(pkb);
+    if (!table.IsValid()) {
+      return BlankResult(is_boolean_select);
+    } else {
+      if (is_boolean_select) {
+        continue;
+      } else {
+        aggregate_table.JoinTable(table);
+      }
     }
   }
 
-  // If it reaches here, that means there's something inside
-  std::unordered_set<ColName> table_colnames = constraint_table.AvailableColName();
-
-  if (table_colnames.find(select_clause.declaration.synonym) != table_colnames.end()) {
-    return constraint_table.Select(select_clause.declaration.synonym);
-  } else {
-    return select_results;
-  }
+  // If we reach here, meaning we will get non-blank result
+  return (is_boolean_select) ? std::unordered_set<std::string>{"TRUE"}
+                             : aggregate_table.Select(query.selects);
 }

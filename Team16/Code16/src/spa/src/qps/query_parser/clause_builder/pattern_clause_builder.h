@@ -8,22 +8,29 @@
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/declaration.h"
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
-#include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "utils/entity_types.h"
 #include "qps/qps_errors/qps_syntax_error.h"
+#include "qps/query_parser/query_tokenizer/query_tokenizer.h"
+
+enum PatternType {
+  kIf,
+  kWhile,
+  kAssignSyn
+};
 
 class PatternClauseBuilder : public ClauseBuilder {
  public:
+  PatternType pattern_type;
   Declaration syn_assignment;
   EntRef lhs;
   ExprSpec rhs;
-  PQLTokenType rhs_type;  // indicator to know what whether rhs is expr or sub expr
 
   /*!
-   * Sets the synonym assignment of pattern clause
-   * @param declaration the set of declarations
+   * Sets the pattern type and syn_assignment of the pattern clause
+   * @param token first token from pattern clause
+   * @param declarations is the set of declarations
    */
-  void setSynAssignment(Declaration declaration);
+  void setPatternType(const QueryToken& token, const std::vector<Declaration>& declarations);
 
   /*!
    * Sets the left argument of the pattern clause

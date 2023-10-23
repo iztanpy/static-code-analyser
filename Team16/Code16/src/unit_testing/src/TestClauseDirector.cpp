@@ -5,8 +5,8 @@ TEST_CASE("Select Clause Builder successfully sets attributes of clause") {
   SelectClauseBuilder builder;
   Declaration declaration = {"v", DesignEntity::VARIABLE};
   builder.setDeclaration(declaration);
-  SelectClause select_clause = builder.getClause();
-  REQUIRE(select_clause.declaration.equals(declaration));
+  std::unique_ptr<SelectClause> select_clause = builder.getClause();
+  REQUIRE(select_clause->declaration == declaration);
 }
 
 TEST_CASE("Clause Director can create select clause") {
@@ -16,8 +16,9 @@ TEST_CASE("Clause Director can create select clause") {
   std::vector<Declaration> declarations;
   Declaration declaration = {"v", DesignEntity::VARIABLE};
   declarations.push_back(declaration);
-  SelectClause selectClause = ClauseDirector::makeSelectClause(builder, token, declarations);
-  REQUIRE(selectClause.declaration.equals(declaration));
+  std::unique_ptr<Clause> selectClause = ClauseDirector::makeSelectClause(builder, token, declarations);
+  auto* clause = dynamic_cast<SelectClause*>(selectClause.get());
+  REQUIRE(clause->declaration == declaration);
 }
 
 TEST_CASE("Such that Clause Builder successfully sets attributes of parent relation") {
@@ -55,7 +56,7 @@ TEST_CASE("Clause Director can create such that clause with parent relation") {
       {"a", DesignEntity::ASSIGN}
   };
 
-  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  std::unique_ptr<Clause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
   auto* clause = dynamic_cast<Parent*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = StmtRef(7);
@@ -98,7 +99,7 @@ TEST_CASE("Clause Director can create such that clause with parent* relation") {
       {"a", DesignEntity::ASSIGN}
   };
 
-  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  std::unique_ptr<Clause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
   auto* clause = dynamic_cast<ParentT*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = StmtRef(7);
@@ -141,7 +142,7 @@ TEST_CASE("Clause Director can create such that clause with follows relation") {
       {"s", DesignEntity::STMT}
   };
 
-  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  std::unique_ptr<Clause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
   auto* clause = dynamic_cast<Follows*>(such_that_clause.get());
   RefParam expectedRhs = StmtRef(declarations[0]);
   RefParam expectedLhs = StmtRef(7);
@@ -230,7 +231,7 @@ TEST_CASE("Clause Director can create such that clause with ModifiesS('stmtRef',
       {"p", DesignEntity::PROCEDURE}
   };
 
-  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  std::unique_ptr<Clause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
   auto* clause = dynamic_cast<ModifiesS*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = EntRef("x");
@@ -273,7 +274,7 @@ TEST_CASE("Clause Director can create such that clause with ModifiesS with wildc
       {"p", DesignEntity::PROCEDURE}
   };
 
-  std::unique_ptr<SuchThatClause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
+  std::unique_ptr<Clause> such_that_clause = ClauseDirector::makeSuchThatClause(builder, tokens, declarations);
   auto* clause = dynamic_cast<ModifiesS*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
   RefParam expectedRhs = EntRef(Wildcard::Value);
@@ -295,12 +296,12 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExp
 
   PatternClauseBuilder builder;
 
-  std::unique_ptr<PatternClause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
-  auto* clause = dynamic_cast<PartialPattern*>(pattern_clause.get());
+  std::unique_ptr<Clause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[1]);
-  ExprSpec expected_rhs = ExprSpec("x+y");
-  REQUIRE(clause->syn_assignment.equals(declarations[0]));
+  ExprSpec expected_rhs = PartialExpr{"x+y"};
+  REQUIRE(clause->declaration == (declarations[0]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }
@@ -309,7 +310,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
   std::vector<QueryToken> tokens = {
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"x+y", PQLTokenType::IDENT}
+      {"x+y", PQLTokenType::PARTIALEXPR}
   };
 
   std::vector<Declaration> declarations = {
@@ -318,12 +319,12 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
   };
 
   PatternClauseBuilder builder;
-  std::unique_ptr<PatternClause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
-  auto* clause = dynamic_cast<ExactPattern*>(pattern_clause.get());
+  std::unique_ptr<Clause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = EntRef(declarations[1]);
-  ExprSpec expected_rhs = ExprSpec("x+y");
-  REQUIRE(clause->syn_assignment.equals(declarations[0]));
+  ExprSpec expected_rhs = PartialExpr{"x+y"};
+  REQUIRE(clause->declaration == (declarations[0]));
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }
@@ -332,7 +333,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
   std::vector<QueryToken> tokens = {
       {"a", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
-      {"x+y", PQLTokenType::IDENT}
+      {"x+y", PQLTokenType::PARTIALEXPR}
   };
 
   std::vector<Declaration> declarations = {
@@ -340,12 +341,12 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
   };
 
   PatternClauseBuilder builder;
-  std::unique_ptr<PatternClause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
-  auto* clause = dynamic_cast<ExactPattern*>(pattern_clause.get());
+  std::unique_ptr<Clause> pattern_clause = ClauseDirector::makePatternClause(builder, tokens, declarations);
+  auto* clause = dynamic_cast<AssignPattern*>(pattern_clause.get());
 
   EntRef expected_lhs = Wildcard::Value;
-  ExprSpec expected_rhs = ExprSpec("x+y");
-  REQUIRE(clause->syn_assignment.equals(declarations[0]) == true);
+  ExprSpec expected_rhs = PartialExpr{"x+y"};
+  REQUIRE(clause->declaration == declarations[0]);
   REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
   REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
 }

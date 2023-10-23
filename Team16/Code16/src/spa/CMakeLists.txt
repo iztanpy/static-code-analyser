@@ -2,7 +2,6 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers}
         src/qps/query_parser/parsed_query.h
-        src/qps/declaration.cpp
         src/qps/declaration.h
         src/qps/design_entity.cpp
         src/qps/design_entity.h
@@ -64,17 +63,17 @@ add_library(spa ${srcs} ${headers}
         src/PKB/Stores/VariableStore.h
         src/PKB/Stores/ConstantStore.cpp
         src/PKB/Stores/ConstantStore.h
-        src/PKB/Stores/UsesStore.cpp
-        src/PKB/Stores/UsesStore.h
         src/PKB/Stores/AssignStore.cpp
         src/PKB/Stores/AssignStore.h
         src/PKB/Stores/StatementStore.cpp
         src/PKB/Stores/StatementStore.h
         src/PKB/Stores/AssignStore.cpp
-        src/PKB/Stores/ModifiesStore.cpp
-        src/PKB/Stores/ModifiesStore.h
+        src/PKB/Stores/RelationStore.cpp
+        src/PKB/Stores/RelationStore.h
         src/PKB/Stores/FollowsStore.cpp
         src/PKB/Stores/FollowsStore.h
+        src/PKB/Stores/CallStore.h
+        src/PKB/Stores/CallStore.cpp
         src/utils/Error.cpp
         src/utils/Error.h
         src/qps/qps_errors/qps_error.h
@@ -110,6 +109,14 @@ add_library(spa ${srcs} ${headers}
         src/SP/sp_parser/ParserFactory.cpp
         src/SP/sp_parser/CallParser.cpp
         src/SP/sp_parser/CallParser.h
+        src/SP/sp_parser/Parser.cpp
+        src/SP/sp_parser/ElseParser.cpp
+        src/SP/sp_parser/ElseParser.h
+        src/SP/sp_parser/CloseBraceParser.cpp
+        src/SP/sp_parser/CloseBraceParser.h
+        src/SP/sp_cfg/Cfg.cpp
+        src/SP/sp_cfg/Cfg.h
+        src/SP/sp_cfg/CfgNode.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -151,6 +158,55 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/evaluator_util.h
         src/qps/query_evaluator/assign_pattern_evaluator.cpp
         src/qps/query_evaluator/assign_pattern_evaluator.h
+        src/PKB/Stores/IfStore.cpp
+        src/PKB/Stores/IfStore.h
+        src/PKB/Stores/WhileStore.cpp
+        src/PKB/Stores/WhileStore.h
+        src/qps/qps_validator/qps_validator_handler.h
+        src/qps/qps_validator/qps_validator.cpp
+        src/qps/qps_validator/qps_validator.h
+        src/qps/qps_validator/statement_syntax_handler.cpp
+        src/qps/qps_validator/statement_syntax_handler.h
+        src/qps/qps_validator/declaration_statement_syntax_handler.cpp
+        src/qps/qps_validator/declaration_statement_syntax_handler.h
+        src/qps/qps_validator/declaration_synonym_syntax_handler.cpp
+        src/qps/qps_validator/declaration_synonym_syntax_handler.h
+        src/qps/qps_validator/declaration_synonym_semantic_handler.cpp
+        src/qps/qps_validator/declaration_synonym_semantic_handler.h
+        src/qps/qps_validator/select_statement_syntax_handler.cpp
+        src/qps/qps_validator/select_statement_syntax_handler.h
+        src/qps/qps_validator/select_synonym_syntax_handler.cpp
+        src/qps/qps_validator/select_synonym_syntax_handler.h
+        src/qps/qps_validator/select_synonym_semantic_handler.cpp
+        src/qps/qps_validator/select_synonym_semantic_handler.h
+        src/qps/qps_validator/clause_args_syntax_handler.cpp
+        src/qps/qps_validator/clause_args_syntax_handler.h
+        src/qps/qps_validator/clause_synonym_semantic_handler.cpp
+        src/qps/qps_validator/clause_synonym_semantic_handler.h
+        src/qps/clauses/suchthat_clauses/calls.cpp
+        src/qps/clauses/suchthat_clauses/calls.h
+        src/qps/query_evaluator/calls_evaluator.cpp
+        src/qps/query_evaluator/calls_evaluator.h
+        src/qps/clauses/suchthat_clauses/next.cpp
+        src/qps/clauses/suchthat_clauses/next.h
+        src/qps/clauses/suchthat_clauses/affects.cpp
+        src/qps/clauses/suchthat_clauses/affects.h
+        src/qps/qps_validator/pattern_syn_semantic_handler.cpp
+        src/qps/qps_validator/pattern_syn_semantic_handler.h
+        src/qps/qps_validator/select_tuple_synonym_semantic_handler.cpp
+        src/qps/qps_validator/select_tuple_synonym_semantic_handler.h
+        src/qps/query_evaluator/constraint_solver/clause_group.cpp
+        src/qps/query_evaluator/constraint_solver/clause_group.h
+        src/qps/query_evaluator/constraint_solver/clause_grouper.cpp
+        src/qps/query_evaluator/constraint_solver/clause_grouper.h
+        src/PKB/Stores/NextStore.cpp
+        src/PKB/Stores/NextStore.h
+        src/qps/query_evaluator/if_evaluator.cpp
+        src/qps/query_evaluator/if_evaluator.h
+        src/qps/query_evaluator/while_evaluator.cpp
+        src/qps/query_evaluator/while_evaluator.h
+        src/qps/query_evaluator/next_evaluator.h
+        src/qps/query_evaluator/next_evaluator.cpp
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
