@@ -262,7 +262,7 @@ void ParseUtils::setUpCondIndexMap(const std::vector<Token>& tokens) {
     condIndexMap.clear();
     int i = index;
     std::shared_ptr<std::stack<int>> openParenIndexStack = std::make_shared<std::stack<int>>();
-    std::shared_ptr<std::vector<int>> currCondIndex = std::make_shared<std::vector<int>>();
+    std::shared_ptr<std::stack<std::vector<int>>> currCondIndex = std::make_shared<std::stack<std::vector<int>>>();
     while (i < tokens.size()) {
         if (tokens[i].tokenType == TokenType::kSepOpenParen) {
             openParenIndexStack->push(i);
@@ -271,18 +271,20 @@ void ParseUtils::setUpCondIndexMap(const std::vector<Token>& tokens) {
             openParenIndexStack->pop();
             if (openParenIndexStack->empty()) {
                 break;
-            } else if (!currCondIndex->empty() && openParenIndex == currCondIndex->at(1) + 1) {
+            } else if (!currCondIndex.get()->empty() && openParenIndex == currCondIndex->top()[1] + 1) {
                 // closing a cond expression
-                currCondIndex->push_back(i);
-                condIndexMap[currCondIndex->at(0)] = *currCondIndex;
-                currCondIndex->clear();
-            } else if (currCondIndex->empty()
-                && i + 2 < tokens.size()
+                std::vector<int>& curr = currCondIndex->top();
+                curr.push_back(i);
+                condIndexMap[curr[0]] = curr;
+                currCondIndex->pop();
+            } else if (i + 2 < tokens.size()
                 && isCondExpressionOperator(tokens[i + 1])
                 && tokens[i + 2].tokenType == TokenType::kSepOpenParen) {
                 // cond expression detected save [cond start index, cond operator index]
-                currCondIndex->push_back(openParenIndex);
-                currCondIndex->push_back(i + 1);
+                std::vector<int> curr = std::vector<int>();
+                curr.push_back(openParenIndex);
+                curr.push_back(i + 1);
+                currCondIndex->push(curr);
                 i++;
             } else if (isCondExpressionOperator(tokens[i])) {
                 // third cond operator detected which is not allowed

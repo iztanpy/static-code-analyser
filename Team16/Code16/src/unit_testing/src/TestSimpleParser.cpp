@@ -524,7 +524,13 @@ TEST_CASE(("Test Conditional Tokens Retrieval1")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     auto writeFacade = WriteFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
-    std::string simpleProgram2 = "procedure p { while ((x == 1) || (x==2))  { read x; } }";
+    std::string simpleProgram2 = R"(
+        procedure Main {
+            while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((0))))))))))))))){
+                x = 1;
+            }
+        }
+    )";
     sourceProcessor.processSource(simpleProgram2);
     REQUIRE(1 == 1);
 }
