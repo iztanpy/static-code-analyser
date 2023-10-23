@@ -286,10 +286,9 @@ void ParseUtils::setUpCondIndexMap(const std::vector<Token>& tokens) {
                 curr.push_back(i + 1);
                 currCondIndex->push(curr);
                 i++;
-            } else if (isCondExpressionOperator(tokens[i])) {
-                // third cond operator detected which is not allowed
-                throw InvalidSyntaxError();
             }
+        } else if (isCondExpressionOperator(tokens[i])) {
+            throw InvalidSyntaxError();
         }
         i++;
     }
