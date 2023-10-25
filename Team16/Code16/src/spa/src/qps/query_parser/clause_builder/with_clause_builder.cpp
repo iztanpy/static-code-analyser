@@ -1,4 +1,5 @@
-#include "with_clause_builder.h"
+#include <utility>
+#include "qps/query_parser/clause_builder/with_clause_builder.h"
 
 WithClauseBuilder::WithClauseBuilder() = default;
 

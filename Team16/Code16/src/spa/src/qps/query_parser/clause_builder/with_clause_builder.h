@@ -1,7 +1,8 @@
 #pragma once
 
+#include <memory>
 #include "utils/clauses_types.h"
-#include "clause_builder.h"
+#include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/clauses/with_clause.h"
 
 class WithClauseBuilder : public ClauseBuilder {

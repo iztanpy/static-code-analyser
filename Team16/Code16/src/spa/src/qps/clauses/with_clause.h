@@ -2,7 +2,8 @@
 
 #include <string>
 #include <utility>
-#include "clause.h"
+#include <unordered_set>
+#include "qps/clauses/clause.h"
 
 class WithClause : public Clause {
  public:

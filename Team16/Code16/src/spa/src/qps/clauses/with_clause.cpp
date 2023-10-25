@@ -1,4 +1,4 @@
-#include "with_clause.h"
+#include "qps/clauses/with_clause.h"
 
 std::unordered_set<Synonym> WithClause::GetSynonyms() const {
   std::unordered_set < Synonym > synonyms;
@@ -49,5 +49,5 @@ bool operator==(const WithClause& first, const WithClause& second) {
   return is_lhs_equal && is_rhs_equal;
 }
 void WithClause::Validate() {
-  // TODO: Implement validate
+  // TODO(Cuong): Implement validate
 }
