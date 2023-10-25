@@ -23,6 +23,23 @@ using EntRef = std::variant<Declaration, Wildcard, std::string>;
  */
 using RefParam = std::variant<StmtRef, EntRef>;
 
+enum AttrName {
+  PROCNAME,
+  VARNAME,
+  VALUE,
+  STMTNUM
+};
+
+struct AttrRef {
+  Declaration declaration;
+  AttrName attr_name;
+};
+
+/*!
+ * Represents Ref in PQL grammar
+ */
+using Ref = std::variant<std::string, int, AttrRef>;
+
 struct PartialExpr {
   std::string value;
 
@@ -44,6 +61,7 @@ struct ExactExpr {
  */
 using ExprSpec = std::variant<PartialExpr, ExactExpr, Wildcard>;
 using Synonym = std::string;
+using Elem = std::variant<Synonym, AttrRef>;
 
 /*!
  * Hash function for EntRef and StmtRef
