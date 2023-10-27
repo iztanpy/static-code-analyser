@@ -1531,6 +1531,8 @@ class PKB {
     */
     void clearNextStarCache();
 
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
+
     PKB(const PKB&) = delete;
     PKB& operator=(const PKB&) = delete;
 };

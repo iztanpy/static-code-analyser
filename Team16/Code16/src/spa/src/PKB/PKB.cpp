@@ -986,3 +986,19 @@ bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
 void PKB::clearNextStarCache() {
     nextStore->clearCache();
 }
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+        PKB::getStatementsAndVariable(StmtEntity type) {
+    // if type is print or call or read,
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> statementsAndVariable;
+    if (type == StmtEntity::kPrint || type == StmtEntity::kCall || type == StmtEntity::kRead) {
+        auto typeStatements = statementStore->getStatements(type);
+        for (auto statement: typeStatements) {
+            auto variables = modifiesStore->relates(statement);
+            for (auto variable: variables) {
+                statementsAndVariable.insert(std::make_pair(statement, variable));
+            }
+        }
+        return statementsAndVariable;
+    }
+    return std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
+}

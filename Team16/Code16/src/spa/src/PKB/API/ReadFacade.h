@@ -995,4 +995,7 @@ class ReadFacade {
   bool isNextStar(statementNumber num, Wildcard);
 
   bool isNextStar(statementNumber num1, statementNumber num2);
+
+  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
+
 };
