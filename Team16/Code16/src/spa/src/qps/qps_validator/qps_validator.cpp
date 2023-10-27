@@ -19,6 +19,7 @@
 #include "utils/string_utils.h"
 #include "qps/constants.h"
 #include "qps/qps_validator/select_tuple_synonym_semantic_handler.h"
+#include "WithClauseSyntaxHandler.h"
 
 void qps_validator::ValidateStatement(std::string statement, bool is_select_statement_processed) {
   StatementSyntaxHandler statement_syntax_handler = StatementSyntaxHandler(is_select_statement_processed);
@@ -79,6 +80,11 @@ void qps_validator::ValidateClauseArgs(std::string clause, PQLTokenType pattern_
 void qps_validator::ValidateClauseArgs(std::string lhs, std::string rhs) {
   ClauseArgsSyntaxHandler syntax_handler = ClauseArgsSyntaxHandler();
   syntax_handler.handle(lhs, rhs);
+}
+
+void qps_validator::ValidateWithClauseArgs(std::string & with_clause) {
+  WithClauseSyntaxHandler syntax_handler = WithClauseSyntaxHandler();
+  syntax_handler.handle(with_clause);
 }
 
 void qps_validator::ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations) {
@@ -147,8 +153,9 @@ void qps_validator::ValidateAndIsNotFirstClause(ClauseEnum prev_clause) {
 
 void qps_validator::ValidateAndClause(std::string& curr_clause) {
   if (QueryTokenizer::clauseMatch(curr_clause, qps_constants::kSuchThatClauseRegex)
-      ||QueryTokenizer::clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)) {
-    throw QpsSyntaxError("And is followed by such that or pattern");
+      ||QueryTokenizer::clauseMatch(curr_clause, qps_constants::kPatternClauseRegex)
+      || QueryTokenizer::clauseMatch(curr_clause, qps_constants::kWithClauseRegex)) {
+    throw QpsSyntaxError("And is followed by such that, pattern or with");
   }
 }
 
@@ -187,5 +194,55 @@ void qps_validator::ValidateStatementAfterResClause(std::string & remaining_stat
         && !QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kSuchThatClauseRegex)) {
       throw QpsSyntaxError("Invalid syntax after Select synonym");
     }
+  }
+}
+
+void qps_validator::ValidateAttributeRef(std::string & syn_string,
+                                         std::string & attrName_string,
+                                         std::vector<Declaration> declarations) {
+  DesignEntity syn_design_entity;
+  for (const Declaration& declaration : declarations) {
+    if (syn_string == declaration.synonym) {
+      syn_design_entity = declaration.design_entity;
+      break;
+    }
+  }
+  switch (syn_design_entity) {
+    case DesignEntity::PROCEDURE:
+      if (attrName_string != "procName") {
+        throw QpsSemanticError("Procedure can only have .procName as attribute value");
+      }
+      break;
+    case DesignEntity::STMT:
+    case DesignEntity::WHILE_LOOP:
+    case DesignEntity::IF_STMT:
+    case DesignEntity::ASSIGN:
+      if (attrName_string != "stmt#") {
+        throw QpsSemanticError("Synonym can only have .stmt# as attribute value");
+      }
+      break;
+    case DesignEntity::CALL:
+      if (attrName_string != "procName" && attrName_string != "stmt#") {
+        throw QpsSemanticError("Call can only have .stmt# or .procName as attribute value");
+      }
+      break;
+    case DesignEntity::VARIABLE:
+      if (attrName_string != "varName") {
+        throw QpsSemanticError("Variable can only have .varName as attribute value");
+      }
+      break;
+    case DesignEntity::READ:
+    case DesignEntity::PRINT:
+      if (attrName_string != "varName" && attrName_string != "stmt#") {
+        throw QpsSemanticError("Synonym can only have .stmt# or .varName as attribute value");
+      }
+      break;
+    case DesignEntity::CONSTANT:
+      if (attrName_string != "value") {
+        throw QpsSemanticError("Constant can only have .value as attribute value");
+      }
+      break;
+    default:
+      throw QpsSyntaxError("Unknown design entity synonym");
   }
 }

@@ -46,6 +46,13 @@ class QueryUtil {
   static bool IsEntRef(const std::string & s);
 
   /*!
+   * Checks if a given string is a ref
+   * @param s is the input string
+   * @return True if string is a ref, else false
+   */
+  static bool IsRef(std::string & s);
+
+  /*!
    * Checks if a string belongs to any design entity
    * @param s is the input string
    * @return True if string is a design entity, else false
@@ -209,4 +216,18 @@ class QueryUtil {
    * @return The expression between the brackets
    */
   static std::string RemoveTuple(const std::string & s);
+
+  /*!
+   * Checks if a string is an attribute name
+   * @param s string to be checked
+   * @return true if the string is an attribute name, else false
+   */
+  static bool IsAttrName(std::string & s);
+
+  /*!
+   * Checks if a string is an attribute ref
+   * @param s string to be checked
+   * @return true if the string is an attribute ref, else false
+   */
+  static bool IsAttrRef(std::string & s);
 };

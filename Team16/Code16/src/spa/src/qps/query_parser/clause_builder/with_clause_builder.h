@@ -1,9 +1,11 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include "utils/clauses_types.h"
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/clauses/with_clause.h"
+#include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 
 class WithClauseBuilder : public ClauseBuilder {
  public:
@@ -14,14 +16,16 @@ class WithClauseBuilder : public ClauseBuilder {
   /*!
    * Sets the lhs Ref of the with clause
    * @param lhs is the Ref to be set
+   * @param declarations is the set of declarations
    */
-  void setLhs(Ref lhs);
+  void setLhs(const QueryToken& param, const std::vector<Declaration>& declarations);
 
   /*!
    * Sets the rhs Ref of the with clause
    * @param rhs is the Ref to be set
+   * @param declarations is the set of declarations
    */
-  void setRhs(Ref rhs);
+  void setRhs(const QueryToken& param, const std::vector<Declaration>& declarations);
 
   /*!
    * Returns a pointer to the with clause

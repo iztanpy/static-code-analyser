@@ -10,6 +10,7 @@
 #include "qps/query_parser/clause_builder/suchthat_clause_builder.h"
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 #include "qps/query_parser/clause_builder/pattern_clause_builder.h"
+#include "qps/query_parser//clause_builder/with_clause_builder.h"
 
 class ClauseDirector {
  public:
@@ -44,6 +45,11 @@ class ClauseDirector {
    */
   static std::unique_ptr<Clause> makePatternClause(
       PatternClauseBuilder builder,
+      const std::vector<QueryToken>& tokens,
+      const std::vector<Declaration>& declarations);
+
+  static std::unique_ptr<Clause> makeWithClause(
+      WithClauseBuilder builder,
       const std::vector<QueryToken>& tokens,
       const std::vector<Declaration>& declarations);
 };

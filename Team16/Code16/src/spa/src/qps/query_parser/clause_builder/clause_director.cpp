@@ -38,3 +38,11 @@ std::unique_ptr<Clause> ClauseDirector::makePatternClause(PatternClauseBuilder b
   builder.setRhs(tokens[2], declarations);
   return builder.getClause();
 }
+
+std::unique_ptr<Clause> ClauseDirector::makeWithClause(WithClauseBuilder builder,
+                                                       const std::vector<QueryToken> & tokens,
+                                                       const std::vector<Declaration> & declarations) {
+  builder.setLhs(tokens[0], declarations);
+  builder.setRhs(tokens[1], declarations);
+  return builder.getClause();
+}

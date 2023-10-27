@@ -233,3 +233,30 @@ std::string QueryUtil::addParentheses(const std::string& expression) {
 
   return operands.top();
 }
+
+bool QueryUtil::IsAttrName(std::string & s) {
+  std::set<std::string> attr_names = {
+      "procName",
+      "varName",
+      "value",
+      "stmt#"
+  };
+  // If string is not in attr_names
+  if (attr_names.find(s) == attr_names.end()) {
+    return false;
+  }
+  return true;
+}
+
+bool QueryUtil::IsAttrRef(std::string & s) {
+  std::vector<std::string> split_s = string_util::SplitStringBy('.', s);
+  if (split_s.size() != 2) {
+    // If more than two '.' or does not contain '.'
+    return false;
+  }
+  return IsSynonym(split_s[0]) && IsAttrName(split_s[1]);
+}
+
+bool QueryUtil::IsRef(std::string & s) {
+  return IsIdentWithDoubleQuotes(s) || lexical_utils::IsInteger(s) || IsAttrRef(s);
+}

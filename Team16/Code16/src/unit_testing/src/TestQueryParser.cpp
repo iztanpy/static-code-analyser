@@ -3,6 +3,7 @@
 #include "qps/query_parser/query_parser.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
+#include "qps/clauses/with_clause.h"
 
 bool areClauseSetsEqual(const ClauseSet& lhs, const ClauseSet& rhs) {
   if (lhs.size() != rhs.size()) {
@@ -348,4 +349,27 @@ TEST_CASE("Parser can parse multiple select clauses") {
   for (int i = 0; i < select_clauses.size(); i++) {
     REQUIRE(parsed_query_1.selects[i] == select_clauses[i]);
   }
+}
+
+TEST_CASE("Parser can parse with clause") {
+  std::string sample_query_1 = "stmt s, s1;\n"
+                               "Select s such that Follows* (s, s1) with s1.stmt#=10";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"s", DesignEntity::STMT},
+      {"s1", DesignEntity::STMT}
+  };
+  std::vector<std::string> expected_selects = {declarations[0].synonym};
+
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
+
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::make_unique<FollowsT>(declarations[0], declarations[1]));
+  AttrRef expected_with_lhs = {declarations[1], AttrName::STMTNUM};
+  expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs, 10));
+
+  REQUIRE(parsed_query_1.selects == expected_selects);
+  // REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
 }

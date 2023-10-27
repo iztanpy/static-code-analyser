@@ -211,6 +211,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/with_clause.h
         src/qps/query_parser/clause_builder/with_clause_builder.cpp
         src/qps/query_parser/clause_builder/with_clause_builder.h
+        src/qps/qps_validator/WithClauseSyntaxHandler.cpp
+        src/qps/qps_validator/WithClauseSyntaxHandler.h
 )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
