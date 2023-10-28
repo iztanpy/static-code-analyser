@@ -315,10 +315,6 @@ std::unordered_set<procedure> ReadFacade::call(Wildcard wildcard, StmtEntity pro
     return pkb.call(wildcard, procedure);
 }
 
-std::unordered_set<std::pair<statementNumber, procedure>, PairHash> ReadFacade::getCallPairs() {
-    return pkb.getCallPairs();
-}
-
 std::unordered_set<procedure> ReadFacade::call(procedure procedure, StmtEntity proc) {
     return pkb.call(procedure, proc);
 }

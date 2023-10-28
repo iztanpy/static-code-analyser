@@ -720,9 +720,7 @@ class ReadFacade {
  */
     std::unordered_set<procedure> call(Wildcard wildcard, StmtEntity procedure);
 
-    std::unordered_set<std::pair<statementNumber, procedure>, PairHash> getCallPairs();
-
-/**
+/** 
  * @brief Retrieves procedures that call a specific procedure.
  *
  * This function returns procedures that call the provided specific procedure.
