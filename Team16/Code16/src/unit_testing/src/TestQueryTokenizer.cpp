@@ -723,6 +723,24 @@ TEST_CASE("Tokenizer can tokenize select tuple") {
   REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_3, declarations_1), QpsSyntaxError);
 }
 
+TEST_CASE("Tokenizer can tokenize select attr ref") {
+  std::string sample_query_1 = "Select <a1.stmt#, a2> such that Affects (a1, a2)";
+  std::vector<Declaration> declarations_1 = {
+      {"a1", DesignEntity::ASSIGN},
+      {"a2", DesignEntity::ASSIGN}
+  };
+  std::vector<QueryToken> expected_select_tokens = {
+      {"a1", PQLTokenType::WITH_STMTNO},
+      {"a2", PQLTokenType::SYNONYM},
+  };
+
+  std::vector<QueryToken> results_1 = QueryTokenizer::extractSelectToken(sample_query_1, declarations_1);
+  for (int i = 0; i < results_1.size(); ++i) {
+    REQUIRE(results_1[i].type == expected_select_tokens[i].type);
+    REQUIRE(results_1[i].text == expected_select_tokens[i].text);
+  }
+}
+
 TEST_CASE("Tokenizer can tokenize select BOOLEAN") {
   std::string sample_query_1 = "Select BOOLEAN such that Parent (s1, s2)";
   std::vector<Declaration> declarations_1 = {

@@ -20,6 +20,7 @@
 #include "qps/constants.h"
 #include "qps/qps_validator/select_tuple_synonym_semantic_handler.h"
 #include "WithClauseSyntaxHandler.h"
+#include "utils/lexical_utils.h"
 
 void qps_validator::ValidateStatement(std::string statement, bool is_select_statement_processed) {
   StatementSyntaxHandler statement_syntax_handler = StatementSyntaxHandler(is_select_statement_processed);
@@ -50,10 +51,17 @@ void qps_validator::ValidateSelectStatement(std::string select_statement) {
 }
 
 void qps_validator::ValidateSelectSynonym(std::string select_synonym, std::vector<Declaration> & declarations) {
-  SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
-  std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectSynonymSemanticHandler(declarations));
-  syntax_handler.setNext(std::move(semantic_handler));
-  syntax_handler.handle(std::move(select_synonym));
+  if (lexical_utils::IsSynonym(select_synonym)) {
+    SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
+    std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectSynonymSemanticHandler(declarations));
+    syntax_handler.setNext(std::move(semantic_handler));
+    syntax_handler.handle(std::move(select_synonym));
+  } else if (QueryUtil::IsAttrRef(select_synonym)) {
+    std::vector<std::string> split_attr_ref = string_util::SplitStringBy('.', select_synonym);
+    std::string attr_syn = split_attr_ref[0];
+    std::string attr_name = split_attr_ref[1];
+    qps_validator::ValidateAttributeRef(attr_syn, attr_name, declarations);
+  }
 }
 
 void qps_validator::ValidateClauseIndexes(std::vector<size_t> & indexes) {
@@ -160,16 +168,26 @@ void qps_validator::ValidateAndClause(std::string& curr_clause) {
 }
 
 void qps_validator::ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations) {
-  std::string select_value_with_tuple_removed = QueryUtil::RemoveTuple(select_value);
-  std::vector<std::string> tuple_arguments = string_util::SplitStringBy(',', select_value_with_tuple_removed);
   SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
   std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectTupleSynonymSemanticHandler(declarations));
   syntax_handler.setNext(std::move(semantic_handler));
-  for (const std::string& argument : tuple_arguments) {
+  std::string select_value_with_tuple_removed = QueryUtil::RemoveTuple(select_value);
+  std::vector<std::string> tuple_arguments = string_util::SplitStringBy(',', select_value_with_tuple_removed);
+  for (std::string argument : tuple_arguments) {
     if (argument.empty()) {
       throw QpsSyntaxError("Missing argument in tuple");
     }
-    syntax_handler.handle(argument);
+    if (lexical_utils::IsSynonym(argument)) {
+      syntax_handler.handle(argument);
+    } else if (QueryUtil::IsAttrRef(argument)) {
+      std::vector<std::string> split_attr_ref = string_util::SplitStringBy('.', argument);
+      std::string attr_syn = split_attr_ref[0];
+      std::string attr_name = split_attr_ref[1];
+      syntax_handler.handle(attr_syn);
+      qps_validator::ValidateAttributeRef(attr_syn, attr_name, declarations);
+    } else {
+      throw QpsSyntaxError("Invalid select element");
+    }
   }
 }
 
@@ -191,7 +209,8 @@ void qps_validator::ValidateSelectValue(std::string & select_value,
 void qps_validator::ValidateStatementAfterResClause(std::string & remaining_statement) {
   if (!remaining_statement.empty()) {
     if (!QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kPatternClauseRegex)
-        && !QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kSuchThatClauseRegex)) {
+        && !QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kSuchThatClauseRegex)
+        && !QueryTokenizer::clauseMatch(remaining_statement, qps_constants::kWithClauseRegex)) {
       throw QpsSyntaxError("Invalid syntax after Select synonym");
     }
   }

@@ -27,7 +27,8 @@ enum AttrName {
   PROCNAME,
   VARNAME,
   VALUE,
-  STMTNUM
+  STMTNUM,
+  NONE
 };
 
 struct AttrRef {
@@ -61,7 +62,7 @@ struct ExactExpr {
  */
 using ExprSpec = std::variant<PartialExpr, ExactExpr, Wildcard>;
 using Synonym = std::string;
-using Elem = std::variant<Synonym, AttrRef>;
+using Elem = std::variant<Declaration, AttrRef>;
 
 /*!
  * Hash function for EntRef and StmtRef

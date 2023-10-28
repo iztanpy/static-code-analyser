@@ -209,4 +209,12 @@ class QueryTokenizer {
    * @return the preserved result clause
    */
   static std::string removeAfterResultClause(std::string& select_statement);
+
+
+  /*!
+   * Converts a attribute name to a PQL token type
+   * @param attr_name to be converted
+   * @return a PQL token type
+   */
+  static PQLTokenType getAttrTokenType(const std::string& attr_name);
 };

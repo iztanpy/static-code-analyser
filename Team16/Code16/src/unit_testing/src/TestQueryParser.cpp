@@ -84,6 +84,7 @@ TEST_CASE("Query Parser can return a parsed query") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -105,6 +106,7 @@ TEST_CASE("Parser can parse Calls and Calls*") {
 
     std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
     expected_select_clause_ptr->declaration = declarations[0];
+    expected_select_clause_ptr->attr_name = AttrName::NONE;
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -125,6 +127,7 @@ TEST_CASE("Parser can parse Calls and Calls*") {
 
     std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
     expected_select_clause_ptr->declaration = declarations[0];
+    expected_select_clause_ptr->attr_name = AttrName::NONE;
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -154,6 +157,7 @@ TEST_CASE("Parser can parse Next and Next*") {
 
     std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
     expected_select_clause_ptr->declaration = declarations[0];
+    expected_select_clause_ptr->attr_name = AttrName::NONE;
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -174,6 +178,7 @@ TEST_CASE("Parser can parse Next and Next*") {
 
     std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
     expected_select_clause_ptr->declaration = declarations[0];
+    expected_select_clause_ptr->attr_name = AttrName::NONE;
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -195,6 +200,7 @@ TEST_CASE("Parser can parse Affects") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -216,6 +222,7 @@ TEST_CASE("Parser can parse while pattern") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -237,6 +244,7 @@ TEST_CASE("Parser can parse if pattern") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -258,6 +266,7 @@ TEST_CASE("Parser can parse multiple such that clauses") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -283,6 +292,7 @@ TEST_CASE("Parser can parse multiple pattern clauses") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -307,6 +317,7 @@ TEST_CASE("Parser can parse multiple different clauses") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[1];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -363,6 +374,7 @@ TEST_CASE("Parser can parse with clause") {
 
   std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
   expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::NONE;
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -372,4 +384,29 @@ TEST_CASE("Parser can parse with clause") {
 
   REQUIRE(parsed_query_1.selects == expected_selects);
   // REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
+}
+
+TEST_CASE("Parser can parse select attr ref") {
+  std::string sample_query_1 = "assign a1, a2;\n"
+                               "Select <a1.stmt#, a2> such that Affects (a1, a2)";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations = {
+      {"a1", DesignEntity::ASSIGN},
+      {"a2", DesignEntity::ASSIGN}
+  };
+  std::vector<std::string> expected_selects = {declarations[0].synonym, declarations[1].synonym};
+  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
+  expected_select_clause_ptr->declaration = declarations[0];
+  expected_select_clause_ptr->attr_name = AttrName::STMTNUM;
+
+  std::unique_ptr<SelectClause> expected_select_clause_ptr_2 = std::make_unique<SelectClause>();
+  expected_select_clause_ptr_2->declaration = declarations[1];
+  expected_select_clause_ptr_2->attr_name = AttrName::NONE;
+
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+  expected_clauses.insert(std::move(expected_select_clause_ptr_2));
+  expected_clauses.insert(std::make_unique<Affects>(declarations[0], declarations[1]));
+  REQUIRE(parsed_query_1.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
 }

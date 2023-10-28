@@ -23,7 +23,8 @@ void SelectStatementSyntaxHandler::handle(std::string select_statement) {
   std::string synonym_removed_statement = QueryTokenizer::removeSelectClause(remaining_statement);
   bool statement_can_match_clause =
       QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kSuchThatClauseRegex) ||
-          QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kPatternClauseRegex);
+          QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kPatternClauseRegex) ||
+          QueryTokenizer::clauseMatch(synonym_removed_statement, qps_constants::kWithClauseRegex);
 
   if (!synonym_removed_statement.empty() && !statement_can_match_clause) {
     // it is syntactically invalid

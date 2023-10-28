@@ -106,13 +106,30 @@ std::vector<QueryToken> processSelectClause(std::string& select_statement, Selec
   std::vector<std::string> tuple_arguments;
   switch (select_value_type) {
     case SelectValueType::SINGLE:
-      results.push_back({select_statement, PQLTokenType::SYNONYM});
+      if (lexical_utils::IsSynonym(select_statement)) {
+        results.push_back({select_statement, PQLTokenType::SYNONYM});
+      } else if (QueryUtil::IsAttrRef(select_statement)) {
+        std::vector<std::string> split_attr_ref = string_util::SplitStringBy('.', select_statement);
+        std::string attr_syn = split_attr_ref[0];
+        std::string attr_name = split_attr_ref[1];
+        PQLTokenType token_type = QueryTokenizer::getAttrTokenType(attr_name);
+        results.push_back({attr_syn, token_type});
+      }
+      // results.push_back({select_statement, PQLTokenType::SYNONYM});
       break;
     case SelectValueType::MUTLIPLE:
       select_with_tuple_removed = QueryUtil::RemoveTuple(select_statement);
       tuple_arguments = string_util::SplitStringBy(',', select_with_tuple_removed);
-      for (const std::string& tuple_argument : tuple_arguments) {
-        results.push_back({tuple_argument, PQLTokenType::SYNONYM});
+      for (std::string& tuple_argument : tuple_arguments) {
+        if (lexical_utils::IsSynonym(tuple_argument)) {
+          results.push_back({tuple_argument, PQLTokenType::SYNONYM});
+        } else if (QueryUtil::IsAttrRef(tuple_argument)) {
+          std::vector<std::string> split_attr_ref = string_util::SplitStringBy('.', tuple_argument);
+          std::string attr_syn = split_attr_ref[0];
+          std::string attr_name = split_attr_ref[1];
+          PQLTokenType token_type = QueryTokenizer::getAttrTokenType(attr_name);
+          results.push_back({attr_syn, token_type});
+        }
       }
       break;
     default:
@@ -293,7 +310,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
   return arg_pair;
 }
 
-PQLTokenType getWithAttrRefTokenType(const std::string & attrName) {
+PQLTokenType QueryTokenizer::getAttrTokenType(const std::string & attrName) {
   if (attrName == "procName") {
     return PQLTokenType::WITH_PROCNAME;
   } else if (attrName == "varName") {
@@ -327,7 +344,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getWithArgs(std::string& claus
     std::string syn_string = attrRef_split[0];
     std::string attrName_string = attrRef_split[1];
     qps_validator::ValidateClauseSynonym(syn_string, declarations);
-    PQLTokenType token_type = getWithAttrRefTokenType(attrName_string);
+    PQLTokenType token_type = getAttrTokenType(attrName_string);
     left_token = {syn_string, token_type};
   }
 
@@ -342,7 +359,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getWithArgs(std::string& claus
     std::string syn_string = attrRef_split[0];
     std::string attrName_string = attrRef_split[1];
     qps_validator::ValidateClauseSynonym(syn_string, declarations);
-    PQLTokenType token_type = getWithAttrRefTokenType(attrName_string);
+    PQLTokenType token_type = getAttrTokenType(attrName_string);
     qps_validator::ValidateAttributeRef(syn_string, attrName_string, declarations);
     right_token = {syn_string, token_type};
   }
