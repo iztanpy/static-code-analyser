@@ -52,18 +52,19 @@ std::set<std::string> RelRef::getStringRelRef() {
 int RelRef::getClauseScore(RelRefType rel_ref, int num_synonym) {
   static const int kSynonymPenalty = 8;
   static const std::map<RelRefType, int> kClauseScore = {
-      {RelRefType::NEXT, 1}, {RelRefType::FOLLOWS, 1},
-      {RelRefType::CALLS, 2}, {RelRefType::CALLST, 2},
-      {RelRefType::PARENT, 3},
-      {RelRefType::FOLLOWST, 4}, {RelRefType::PARENTT, 4},
-      {RelRefType::MODIFIESS, 5},
-      {RelRefType::MODIFIESP, 6},
-      {RelRefType::WHILE, 7}, {RelRefType::IF, 7},
-      {RelRefType::ASSIGN, 8},
-      {RelRefType::USESS, 9},
-      {RelRefType::SELECT, 10},
-      {RelRefType::USESP, 11},
-      {RelRefType::NEXTT, 20},
+      {RelRefType::WITH, 1},
+      {RelRefType::NEXT, 2}, {RelRefType::FOLLOWS, 2},
+      {RelRefType::CALLS, 3}, {RelRefType::CALLST, 3},
+      {RelRefType::PARENT, 4},
+      {RelRefType::FOLLOWST, 5}, {RelRefType::PARENTT, 5},
+      {RelRefType::MODIFIESS, 6},
+      {RelRefType::MODIFIESP, 7},
+      {RelRefType::WHILE, 8}, {RelRefType::IF, 8},
+      {RelRefType::ASSIGN, 9},
+      {RelRefType::USESS, 10},
+      {RelRefType::SELECT, 11},
+      {RelRefType::USESP, 12},
+      {RelRefType::NEXTT, 21},
       {RelRefType::AFFECTS, 25},
   };
 
