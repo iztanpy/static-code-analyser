@@ -3,6 +3,7 @@
 #include <iostream>
 #include "utils/Error.h"
 
+typedef int statementNumber;
 typedef std::string procedure;
 
 CallStore::CallStore() {
@@ -10,6 +11,7 @@ CallStore::CallStore() {
     this->callTableReverse = std::unordered_map<procedure, std::unordered_set<procedure>>();
     this->callTableStar = std::unordered_map<procedure, std::unordered_set<procedure>>();
     this->callTableStarReverse = std::unordered_map<procedure, std::unordered_set<procedure>>();
+    this->callPairs = std::unordered_set<std::pair<statementNumber, procedure>, PairHash>();
 }
 
 void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable) {
@@ -62,6 +64,18 @@ void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<proc
             }
         }
     }
+}
+
+void CallStore::storeCallPairs(std::unordered_map<statementNumber, procedure> callStatements) {
+    for (auto it = callStatements.begin(); it != callStatements.end(); ++it) {
+        statementNumber stmtNum = it->first;
+        procedure procName = it->second;
+        this->callPairs.insert(std::make_pair(stmtNum, procName));
+    }
+}
+
+std::unordered_set<std::pair<statementNumber, procedure>, PairHash> CallStore::getCallPairs() {
+    return this->callPairs;
 }
 
 std::unordered_set<procedure> CallStore::getCallChildren(procedure p) {

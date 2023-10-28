@@ -643,6 +643,14 @@ void PKB::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>
     callStore->storeCalls(callTable);
 }
 
+void PKB::storeCallsPairs(std::unordered_map<statementNumber, procedure> calls) {
+    callStore->storeCallPairs(calls);
+}
+
+std::unordered_set<std::pair<statementNumber, procedure>, PairHash> PKB::getCallPairs() {
+    return callStore->getCallPairs();
+}
+
 std::unordered_map<procedure, std::unordered_set<procedure>> PKB::getCallStar() {
     return callStore->getCallStar();
 }
@@ -985,4 +993,32 @@ bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
 
 void PKB::clearNextStarCache() {
     nextStore->clearCache();
+}
+std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+        PKB::getStatementsAndVariable(StmtEntity type) {
+    // if type is print or call or read,
+    std::unordered_set<std::pair<statementNumber, variable>, PairHash> statementsAndVariable;
+    auto typeStatements = statementStore->getStatements(type);
+    switch (type) {
+        case StmtEntity::kPrint:
+            for (auto statement : typeStatements) {
+                auto variables = usesStore->relates(statement);
+                for (auto variable : variables) {
+                    statementsAndVariable.insert(std::make_pair(statement, variable));
+                }
+            }
+            return statementsAndVariable;
+        case StmtEntity::kRead:
+            for (auto statement : typeStatements) {
+                auto variables = modifiesStore->relates(statement);
+                for (auto variable : variables) {
+                    statementsAndVariable.insert(std::make_pair(statement, variable));
+                }
+            }
+            return statementsAndVariable;
+        case StmtEntity::kCall:
+            return callStore->getCallPairs();
+        default:
+            return std::unordered_set<std::pair<statementNumber, variable>, PairHash>();
+    }
 }

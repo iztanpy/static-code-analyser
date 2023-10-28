@@ -479,5 +479,7 @@ bool ReadFacade::isNextStar(statementNumber num1, statementNumber num2) {
     return pkb.isNextStar(num1, num2);
 }
 
-
-
+std::unordered_set<std::pair<statementNumber, std::string>, PairHash>
+        ReadFacade::getStatementsAndVariable(StmtEntity type) {
+    return pkb.getStatementsAndVariable(type);
+}
