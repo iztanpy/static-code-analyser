@@ -510,7 +510,7 @@ TEST_CASE("Test Call Store functionalityies") {
 
     std::unordered_set<std::pair<statementNumber, procedure>, PairHash> callPairs = { {1, "b"}, {4, "c"} };
         
-    REQUIRE(readFacade.getCallPairs() == callPairs);
+    REQUIRE(pkb_ptr->getCallPairs() == callPairs);
     REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kCall) == callPairs);
     REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kPrint) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {5, "bb"}, {6, "cc"} }));
     REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kRead) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {3, "xx"} }));
