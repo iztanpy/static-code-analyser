@@ -34,6 +34,10 @@ enum AttrName {
 struct AttrRef {
   Declaration declaration;
   AttrName attr_name;
+
+  bool operator==(const AttrRef& other) const {
+    return declaration == other.declaration && attr_name == other.attr_name;
+  }
 };
 
 /*!
@@ -62,7 +66,6 @@ struct ExactExpr {
  */
 using ExprSpec = std::variant<PartialExpr, ExactExpr, Wildcard>;
 using Synonym = std::string;
-using Elem = std::variant<Declaration, AttrRef>;
 
 /*!
  * Hash function for EntRef and StmtRef
@@ -148,6 +151,43 @@ template<>
 struct hash<ExprSpec> {
   size_t operator()(const ExprSpec& spec) const {
     return std::visit(ExprSpecHashVisitor(), spec);
+  }
+};
+}  // namespace std
+
+/*!
+ * Hash function for AttrRef and Ref
+ */
+namespace std {
+template<>
+struct hash<AttrRef> {
+  size_t operator()(const AttrRef& attr_ref) const {
+    size_t h1 = std::hash<Declaration>()(attr_ref.declaration);
+    size_t h2 = std::hash<int>()(static_cast<int>(attr_ref.attr_name));
+    return h1 ^ (h2 << 1);
+  }
+};
+}  // namespace std
+
+// Hash Visitor for Ref
+struct RefHashVisitor {
+  size_t operator()(const int value) const {
+    return std::hash<int>()(value);
+  }
+  size_t operator()(const std::string& value) const {
+    return std::hash<std::string>()(value);
+  }
+  size_t operator()(const AttrRef& value) const {
+    return std::hash<AttrRef>()(value);
+  }
+};
+
+namespace std {
+// Custom std::hash for ExprSpec
+template<>
+struct hash<Ref> {
+  size_t operator()(const Ref& value) const {
+    return std::visit(RefHashVisitor(), value);
   }
 };
 }  // namespace std
