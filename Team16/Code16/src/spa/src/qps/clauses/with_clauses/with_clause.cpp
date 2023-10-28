@@ -12,7 +12,7 @@ std::unordered_set<Synonym> WithClause::GetSynonyms() const {
 }
 
 Constraint WithClause::Evaluate(ReadFacade& pkb_reader) {
-  return Constraint();
+  throw std::runtime_error("Not implemented");
 }
 
 size_t WithClause::Hash() const {
@@ -32,5 +32,23 @@ bool operator==(const WithClause& first, const WithClause& second) {
 }
 
 void WithClause::Validate() {
-  // TODO(Cuong): Implement validate
+  if (GetType(lhs) != GetType(rhs)) {
+    throw QpsSemanticError("LHS and RHS of WithClause must be of the same underlying type");
+  }
+}
+
+const RefUnderlyingType WithClause::GetType(const Ref& param) {
+  if (std::holds_alternative<AttrRef>(param)) {
+    AttrRef ref = std::get<AttrRef>(param);
+    if (ref.attr_name == AttrName::NONE) {
+      throw QpsSemanticError("AttrName cannot be NONE in With clause");
+    }
+    return kAttrNameToUnderlyingType.at(ref.attr_name);
+  } else if (std::holds_alternative<int>(param)) {
+    return RefUnderlyingType::INTEGER;
+  } else if (std::holds_alternative<std::string>(param)) {
+    return RefUnderlyingType::IDENT;
+  } else {
+    throw std::runtime_error("Unknown Ref type");
+  }
 }

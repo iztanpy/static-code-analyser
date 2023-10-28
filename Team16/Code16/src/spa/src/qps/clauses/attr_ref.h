@@ -21,6 +21,16 @@ enum class AttrName {
   NONE
 };
 
+/*!
+ * Represents the underlying type of Ref in PQL grammar
+ * INTEGER: int
+ * IDENT: string
+ */
+enum class RefUnderlyingType {
+  INTEGER,
+  IDENT,
+};
+
 static const std::unordered_map<AttrName, std::unordered_set<DesignEntity>> kAttrNameToDesignEntity = {
     {AttrName::PROCNAME, {DesignEntity::PROCEDURE, DesignEntity::CALL}},
     {AttrName::VARNAME, {DesignEntity::VARIABLE, DesignEntity::READ, DesignEntity::PRINT}},
@@ -29,8 +39,18 @@ static const std::unordered_map<AttrName, std::unordered_set<DesignEntity>> kAtt
                          DesignEntity::WHILE_LOOP, DesignEntity::IF_STMT, DesignEntity::ASSIGN}},
 };
 
+static const std::unordered_map<AttrName, RefUnderlyingType> kAttrNameToUnderlyingType = {
+    {AttrName::PROCNAME, RefUnderlyingType::IDENT},
+    {AttrName::VARNAME, RefUnderlyingType::IDENT},
+    {AttrName::VALUE, RefUnderlyingType::INTEGER},
+    {AttrName::STMTNUM, RefUnderlyingType::INTEGER},
+};
+
 class AttrRef {
  public:
+  Declaration declaration;
+  AttrName attr_name;
+
   AttrRef(Declaration declaration, AttrName attr_name) : declaration(std::move(declaration)), attr_name(attr_name) {
     Validate();
   }
@@ -44,9 +64,6 @@ class AttrRef {
   std::string GetSynonym() const;
 
  private:
-  Declaration declaration;
-  AttrName attr_name;
-
   void Validate();
 };
 
@@ -54,16 +71,6 @@ class AttrRef {
  * Represents Ref in PQL grammar
  */
 using Ref = std::variant<std::string, int, AttrRef>;
-
-/*!
- * Represents the underlying type of Ref in PQL grammar
- * INTEGER: int
- * IDENT: string
- */
-enum class RefUnderlyingType {
-  INTEGER,
-  IDENT,
-};
 
 // Hash Visitor for Ref
 struct RefHashVisitor {

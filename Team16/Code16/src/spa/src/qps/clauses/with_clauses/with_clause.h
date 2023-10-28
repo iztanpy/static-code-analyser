@@ -52,4 +52,6 @@ class WithClause : public Clause {
   RelRefType GetRelRef() const override {
     return RelRefType::WITH;
   };
+
+  static const RefUnderlyingType GetType(const Ref& param);
 };
