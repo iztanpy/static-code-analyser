@@ -4,7 +4,7 @@
 #include <vector>
 #include "utils/clauses_types.h"
 #include "qps/query_parser/clause_builder/clause_builder.h"
-#include "qps/clauses/with_clause.h"
+#include "qps/clauses/with_clauses/with_clause.h"
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 
 class WithClauseBuilder : public ClauseBuilder {

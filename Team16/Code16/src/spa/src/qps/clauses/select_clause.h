@@ -6,7 +6,9 @@
 #include "qps/design_entity.h"
 #include "qps/clauses/clause.h"
 #include "qps/query_evaluator/select_evaluator.h"
+#include "qps/clauses/attr_ref.h"
 
+// TODO(phuccuongngo99): Please change this to point at AttrRef implementation
 class SelectClause : public Clause {
  public:
   Declaration declaration;

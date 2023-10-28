@@ -3,7 +3,7 @@
 #include "qps/query_parser/query_parser.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
-#include "qps/clauses/with_clause.h"
+#include "qps/clauses/with_clauses/with_clause.h"
 
 bool areClauseSetsEqual(const ClauseSet& lhs, const ClauseSet& rhs) {
   if (lhs.size() != rhs.size()) {
@@ -351,10 +351,10 @@ TEST_CASE("Parser can parse multiple select clauses") {
       {"s", DesignEntity::STMT}
   };
 
-  std::vector<Synonym> select_clauses =  {
-    declarations[0].synonym,
-    declarations[1].synonym,
-    declarations[2].synonym
+  std::vector<Synonym> select_clauses = {
+      declarations[0].synonym,
+      declarations[1].synonym,
+      declarations[2].synonym
   };
 
   for (int i = 0; i < select_clauses.size(); i++) {

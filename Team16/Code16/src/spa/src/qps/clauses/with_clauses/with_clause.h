@@ -4,6 +4,7 @@
 #include <utility>
 #include <unordered_set>
 #include "qps/clauses/clause.h"
+#include "qps/clauses/attr_ref.h"
 
 class WithClause : public Clause {
  public:
