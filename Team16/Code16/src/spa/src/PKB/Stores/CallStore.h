@@ -11,10 +11,13 @@
 class CallStore {
  private:
     typedef std::string procedure;
+    typedef int statementNumber;
     std::unordered_map<procedure, std::unordered_set<procedure>> callTable;
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableReverse;
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStar;
     std::unordered_map<procedure, std::unordered_set<procedure>> callTableStarReverse;
+    std::unordered_set<std::pair<statementNumber, procedure>, PairHash> callPairs;
+
 
  public:
     CallStore();
@@ -29,6 +32,10 @@ class CallStore {
     *                  procedures called by the key procedure.
     */
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
+
+    void storeCallPairs(std::unordered_map<statementNumber, procedure> callStatements);
+
+    std::unordered_set<std::pair<statementNumber, procedure>, PairHash> getCallPairs();
 
     /**
     * @brief Retrieves the Call* (transitive call) relationship table.

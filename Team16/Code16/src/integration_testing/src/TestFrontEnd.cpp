@@ -482,6 +482,42 @@ TEST_CASE("Selecting Assign statements") {
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "1", "3" }));
 }
 
+
+TEST_CASE("Test Call Store functionalityies") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+
+    std::string simpleProgram = R"(procedure a {
+                                      call b;
+                                      cc = dd + ee; }
+
+                                    procedure b {
+                                      read xx;
+                                      call c; }
+
+                                    procedure c {
+                                      print bb;
+                                      print cc; })";
+
+
+    sourceProcessor.processSource(simpleProgram);
+    REQUIRE((readFacade.isCall("a", "b")));
+    REQUIRE((readFacade.isCall("b", "c")));
+    REQUIRE((!readFacade.isCall("a", "c")));
+
+    std::unordered_set<std::pair<statementNumber, procedure>, PairHash> callPairs = { {1, "b"}, {4, "c"} };
+        
+    REQUIRE(readFacade.getCallPairs() == callPairs);
+    REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kCall) == callPairs);
+    REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kPrint) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {5, "bb"}, {6, "cc"} }));
+    REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kRead) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({ {3, "xx"} }));
+    REQUIRE(readFacade.getStatementsAndVariable(StmtEntity::kAssign) == std::unordered_set<std::pair<statementNumber, variable>, PairHash>({}));
+
+}
+
 TEST_CASE("Test failing modifies testcase") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);

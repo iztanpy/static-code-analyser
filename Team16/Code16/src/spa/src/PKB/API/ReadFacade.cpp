@@ -315,6 +315,10 @@ std::unordered_set<procedure> ReadFacade::call(Wildcard wildcard, StmtEntity pro
     return pkb.call(wildcard, procedure);
 }
 
+std::unordered_set<std::pair<statementNumber, procedure>, PairHash> ReadFacade::getCallPairs() {
+    return pkb.getCallPairs();
+}
+
 std::unordered_set<procedure> ReadFacade::call(procedure procedure, StmtEntity proc) {
     return pkb.call(procedure, proc);
 }
@@ -479,11 +483,7 @@ bool ReadFacade::isNextStar(statementNumber num1, statementNumber num2) {
     return pkb.isNextStar(num1, num2);
 }
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash>
+std::unordered_set<std::pair<statementNumber, std::string>, PairHash>
         ReadFacade::getStatementsAndVariable(StmtEntity type) {
     return pkb.getStatementsAndVariable(type);
 }
-
-
-
-

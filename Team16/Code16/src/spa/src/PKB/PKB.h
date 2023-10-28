@@ -1080,6 +1080,18 @@ class PKB {
     */
     void storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable);
 
+
+    /**
+    * @brief Stores calls pairs.
+    * 
+    * This function stores the pairs of procedures that call each other.
+    * 
+    * @param calls An unordered_map where the key is a statement number, and the value is a procedure.
+    */
+    void storeCallsPairs(std::unordered_map<statementNumber, procedure> calls);
+
+    std::unordered_set<std::pair<statementNumber, procedure>, PairHash> getCallPairs();
+
     /**
     * @brief Retrieves the Call* (transitive call) relationship table.
     *

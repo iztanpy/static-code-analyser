@@ -720,6 +720,8 @@ class ReadFacade {
  */
     std::unordered_set<procedure> call(Wildcard wildcard, StmtEntity procedure);
 
+    std::unordered_set<std::pair<statementNumber, procedure>, PairHash> getCallPairs();
+
 /**
  * @brief Retrieves procedures that call a specific procedure.
  *
@@ -996,6 +998,5 @@ class ReadFacade {
 
   bool isNextStar(statementNumber num1, statementNumber num2);
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
-
+  std::unordered_set<std::pair<statementNumber, std::string>, PairHash> getStatementsAndVariable(StmtEntity type);
 };
