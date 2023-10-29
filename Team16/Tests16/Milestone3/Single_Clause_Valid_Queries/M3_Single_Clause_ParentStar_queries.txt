@@ -1,0 +1,75 @@
+1 - True clause
+print aAssign; variable v;
+Select aAssign such that Parent*(6, 8)
+21, 20, 19, 28
+5000
+2 - Using underscore wildcard in arg2
+while wild1, wild2; variable wildVar;
+Select wild1 such that Parent*(wild1, _)
+10, 12, 24, 30
+5000
+3 - arg1 as declared synonym, arg2 as number
+stmt a5; variable v4;
+Select a5 such that Parent*(a5, 7)
+4, 6
+5000
+4 - arg1 as declared synonym, arg2 as declared synonym
+if a6; stmt a7; variable v5;
+Select a6 such that Parent*(a6, a7)
+4, 6, 16, 23,
+5000
+5 - arg1 as declared synonym, arg2 as underscore
+while a8; variable v6;
+Select a8 such that Parent*(a8, _)
+10, 12, 24, 30
+5000
+6 - arg1 as underscore, arg2 as number
+stmt a9; variable v7;
+Select a9 such that Parent*(_, 17)
+20, 18, 17, 16, 15, 13, 12, 19, 11, 21, 2, 14, 9, 6, 5, 1, 7, 10, 8, 4, 3, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
+5000
+7 - arg1 as underscore, arg2 as declared synonym, assign in another proc should also be selected
+assign a10, a11; variable v8;
+Select a10 such that Parent*(_, a11)
+18, 14, 11, 9, 7, 5, 8, 13, 17, 15, 3, 33
+5000
+8 - arg1 as underscore, arg2 as underscore
+assign a12; variable v9;
+Select a12 such that Parent*(_, _)
+18, 14, 11, 9, 7, 5, 8, 13, 17, 15, 3, 33
+5000
+9 - arg1 as number, arg2 as declared synonym
+assign a13, a14; variable v10;
+Select a13 such that Parent*(6, a14)
+18, 14, 11, 9, 7, 5, 8, 13, 17, 15, 3, 33
+5000
+10 - arg1 as number, arg2 as number
+read a15; variable v11;
+Select a15 such that Parent*(4, 5)
+2, 1, 26
+5000
+11 - arg1 as number, arg2 as underscore
+variable a16; variable v12;
+Select a16 such that Parent*(10, _)
+break, t, continue, k, sum, z, y, x, call
+5000
+12 - Complex mixed usage
+assign complex1, complex2; variable complexVar;
+Select complex1 such that Parent*(complex2, 9)
+none
+5000
+13 - Nested usage of synonyms
+while nest1, nest2; if nest3; variable nestVar;
+Select nest1 such that Parent*(nest1, nest3)
+10, 12
+5000
+14 - Complex mix with underscore
+assign mix1, mix2; variable mixVar;
+Select mix1 such that Parent*(mix2, 6)
+none
+5000
+15 - Same synonyms for both arg
+while mix1;
+Select mix1 such that Parent*(mix1, mix1)
+none
+5000
