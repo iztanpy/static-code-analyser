@@ -161,6 +161,13 @@ std::unordered_set<statementNumber> NextStore::getNext(statementNumber num) {
     return std::unordered_set<statementNumber>();
 }
 
+std::unordered_set<statementNumber> NextStore::getNextReverse(statementNumber num) {
+    if (NextMapReverse.find(num) != NextMapReverse.end()) {
+        return NextMapReverse[num];
+    }
+    return std::unordered_set<statementNumber>();
+}
+
 void NextStore::clearCache() {
     NextStarMap.clear();
     NextStarMapReverse.clear();

@@ -1017,7 +1017,6 @@ bool PKB::isAffects(statementNumber statement1, statementNumber statement2) {
     auto modifiedVariables = modifiesStore->relates(statement1);
     auto usedVariables = usesStore->relates(statement2);
 
-    //get first variable in modifiedVariable
     variable modifiedVariable = *modifiedVariables.begin();
     if (usedVariables.count(modifiedVariable) == 0) {
         return false;
@@ -1050,6 +1049,78 @@ bool PKB::isAffects(statementNumber statement1, statementNumber statement2) {
                     else {
                         stack.push(nextStatement);
                     }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+bool PKB::isAffects(statementNumber statement1, Wildcard w) {
+    if (!statementStore->isAssign(statement1)) {
+        return false;
+    }
+
+    auto modifiedVariables = modifiesStore->relates(statement1);
+    variable modifiedVariable = *modifiedVariables.begin();
+    std::stack<statementNumber> stack;
+    std::unordered_set<statementNumber> visited;
+
+    stack.push(statement1);
+
+    while (!stack.empty()) {
+        statementNumber currentStatement = stack.top();
+        stack.pop();
+
+        if (visited.count(currentStatement) == 0) {
+            visited.insert(currentStatement);
+            auto nextStatements = nextStore->getNext(currentStatement);
+            for (auto nextStatement : nextStatements) {
+                if (visited.count(nextStatement) == 0) {
+                    if (this->modifiesStatement(nextStatement, modifiedVariable)&& statementStore->isAssign(nextStatement)) {
+                        return true;
+                    }
+                    else {
+                        stack.push(nextStatement);
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool PKB::isAffects(Wildcard w, statementNumber statement2) {
+    if (!statementStore->isAssign(statement2)) {
+        return false;
+    }
+
+    auto usedVariables = usesStore->relates(statement2);
+
+    std::stack<statementNumber> stack;
+    std::unordered_set<statementNumber> visited;
+
+    stack.push(statement2);
+
+    while (!stack.empty()) {
+        statementNumber currentStatement = stack.top();
+        stack.pop();
+
+        if (visited.count(currentStatement) == 0) {
+            visited.insert(currentStatement);
+            auto previousStatements = nextStore->getNextReverse(currentStatement);
+            for (auto previousStatement : previousStatements) {
+                if (visited.count(previousStatement) == 0) {
+                    auto modifiedVariables = modifiesStore->relates(previousStatement);
+
+                    if (statementStore->isAssign(statement2)) {
+                        variable modifiedVariable = *modifiedVariables.begin();
+                        if (usedVariables.count(modifiedVariable) != 0) {
+                            return true;
+                        }
+                    }
+                    stack.push(previousStatement);
                 }
             }
         }

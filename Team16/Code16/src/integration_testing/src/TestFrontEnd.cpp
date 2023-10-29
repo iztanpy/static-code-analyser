@@ -548,6 +548,7 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(pkb_ptr->isAffects(2, 6));
     REQUIRE(pkb_ptr->isAffects(4, 8));
     REQUIRE(pkb_ptr->isAffects(4, 10));
+    REQUIRE(pkb_ptr->isAffects(6, 6));
     REQUIRE(pkb_ptr->isAffects(1, 4));
     REQUIRE(pkb_ptr->isAffects(1, 8));
     REQUIRE(pkb_ptr->isAffects(1, 10));

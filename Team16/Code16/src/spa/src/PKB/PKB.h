@@ -1548,6 +1548,13 @@ class PKB {
     // Affects Methods
     bool isAffects(statementNumber statement1, statementNumber statement2);
 
+    bool isAffects(statementNumber statement1, Wildcard w);
+
+    bool isAffects(Wildcard w, statementNumber statement2);
+
+    bool isAffects(Wildcard w, Wildcard w2);
+
+
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
 
     PKB(const PKB&) = delete;
