@@ -1,0 +1,60 @@
+1 - LHS synonym, RHS synonym
+call c; variable v;
+Select c such that Uses(c, v)
+5, 7, 14, 20
+5000
+2 - LHS synonym, RHS wildcard
+call p;
+Select p such that Uses(p, _)
+5, 7, 14, 20
+5000
+3 - LHS synonym, RHS string
+call p;
+Select p such that Uses(p   , "aa"   )
+7
+5000
+4 - LHS call stmt number, RHS synonym
+variable v;
+Select v such that Uses(5, v  )
+l, n, o, p, q, s, ee, ff, gg, ii, jj, kk, ll
+5000
+5 - LHS call, RHS string
+call call;
+Select call such that Uses(call  , " nn")
+20, 7
+5000
+6 - LHS call, RHS string
+constant c; call call;
+Select c such that Uses(call  , " nn")
+5, 1, 4, 2, 3
+5000
+7 - LHS synonym, RHS synonym
+call p; variable v;
+Select v such that Modifies(p, v)
+rr, u, bb, a, dd, m, r, mm, k, hh
+5000
+8 - LHS synonym, RHS wildcard
+call p;
+Select p such that Modifies(p, _)
+5, 7, 14, 20
+5000
+9 - LHS synonym, RHS string
+call p;
+Select p such that Modifies(  p, " hh  ")
+14, 5
+5000
+10 - LHS call stmt number, RHS synonym
+variable v;
+Select v such that Modifies(14, v)
+hh, dd
+5000
+11 - LHS call stmt number, RHS wildcard
+assign a;
+Select a such that Modifies(20, _)
+33, 29, 26, 22, 17, 15, 6, 11, 32, 8
+5000
+12 - LHS string, RHS string
+constant c;
+Select c such that Modifies(5, "  dd  ")
+5, 1, 4, 2, 3
+5000
