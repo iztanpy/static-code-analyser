@@ -1,4 +1,4 @@
-#include "qps/clauses/with_clauses/with_evaluator.h"
+#include "qps/query_evaluator/with_evaluator.h"
 
 namespace {
 BinaryConstraint HandleComplexSimple(AttrRef& complex, AttrRef& simple, ReadFacade& pkb_reader) {

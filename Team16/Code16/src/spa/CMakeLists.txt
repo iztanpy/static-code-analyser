@@ -18,8 +18,6 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/clause.h
         src/qps/clauses/select_clause.cpp
         src/qps/query_evaluator/constraint_solver/constraint.h
-        src/qps/query_evaluator/select_evaluator.cpp
-        src/qps/query_evaluator/select_evaluator.h
         src/PKB/PKB.h
         src/qps/clauses/suchthat_clauses/suchthat_clause.cpp
         src/qps/clauses/suchthat_clauses/suchthat_clause.h
@@ -215,8 +213,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/qps_validator/WithClauseSyntaxHandler.h
         src/qps/clauses/attr_ref.h
         src/qps/clauses/attr_ref.cpp
-        src/qps/clauses/with_clauses/with_evaluator.cpp
-        src/qps/clauses/with_clauses/with_evaluator.h
+        src/qps/query_evaluator/with_evaluator.cpp
+        src/qps/query_evaluator/with_evaluator.h
         src/utils/algorithm_utils.h
 )
 # this makes the headers accessible for other projects which uses spa lib
