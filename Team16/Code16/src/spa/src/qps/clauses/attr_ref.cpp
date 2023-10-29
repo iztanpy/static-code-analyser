@@ -14,9 +14,40 @@ void AttrRef::Validate() {
   }
 }
 
-// TODO(phuccuongngo99): Implement this
 Constraint AttrRef::Evaluate(ReadFacade& pkb_reader) {
-  return Constraint{};
+  if ((declaration.design_entity == DesignEntity::CALL && attr_name == AttrName::PROCNAME)
+      || (declaration.design_entity == DesignEntity::READ && attr_name == AttrName::VARNAME)
+      || (declaration.design_entity == DesignEntity::PRINT && attr_name == AttrName::VARNAME)) {
+    std::string synonym = declaration.synonym;
+    // TODO(phuccuongngo99): Change this to
+    std::string attr_synonym = declaration.synonym + kAttrSynonym;
+    std::unordered_set<std::pair<int, std::string>, PairHash>
+        raw_results = pkb_reader.getStatementsAndVariable(ConvertToStmtEntity(declaration.design_entity));
+    return BinaryConstraint{{synonym, attr_synonym}, EvaluatorUtil::ToStringPairSet(raw_results)};
+  } else {
+    auto values = [&]() -> std::unordered_set<std::string> {
+      switch (declaration.design_entity) {
+        case DesignEntity::STMT:
+        case DesignEntity::READ:
+        case DesignEntity::PRINT:
+        case DesignEntity::CALL:
+        case DesignEntity::WHILE_LOOP:
+        case DesignEntity::ASSIGN:
+        case DesignEntity::IF_STMT: {
+          std::unordered_set<int> result = pkb_reader.getStatements(ConvertToStmtEntity(declaration.design_entity));
+          return EvaluatorUtil::ToStringSet(result);
+        }
+        case DesignEntity::CONSTANT:return pkb_reader.getConstants();
+        case DesignEntity::VARIABLE:return pkb_reader.getVariables();
+        case DesignEntity::PROCEDURE:return pkb_reader.getProcedures();
+      }
+    }();
+
+    return UnaryConstraint{
+        declaration.synonym,
+        values
+    };
+  }
 }
 
 size_t AttrRef::Hash() const {

@@ -8,6 +8,7 @@
 
 #include "qps/declaration.h"
 #include "qps/query_evaluator/constraint_solver/constraint.h"
+#include "qps/query_evaluator/evaluator_util.h"
 #include "PKB/API/ReadFacade.h"
 
 /*!
@@ -45,6 +46,8 @@ static const std::unordered_map<AttrName, RefUnderlyingType> kAttrNameToUnderlyi
     {AttrName::VALUE, RefUnderlyingType::INTEGER},
     {AttrName::STMTNUM, RefUnderlyingType::INTEGER},
 };
+
+static const char kAttrSynonym[] = ".ATTR";
 
 class AttrRef {
  public:

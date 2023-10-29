@@ -41,7 +41,7 @@ const RefUnderlyingType WithClause::GetType(const Ref& param) {
   if (std::holds_alternative<AttrRef>(param)) {
     AttrRef ref = std::get<AttrRef>(param);
     if (ref.attr_name == AttrName::NONE) {
-      throw QpsSemanticError("AttrName cannot be NONE in With clause");
+      assert(false && "[WithClause::GetType]. Shouldn't reach here! AttrName cannot be NONE in With clause");
     }
     return kAttrNameToUnderlyingType.at(ref.attr_name);
   } else if (std::holds_alternative<int>(param)) {
