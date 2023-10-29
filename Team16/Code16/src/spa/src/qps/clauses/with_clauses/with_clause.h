@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include "qps/clauses/clause.h"
 #include "qps/clauses/attr_ref.h"
+#include "qps/clauses/with_clauses/with_evaluator.h"
 
 class WithClause : public Clause {
  public:
@@ -53,5 +54,5 @@ class WithClause : public Clause {
     return RelRefType::WITH;
   };
 
-  static const RefUnderlyingType GetType(const Ref& param);
+  static RefUnderlyingType GetType(const Ref& param);
 };

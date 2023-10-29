@@ -58,6 +58,8 @@ class AttrRef {
     Validate();
   }
 
+  bool IsComplexCase() const;
+
   bool operator==(const AttrRef& other) const;
 
   Constraint Evaluate(ReadFacade& pkb_reader);

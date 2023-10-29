@@ -15,9 +15,7 @@ void AttrRef::Validate() {
 }
 
 Constraint AttrRef::Evaluate(ReadFacade& pkb_reader) {
-  if ((declaration.design_entity == DesignEntity::CALL && attr_name == AttrName::PROCNAME)
-      || (declaration.design_entity == DesignEntity::READ && attr_name == AttrName::VARNAME)
-      || (declaration.design_entity == DesignEntity::PRINT && attr_name == AttrName::VARNAME)) {
+  if (IsComplexCase()) {
     std::string synonym = declaration.synonym;
     // TODO(phuccuongngo99): Change this to
     std::string attr_synonym = declaration.synonym + kAttrSynonym;
@@ -57,4 +55,11 @@ size_t AttrRef::Hash() const {
 }
 Synonym AttrRef::GetSynonym() const {
   return declaration.synonym;
+}
+
+bool AttrRef::IsComplexCase() const {
+  return
+      (declaration.design_entity == DesignEntity::CALL && attr_name == AttrName::PROCNAME)
+          || (declaration.design_entity == DesignEntity::READ && attr_name == AttrName::VARNAME)
+          || (declaration.design_entity == DesignEntity::PRINT && attr_name == AttrName::VARNAME);
 }

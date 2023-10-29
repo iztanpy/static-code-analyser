@@ -1,6 +1,10 @@
 #include "qps/clauses/with_clauses/with_clause.h"
 
 std::unordered_set<Synonym> WithClause::GetSynonyms() const {
+  if (lhs == rhs) {
+    return {};
+  }
+
   std::unordered_set<Synonym> synonyms;
   if (std::holds_alternative<AttrRef>(lhs)) {
     synonyms.insert(std::get<AttrRef>(lhs).GetSynonym());
@@ -12,7 +16,9 @@ std::unordered_set<Synonym> WithClause::GetSynonyms() const {
 }
 
 Constraint WithClause::Evaluate(ReadFacade& pkb_reader) {
-  throw std::runtime_error("Not implemented");
+  return std::visit([&pkb_reader](auto&& lhs_arg, auto&& rhs_arg) {
+    return Constraint{WithEvaluator::Handle(lhs_arg, rhs_arg, pkb_reader)};
+  }, lhs, rhs);
 }
 
 size_t WithClause::Hash() const {
@@ -31,13 +37,7 @@ bool operator==(const WithClause& first, const WithClause& second) {
   return first.lhs == second.lhs && first.rhs == second.rhs;
 }
 
-void WithClause::Validate() {
-  if (GetType(lhs) != GetType(rhs)) {
-    throw QpsSemanticError("LHS and RHS of WithClause must be of the same underlying type");
-  }
-}
-
-const RefUnderlyingType WithClause::GetType(const Ref& param) {
+RefUnderlyingType WithClause::GetType(const Ref& param) {
   if (std::holds_alternative<AttrRef>(param)) {
     AttrRef ref = std::get<AttrRef>(param);
     if (ref.attr_name == AttrName::NONE) {
@@ -50,5 +50,11 @@ const RefUnderlyingType WithClause::GetType(const Ref& param) {
     return RefUnderlyingType::IDENT;
   } else {
     throw std::runtime_error("Unknown Ref type");
+  }
+}
+
+void WithClause::Validate() {
+  if (GetType(lhs) != GetType(rhs)) {
+    throw QpsSemanticError("LHS and RHS of WithClause must be of the same underlying type");
   }
 }
