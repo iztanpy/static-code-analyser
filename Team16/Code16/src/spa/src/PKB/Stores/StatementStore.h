@@ -46,5 +46,7 @@ class StatementStore {
   std::unordered_set<statementNumber> getAllStatements();
 
   bool isPresent(statementNumber statement);
+
+  bool isAssign(statementNumber statement);
 };
 

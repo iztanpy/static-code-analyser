@@ -994,6 +994,70 @@ bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
 void PKB::clearNextStarCache() {
     nextStore->clearCache();
 }
+
+bool PKB::modifiesStatement(statementNumber num, variable targetVariable) {
+    // check if statementNumber is a assign read or procedure call
+    if (statementStore->getStatements(StmtEntity::kAssign).count(num) ||
+        statementStore->getStatements(StmtEntity::kRead).count(num) ||
+        statementStore->getStatements(StmtEntity::kCall).count(num)) {
+        return modifiesStore->isRelation(num, targetVariable);
+    }
+    return false;
+}
+
+bool PKB::isAffects(statementNumber statement1, statementNumber statement2) {
+    if (procedureStore->getProcedureName(statement1) != procedureStore->getProcedureName(statement2)) {
+        return false;
+    }
+
+    if (!statementStore->isAssign(statement1) || !statementStore->isAssign(statement2)) {
+        return false;
+    }
+
+    auto modifiedVariables = modifiesStore->relates(statement1);
+    auto usedVariables = usesStore->relates(statement2);
+
+    //get first variable in modifiedVariable
+    variable modifiedVariable = *modifiedVariables.begin();
+    if (usedVariables.count(modifiedVariable) == 0) {
+        return false;
+    }
+
+    std::stack<statementNumber> stack;
+    std::unordered_set<statementNumber> visited;
+
+    stack.push(statement1);
+
+    while (!stack.empty()) {
+        statementNumber currentStatement = stack.top();
+        stack.pop();
+
+        if (currentStatement == statement2) {
+            return true;
+        }
+
+        if (visited.count(currentStatement) == 0) {
+            visited.insert(currentStatement);
+            auto nextStatements = nextStore->getNext(currentStatement);
+            for (auto nextStatement : nextStatements) {
+                if (visited.count(nextStatement) == 0) {
+                    if (this->modifiesStatement(nextStatement, modifiedVariable)) {
+                        if (nextStatement == statement2) {
+                            return true;
+                        }
+                        visited.insert(nextStatement);
+                    }
+                    else {
+                        stack.push(nextStatement);
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>
         PKB::getStatementsAndVariable(StmtEntity type) {
     // if type is print or call or read,

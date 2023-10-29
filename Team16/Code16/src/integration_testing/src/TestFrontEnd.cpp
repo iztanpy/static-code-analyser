@@ -518,6 +518,50 @@ TEST_CASE("Test Call Store functionalityies") {
 
 }
 
+TEST_CASE("Test affects testcase") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+    std::string simpleProgram = R"(procedure Second {
+        x = 0;
+        i = 5;
+        while (i!=0) {
+            x = x + 2*y;
+            call Third;
+            i = i - 1; }
+        if (x==1) then {
+            x = x+1; }
+          else {
+            z = 1; }
+        z = z + x + i;
+        y = z + 2;
+        x = x * y + z; }
+
+      procedure Third {
+          z = 5;
+          v = z;
+          print v; })";
+
+    sourceProcessor.processSource(simpleProgram);
+    REQUIRE(pkb_ptr->isAffects(2, 6));
+    REQUIRE(pkb_ptr->isAffects(4, 8));
+    REQUIRE(pkb_ptr->isAffects(4, 10));
+    REQUIRE(pkb_ptr->isAffects(1, 4));
+    REQUIRE(pkb_ptr->isAffects(1, 8));
+    REQUIRE(pkb_ptr->isAffects(1, 10));
+    REQUIRE(pkb_ptr->isAffects(1, 12));
+    REQUIRE(pkb_ptr->isAffects(2, 10));
+    REQUIRE(pkb_ptr->isAffects(9, 10));
+    REQUIRE(!pkb_ptr->isAffects(9, 11));
+    REQUIRE(!pkb_ptr->isAffects(2, 3));
+    REQUIRE(!pkb_ptr->isAffects(9, 6));
+    REQUIRE(!pkb_ptr->isAffects(9, 12));
+
+    
+}
+
 TEST_CASE("Test failing modifies testcase") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);

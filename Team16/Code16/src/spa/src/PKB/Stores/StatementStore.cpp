@@ -40,3 +40,7 @@ std::unordered_set<statementNumber> StatementStore::getAllStatements() {
 bool StatementStore::isPresent(statementNumber statement) {
     return this->statementMap.find(statement) != this->statementMap.end();
 }
+
+bool StatementStore::isAssign(statementNumber statement) {
+    return this->statementMap[statement] == StmtEntity::kAssign;
+}

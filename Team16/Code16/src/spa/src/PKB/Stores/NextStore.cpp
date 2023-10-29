@@ -1,3 +1,4 @@
+#include "NextStore.h"
 //
 // Created by Isaac Tan on 18/10/23.
 //
@@ -153,7 +154,12 @@ bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
     return false;
 }
 
-
+std::unordered_set<statementNumber> NextStore::getNext(statementNumber num) {
+    if (NextMap.find(num) != NextMap.end()) {
+        return NextMap[num];
+    }
+    return std::unordered_set<statementNumber>();
+}
 
 void NextStore::clearCache() {
     NextStarMap.clear();

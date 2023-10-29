@@ -38,4 +38,6 @@ class ProcedureStore {
     std::unordered_set<procedure> getAllProcedures();
 
     std::pair<startStatement, endStatement> getProcedureRange(procedure procedureName);
+
+    procedure getProcedureName(startStatement statementNumber);
 };

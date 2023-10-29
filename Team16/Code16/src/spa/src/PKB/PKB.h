@@ -1543,6 +1543,11 @@ class PKB {
     */
     void clearNextStarCache();
 
+    bool modifiesStatement(statementNumber num, variable targetVariable);
+
+    // Affects Methods
+    bool isAffects(statementNumber statement1, statementNumber statement2);
+
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
 
     PKB(const PKB&) = delete;
