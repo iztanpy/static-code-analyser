@@ -10,6 +10,7 @@
 class SelectClause : public Clause {
  public:
   Declaration declaration;
+  AttrName attr_name;
 
   /*!
    * Checks if this Select clause is equal to another Select clause

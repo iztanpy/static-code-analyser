@@ -11,14 +11,16 @@ std::unique_ptr<Clause> ClauseDirector::makeSelectClause(
 ) {
   // find the design entity using the synonym in token
   DesignEntity design_entity;
+  Declaration decl;
   for (const Declaration& declaration : declarations) {
     if (declaration.synonym == token.text) {
-      design_entity = declaration.design_entity;
+      decl = declaration;
+//      design_entity = declaration.design_entity;
       break;
     }
   }
-
-  builder.setDeclaration({token.text, design_entity});
+  PQLTokenType token_type = token.type;
+  builder.setDeclaration(decl, token_type);
   return builder.getClause();
 }
 
@@ -36,5 +38,13 @@ std::unique_ptr<Clause> ClauseDirector::makePatternClause(PatternClauseBuilder b
   builder.setPatternType(tokens[0], declarations);
   builder.setLhs(tokens[1], declarations);
   builder.setRhs(tokens[2], declarations);
+  return builder.getClause();
+}
+
+std::unique_ptr<Clause> ClauseDirector::makeWithClause(WithClauseBuilder builder,
+                                                       const std::vector<QueryToken> & tokens,
+                                                       const std::vector<Declaration> & declarations) {
+  builder.setLhs(tokens[0], declarations);
+  builder.setRhs(tokens[1], declarations);
   return builder.getClause();
 }

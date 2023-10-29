@@ -40,6 +40,12 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
     clauses.insert(std::make_move_iterator(patternClauses.begin()), std::make_move_iterator(patternClauses.end()));
   }
 
+  std::vector<QueryToken> withTokens = tokenised_query.with_tokens;
+  if (!withTokens.empty()) {
+    std::vector<std::unique_ptr<Clause>> withClauses = ExtractWithClauses(withTokens, declarations);
+    clauses.insert(std::make_move_iterator(withClauses.begin()), std::make_move_iterator(withClauses.end()));
+  }
+
   return {selects, std::move(clauses)};
 }
 
@@ -81,12 +87,26 @@ QueryParser::ExtractPatternClauses(const std::vector<QueryToken>& patternTokens,
   std::vector<std::unique_ptr<Clause>> patternClauses;
   // invoke builder design pattern
   for (size_t i = 0; i < patternTokens.size(); i += 3) {
-    // Such that tokens should be parsed in 3s
+    // Pattern tokens should be parsed in 3s
     std::vector<QueryToken> singleClause = {patternTokens[i], patternTokens[i + 1], patternTokens[i + 2]};
     PatternClauseBuilder builder;
     std::unique_ptr<Clause> clause = ClauseDirector::makePatternClause(builder, singleClause, declarations);
     patternClauses.push_back(std::move(clause));
   }
   return patternClauses;
+}
+
+std::vector<std::unique_ptr<Clause>> QueryParser::ExtractWithClauses(const std::vector<QueryToken> & withTokens,
+                                                                     const std::vector<Declaration> & declarations) {
+  std::vector<std::unique_ptr<Clause>> withClauses;
+  // invoke builder design pattern
+  for (size_t i = 0; i < withTokens.size(); i += 2) {
+    // With tokens should be parsed in 2s
+    std::vector<QueryToken> singleClause = {withTokens[i], withTokens[i + 1]};
+    WithClauseBuilder builder;
+    std::unique_ptr<Clause> clause = ClauseDirector::makeWithClause(builder, singleClause, declarations);
+    withClauses.push_back(std::move(clause));
+  }
+  return withClauses;
 }
 

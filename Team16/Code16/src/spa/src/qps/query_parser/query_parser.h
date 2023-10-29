@@ -45,4 +45,13 @@ class QueryParser {
    */
   static std::vector<std::unique_ptr<Clause>>
   ExtractPatternClauses(const std::vector<QueryToken>& patternTokens, const std::vector<Declaration>& declarations);
+
+  /*!
+   * Creates with clauses given tokens and declarations
+   * @param patternTokens are the set of tokens specific to with clause
+   * @param declarations the set of declarations
+   * @return a vector of pointers to pattern clauses
+   */
+  static std::vector<std::unique_ptr<Clause>>
+  ExtractWithClauses(const std::vector<QueryToken>& withTokens, const std::vector<Declaration>& declarations);
 };

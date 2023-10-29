@@ -22,6 +22,7 @@ enum class RelRefType {
   ASSIGN,
   WHILE,
   IF,
+  WITH
 };
 
 class RelRef {

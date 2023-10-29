@@ -22,7 +22,11 @@ enum class PQLTokenType {
   EXACTEXPR,
   SELECT_SINGLE,
   SELECT_MULTIPLE,
-  SELECT_BOOLEAN
+  SELECT_BOOLEAN,
+  WITH_PROCNAME,
+  WITH_VARNAME,
+  WITH_VALUE,
+  WITH_STMTNO
 };
 
 struct QueryToken {
@@ -35,6 +39,7 @@ struct TokenisedQuery {
   std::vector<QueryToken> select_tokens;
   std::vector<QueryToken> such_that_tokens;
   std::vector<QueryToken> pattern_tokens;
+  std::vector<QueryToken> with_tokens;
 };
 
 struct QueryStructure {
@@ -46,6 +51,7 @@ struct QueryStructure {
 enum class ClauseEnum {
   PATTERN,
   SUCH_THAT,
+  WITH,
   NONE
 };
 
@@ -128,6 +134,15 @@ class QueryTokenizer {
                                                           PQLTokenType pattern_type);
 
   /*!
+   * Returns the LHS and RHS of with clause
+   * @param clause is the trimmed string from with clause
+   * @param declarations is the set of declared entities
+   * @return the LHS and RHS as a pair
+   */
+  static std::pair<QueryToken, QueryToken> getWithArgs(std::string & clause,
+                                                       std::vector<Declaration> & declarations);
+
+  /*!
    * Gets the PQLTokenType of a pattern
    * @param pattern_syn to be checked
    * @return SYNONYM if it is an assign synonym, PATTERN_WHILE if it is 'while', PATTERN_IF if it is 'if'
@@ -140,9 +155,8 @@ class QueryTokenizer {
    * @param declarations is the set of declared entities
    * @return a pair of vectors of query tokens
    */
-  static std::pair<std::vector<QueryToken>, std::vector<QueryToken>>
-  extractClauseTokens(std::string select_statement,
-                      std::vector<Declaration> & declarations);
+  static std::vector<std::vector<QueryToken>> extractClauseTokens(std::string select_statement,
+                                                                  std::vector<Declaration> & declarations);
 
   /*!
    * Processes a such that clause
@@ -161,11 +175,19 @@ class QueryTokenizer {
   static std::vector<QueryToken> processPatternClause(std::string clause, std::vector<Declaration> & declarations);
 
   /*!
+   * Processes a with clause
+   * @param clause string to be processed
+   * @param declarations set of declared entities
+   * @return a vector of with tokens
+   */
+  static std::vector<QueryToken> processWithClause(std::string clause, std::vector<Declaration> & declarations);
+
+  /*!
    * Gets the select value type from a select clause
    * @param select_value is the string to be processed
    * @return the select value type
    */
-  static SelectValueType getSelectValueType(const std::string& select_value);
+  static SelectValueType getSelectValueType(std::string& select_value);
 
   /*!
    * Removes the select clause from remaining clauses
@@ -187,4 +209,12 @@ class QueryTokenizer {
    * @return the preserved result clause
    */
   static std::string removeAfterResultClause(std::string& select_statement);
+
+
+  /*!
+   * Converts a attribute name to a PQL token type
+   * @param attr_name to be converted
+   * @return a PQL token type
+   */
+  static PQLTokenType getAttrTokenType(const std::string& attr_name);
 };

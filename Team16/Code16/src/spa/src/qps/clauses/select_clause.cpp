@@ -1,7 +1,7 @@
 #include "qps/clauses/select_clause.h"
 
 bool SelectClause::equals(const SelectClause& other) const {
-  return declaration == other.declaration;
+  return declaration == other.declaration && attr_name == other.attr_name;
 }
 
 Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
@@ -24,5 +24,5 @@ bool SelectClause::equals(const Clause* other) const {
 }
 
 bool operator==(const SelectClause& lhs, const SelectClause& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration;
+  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.attr_name == rhs.attr_name;
 }

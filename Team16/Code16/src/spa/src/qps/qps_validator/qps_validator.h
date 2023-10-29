@@ -171,4 +171,19 @@ void ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & d
  * @throws QpsSyntaxError if statement cannot match pattern or such that clause
  */
 void ValidateStatementAfterResClause(std::string& remaining_statement);
+
+/*!
+ * Validates the initial syntax of a with clause
+ * @param with_clause to be validated
+ * @throws QpsSyntaxError if there is missing equals or lhs and rhs are not Ref
+ */
+void ValidateWithClauseArgs(std::string& with_clause);
+
+/*!
+ * Validates the attribute ref of a with clause
+ * @param syn_string
+ * @param attrName_string
+ * @param declarations
+ */
+void ValidateAttributeRef(std::string& syn_string, std::string& attrName_string, std::vector<Declaration> declarations);
 }  // namespace qps_validator

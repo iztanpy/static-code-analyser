@@ -4,7 +4,7 @@
 TEST_CASE("Select Clause Builder successfully sets attributes of clause") {
   SelectClauseBuilder builder;
   Declaration declaration = {"v", DesignEntity::VARIABLE};
-  builder.setDeclaration(declaration);
+  builder.setDeclaration(declaration, PQLTokenType::SYNONYM);
   std::unique_ptr<SelectClause> select_clause = builder.getClause();
   REQUIRE(select_clause->declaration == declaration);
 }

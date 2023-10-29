@@ -2,6 +2,7 @@
 #include <memory>
 #include <utility>
 #include <string>
+#include "utils/lexical_utils.h"
 #include "qps/qps_validator/select_synonym_semantic_handler.h"
 #include "qps/query_parser/QueryUtil.h"
 
