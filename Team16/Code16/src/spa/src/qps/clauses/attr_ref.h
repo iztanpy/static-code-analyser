@@ -47,8 +47,6 @@ static const std::unordered_map<AttrName, RefUnderlyingType> kAttrNameToUnderlyi
     {AttrName::STMTNUM, RefUnderlyingType::INTEGER},
 };
 
-static const char kAttrSynonym[] = ".ATTR";
-
 class AttrRef {
  public:
   Declaration declaration;
@@ -66,9 +64,11 @@ class AttrRef {
 
   size_t Hash() const;
 
-  std::string GetSynonym() const;
+  std::unordered_set<Synonym> GetSynonyms() const;
 
  private:
+  constexpr static const char kAttrSynonym[] = ".ATTR";
+
   void Validate();
 };
 

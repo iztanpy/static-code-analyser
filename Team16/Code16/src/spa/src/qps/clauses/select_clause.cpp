@@ -1,20 +1,20 @@
 #include "qps/clauses/select_clause.h"
 
 bool SelectClause::equals(const SelectClause& other) const {
-  return declaration == other.declaration && attr_name == other.attr_name;
+  return attr_ref == other.attr_ref;
 }
 
 Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
-  return SelectEvaluator::Evaluate(declaration, pkb_reader);
+  return attr_ref.Evaluate(pkb_reader);
 }
 
 std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
-  return {declaration.synonym};
+  return attr_ref.GetSynonyms();
 }
 
 size_t SelectClause::Hash() const {
   uint64_t result = Clause::Hash();
-  result = result * 31 + std::hash<Declaration>()(declaration);
+  result = result * 31 + attr_ref.Hash();
   return static_cast<size_t>(result);
 }
 
@@ -24,5 +24,5 @@ bool SelectClause::equals(const Clause* other) const {
 }
 
 bool operator==(const SelectClause& lhs, const SelectClause& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.attr_name == rhs.attr_name;
+  return lhs.attr_ref == rhs.attr_ref;
 }

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_set>
+#include <utility>
 
 #include "qps/design_entity.h"
 #include "qps/clauses/clause.h"
@@ -11,8 +12,9 @@
 // TODO(phuccuongngo99): Please change this to point at AttrRef implementation
 class SelectClause : public Clause {
  public:
-  Declaration declaration;
-  AttrName attr_name;
+  AttrRef attr_ref;
+
+  explicit SelectClause(AttrRef attr_ref) : attr_ref(std::move(attr_ref)) {}
 
   /*!
    * Checks if this Select clause is equal to another Select clause

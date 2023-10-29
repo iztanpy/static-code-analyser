@@ -7,11 +7,13 @@
 #include "qps/clauses/select_clause.h"
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
+#include "qps/clauses/attr_ref.h"
 
 class SelectClauseBuilder : public ClauseBuilder {
  public:
   SelectClauseBuilder();
-  SelectClause selectClause;
+  Declaration declaration_;
+  AttrName attr_name_;
 
   /*!
    * Setts the Declaration synonym of the select clause
