@@ -53,7 +53,7 @@ size_t AttrRef::Hash() const {
   return static_cast<size_t>(result);
 }
 
-std::unordered_set<Synonym> AttrRef::GetSynonyms() const {
+std::vector<Synonym> AttrRef::GetSynonyms() const {
   if (IsComplexCase()) {
     return {declaration.synonym, declaration.synonym + kAttrSynonym};
   } else {

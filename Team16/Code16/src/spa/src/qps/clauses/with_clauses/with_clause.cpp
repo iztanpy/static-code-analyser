@@ -7,11 +7,11 @@ std::unordered_set<Synonym> WithClause::GetSynonyms() const {
 
   std::unordered_set<Synonym> synonyms;
   if (std::holds_alternative<AttrRef>(lhs)) {
-    synonyms.insert(std::get<AttrRef>(lhs).declaration.synonym);
+    synonyms.insert(std::get<AttrRef>(lhs).GetSynonyms()[0]);
   }
 
   if (std::holds_alternative<AttrRef>(rhs)) {
-    synonyms.insert(std::get<AttrRef>(rhs).declaration.synonym);
+    synonyms.insert(std::get<AttrRef>(rhs).GetSynonyms()[0]);
   }
   return synonyms;
 }

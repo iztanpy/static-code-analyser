@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_set>
 #include <utility>
+#include <vector>
 
 #include "qps/design_entity.h"
 #include "qps/clauses/clause.h"

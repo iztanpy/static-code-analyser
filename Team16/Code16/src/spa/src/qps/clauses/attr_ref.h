@@ -4,6 +4,7 @@
 #include <variant>
 #include <unordered_map>
 #include <string>
+#include <vector>
 #include <unordered_set>
 
 #include "qps/declaration.h"
@@ -64,7 +65,11 @@ class AttrRef {
 
   size_t Hash() const;
 
-  std::unordered_set<Synonym> GetSynonyms() const;
+  // Get all synonyms used in this AttrRef
+  // Output is a vector with 1 or 2 elements
+  // Only 2 elements if it's Call.procName, Read.varName, Print.varName
+  // in which case the second synonym will be the synonym with .ATTR appended
+  std::vector<Synonym> GetSynonyms() const;
 
  private:
   constexpr static const char kAttrSynonym[] = ".ATTR";

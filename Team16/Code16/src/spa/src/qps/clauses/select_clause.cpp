@@ -9,7 +9,15 @@ Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
 }
 
 std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
-  return attr_ref.GetSynonyms();
+  std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
+  if (synonyms.empty()) {
+    throw std::runtime_error("SelectClause::GetSynonyms. Shouldn't reach here! Synonyms cannot be empty");
+  }
+  if (attr_ref.IsComplexCase()) {
+    // For complex case, get the second synonym
+    return {synonyms[1]};
+  }
+  return {synonyms[0]};
 }
 
 size_t SelectClause::Hash() const {
