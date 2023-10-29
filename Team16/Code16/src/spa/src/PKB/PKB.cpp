@@ -1027,23 +1027,27 @@ bool PKB::isAffects(statementNumber statement1, statementNumber statement2) {
 
     stack.push(statement1);
 
+    bool visitedHome = false;
     while (!stack.empty()) {
         statementNumber currentStatement = stack.top();
         stack.pop();
 
-        if (currentStatement == statement2) {
-            return true;
-        }
-
         if (visited.count(currentStatement) == 0) {
             visited.insert(currentStatement);
+            if (!visitedHome) {
+                visitedHome = true;
+                visited.erase(statement1);
+            }
             auto nextStatements = nextStore->getNext(currentStatement);
             for (auto nextStatement : nextStatements) {
                 if (visited.count(nextStatement) == 0) {
-                    if (this->modifiesStatement(nextStatement, modifiedVariable)) {
-                        if (nextStatement == statement2) {
+                    usedVariables = usesStore->relates(nextStatement);
+                    if (usedVariables.count(modifiedVariable) > 0) {
+                        if(nextStatement == statement2){
                             return true;
                         }
+                    }
+                    if (this->modifiesStatement(nextStatement, modifiedVariable)) {
                         visited.insert(nextStatement);
                     }
                     else {
@@ -1068,17 +1072,22 @@ bool PKB::isAffects(statementNumber statement1, Wildcard w) {
     std::unordered_set<statementNumber> visited;
 
     stack.push(statement1);
-
+    bool visitedHome = false;
     while (!stack.empty()) {
         statementNumber currentStatement = stack.top();
         stack.pop();
 
         if (visited.count(currentStatement) == 0) {
             visited.insert(currentStatement);
+            if (!visitedHome) {
+                visitedHome = true;
+                visited.erase(statement1);
+            }
             auto nextStatements = nextStore->getNext(currentStatement);
             for (auto nextStatement : nextStatements) {
                 if (visited.count(nextStatement) == 0) {
-                    if (this->modifiesStatement(nextStatement, modifiedVariable)&& statementStore->isAssign(nextStatement)) {
+                    std::unordered_set<variable> usedVariables = usesStore->relates(nextStatement);
+                    if (usedVariables.count(modifiedVariable) != 0  && statementStore->isAssign(nextStatement)) {
                         return true;
                     }
                     else {
@@ -1095,33 +1104,10 @@ bool PKB::isAffects(Wildcard w, statementNumber statement2) {
     if (!statementStore->isAssign(statement2)) {
         return false;
     }
-    auto usedVariables = usesStore->relates(statement2);
 
-    std::stack<statementNumber> stack;
-    std::unordered_set<statementNumber> visited;
-
-    stack.push(statement2);
-
-    while (!stack.empty()) {
-        statementNumber currentStatement = stack.top();
-        stack.pop();
-
-        if (visited.count(currentStatement) == 0) {
-            visited.insert(currentStatement);
-            auto previousStatements = nextStore->getNextReverse(currentStatement);
-            for (auto previousStatement : previousStatements) {
-                if (visited.count(previousStatement) == 0) {
-                    auto modifiedVariables = modifiesStore->relates(previousStatement);
-
-                    if (statementStore->isAssign(statement2)) {
-                        variable modifiedVariable = *modifiedVariables.begin();
-                        if (usedVariables.count(modifiedVariable) != 0) {
-                            return true;
-                        }
-                    }
-                    stack.push(previousStatement);
-                }
-            }
+    for (auto assignStatement : statementStore->getStatements(StmtEntity::kAssign)) {
+        if (isAffects(assignStatement, statement2)) {
+            return true;
         }
     }
     return false;
@@ -1200,6 +1186,7 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
         std::unordered_set<statementNumber> visited;
 
         stack.push(assignStatement);
+        bool visitedHome = false;
 
         while (!stack.empty()) {
             statementNumber currentStatement = stack.top();
@@ -1207,14 +1194,23 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
 
             if (visited.count(currentStatement) == 0) {
                 visited.insert(currentStatement);
+
+                if (!visitedHome) {
+                    visitedHome = true;
+                    visited.erase(assignStatement);
+                }
+
                 auto nextStatements = nextStore->getNext(currentStatement);
                 for (auto nextStatement : nextStatements) {
                     if (visited.count(nextStatement) == 0) {
-                        if (this->modifiesStatement(nextStatement, modifiedVariable) && statementStore->isAssign(nextStatement)) {
+                        auto usedVariables = usesStore->relates(nextStatement);
+                        if (usedVariables.count(modifiedVariable) > 0 && statementStore->isAssign(nextStatement)) {
                             results.insert(std::make_pair(assignStatement, nextStatement));
-                            visited.insert(nextStatement);
                         }
-                        else {
+     
+                        if (modifiesStatement(nextStatement, modifiedVariable)) {
+                            visited.insert(nextStatement);
+                        } else {
                             stack.push(nextStatement);
                         }
                     }

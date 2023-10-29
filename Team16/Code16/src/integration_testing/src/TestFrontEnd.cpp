@@ -559,6 +559,14 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(!pkb_ptr->isAffects(2, 3));
     REQUIRE(!pkb_ptr->isAffects(9, 6));
     REQUIRE(!pkb_ptr->isAffects(9, 12));
+    REQUIRE(!pkb_ptr->isAffects(8, 8));
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> affects = pkb_ptr->Affects();
+
+    //print affects
+    for (auto it = affects.begin(); it != affects.end(); ++it) {
+        std::cout << it->first << " " << it->second << std::endl;
+    }
 
     
 }
