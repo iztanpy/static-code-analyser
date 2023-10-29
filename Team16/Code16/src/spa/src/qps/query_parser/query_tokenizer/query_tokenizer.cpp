@@ -66,9 +66,11 @@ size_t QueryTokenizer::getFirstClauseIndexes(const std::string& remaining_statem
       qps_constants::kSuchThatClauseRegex,
       qps_constants::kPatternClauseRegex,
       qps_constants::kAndClauseRegex,
+      qps_constants::kWithClauseRegex,
       qps_constants::kOnlySuchThat,
       qps_constants::kOnlyPattern,
-      qps_constants::kOnlyAnd
+      qps_constants::kOnlyAnd,
+      qps_constants::kOnlyWith
   };
 
   for (const auto& rgx : rgxVector) {
@@ -90,8 +92,8 @@ size_t QueryTokenizer::getFirstClauseIndexes(const std::string& remaining_statem
   return indexes[0];
 }
 
-SelectValueType QueryTokenizer::getSelectValueType(const std::string& select_value) {
-  if (QueryUtil::IsSynonym(select_value)) {
+SelectValueType QueryTokenizer::getSelectValueType(std::string& select_value) {
+  if (QueryUtil::IsSynonym(select_value) || QueryUtil::IsAttrRef(select_value)) {
     return SelectValueType::SINGLE;
   } else if (QueryUtil::IsEnclosedInTuple(select_value)) {
     return SelectValueType::MUTLIPLE;
@@ -482,6 +484,7 @@ std::vector<std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::st
           for (const QueryToken& token : tokens) {
             with_tokens.push_back(token);
           }
+          break;
         default:
           throw QpsSyntaxError("Unrecognised clause");
       }

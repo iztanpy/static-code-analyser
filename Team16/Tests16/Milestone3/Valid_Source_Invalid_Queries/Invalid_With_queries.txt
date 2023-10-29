@@ -1,0 +1,120 @@
+1 - and followed by with
+assign a; while w;
+Select a such that Parent* (w, a) with a.stmt#=w.stmt# and with a.stmt#=6
+SyntaxError
+5000
+2 - pattern followed by  and with
+assign a; while w;
+Select a such that Parent* (w, a) pattern a ("x", _) and a.stmt#=6
+SyntaxError
+5000
+3 - such that followed by  and with
+assign a; while w;
+Select a such that Parent* (w, a) and a.stmt#=6
+SyntaxError
+5000
+4 - with followed by  and pattern
+assign a; while w;
+Select a with a.stmt#=6 and a("x", _)
+SyntaxError
+5000
+5 - misspelling in attrref
+assign a; while w;
+Select a pattern a(_,_) such that Modifies(a, "x") and Parent*(1, a) with a.stmt = 5
+SyntaxError
+5000
+6 - misspelling in with varName
+assign a; while w; variable v;
+Select a pattern a(_,_) such that Modifies(a, "x") and Parent*(1, a) with v.varNam = "x"
+SyntaxError
+5000
+7 - misspelling in with procName
+assign a; while w; procedure p;
+Select a pattern a(_,_) such that Modifies(a, "x") and Parent*(1, a) with "x"=p.proName
+SyntaxError
+5000
+8 - extra equal sign in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x"==p.procName such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+9 - extra closing bracket in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x"=p.procName) such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+10 - extra opening bracket in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with ("x"=p.procName such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+11 - no equal in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x" p.procName such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+12 - no equal in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x"p.procName such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+13 - extra quotation in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x""=p.procName such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+14 - compare diff type in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x"=a.stmt# such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+15 - wrong attrent to syn
+assign a; while w; procedure p;
+Select a pattern a(_,_) with 5=p.stmt# such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+16 - wrong attrent to syn
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x"=a.varName such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+17 - wrong attrent to syn
+assign a; while w; procedure p;
+Select a pattern a(_,_) with "x"=a.procName such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+18 - no dot in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with astmt# = 5 such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+19 - extra dot in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with 5=a..stmt# such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+20 - extra character in with
+assign a; while w; procedure p;
+Select a pattern a(_,_) with 5a=a.stmt# such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
+21 - with followed by and such that
+assign a; while w;
+Select a with a.stmt#=6 and Parent* (w, a)
+SyntaxError
+5000
+22 - extra arguments
+assign a; while w;
+Select a with a.stmt#=6 such that Parent* (w,a,a)
+SyntaxError
+5000
+23 - missing clause indicators with
+assign a; while w;
+Select a such that Modifies(a, "x") 5=5 such that Parent*(1, a) pattern a(_,_)
+SyntaxError
+5000
+24 - missing clause indicators and
+assign a; while w;
+Select a such that Modifies(a, "x") with 5=5 5=6 pattern a(_,_)
+SyntaxError
+5000

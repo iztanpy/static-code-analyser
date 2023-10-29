@@ -383,7 +383,7 @@ TEST_CASE("Parser can parse with clause") {
   expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs, 10));
 
   REQUIRE(parsed_query_1.selects == expected_selects);
-  // REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
+   REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse select attr ref") {

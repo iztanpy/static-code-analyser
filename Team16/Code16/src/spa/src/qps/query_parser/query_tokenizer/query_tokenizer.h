@@ -187,7 +187,7 @@ class QueryTokenizer {
    * @param select_value is the string to be processed
    * @return the select value type
    */
-  static SelectValueType getSelectValueType(const std::string& select_value);
+  static SelectValueType getSelectValueType(std::string& select_value);
 
   /*!
    * Removes the select clause from remaining clauses
