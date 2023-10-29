@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <memory>
+#include <stack>
 #include "Stores/VariableStore.h"
 #include "Stores/AssignStore.h"
 #include "Stores/ConstantStore.h"
