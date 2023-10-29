@@ -1137,6 +1137,95 @@ bool PKB::isAffects(Wildcard w, Wildcard w2) {
     return false;
 }
 
+std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, Wildcard w) {
+
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    std::unordered_set<statementNumber> results = {};
+    std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
+
+    for (auto assignStatement : assignStatements) {
+        if (isAffects(assignStatement, Wildcard())) {
+            results.insert(assignStatement);
+        }
+    }
+
+    return results;
+}
+
+std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, statementNumber stmt) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    std::unordered_set<statementNumber> results = {};
+    std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
+
+    for (auto assignStatement : assignStatements) {
+        if (isAffects(assignStatement, stmt)) {
+            results.insert(assignStatement);
+        }
+    }
+
+    return results;
+}
+
+std::unordered_set<statementNumber> PKB::Affects(statementNumber stmt, StmtEntity stmtEntity) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    std::unordered_set<statementNumber> results = {};
+    std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
+
+    for (auto assignStatement : assignStatements) {
+        if (isAffects(stmt, assignStatement)) {
+            results.insert(assignStatement);
+        }
+    }
+
+    return results;
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::Affects() {
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> results = std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>();
+    std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
+
+    for (auto assignStatement : assignStatements) {
+        auto modifiedVariables = modifiesStore->relates(assignStatement);
+        variable modifiedVariable = *modifiedVariables.begin();
+        std::stack<statementNumber> stack;
+        std::unordered_set<statementNumber> visited;
+
+        stack.push(assignStatement);
+
+        while (!stack.empty()) {
+            statementNumber currentStatement = stack.top();
+            stack.pop();
+
+            if (visited.count(currentStatement) == 0) {
+                visited.insert(currentStatement);
+                auto nextStatements = nextStore->getNext(currentStatement);
+                for (auto nextStatement : nextStatements) {
+                    if (visited.count(nextStatement) == 0) {
+                        if (this->modifiesStatement(nextStatement, modifiedVariable) && statementStore->isAssign(nextStatement)) {
+                            results.insert(std::make_pair(assignStatement, nextStatement));
+                        }
+                        else {
+                            stack.push(nextStatement);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return results;
+}
+
+
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>
         PKB::getStatementsAndVariable(StmtEntity type) {
     // if type is print or call or read,

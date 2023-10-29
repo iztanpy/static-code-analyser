@@ -1554,6 +1554,13 @@ class PKB {
 
     bool isAffects(Wildcard w, Wildcard w2);
 
+    std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, Wildcard w);
+
+    std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, statementNumber stmt);
+
+    std::unordered_set<statementNumber> Affects(statementNumber stmt, StmtEntity stmtEntity);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> Affects();
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
 
