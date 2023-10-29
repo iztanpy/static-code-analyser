@@ -561,14 +561,79 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(!pkb_ptr->isAffects(9, 12));
     REQUIRE(!pkb_ptr->isAffects(8, 8));
 
+    REQUIRE(!pkb_ptr->isAffects(3, Wildcard()));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 3));
+
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 6));
+    REQUIRE(pkb_ptr->isAffects(1, Wildcard()));
+
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), Wildcard()));
+
+    REQUIRE(pkb_ptr->isAffects(1, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(2, Wildcard()));
+    REQUIRE(!pkb_ptr->isAffects(3, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(4, Wildcard()));
+    REQUIRE(!pkb_ptr->isAffects(5, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(6, Wildcard()));
+    REQUIRE(!pkb_ptr->isAffects(7, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(8, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(9, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(10, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(11, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(1, Wildcard()));
+    REQUIRE(!pkb_ptr->isAffects(12, Wildcard()));
+    REQUIRE(pkb_ptr->isAffects(13, Wildcard()));
+
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 1));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 2));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 3));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 4));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 5));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 6));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 7));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 8));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 9));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 10));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 11));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 12));
+    REQUIRE(!pkb_ptr->isAffects(Wildcard(), 13));
+    REQUIRE(pkb_ptr->isAffects(Wildcard(), 14));
+
+    REQUIRE(pkb_ptr->Affects(1, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 4, 8, 10, 12 }) );
+    REQUIRE(pkb_ptr->Affects(2, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 6, 10 }));
+    REQUIRE(pkb_ptr->Affects(3, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(4, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 4, 8, 10, 12 }));
+    REQUIRE(pkb_ptr->Affects(5, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(6, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 6, 10 }));
+    REQUIRE(pkb_ptr->Affects(7, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(8, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 10, 12 }));
+    REQUIRE(pkb_ptr->Affects(9, StmtEntity::kAssign) == std::unordered_set<statementNumber>({10}));
+    REQUIRE(pkb_ptr->Affects(10, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 11, 12 }));
+    REQUIRE(pkb_ptr->Affects(11, StmtEntity::kAssign) == std::unordered_set<statementNumber>({12}));
+    REQUIRE(pkb_ptr->Affects(12, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(13, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 14 }));
+    REQUIRE(pkb_ptr->Affects(14, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 1) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 2) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 3) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 4) == std::unordered_set<statementNumber>({ 1, 4 }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 5) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 6) == std::unordered_set<statementNumber>({ 2, 6 }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 7) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 8) == std::unordered_set<statementNumber>({ 1, 4 }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 9) == std::unordered_set<statementNumber>({}));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 10) == std::unordered_set<statementNumber>({ 1, 2, 4, 6, 8, 9 }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 11) == std::unordered_set<statementNumber>({ 10 }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 12) == std::unordered_set<statementNumber>({ 1, 4, 8, 10, 11 }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 13) == std::unordered_set<statementNumber>({ }));
+    REQUIRE(pkb_ptr->Affects(StmtEntity::kAssign, 14) == std::unordered_set<statementNumber>({ 13 }));
+
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> affects = pkb_ptr->Affects();
 
-    //print affects
-    for (auto it = affects.begin(); it != affects.end(); ++it) {
-        std::cout << it->first << " " << it->second << std::endl;
-    }
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> affectsRequired = { {4, 12}, {1, 12}, {4, 4}, {1, 4}, {9, 10}, {1, 8}, {1, 10}, {10, 11}, {2, 6}, {10, 12}, {8, 10}, {2, 10}, {6, 6}, {4, 8}, {4, 10}, {6, 10}, {8, 12}, {11, 12}, {13, 14}};
 
-    
+    REQUIRE(affects == affectsRequired);
 }
 
 TEST_CASE("Test failing modifies testcase") {
