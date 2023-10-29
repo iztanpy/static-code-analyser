@@ -1095,7 +1095,6 @@ bool PKB::isAffects(Wildcard w, statementNumber statement2) {
     if (!statementStore->isAssign(statement2)) {
         return false;
     }
-
     auto usedVariables = usesStore->relates(statement2);
 
     std::stack<statementNumber> stack;
@@ -1128,6 +1127,15 @@ bool PKB::isAffects(Wildcard w, statementNumber statement2) {
     return false;
 }
 
+bool PKB::isAffects(Wildcard w, Wildcard w2) {
+    std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
+    for (auto assignStatement : assignStatements) {
+        if (isAffects(assignStatement, Wildcard())) {
+            return true;
+        }
+    }
+    return false;
+}
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>
         PKB::getStatementsAndVariable(StmtEntity type) {
