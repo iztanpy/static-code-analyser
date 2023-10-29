@@ -1212,6 +1212,7 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
                     if (visited.count(nextStatement) == 0) {
                         if (this->modifiesStatement(nextStatement, modifiedVariable) && statementStore->isAssign(nextStatement)) {
                             results.insert(std::make_pair(assignStatement, nextStatement));
+                            visited.insert(nextStatement);
                         }
                         else {
                             stack.push(nextStatement);
@@ -1221,7 +1222,6 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
             }
         }
     }
-
     return results;
 }
 
