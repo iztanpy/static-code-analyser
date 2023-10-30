@@ -48,6 +48,8 @@ class PKB {
     std::unique_ptr<IfStore> ifStore;
     std::unique_ptr<CallStore> callStore;
     std::unique_ptr<NextStore> nextStore;
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsCache;
+
 
  public:
     PKB();
@@ -1562,6 +1564,8 @@ class PKB {
     std::unordered_set<statementNumber> Affects(statementNumber stmt, StmtEntity stmtEntity);
 
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> Affects();
+
+    void clearAffectsCache();
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
 
