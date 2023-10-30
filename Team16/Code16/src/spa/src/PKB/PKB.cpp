@@ -994,6 +994,168 @@ bool PKB::isNextStar(statementNumber num1, statementNumber num2) {
 void PKB::clearNextStarCache() {
     nextStore->clearCache();
 }
+
+bool PKB::modifiesStatement(statementNumber num, variable targetVariable) {
+    // check if statementNumber is a assign read or procedure call
+    if (statementStore->getStatements(StmtEntity::kAssign).count(num) ||
+        statementStore->getStatements(StmtEntity::kRead).count(num) ||
+        statementStore->getStatements(StmtEntity::kCall).count(num)) {
+        return modifiesStore->isRelation(num, targetVariable);
+    }
+    return false;
+}
+
+bool PKB::isAffects(statementNumber statement1, statementNumber statement2) {
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    return AffectsStore[statement1].count(statement2) > 0;
+}
+
+
+bool PKB::isAffects(statementNumber statement1, Wildcard w) {
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    return AffectsStore[statement1].size() > 0;
+}
+
+bool PKB::isAffects(Wildcard w, statementNumber statement2) {
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    return AffectsStoreReverse[statement2].size() > 0;
+}
+
+bool PKB::isAffects(Wildcard w, Wildcard w2) {
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    return AffectsCache.size() > 0;
+}
+
+std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, Wildcard w) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+
+    std::unordered_set<statementNumber> results = {};
+    for (auto const& x : AffectsStore) {
+        if (x.second.size() > 0) {
+            results.insert(x.first);
+        }
+    }
+    return results;
+}
+
+std::unordered_set<statementNumber> PKB::Affects(Wildcard w, StmtEntity stmtEntity) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    std::unordered_set<statementNumber> results = {};
+
+    for (auto const& x : AffectsStoreReverse) {
+        if (x.second.size() > 0) {
+            results.insert(x.first);
+        }
+    }
+    return results;
+}
+
+std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, statementNumber stmt) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+
+    return AffectsStoreReverse[stmt];
+}
+
+std::unordered_set<statementNumber> PKB::Affects(statementNumber stmt, StmtEntity stmtEntity) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+
+    return AffectsStore[stmt];
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::Affects() {
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> results =
+        std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>();
+    if (!AffectsCache.empty()) {
+        return AffectsCache;
+    }
+
+    AffectsStore = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
+    AffectsStoreReverse = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
+
+    std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
+    for (auto assignStatement : assignStatements) {
+        auto modifiedVariables = modifiesStore->relates(assignStatement);
+        variable modifiedVariable = *modifiedVariables.begin();
+        std::stack<statementNumber> stack;
+        std::unordered_set<statementNumber> visited;
+
+        stack.push(assignStatement);
+        bool visitedHome = false;
+
+        while (!stack.empty()) {
+            statementNumber currentStatement = stack.top();
+            stack.pop();
+
+            if (visited.count(currentStatement) == 0) {
+                visited.insert(currentStatement);
+
+                if (!visitedHome) {
+                    visitedHome = true;
+                    visited.erase(assignStatement);
+                }
+
+                auto nextStatements = nextStore->getNext(currentStatement);
+                for (auto nextStatement : nextStatements) {
+                    if (visited.count(nextStatement) == 0) {
+                        auto usedVariables = usesStore->relates(nextStatement);
+                        if (usedVariables.count(modifiedVariable) > 0 && statementStore->isAssign(nextStatement)) {
+                            results.insert(std::make_pair(assignStatement, nextStatement));
+                            AffectsStore[assignStatement].insert(nextStatement);
+                            AffectsStoreReverse[nextStatement].insert(assignStatement);
+                        }
+
+                        if (modifiesStatement(nextStatement, modifiedVariable)) {
+                            visited.insert(nextStatement);
+                        } else {
+                            stack.push(nextStatement);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    AffectsCache = results;
+    return results;
+}
+
+void PKB::clearAffectsCache() {
+    AffectsCache.clear();
+    AffectsStore.clear();
+    AffectsStoreReverse.clear();
+}
+
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>
         PKB::getStatementsAndVariable(StmtEntity type) {
     // if type is print or call or read,

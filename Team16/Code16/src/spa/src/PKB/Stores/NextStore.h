@@ -61,6 +61,11 @@ class NextStore {
                          std::unordered_set<std::shared_ptr<CfgNode>> visitedNodes,
                          std::unordered_set<statementNumber> visitedNums);
 
+    std::unordered_set<statementNumber> getNext(statementNumber num);
+
+    std::unordered_set<statementNumber> getNextReverse(statementNumber num);
+
+
     void clearCache();
 };
 

@@ -997,4 +997,22 @@ class ReadFacade {
   bool isNextStar(statementNumber num1, statementNumber num2);
 
   std::unordered_set<std::pair<statementNumber, std::string>, PairHash> getStatementsAndVariable(StmtEntity type);
+
+  bool isAffects(statementNumber statement1, statementNumber statement2);
+
+  bool isAffects(statementNumber statement1, Wildcard w);
+
+  bool isAffects(Wildcard w, statementNumber statement2);
+
+  bool isAffects(Wildcard w, Wildcard w2);
+
+  std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, Wildcard w);
+
+  std::unordered_set<statementNumber> Affects(Wildcard w, StmtEntity stmtEntity);
+
+  std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, statementNumber stmt);
+
+  std::unordered_set<statementNumber> Affects(statementNumber stmt, StmtEntity stmtEntity);
+
+  std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> Affects();
 };

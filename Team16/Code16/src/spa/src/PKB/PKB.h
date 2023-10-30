@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <memory>
+#include <stack>
 #include "Stores/VariableStore.h"
 #include "Stores/AssignStore.h"
 #include "Stores/ConstantStore.h"
@@ -47,6 +48,9 @@ class PKB {
     std::unique_ptr<IfStore> ifStore;
     std::unique_ptr<CallStore> callStore;
     std::unique_ptr<NextStore> nextStore;
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsCache;
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> AffectsStore;
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> AffectsStoreReverse;
 
  public:
     PKB();
@@ -1542,6 +1546,29 @@ class PKB {
     * This function clears the cache used for storing Next* relationships, allowing for recalculation when needed.
     */
     void clearNextStarCache();
+
+    bool modifiesStatement(statementNumber num, variable targetVariable);
+
+    // Affects Methods
+    bool isAffects(statementNumber statement1, statementNumber statement2);
+
+    bool isAffects(statementNumber statement1, Wildcard w);
+
+    bool isAffects(Wildcard w, statementNumber statement2);
+
+    bool isAffects(Wildcard w, Wildcard w2);
+
+    std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, Wildcard w);
+
+    std::unordered_set<statementNumber> Affects(Wildcard w, StmtEntity stmtEntity);
+
+    std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, statementNumber stmt);
+
+    std::unordered_set<statementNumber> Affects(statementNumber stmt, StmtEntity stmtEntity);
+
+    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> Affects();
+
+    void clearAffectsCache();
 
     std::unordered_set<std::pair<statementNumber, variable>, PairHash> getStatementsAndVariable(StmtEntity type);
 

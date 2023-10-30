@@ -483,3 +483,39 @@ std::unordered_set<std::pair<statementNumber, std::string>, PairHash>
         ReadFacade::getStatementsAndVariable(StmtEntity type) {
     return pkb.getStatementsAndVariable(type);
 }
+
+bool ReadFacade::isAffects(statementNumber statement1, statementNumber statement2) {
+    return pkb.isAffects(statement1, statement2);
+}
+
+bool ReadFacade::isAffects(statementNumber statement1, Wildcard w) {
+    return pkb.isAffects(statement1, w);
+}
+
+bool ReadFacade::isAffects(Wildcard w, statementNumber statement2) {
+    return pkb.isAffects(w, statement2);
+}
+
+bool ReadFacade::isAffects(Wildcard w, Wildcard w2) {
+    return pkb.isAffects(w, w2);
+}
+
+std::unordered_set<statementNumber> ReadFacade::Affects(StmtEntity stmtEntity, Wildcard w) {
+    return pkb.Affects(stmtEntity, w);
+}
+
+std::unordered_set<statementNumber> ReadFacade::Affects(Wildcard w, StmtEntity stmtEntity) {
+    return pkb.Affects(w, stmtEntity);
+}
+
+std::unordered_set<statementNumber> ReadFacade::Affects(StmtEntity stmtEntity, statementNumber stmt) {
+    return pkb.Affects(stmtEntity, stmt);
+}
+
+std::unordered_set<statementNumber> ReadFacade::Affects(statementNumber stmt, StmtEntity stmtEntity) {
+    return pkb.Affects(stmt, stmtEntity);
+}
+
+std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> ReadFacade::Affects() {
+    return pkb.Affects();
+}
