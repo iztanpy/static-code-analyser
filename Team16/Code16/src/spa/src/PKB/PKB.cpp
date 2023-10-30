@@ -1052,6 +1052,24 @@ std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, Wildcard
     return results;
 }
 
+std::unordered_set<statementNumber> PKB::Affects(Wildcard w, StmtEntity stmtEntity) {
+    if (stmtEntity != StmtEntity::kAssign) {
+        return std::unordered_set<statementNumber>();
+    }
+
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    std::unordered_set<statementNumber> results = {};
+
+    for (auto const& x : AffectsStoreReverse) {
+        if (x.second.size() > 0) {
+            results.insert(x.first);
+        }
+    }
+    return results;
+}
+
 std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, statementNumber stmt) {
     if (stmtEntity != StmtEntity::kAssign) {
         return std::unordered_set<statementNumber>();

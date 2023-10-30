@@ -504,6 +504,10 @@ std::unordered_set<statementNumber> ReadFacade::Affects(StmtEntity stmtEntity, W
     return pkb.Affects(stmtEntity, w);
 }
 
+std::unordered_set<statementNumber> ReadFacade::Affects(Wildcard w, StmtEntity stmtEntity) {
+    return pkb.Affects(w, stmtEntity);
+}
+
 std::unordered_set<statementNumber> ReadFacade::Affects(StmtEntity stmtEntity, statementNumber stmt) {
     return pkb.Affects(stmtEntity, stmt);
 }

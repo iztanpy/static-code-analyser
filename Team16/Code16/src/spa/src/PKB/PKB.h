@@ -1560,6 +1560,8 @@ class PKB {
 
     std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, Wildcard w);
 
+    std::unordered_set<statementNumber> Affects(Wildcard w, StmtEntity stmtEntity);
+
     std::unordered_set<statementNumber> Affects(StmtEntity stmtEntity, statementNumber stmt);
 
     std::unordered_set<statementNumber> Affects(statementNumber stmt, StmtEntity stmtEntity);

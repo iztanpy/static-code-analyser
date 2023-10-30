@@ -620,6 +620,8 @@ TEST_CASE("Test affects testcase") {
 
     pkb_ptr->clearAffectsCache();
 
+    REQUIRE(readFacade.Affects(Wildcard(), StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 4, 6, 8, 10, 11, 12, 14 }));
+    REQUIRE(readFacade.Affects(StmtEntity::kAssign, Wildcard()) == std::unordered_set<statementNumber>({ 1, 2, 4, 6, 8, 9, 10, 11, 13 }));
 
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 1) == std::unordered_set<statementNumber>({}));
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 2) == std::unordered_set<statementNumber>({}));
