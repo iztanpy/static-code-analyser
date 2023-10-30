@@ -583,6 +583,7 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(readFacade.isAffects(1, Wildcard()));
     REQUIRE(!readFacade.isAffects(12, Wildcard()));
     REQUIRE(readFacade.isAffects(13, Wildcard()));
+    REQUIRE(!readFacade.isAffects(51, Wildcard()));
 
     REQUIRE(!readFacade.isAffects(Wildcard(), 1));
     REQUIRE(!readFacade.isAffects(Wildcard(), 2));
@@ -598,6 +599,7 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(readFacade.isAffects(Wildcard(), 12));
     REQUIRE(!readFacade.isAffects(Wildcard(), 13));
     REQUIRE(readFacade.isAffects(Wildcard(), 14));
+    REQUIRE(!readFacade.isAffects(Wildcard(), 51));
 
     REQUIRE(readFacade.Affects(1, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 4, 8, 10, 12 }));
     REQUIRE(readFacade.Affects(2, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 6, 10 }));
@@ -613,6 +615,11 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(readFacade.Affects(12, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
     REQUIRE(readFacade.Affects(13, StmtEntity::kAssign) == std::unordered_set<statementNumber>({ 14 }));
     REQUIRE(readFacade.Affects(14, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+    REQUIRE(readFacade.Affects(51, StmtEntity::kAssign) == std::unordered_set<statementNumber>({}));
+
+
+    pkb_ptr->clearAffectsCache();
+
 
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 1) == std::unordered_set<statementNumber>({}));
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 2) == std::unordered_set<statementNumber>({}));
@@ -628,12 +635,39 @@ TEST_CASE("Test affects testcase") {
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 12) == std::unordered_set<statementNumber>({ 1, 4, 8, 10, 11 }));
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 13) == std::unordered_set<statementNumber>({ }));
     REQUIRE(readFacade.Affects(StmtEntity::kAssign, 14) == std::unordered_set<statementNumber>({ 13 }));
+    REQUIRE(readFacade.Affects(StmtEntity::kAssign, 51) == std::unordered_set<statementNumber>({ }));
+
+
+    REQUIRE(readFacade.Affects(StmtEntity::kCall, 14) == std::unordered_set<statementNumber>({}));
+    REQUIRE(readFacade.Affects(1, StmtEntity::kCall) == std::unordered_set<statementNumber>({}));
 
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> affects = readFacade.Affects();
 
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> affectsRequired = { {4, 12}, {1, 12}, {4, 4}, {1, 4}, {9, 10}, {1, 8}, {1, 10}, {10, 11}, {2, 6}, {10, 12}, {8, 10}, {2, 10}, {6, 6}, {4, 8}, {4, 10}, {6, 10}, {8, 12}, {11, 12}, {13, 14}};
 
     REQUIRE(affects == affectsRequired);
+}
+
+TEST_CASE("Test affects testcase 2") {
+    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+    ReadFacade readFacade = ReadFacade(*pkb_ptr);
+    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    SourceProcessor sourceProcessor(&writeFacade);
+    QPS qps(readFacade);
+    std::string simpleProgram = R"(procedure Third {
+          z = 5;
+          v = a;
+          print v; })";
+
+    sourceProcessor.processSource(simpleProgram);
+    REQUIRE(!readFacade.isAffects(1, 3));
+    REQUIRE(!readFacade.isAffects(Wildcard(), Wildcard()));
+    REQUIRE(!readFacade.isAffects(1, Wildcard()));
+    REQUIRE(!readFacade.isAffects(Wildcard(), 3));
+    REQUIRE(!readFacade.isAffects(1, 2));
+    REQUIRE(!readFacade.isAffects(2, 3));
+    REQUIRE(!readFacade.isAffects(3, 3));
+    REQUIRE(!readFacade.isAffects(2, 1));
 }
 
 TEST_CASE("Test failing modifies testcase") {

@@ -49,7 +49,8 @@ class PKB {
     std::unique_ptr<CallStore> callStore;
     std::unique_ptr<NextStore> nextStore;
     std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsCache;
-
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> AffectsStore;
+    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> AffectsStoreReverse;
 
  public:
     PKB();

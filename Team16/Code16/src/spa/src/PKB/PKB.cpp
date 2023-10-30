@@ -1006,34 +1006,32 @@ bool PKB::modifiesStatement(statementNumber num, variable targetVariable) {
 }
 
 bool PKB::isAffects(statementNumber statement1, statementNumber statement2) {
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
-    return AffectsPairs.count(std::make_pair(statement1, statement2)) != 0;
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    return AffectsStore[statement1].count(statement2) > 0;
 }
 
 
 bool PKB::isAffects(statementNumber statement1, Wildcard w) {
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
-    for (auto const& x : AffectsPairs) {
-        if (x.first == statement1) {
-            return true;
-        }
+    if (AffectsCache.empty()) {
+        Affects();
     }
-    return false;
+    return AffectsStore[statement1].size() > 0;
 }
 
 bool PKB::isAffects(Wildcard w, statementNumber statement2) {
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
-    for (auto const& x : AffectsPairs) {
-        if (x.second == statement2) {
-            return true;
-        }
+    if (AffectsCache.empty()) {
+        Affects();
     }
-    return false;
+    return AffectsStoreReverse[statement2].size() > 0;
 }
 
 bool PKB::isAffects(Wildcard w, Wildcard w2) {
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
-    return !AffectsPairs.empty();
+    if (AffectsCache.empty()) {
+        Affects();
+    }
+    return AffectsCache.size() > 0;
 }
 
 std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, Wildcard w) {
@@ -1041,11 +1039,15 @@ std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, Wildcard
         return std::unordered_set<statementNumber>();
     }
 
-    std::unordered_set<statementNumber> results = {};
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
+    if (AffectsCache.empty()) {
+        Affects();
+    }
 
-    for (auto const& x : AffectsPairs) {
-        results.insert(x.first);
+    std::unordered_set<statementNumber> results = {};
+    for (auto const& x : AffectsStore) {
+        if (x.second.size() > 0) {
+            results.insert(x.first);
+        }
     }
     return results;
 }
@@ -1055,15 +1057,11 @@ std::unordered_set<statementNumber> PKB::Affects(StmtEntity stmtEntity, statemen
         return std::unordered_set<statementNumber>();
     }
 
-    std::unordered_set<statementNumber> results = {};
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
-
-    for (auto const& x : AffectsPairs) {
-        if (x.second == stmt) {
-            results.insert(x.first);
-        }
+    if (AffectsCache.empty()) {
+        Affects();
     }
-    return results;
+
+    return AffectsStoreReverse[stmt];
 }
 
 std::unordered_set<statementNumber> PKB::Affects(statementNumber stmt, StmtEntity stmtEntity) {
@@ -1071,15 +1069,11 @@ std::unordered_set<statementNumber> PKB::Affects(statementNumber stmt, StmtEntit
         return std::unordered_set<statementNumber>();
     }
 
-    std::unordered_set<statementNumber> results = {};
-    std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsPairs = Affects();
-
-    for (auto const& x : AffectsPairs) {
-        if (x.first == stmt) {
-            results.insert(x.second);
-        }
+    if (AffectsCache.empty()) {
+        Affects();
     }
-    return results;
+
+    return AffectsStore[stmt];
 }
 
 std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::Affects() {
@@ -1088,6 +1082,9 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
     if (!AffectsCache.empty()) {
         return AffectsCache;
     }
+
+    AffectsStore = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
+    AffectsStoreReverse = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
 
     std::unordered_set<statementNumber> assignStatements = statementStore->getStatements(StmtEntity::kAssign);
     for (auto assignStatement : assignStatements) {
@@ -1117,6 +1114,8 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
                         auto usedVariables = usesStore->relates(nextStatement);
                         if (usedVariables.count(modifiedVariable) > 0 && statementStore->isAssign(nextStatement)) {
                             results.insert(std::make_pair(assignStatement, nextStatement));
+                            AffectsStore[assignStatement].insert(nextStatement);
+                            AffectsStoreReverse[nextStatement].insert(assignStatement);
                         }
 
                         if (modifiesStatement(nextStatement, modifiedVariable)) {
@@ -1135,6 +1134,8 @@ std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> PKB::A
 
 void PKB::clearAffectsCache() {
     AffectsCache.clear();
+    AffectsStore.clear();
+    AffectsStoreReverse.clear();
 }
 
 std::unordered_set<std::pair<statementNumber, variable>, PairHash>
