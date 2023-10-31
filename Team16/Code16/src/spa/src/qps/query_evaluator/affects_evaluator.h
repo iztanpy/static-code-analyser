@@ -7,6 +7,9 @@
 #include "qps/query_evaluator/evaluator_util.h"
 #include "utils/entity_types.h"
 
+/*!
+ * Evaluator visitor to handle all combination of parameters of Affects clause
+ */
 struct AffectsEvaluator {
   static bool Handle(int lhs, int rhs, ReadFacade& pkb_reader);
 
