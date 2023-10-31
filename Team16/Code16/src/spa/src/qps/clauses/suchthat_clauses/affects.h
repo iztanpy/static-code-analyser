@@ -3,8 +3,11 @@
 #include <utility>
 #include "qps/clauses/suchthat_clauses/suchthat_clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_validator.h"
-#include "qps/query_evaluator/parent_evaluator.h"
+#include "qps/query_evaluator/affects_evaluator.h"
 
+/*!
+ * Represents Affects clause in PQL grammar
+ */
 class Affects : public SuchThatClause {
  public:
   StmtRef lhs;

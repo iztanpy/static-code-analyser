@@ -193,6 +193,29 @@ TEST_CASE("Next::Next", "[Next]") {
     REQUIRE_NOTHROW(NextT(stmt_ref1, stmt_ref2));
   }
 }
+
+TEST_CASE("Affects::Affects", "[Affects]") {
+  SECTION("Constructor throws semantic error") {
+    StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
+    StmtRef stmt_ref2(1);
+    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+  }
+
+  SECTION("Constructor throws semantic error") {
+    StmtRef stmt_ref1(Wildcard::Value);
+    StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
+    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+  }
+
+  SECTION("Constructor not throwing semantic error") {
+    StmtRef stmt_ref1(Wildcard::Value);
+    StmtRef stmt_ref2(Declaration{"x", DesignEntity::STMT});
+    REQUIRE_NOTHROW(Affects(stmt_ref1, stmt_ref2));
+  }
+}
+
 TEST_CASE("IfPattern::IfPattern", "[IfPattern]") {
   SECTION("Constructor throws semantic error") {
     Declaration syn({"x", DesignEntity::READ});
