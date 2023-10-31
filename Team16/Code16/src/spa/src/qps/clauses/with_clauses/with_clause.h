@@ -2,6 +2,8 @@
 
 #include <string>
 #include <utility>
+#include <cassert>
+
 #include <unordered_set>
 #include "qps/clauses/clause.h"
 #include "qps/clauses/attr_ref.h"
