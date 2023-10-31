@@ -10,14 +10,21 @@ Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
 
 std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
   std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
-  if (synonyms.empty()) {
-    throw std::runtime_error("SelectClause::GetSynonyms. Shouldn't reach here! Synonyms cannot be empty");
+  // Check if synonyms vector size is not 1 or 2
+  if (synonyms.empty() || synonyms.size() > 2) {
+    throw std::runtime_error("SelectClause::GetSelectedSynonym. Synonyms size must be 1 or 2.");
   }
-  if (attr_ref.IsComplexCase()) {
-    // For complex case, get the second synonym
-    return {synonyms[1]};
+  return {synonyms.begin(), synonyms.end()};
+}
+
+Synonym SelectClause::GetSelectedSynonym() const {
+  std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
+  // Check if synonyms vector size is not 1 or 2
+  if (synonyms.empty() || synonyms.size() > 2) {
+    throw std::runtime_error("SelectClause::GetSelectedSynonym. Synonyms size must be 1 or 2.");
   }
-  return {synonyms[0]};
+  // Return the second element if there are two synonyms, otherwise return the first
+  return synonyms.back();
 }
 
 size_t SelectClause::Hash() const {
