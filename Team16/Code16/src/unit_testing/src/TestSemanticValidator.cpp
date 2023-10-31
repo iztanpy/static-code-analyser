@@ -4,6 +4,7 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/entity_types.h"
+#include "qps/clauses/attr_ref.h"
 
 TEST_CASE("Uses::Uses", "[Uses]") {
   SECTION("Constructor throws semantic error") {
@@ -232,5 +233,71 @@ TEST_CASE("WhilePattern::WhilePattern", "[WhilePattern]") {
     Declaration syn({"x", DesignEntity::WHILE_LOOP});
     EntRef ent_ref("xyr");
     REQUIRE_NOTHROW(WhilePattern(syn, ent_ref));
+  }
+}
+
+TEST_CASE("AttrRef::AttrRef", "[AttrRef]") {
+  SECTION("Constructor throws semantic error") {
+    // Invalid: VARIABLE should not be paired with PROCNAME
+    REQUIRE_THROWS_AS(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::PROCNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::PROCNAME), "Invalid AttrName for synonym");
+
+    // Invalid: PROCEDURE should not be paired with VARNAME
+    REQUIRE_THROWS_AS(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::VARNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::VARNAME), "Invalid AttrName for synonym");
+
+    // Invalid: CONSTANT should not be paired with PROCNAME
+    REQUIRE_THROWS_AS(AttrRef({"c", DesignEntity::CONSTANT}, AttrName::PROCNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"c", DesignEntity::CONSTANT}, AttrName::PROCNAME), "Invalid AttrName for synonym");
+
+    // Invalid: READ should not be paired with PROCNAME
+    REQUIRE_THROWS_AS(AttrRef({"r", DesignEntity::READ}, AttrName::PROCNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"r", DesignEntity::READ}, AttrName::PROCNAME), "Invalid AttrName for synonym");
+
+    // Invalid: PRINT should not be paired with VALUE
+    REQUIRE_THROWS_AS(AttrRef({"pr", DesignEntity::PRINT}, AttrName::VALUE), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"pr", DesignEntity::PRINT}, AttrName::VALUE), "Invalid AttrName for synonym");
+
+    // Invalid: CALL should not be paired with VARNAME
+    REQUIRE_THROWS_AS(AttrRef({"c", DesignEntity::CALL}, AttrName::VARNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"c", DesignEntity::CALL}, AttrName::VARNAME), "Invalid AttrName for synonym");
+
+    // Invalid: WHILE_LOOP should not be paired with VALUE
+    REQUIRE_THROWS_AS(AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::VALUE), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::VALUE), "Invalid AttrName for synonym");
+
+    // Invalid: IF_STMT should not be paired with VARNAME
+    REQUIRE_THROWS_AS(AttrRef({"i", DesignEntity::IF_STMT}, AttrName::VARNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"i", DesignEntity::IF_STMT}, AttrName::VARNAME), "Invalid AttrName for synonym");
+
+    // Invalid: ASSIGN should not be paired with PROCNAME
+    REQUIRE_THROWS_AS(AttrRef({"a", DesignEntity::ASSIGN}, AttrName::PROCNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"a", DesignEntity::ASSIGN}, AttrName::PROCNAME), "Invalid AttrName for synonym");
+
+    // Invalid: STMT should not be paired with PROCNAME
+    REQUIRE_THROWS_AS(AttrRef({"s", DesignEntity::STMT}, AttrName::PROCNAME), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AttrRef({"s", DesignEntity::STMT}, AttrName::PROCNAME), "Invalid AttrName for synonym");
+
+  }
+
+  SECTION("Constructor not throwing semantic error") {
+    // procedure.procName, call.procName, variable.varName, read.varName, print.varName: NAME
+    REQUIRE_NOTHROW(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME));
+    REQUIRE_NOTHROW(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME));
+    REQUIRE_NOTHROW(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME));
+    REQUIRE_NOTHROW(AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME));
+    REQUIRE_NOTHROW(AttrRef({"pr", DesignEntity::PRINT}, AttrName::VARNAME));
+
+    // constant.value: INTEGER
+    REQUIRE_NOTHROW(AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE));
+
+    // stmt.stmt#, read.stmt#, print.stmt#, call.stmt#, while.stmt#, if.stmt#, assign.stmt#: INTEGER
+    REQUIRE_NOTHROW(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM));
+    REQUIRE_NOTHROW(AttrRef({"r", DesignEntity::READ}, AttrName::STMTNUM));
+    REQUIRE_NOTHROW(AttrRef({"pr", DesignEntity::PRINT}, AttrName::STMTNUM));
+    REQUIRE_NOTHROW(AttrRef({"c", DesignEntity::CALL}, AttrName::STMTNUM));
+    REQUIRE_NOTHROW(AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::STMTNUM));
+    REQUIRE_NOTHROW(AttrRef({"i", DesignEntity::IF_STMT}, AttrName::STMTNUM));
+    REQUIRE_NOTHROW(AttrRef({"a", DesignEntity::ASSIGN}, AttrName::STMTNUM));
   }
 }
