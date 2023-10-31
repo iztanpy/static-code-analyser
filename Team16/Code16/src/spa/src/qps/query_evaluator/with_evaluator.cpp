@@ -90,13 +90,17 @@ Constraint WithEvaluator::Handle(AttrRef& lhs, AttrRef& rhs, ReadFacade& pkb_rea
 
     BinaryConstraint lhs_results = std::get<BinaryConstraint>(lhs.Evaluate(pkb_reader));
     BinaryConstraint rhs_results = std::get<BinaryConstraint>(rhs.Evaluate(pkb_reader));
+
+    std::unordered_multimap<std::string, std::string> map;
     for (const auto& p : lhs_results.pair_values) {
-      mapLhsToRhs[p.second] = p.first;
+      map.insert({p.second, p.first});
     }
 
+    // Iterate over the second set and find matches in the map
     for (const auto& p : rhs_results.pair_values) {
-      if (mapLhsToRhs.find(p.first) != mapLhsToRhs.end()) {
-        result.pair_values.insert({mapLhsToRhs[p.first], p.second});
+      auto range = map.equal_range(p.second);
+      for (auto it = range.first; it != range.second; ++it) {
+        result.pair_values.emplace(it->second, p.first);
       }
     }
     return result;
