@@ -12,7 +12,9 @@ class WithClause : public Clause {
   Ref lhs;
   Ref rhs;
 
-  WithClause(Ref lhs, Ref rhs) : lhs(std::move(lhs)), rhs(std::move(rhs)) {}
+  WithClause(Ref lhs, Ref rhs) : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+    Validate();
+  }
 
   /*!
    * Evaluate this clause given info from PKB
