@@ -198,21 +198,21 @@ TEST_CASE("Affects::Affects", "[Affects]") {
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     StmtRef stmt_ref2(1);
-    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2, false), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
-    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2, false), "Invalid RHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor not throwing semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::STMT});
-    REQUIRE_NOTHROW(Affects(stmt_ref1, stmt_ref2));
+    REQUIRE_NOTHROW(Affects(stmt_ref1, stmt_ref2, false));
   }
 }
 
@@ -332,35 +332,35 @@ TEST_CASE("WithClause::WithClause", "[WithClause]") {
 
     // Test 0: Mismatch between Name and INTEGER for procedure name
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), 8),
+        WithClause(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), 8, false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 1: Mismatch between Name and INTEGER for statement number
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), std::string("10")),
+        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), std::string("10"), false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 2: Mismatch between Name and INTEGER for procedure name
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME), 123),
+        WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME), 123, false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 3: Mismatch between Name and INTEGER for variable name
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), 999),
+        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), 999, false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 4: Mismatch between INTEGER for statement number and Name for read variable
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"r", DesignEntity::READ}, AttrName::STMTNUM), std::string("someVar")),
+        WithClause(AttrRef({"r", DesignEntity::READ}, AttrName::STMTNUM), std::string("someVar"), false),
         QpsSemanticError,
         message_matcher
     );
@@ -368,14 +368,14 @@ TEST_CASE("WithClause::WithClause", "[WithClause]") {
     // Test 5: Mismatch between INTEGER for constant value and Name for call procedure
     REQUIRE_THROWS_MATCHES(
         WithClause(AttrRef({"con", DesignEntity::CONSTANT}, AttrName::VALUE),
-                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME)),
+                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 6: Mismatch between INTEGER and string
     REQUIRE_THROWS_MATCHES(
-        WithClause(5, std::string("five")),
+        WithClause(5, std::string("five"), false),
         QpsSemanticError,
         message_matcher
     );
@@ -385,81 +385,81 @@ TEST_CASE("WithClause::WithClause", "[WithClause]") {
     // Test 1: PROCNAME and VARNAME has the same underlying type
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME),
-                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME))
+                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), false)
     );
 
     // Test 2: STMTNUM and VALUE has the same underlying type
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE),
-                   AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM))
+                   AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), false)
     );
 
     // Test 3: Mismatch between INTEGER types (read and print)
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME),
-                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME))
+                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), false)
     );
 
     // Test 4: Mismatch between INTEGER types (read and print)
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"pt", DesignEntity::PRINT}, AttrName::VARNAME),
-                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME))
+                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), false)
     );
-    REQUIRE_NOTHROW(WithClause(7, 10));
-    REQUIRE_NOTHROW(WithClause("procedureName", "varName"));
+    REQUIRE_NOTHROW(WithClause(7, 10, false));
+    REQUIRE_NOTHROW(WithClause("procedureName", "varName", false));
 
     // Matching Name types for procedure name with another procedure name
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"p1", DesignEntity::PROCEDURE}, AttrName::PROCNAME),
-                   AttrRef({"p2", DesignEntity::PROCEDURE}, AttrName::PROCNAME))
+                   AttrRef({"p2", DesignEntity::PROCEDURE}, AttrName::PROCNAME), false)
     );
 
     // Matching Name types for variable name with a string
     REQUIRE_NOTHROW(
-        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), std::string("variableName"))
+        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), std::string("variableName"), false)
     );
 
     // Matching Name types for call procedure name with read variable name
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME),
-                   AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME))
+                   AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME), false)
     );
 
     // Matching Name types for print variable name with a string
     REQUIRE_NOTHROW(
-        WithClause("printVar", AttrRef({"pr", DesignEntity::PRINT}, AttrName::VARNAME))
+        WithClause("printVar", AttrRef({"pr", DesignEntity::PRINT}, AttrName::VARNAME), false)
     );
 
     // Matching INTEGER types for statement number with integer
     REQUIRE_NOTHROW(
-        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), 5)
+        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), 5, false)
     );
 
     // Matching INTEGER types for constant value with integer
     REQUIRE_NOTHROW(
-        WithClause(10, AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE))
+        WithClause(10, AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE), false)
     );
 
     // Matching INTEGER types for assign statement number with read statement number
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"a", DesignEntity::ASSIGN}, AttrName::STMTNUM),
-                   AttrRef({"rd", DesignEntity::READ}, AttrName::STMTNUM))
+                   AttrRef({"rd", DesignEntity::READ}, AttrName::STMTNUM), false)
     );
 
     // Matching Name types for call procedure name with a string
     REQUIRE_NOTHROW(
-        WithClause(AttrRef({"cal", DesignEntity::CALL}, AttrName::PROCNAME), std::string("someProcedure"))
+        WithClause(AttrRef({"cal", DesignEntity::CALL}, AttrName::PROCNAME), std::string("someProcedure"), false)
     );
 
     // Matching INTEGER types for while statement number with integer
     REQUIRE_NOTHROW(
-        WithClause(20, AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::STMTNUM))
+        WithClause(20, AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::STMTNUM), false)
     );
 
     // Matching Name types for read variable name with print variable name
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME),
-                   AttrRef({"pt", DesignEntity::PRINT}, AttrName::VARNAME))
+                   AttrRef({"pt", DesignEntity::PRINT}, AttrName::VARNAME), false)
     );
 
   }
