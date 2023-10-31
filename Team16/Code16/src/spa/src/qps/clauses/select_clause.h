@@ -2,15 +2,19 @@
 
 #include <string>
 #include <unordered_set>
+#include <utility>
+#include <vector>
 
 #include "qps/design_entity.h"
 #include "qps/clauses/clause.h"
-#include "qps/query_evaluator/select_evaluator.h"
+#include "qps/clauses/attr_ref.h"
 
+// TODO(phuccuongngo99): Please change this to point at AttrRef implementation
 class SelectClause : public Clause {
  public:
-  Declaration declaration;
-  AttrName attr_name;
+  AttrRef attr_ref;
+
+  explicit SelectClause(AttrRef attr_ref) : attr_ref(std::move(attr_ref)) {}
 
   /*!
    * Checks if this Select clause is equal to another Select clause
@@ -28,10 +32,19 @@ class SelectClause : public Clause {
 
   /*!
    * Gets the synonyms used in this Select clause. However, each select clause
-   * only has 1 synonym
+   * only has 1 synonym or 2 synonyms for the Evaluator to group with other clauses
    * @return a set of just 1 element
    */
   std::unordered_set<Synonym> GetSynonyms() const override;
+
+  /*!
+   * The difference with GetSynonyms() is that this function returns the second synonyms
+   * for attrName cases like call.ProcName, read.VarName, and print.VarName
+   * while GetSynonyms() returns both call, call.Procname at once as GetSynonyms()
+   * reflects the actual number of synonyms produced by Evaluate function
+   * @return the synonym to be selected in each select clause
+   */
+  Synonym GetSelectedSynonym() const;
 
   /*!
    * Gets the hash of this Select clause

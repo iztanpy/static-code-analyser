@@ -22,7 +22,8 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
     std::vector<std::unique_ptr<Clause>> selectClauses = ExtractSelectClauses(selectTokens, declarations);
 
     for (const std::unique_ptr<Clause>& clause : selectClauses) {
-      selects.push_back(*clause->GetSynonyms().begin());
+      const auto* select_clause = static_cast<const SelectClause*>(clause.get());
+      selects.push_back(select_clause->GetSelectedSynonym());
     }
 
     clauses.insert(std::make_move_iterator(selectClauses.begin()), std::make_move_iterator(selectClauses.end()));
@@ -96,8 +97,8 @@ QueryParser::ExtractPatternClauses(const std::vector<QueryToken>& patternTokens,
   return patternClauses;
 }
 
-std::vector<std::unique_ptr<Clause>> QueryParser::ExtractWithClauses(const std::vector<QueryToken> & withTokens,
-                                                                     const std::vector<Declaration> & declarations) {
+std::vector<std::unique_ptr<Clause>> QueryParser::ExtractWithClauses(const std::vector<QueryToken>& withTokens,
+                                                                     const std::vector<Declaration>& declarations) {
   std::vector<std::unique_ptr<Clause>> withClauses;
   // invoke builder design pattern
   for (size_t i = 0; i < withTokens.size(); i += 2) {

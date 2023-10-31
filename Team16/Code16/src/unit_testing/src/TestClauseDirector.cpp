@@ -4,9 +4,10 @@
 TEST_CASE("Select Clause Builder successfully sets attributes of clause") {
   SelectClauseBuilder builder;
   Declaration declaration = {"v", DesignEntity::VARIABLE};
+  AttrRef expected_attr_ref = AttrRef(declaration, AttrName::NONE);
   builder.setDeclaration(declaration, PQLTokenType::SYNONYM);
   std::unique_ptr<SelectClause> select_clause = builder.getClause();
-  REQUIRE(select_clause->declaration == declaration);
+  REQUIRE(select_clause->attr_ref == expected_attr_ref);
 }
 
 TEST_CASE("Clause Director can create select clause") {
@@ -16,9 +17,10 @@ TEST_CASE("Clause Director can create select clause") {
   std::vector<Declaration> declarations;
   Declaration declaration = {"v", DesignEntity::VARIABLE};
   declarations.push_back(declaration);
+  AttrRef expected_attr_ref = AttrRef(declaration, AttrName::NONE);
   std::unique_ptr<Clause> selectClause = ClauseDirector::makeSelectClause(builder, token, declarations);
   auto* clause = dynamic_cast<SelectClause*>(selectClause.get());
-  REQUIRE(clause->declaration == declaration);
+  REQUIRE(clause->attr_ref == expected_attr_ref);
 }
 
 TEST_CASE("Such that Clause Builder successfully sets attributes of parent relation") {

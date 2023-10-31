@@ -4,23 +4,19 @@
 SelectClauseBuilder::SelectClauseBuilder() = default;
 
 void SelectClauseBuilder::setDeclaration(Declaration declaration, PQLTokenType token_type) {
-  selectClause.declaration = std::move(declaration);
-  switch (token_type) {
-    case PQLTokenType::SYNONYM: selectClause.attr_name = AttrName::NONE;
-      break;
-    case PQLTokenType::WITH_PROCNAME: selectClause.attr_name = AttrName::PROCNAME;
-      break;
-    case PQLTokenType::WITH_VARNAME: selectClause.attr_name = AttrName::VARNAME;
-      break;
-    case PQLTokenType::WITH_VALUE: selectClause.attr_name = AttrName::VALUE;
-      break;
-    case PQLTokenType::WITH_STMTNO: selectClause.attr_name = AttrName::STMTNUM;
-      break;
-    default: selectClause.attr_name = AttrName::NONE;
-      break;
-  }
+  declaration_ = std::move(declaration);
+  attr_name_ = [&]() -> AttrName {
+    switch (token_type) {
+      case PQLTokenType::SYNONYM:return AttrName::NONE;
+      case PQLTokenType::WITH_PROCNAME:return AttrName::PROCNAME;
+      case PQLTokenType::WITH_VARNAME:return AttrName::VARNAME;
+      case PQLTokenType::WITH_VALUE:return AttrName::VALUE;
+      case PQLTokenType::WITH_STMTNO:return AttrName::STMTNUM;
+      default:return AttrName::NONE;
+    }
+  }();
 }
 
 std::unique_ptr<SelectClause> SelectClauseBuilder::getClause() const {
-  return std::make_unique<SelectClause>(selectClause);
+  return std::make_unique<SelectClause>(AttrRef(declaration_, attr_name_));
 }

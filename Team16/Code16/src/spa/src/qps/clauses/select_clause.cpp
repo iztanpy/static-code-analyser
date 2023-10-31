@@ -1,20 +1,35 @@
 #include "qps/clauses/select_clause.h"
 
 bool SelectClause::equals(const SelectClause& other) const {
-  return declaration == other.declaration && attr_name == other.attr_name;
+  return attr_ref == other.attr_ref;
 }
 
 Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
-  return SelectEvaluator::Evaluate(declaration, pkb_reader);
+  return attr_ref.Evaluate(pkb_reader);
 }
 
 std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
-  return {declaration.synonym};
+  std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
+  // Check if synonyms vector size is not 1 or 2
+  if (synonyms.empty() || synonyms.size() > 2) {
+    throw std::runtime_error("SelectClause::GetSelectedSynonym. Synonyms size must be 1 or 2.");
+  }
+  return {synonyms.begin(), synonyms.end()};
+}
+
+Synonym SelectClause::GetSelectedSynonym() const {
+  std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
+  // Check if synonyms vector size is not 1 or 2
+  if (synonyms.empty() || synonyms.size() > 2) {
+    throw std::runtime_error("SelectClause::GetSelectedSynonym. Synonyms size must be 1 or 2.");
+  }
+  // Return the second element if there are two synonyms, otherwise return the first
+  return synonyms.back();
 }
 
 size_t SelectClause::Hash() const {
   uint64_t result = Clause::Hash();
-  result = result * 31 + std::hash<Declaration>()(declaration);
+  result = result * 31 + attr_ref.Hash();
   return static_cast<size_t>(result);
 }
 
@@ -24,5 +39,5 @@ bool SelectClause::equals(const Clause* other) const {
 }
 
 bool operator==(const SelectClause& lhs, const SelectClause& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.attr_name == rhs.attr_name;
+  return lhs.attr_ref == rhs.attr_ref;
 }

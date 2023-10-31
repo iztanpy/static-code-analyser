@@ -2,15 +2,21 @@
 
 #include <string>
 #include <utility>
+#include <cassert>
+
 #include <unordered_set>
 #include "qps/clauses/clause.h"
+#include "qps/clauses/attr_ref.h"
+#include "qps/query_evaluator/with_evaluator.h"
 
 class WithClause : public Clause {
  public:
   Ref lhs;
   Ref rhs;
 
-  WithClause(Ref lhs, Ref rhs) : lhs(std::move(lhs)), rhs(std::move(rhs)) {}
+  WithClause(Ref lhs, Ref rhs) : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+    Validate();
+  }
 
   /*!
    * Evaluate this clause given info from PKB
@@ -51,4 +57,6 @@ class WithClause : public Clause {
   RelRefType GetRelRef() const override {
     return RelRefType::WITH;
   };
+
+  static RefUnderlyingType GetType(const Ref& param);
 };

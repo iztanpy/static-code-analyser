@@ -16,17 +16,27 @@ TEST_CASE("Test 1") {
 }
 
 TEST_CASE("Test 2") {
-  auto s1 = std::make_unique<SelectClause>();
-  s1->declaration = {"p", DesignEntity::PROCEDURE};
+  auto s1 = std::make_unique<SelectClause>(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::NONE));
 
-  auto s2 = std::make_unique<SelectClause>();
-  s2->declaration = {"v", DesignEntity::PROCEDURE};
+  auto s2 = std::make_unique<SelectClause>(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::NONE));
+
+  auto s3 = std::make_unique<SelectClause>(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME));
+
+  auto s4 = std::make_unique<SelectClause>(AttrRef({"c", DesignEntity::CALL}, AttrName::NONE));
+
+  auto s5 = std::make_unique<SelectClause>(AttrRef({"c", DesignEntity::CALL}, AttrName::STMTNUM));
+
+  auto s6 = std::make_unique<SelectClause>(AttrRef({"c", DesignEntity::CALL}, AttrName::STMTNUM));
 
   ClauseSet clause_set;
   clause_set.insert(std::move(s1));
   clause_set.insert(std::move(s2));
+  clause_set.insert(std::move(s3));
+  clause_set.insert(std::move(s4));
+  clause_set.insert(std::move(s5));
+  clause_set.insert(std::move(s6));
 
-  REQUIRE(clause_set.size() == 2);
+  REQUIRE(clause_set.size() == 5);
 }
 
 TEST_CASE("Test 3") {

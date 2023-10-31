@@ -3,7 +3,7 @@
 #include "qps/query_parser/query_parser.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
-#include "qps/clauses/with_clause.h"
+#include "qps/clauses/with_clauses/with_clause.h"
 
 bool areClauseSetsEqual(const ClauseSet& lhs, const ClauseSet& rhs) {
   if (lhs.size() != rhs.size()) {
@@ -29,8 +29,9 @@ TEST_CASE("Query Parser can extract select clause") {
   std::vector<std::unique_ptr<Clause>> selectClause = QueryParser::ExtractSelectClauses(selectTokens, declarations);
   REQUIRE(selectClause.size() == 1);
   auto* clause = dynamic_cast<SelectClause*>(selectClause[0].get());
-  REQUIRE(clause->declaration.design_entity == DesignEntity::VARIABLE);
-  REQUIRE(clause->declaration.synonym == "v");
+
+  AttrRef expected_attr_ref = AttrRef(declarations[0], AttrName::NONE);
+  REQUIRE(clause->attr_ref == expected_attr_ref);
 }
 
 TEST_CASE(
@@ -82,9 +83,9 @@ TEST_CASE("Query Parser can return a parsed query") {
 
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  auto expected_select_clause_ptr = std::make_unique<SelectClause>(
+      AttrRef(declarations[0], AttrName::NONE)
+  );
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -104,9 +105,9 @@ TEST_CASE("Parser can parse Calls and Calls*") {
 
     std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-    expected_select_clause_ptr->declaration = declarations[0];
-    expected_select_clause_ptr->attr_name = AttrName::NONE;
+    auto expected_select_clause_ptr = std::make_unique<SelectClause>(
+        AttrRef(declarations[0], AttrName::NONE)
+    );
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -125,9 +126,9 @@ TEST_CASE("Parser can parse Calls and Calls*") {
 
     std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-    expected_select_clause_ptr->declaration = declarations[0];
-    expected_select_clause_ptr->attr_name = AttrName::NONE;
+    auto expected_select_clause_ptr = std::make_unique<SelectClause>(
+        AttrRef(declarations[0], AttrName::NONE)
+    );
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -155,9 +156,9 @@ TEST_CASE("Parser can parse Next and Next*") {
     };
     std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-    expected_select_clause_ptr->declaration = declarations[0];
-    expected_select_clause_ptr->attr_name = AttrName::NONE;
+    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>(
+        AttrRef(declarations[0], AttrName::NONE)
+    );
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -176,9 +177,9 @@ TEST_CASE("Parser can parse Next and Next*") {
 
     std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-    expected_select_clause_ptr->declaration = declarations[0];
-    expected_select_clause_ptr->attr_name = AttrName::NONE;
+    std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>(
+        AttrRef(declarations[0], AttrName::NONE)
+    );
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -198,9 +199,7 @@ TEST_CASE("Parser can parse Affects") {
 
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  auto expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -220,9 +219,8 @@ TEST_CASE("Parser can parse while pattern") {
 
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -242,9 +240,8 @@ TEST_CASE("Parser can parse if pattern") {
 
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -264,9 +261,8 @@ TEST_CASE("Parser can parse multiple such that clauses") {
   };
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -290,9 +286,8 @@ TEST_CASE("Parser can parse multiple pattern clauses") {
 
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -315,9 +310,8 @@ TEST_CASE("Parser can parse multiple different clauses") {
 
   std::vector<std::string> expected_selects = {declarations[1].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[1];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[1], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -351,10 +345,10 @@ TEST_CASE("Parser can parse multiple select clauses") {
       {"s", DesignEntity::STMT}
   };
 
-  std::vector<Synonym> select_clauses =  {
-    declarations[0].synonym,
-    declarations[1].synonym,
-    declarations[2].synonym
+  std::vector<Synonym> select_clauses = {
+      declarations[0].synonym,
+      declarations[1].synonym,
+      declarations[2].synonym
   };
 
   for (int i = 0; i < select_clauses.size(); i++) {
@@ -372,9 +366,8 @@ TEST_CASE("Parser can parse with clause") {
   };
   std::vector<std::string> expected_selects = {declarations[0].synonym};
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
@@ -395,13 +388,11 @@ TEST_CASE("Parser can parse select attr ref") {
       {"a2", DesignEntity::ASSIGN}
   };
   std::vector<std::string> expected_selects = {declarations[0].synonym, declarations[1].synonym};
-  std::unique_ptr<SelectClause> expected_select_clause_ptr = std::make_unique<SelectClause>();
-  expected_select_clause_ptr->declaration = declarations[0];
-  expected_select_clause_ptr->attr_name = AttrName::STMTNUM;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations[0], AttrName::STMTNUM));
 
-  std::unique_ptr<SelectClause> expected_select_clause_ptr_2 = std::make_unique<SelectClause>();
-  expected_select_clause_ptr_2->declaration = declarations[1];
-  expected_select_clause_ptr_2->attr_name = AttrName::NONE;
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr_2 = std::make_unique<SelectClause>(AttrRef(declarations[1], AttrName::NONE));
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
