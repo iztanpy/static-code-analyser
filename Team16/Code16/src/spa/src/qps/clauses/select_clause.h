@@ -38,11 +38,11 @@ class SelectClause : public Clause {
   std::unordered_set<Synonym> GetSynonyms() const override;
 
   /*!
-   * Gets the synonym to be selected in each select clause
    * The difference with GetSynonyms() is that this function returns the second synonyms
    * for attrName cases like call.ProcName, read.VarName, and print.VarName
    * while GetSynonyms() returns both call, call.Procname at once as GetSynonyms()
    * reflects the actual number of synonyms produced by Evaluate function
+   * @return the synonym to be selected in each select clause
    */
   Synonym GetSelectedSynonym() const;
 

@@ -8,6 +8,9 @@
 #include "utils/algorithm_utils.h"
 #include "qps/clauses/attr_ref.h"
 
+/*!
+ * Evaluator visitor that handle all combinations of parameters for WithClause
+ */
 struct WithEvaluator {
   static bool Handle(int lhs, int rhs, ReadFacade& pkb_reader);
 

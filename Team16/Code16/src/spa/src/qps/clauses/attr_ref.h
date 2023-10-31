@@ -33,6 +33,9 @@ enum class RefUnderlyingType {
   IDENT,
 };
 
+/*!
+ * Represents the design entity that an AttrRef can refer to
+ */
 static const std::unordered_map<AttrName, std::unordered_set<DesignEntity>> kAttrNameToDesignEntity = {
     {AttrName::PROCNAME, {DesignEntity::PROCEDURE, DesignEntity::CALL}},
     {AttrName::VARNAME, {DesignEntity::VARIABLE, DesignEntity::READ, DesignEntity::PRINT}},
@@ -41,6 +44,9 @@ static const std::unordered_map<AttrName, std::unordered_set<DesignEntity>> kAtt
                          DesignEntity::WHILE_LOOP, DesignEntity::IF_STMT, DesignEntity::ASSIGN}},
 };
 
+/*!
+ * Represents the underlying type of Ref in PQL grammar
+ */
 static const std::unordered_map<AttrName, RefUnderlyingType> kAttrNameToUnderlyingType = {
     {AttrName::PROCNAME, RefUnderlyingType::IDENT},
     {AttrName::VARNAME, RefUnderlyingType::IDENT},
@@ -48,6 +54,9 @@ static const std::unordered_map<AttrName, RefUnderlyingType> kAttrNameToUnderlyi
     {AttrName::STMTNUM, RefUnderlyingType::INTEGER},
 };
 
+/*!
+ * Represents AttrRef in PQL grammar
+ */
 class AttrRef {
  public:
   Declaration declaration;
@@ -57,18 +66,32 @@ class AttrRef {
     Validate();
   }
 
+  /*!
+   * Checks if this AttrRef is a complex case.
+   * @return true if it's call.ProcName, read.VarName, print.VarName
+   */
   bool IsComplexCase() const;
 
   bool operator==(const AttrRef& other) const;
 
+  /*!
+   * Evaluates this AttrRef
+   * @param pkb_reader is the PKB ReadFacade
+   * @return a Constraint that contains all possible values of this AttrRef
+   * BinaryConstraint if it's a complex case like call.ProcName, read.VarName, print.VarName
+   * UnaryConstraint if it's a normal case
+   */
   Constraint Evaluate(ReadFacade& pkb_reader);
 
   size_t Hash() const;
 
-  // Get all synonyms used in this AttrRef
-  // Output is a vector with 1 or 2 elements
-  // Only 2 elements if it's Call.procName, Read.varName, Print.varName
-  // in which case the second synonym will be the synonym with .ATTR appended
+  /*!
+   * Gets the synonyms used in this AttrRef
+   * @return a vector of synonyms used in this AttrRef
+   * Only 2 elements if it's Call.procName, Read.varName, Print.varName
+   *    in which case the second synonym will be the synonym with .ATTR appended
+   * Only 1 element if it's a normal case
+   */
   std::vector<Synonym> GetSynonyms() const;
 
  private:
