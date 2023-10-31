@@ -18,8 +18,8 @@ class Follows : public SuchThatClause {
     return RelRefType::FOLLOWS;
   }
 
-  Follows(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  Follows(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -41,8 +41,8 @@ class FollowsT : public SuchThatClause {
     return RelRefType::FOLLOWST;
   }
 
-  FollowsT(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  FollowsT(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

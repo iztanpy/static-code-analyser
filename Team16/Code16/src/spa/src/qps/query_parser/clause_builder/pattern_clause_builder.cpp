@@ -56,14 +56,14 @@ void PatternClauseBuilder::setRhs(const QueryToken& param, const std::vector<Dec
 std::unique_ptr<PatternClause> PatternClauseBuilder::getClause() const {
   switch (pattern_type) {
     case PatternType::kWhile:
-      return std::make_unique<WhilePattern>(syn_assignment, lhs);
+      return std::make_unique<WhilePattern>(syn_assignment, lhs, is_not);
     case PatternType::kIf:
-      return std::make_unique<IfPattern>(syn_assignment, lhs);
+      return std::make_unique<IfPattern>(syn_assignment, lhs, is_not);
     case PatternType::kAssignSyn:
       if (std::holds_alternative<Wildcard>(rhs)
           || std::holds_alternative<ExactExpr>(rhs)
           || std::holds_alternative<PartialExpr>(rhs)) {
-        return std::make_unique<AssignPattern>(syn_assignment, lhs, rhs);
+        return std::make_unique<AssignPattern>(syn_assignment, lhs, rhs, is_not);
       } else {
         throw QpsSyntaxError("Syntax error");
       }

@@ -72,9 +72,10 @@ QueryParser::ExtractSuchThatClauses(const std::vector<QueryToken>& suchThatToken
                                     const std::vector<Declaration>& declarations) {
   std::vector<std::unique_ptr<Clause>> suchThatClauses;
   // invoke builder design pattern
-  for (size_t i = 0; i < suchThatTokens.size(); i += 3) {
-    // Such that tokens should be parsed in 3s
-    std::vector<QueryToken> singleClause = {suchThatTokens[i], suchThatTokens[i + 1], suchThatTokens[i + 2]};
+  for (size_t i = 0; i < suchThatTokens.size(); i += 4) {
+    // Such that tokens should be parsed in 4s
+    std::vector<QueryToken> singleClause = {suchThatTokens[i], suchThatTokens[i + 1],
+                                            suchThatTokens[i + 2], suchThatTokens[i + 3]};
     SuchThatClauseBuilder builder;
     std::unique_ptr<Clause> clause = ClauseDirector::makeSuchThatClause(builder, singleClause, declarations);
     suchThatClauses.push_back(std::move(clause));
@@ -87,9 +88,10 @@ QueryParser::ExtractPatternClauses(const std::vector<QueryToken>& patternTokens,
                                    const std::vector<Declaration>& declarations) {
   std::vector<std::unique_ptr<Clause>> patternClauses;
   // invoke builder design pattern
-  for (size_t i = 0; i < patternTokens.size(); i += 3) {
-    // Pattern tokens should be parsed in 3s
-    std::vector<QueryToken> singleClause = {patternTokens[i], patternTokens[i + 1], patternTokens[i + 2]};
+  for (size_t i = 0; i < patternTokens.size(); i += 4) {
+    // Pattern tokens should be parsed in 4s
+    std::vector<QueryToken> singleClause = {patternTokens[i], patternTokens[i + 1],
+                                            patternTokens[i + 2], patternTokens[i + 3]};
     PatternClauseBuilder builder;
     std::unique_ptr<Clause> clause = ClauseDirector::makePatternClause(builder, singleClause, declarations);
     patternClauses.push_back(std::move(clause));
@@ -101,9 +103,9 @@ std::vector<std::unique_ptr<Clause>> QueryParser::ExtractWithClauses(const std::
                                                                      const std::vector<Declaration>& declarations) {
   std::vector<std::unique_ptr<Clause>> withClauses;
   // invoke builder design pattern
-  for (size_t i = 0; i < withTokens.size(); i += 2) {
-    // With tokens should be parsed in 2s
-    std::vector<QueryToken> singleClause = {withTokens[i], withTokens[i + 1]};
+  for (size_t i = 0; i < withTokens.size(); i += 3) {
+    // With tokens should be parsed in 3s
+    std::vector<QueryToken> singleClause = {withTokens[i], withTokens[i + 1], withTokens[i + 2]};
     WithClauseBuilder builder;
     std::unique_ptr<Clause> clause = ClauseDirector::makeWithClause(builder, singleClause, declarations);
     withClauses.push_back(std::move(clause));

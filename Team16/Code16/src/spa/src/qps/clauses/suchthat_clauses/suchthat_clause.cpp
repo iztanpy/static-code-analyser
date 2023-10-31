@@ -114,3 +114,7 @@ bool SuchThatClause::equals(const Clause* other) const {
   const auto* other_clause = dynamic_cast<const SuchThatClause*>(other);
   return other_clause != nullptr && *this == *other_clause;
 }
+
+bool SuchThatClause::IsNot() const {
+  return is_not;
+}

@@ -40,8 +40,8 @@ TEST_CASE("Test 2") {
 }
 
 TEST_CASE("Test 3") {
-  auto s1 = std::make_unique<Calls>(Declaration{"p", DesignEntity::PROCEDURE}, Wildcard::Value);
-  auto s2 = std::make_unique<Calls>(Declaration{"x", DesignEntity::PROCEDURE}, Wildcard::Value);
+  auto s1 = std::make_unique<Calls>(Declaration{"p", DesignEntity::PROCEDURE}, Wildcard::Value, false);
+  auto s2 = std::make_unique<Calls>(Declaration{"x", DesignEntity::PROCEDURE}, Wildcard::Value, false);
 //  auto s2 = std::make_unique<Parent>(Wildcard::Value, Declaration{"p", DesignEntity::STMT});
 
   size_t hash1 = s1->Hash();
@@ -55,8 +55,8 @@ TEST_CASE("Test 3") {
 }
 
 TEST_CASE("Test 4") {
-  auto s1 = std::make_unique<WhilePattern>(Declaration{"p", DesignEntity::WHILE_LOOP}, Wildcard::Value);
-  auto s2 = std::make_unique<WhilePattern>(Declaration{"p", DesignEntity::WHILE_LOOP}, Wildcard::Value);
+  auto s1 = std::make_unique<WhilePattern>(Declaration{"p", DesignEntity::WHILE_LOOP}, Wildcard::Value, false);
+  auto s2 = std::make_unique<WhilePattern>(Declaration{"p", DesignEntity::WHILE_LOOP}, Wildcard::Value, false);
 
   ClauseSet clause_set;
   clause_set.insert(std::move(s1));
@@ -67,10 +67,10 @@ TEST_CASE("Test 4") {
 
 TEST_CASE("Test 5") {
   auto s1 = std::make_unique<AssignPattern>(
-      Declaration{"x", DesignEntity::ASSIGN}, Wildcard::Value, ExactExpr{"x"});
+      Declaration{"x", DesignEntity::ASSIGN}, Wildcard::Value, ExactExpr{"x"}, false);
 
   auto s2 = std::make_unique<AssignPattern>(
-      Declaration{"x", DesignEntity::ASSIGN}, Wildcard::Value, ExactExpr{"y"});
+      Declaration{"x", DesignEntity::ASSIGN}, Wildcard::Value, ExactExpr{"y"}, false);
 
   ClauseSet clause_set;
   clause_set.insert(std::move(s1));

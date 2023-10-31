@@ -24,6 +24,7 @@ class PatternClauseBuilder : public ClauseBuilder {
   Declaration syn_assignment;
   EntRef lhs;
   ExprSpec rhs;
+  bool is_not;
 
   /*!
    * Sets the pattern type and syn_assignment of the pattern clause

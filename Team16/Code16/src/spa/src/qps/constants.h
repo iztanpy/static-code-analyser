@@ -11,6 +11,7 @@ const char kComma = ',';
 const char kEqual = '=';
 const char kSemicolon = ';';
 const char kWildcard = '_';
+const std::string kNot = "not";
 
 const std::vector<char> kSpecialTokens = {
     kOpenBracket,

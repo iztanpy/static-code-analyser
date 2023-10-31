@@ -44,6 +44,12 @@ class Clause {
    */
   virtual size_t Hash() const { return std::hash<int>{}(static_cast<int>(GetRelRef())); }
 
+  /*!
+   * Checks if this clause is a has a not attached to it
+   * @return true if it has a not attached, else false
+   */
+  virtual bool IsNot() const = 0;
+
   virtual ~Clause() = default;
 
   /*!

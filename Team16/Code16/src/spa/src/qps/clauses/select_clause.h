@@ -59,6 +59,8 @@ class SelectClause : public Clause {
    */
   bool equals(const Clause* other) const override;
 
+  bool IsNot() const override;
+
   /*!
   * Gets the RelRefType of this clause
   * @return

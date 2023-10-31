@@ -18,8 +18,8 @@ class ModifiesP : public SuchThatClause {
     return RelRefType::MODIFIESP;
   }
 
-  ModifiesP(EntRef lhs, EntRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  ModifiesP(EntRef lhs, EntRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -36,13 +36,14 @@ class ModifiesS : public SuchThatClause {
  public:
   StmtRef lhs;
   EntRef rhs;
+  bool is_not;
 
   RelRefType GetRelRef() const override {
     return RelRefType::MODIFIESS;
   }
 
-  ModifiesS(StmtRef lhs, EntRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  ModifiesS(StmtRef lhs, EntRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

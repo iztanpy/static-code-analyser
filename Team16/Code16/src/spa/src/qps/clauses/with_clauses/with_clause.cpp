@@ -29,6 +29,10 @@ size_t WithClause::Hash() const {
   return static_cast<size_t>(result);
 }
 
+bool WithClause::IsNot() const {
+  return is_not;
+}
+
 bool WithClause::equals(const Clause* other) const {
   const auto* other_clause = dynamic_cast<const WithClause*>(other);
   return other_clause != nullptr && *this == *other_clause;

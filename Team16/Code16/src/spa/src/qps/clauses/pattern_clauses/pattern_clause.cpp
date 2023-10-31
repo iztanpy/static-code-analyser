@@ -76,6 +76,10 @@ size_t PatternClause::Hash() const {
   return static_cast<size_t>(result);
 }
 
+bool PatternClause::IsNot() const {
+  return is_not;
+}
+
 bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {
   return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs
       && lhs.rhs == rhs.rhs;
