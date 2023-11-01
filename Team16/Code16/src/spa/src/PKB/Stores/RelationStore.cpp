@@ -142,7 +142,9 @@ bool RelationStore::isRelation(procedure procedure, variable variable) {
 std::unordered_set<procedure> RelationStore::relatesProcedure() {
     std::unordered_set<procedure> procedures;
     for (auto const& x : ForwardProcedureStore) {
-        procedures.insert(x.first);
+        if (x.second.size() > 0) {
+            procedures.insert(x.first);
+        }
     }
     return procedures;
 }
