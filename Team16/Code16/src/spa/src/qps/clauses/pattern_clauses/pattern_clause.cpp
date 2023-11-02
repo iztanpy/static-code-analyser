@@ -1,8 +1,7 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
-
 std::unordered_set<Synonym> PatternClause::GetSynonyms() const {
-  std::unordered_set < Synonym > synonyms;
+  std::unordered_set<Synonym> synonyms;
   synonyms.insert(declaration.synonym);
 
   if (std::holds_alternative<Declaration>(lhs)) {
@@ -82,7 +81,7 @@ bool PatternClause::IsNot() const {
 
 bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {
   return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs
-      && lhs.rhs == rhs.rhs;
+      && lhs.rhs == rhs.rhs && lhs.is_not == rhs.is_not;
 }
 
 bool AssignPattern::equals(const Clause* other) const {
