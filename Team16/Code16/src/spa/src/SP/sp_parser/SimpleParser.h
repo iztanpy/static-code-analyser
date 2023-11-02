@@ -32,15 +32,13 @@ class Parser;
   */
 class SimpleParser : public Parser {
  private:
-    WriteFacade* writeFacade;
     ASTVisitor* visitor;
     ParserFactory* factory = new ParserFactory(visitor);
     Parser* parser;
-    void populatePKB();
     void checkCalls();
 
  public:
-    explicit SimpleParser(WriteFacade* writeFacade, ASTVisitor* visitor);
+    explicit SimpleParser(ASTVisitor* visitor);
     int parse(std::vector<Token>& tokens) override;
     std::shared_ptr<TNode> rootTNode = nullptr;
 };

@@ -33,6 +33,8 @@ class SourceProcessor {
     SPtokeniser tokeniser;
     SimpleParser simpleParser;
     ASTVisitor visitor;
+    WriteFacade* writeFacade;
+    void populatePKB();
 
  public:
     /**
