@@ -35,7 +35,7 @@ class SelectClause : public Clause {
    * only has 1 synonym or 2 synonyms for the Evaluator to group with other clauses
    * @return a set of just 1 element
    */
-  std::unordered_set<Synonym> GetSynonyms() const override;
+  std::unordered_set<Synonym> ComputeSynonyms() const override;
 
   /*!
    * The difference with GetSynonyms() is that this function returns the second synonyms

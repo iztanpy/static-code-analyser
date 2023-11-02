@@ -8,7 +8,7 @@ Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
   return attr_ref.Evaluate(pkb_reader);
 }
 
-std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
+std::unordered_set<Synonym> SelectClause::ComputeSynonyms() const {
   std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
   // Check if synonyms vector size is not 1 or 2
   if (synonyms.empty() || synonyms.size() > 2) {

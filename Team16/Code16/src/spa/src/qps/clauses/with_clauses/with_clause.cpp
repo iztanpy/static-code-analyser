@@ -1,6 +1,6 @@
 #include "qps/clauses/with_clauses/with_clause.h"
 
-std::unordered_set<Synonym> WithClause::GetSynonyms() const {
+std::unordered_set<Synonym> WithClause::ComputeSynonyms() const {
   if (lhs == rhs) {
     return {};
   }
