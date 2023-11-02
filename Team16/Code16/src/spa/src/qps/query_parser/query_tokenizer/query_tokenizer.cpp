@@ -117,7 +117,6 @@ std::vector<QueryToken> processSelectClause(std::string& select_statement, Selec
         PQLTokenType token_type = QueryTokenizer::getAttrTokenType(attr_name);
         results.push_back({attr_syn, token_type});
       }
-      // results.push_back({select_statement, PQLTokenType::SYNONYM});
       break;
     case SelectValueType::MUTLIPLE:
       select_with_tuple_removed = QueryUtil::RemoveTuple(select_statement);
@@ -146,7 +145,7 @@ std::string QueryTokenizer::removeResultClause(std::string& select_statement) {
     // Replace the result-cl with an empty string
     modifiedQuery = std::regex_replace(select_statement, qps_constants::kTupleRegex, "");
   } else {
-    // either a BOOLEAN or synonym
+    // either a BOOLEAN or synonym or attrRef
     modifiedQuery = string_util::RemoveFirstWord(select_statement);
   }
   // Remove any extra spaces or whitespace characters
@@ -387,9 +386,25 @@ PQLTokenType QueryTokenizer::getPatternTokenType(std::string & pattern_syn, std:
   }
 }
 
+QueryToken processNot(std::string clause) {
+  // checks whether the first word is 'not'
+  std::string first_word = string_util::GetFirstWord(clause);
+  if (first_word == qps_constants::kNot) {
+    return {qps_constants::kNot, PQLTokenType::NOT_CLAUSE};
+  } else {
+    return {"", PQLTokenType::NORMAL_CLAUSE};
+  }
+}
+
 std::vector<QueryToken> QueryTokenizer::processSuchThatClause(std::string clause_with_such_that_removed,
                                               std::vector<Declaration>& declarations) {
   std::vector<QueryToken> result;
+  QueryToken not_query_token = processNot(clause_with_such_that_removed);
+  result.push_back(not_query_token);
+  if (not_query_token.type == PQLTokenType::NOT_CLAUSE) {
+    // remove 'not'
+    clause_with_such_that_removed = string_util::RemoveFirstWord(clause_with_such_that_removed);
+  }
   qps_validator::ValidateNonEmptyClause(clause_with_such_that_removed);
   std::string rel_ref = string_util::GetFirstWordFromArgs(clause_with_such_that_removed);
   qps_validator::ValidateRelRef(rel_ref);
@@ -405,10 +420,15 @@ std::vector<QueryToken> QueryTokenizer::processSuchThatClause(std::string clause
 std::vector<QueryToken> QueryTokenizer::processPatternClause(std::string clause_with_pattern_removed,
                                              std::vector<Declaration>& declarations) {
   std::vector<QueryToken> result;
+  QueryToken not_query_token = processNot(clause_with_pattern_removed);
+  result.push_back(not_query_token);
+  if (not_query_token.type == PQLTokenType::NOT_CLAUSE) {
+    // remove 'not'
+    clause_with_pattern_removed = string_util::RemoveFirstWord(clause_with_pattern_removed);
+  }
   qps_validator::ValidateNonEmptyClause(clause_with_pattern_removed);
   std::string pattern_syn = string_util::GetFirstWordFromArgs(clause_with_pattern_removed);
   PQLTokenType pattern_type = getPatternTokenType(pattern_syn, declarations);  // throws semantic error
-
 
   std::string pattern_arg = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
   std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg, declarations, pattern_type);
@@ -422,6 +442,12 @@ std::vector<QueryToken> QueryTokenizer::processPatternClause(std::string clause_
 std::vector<QueryToken> QueryTokenizer::processWithClause(std::string clause_with_with_removed,
                                                           std::vector<Declaration>& declarations) {
   std::vector<QueryToken> result;
+  QueryToken not_query_token = processNot(clause_with_with_removed);
+  result.push_back(not_query_token);
+  if (not_query_token.type == PQLTokenType::NOT_CLAUSE) {
+    // remove 'not'
+    clause_with_with_removed = string_util::RemoveFirstWord(clause_with_with_removed);
+  }
   qps_validator::ValidateNonEmptyClause(clause_with_with_removed);
   std::pair<QueryToken, QueryToken> with_args = getWithArgs(clause_with_with_removed, declarations);
   result.push_back(with_args.first);

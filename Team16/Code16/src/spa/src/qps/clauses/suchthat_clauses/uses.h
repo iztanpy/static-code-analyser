@@ -20,8 +20,8 @@ class UsesS : public SuchThatClause {
     return RelRefType::USESS;
   }
 
-  UsesS(StmtRef lhs, EntRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  UsesS(StmtRef lhs, EntRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -43,8 +43,8 @@ class UsesP : public SuchThatClause {
     return RelRefType::USESP;
   }
 
-  UsesP(EntRef lhs, EntRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  UsesP(EntRef lhs, EntRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

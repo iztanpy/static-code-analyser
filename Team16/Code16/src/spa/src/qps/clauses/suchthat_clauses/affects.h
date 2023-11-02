@@ -17,8 +17,8 @@ class Affects : public SuchThatClause {
     return RelRefType::AFFECTS;
   }
 
-  Affects(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  Affects(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

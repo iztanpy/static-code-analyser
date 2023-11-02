@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include <variant>
 #include <unordered_set>
 
@@ -25,7 +26,9 @@ class PatternClause : public Clause {
   Declaration declaration;
   EntRef lhs;
 
-  PatternClause(Declaration declaration, EntRef lhs) : declaration(declaration), lhs(lhs) {}
+  PatternClause(Declaration declaration, EntRef lhs, bool is_not) :
+      Clause(is_not), declaration(std::move(declaration)), lhs(lhs) {
+  }
 
   /*!
    * Checks if two expression-specs are equal
@@ -77,8 +80,8 @@ class AssignPattern : public PatternClause {
     return RelRefType::ASSIGN;
   }
 
-  AssignPattern(Declaration syn, EntRef lhs, ExprSpec rhs)
-      : PatternClause(syn, lhs), rhs(rhs) {
+  AssignPattern(Declaration syn, EntRef lhs, ExprSpec rhs, bool is_not)
+      : PatternClause(syn, lhs, is_not), rhs(rhs) {
     Validate();
   }
 
@@ -101,7 +104,7 @@ class AssignPattern : public PatternClause {
 
 class WhilePattern : public PatternClause {
  public:
-  WhilePattern(Declaration syn, EntRef lhs) : PatternClause(syn, lhs) {
+  WhilePattern(Declaration syn, EntRef lhs, bool is_not) : PatternClause(syn, lhs, is_not) {
     Validate();
   }
 
@@ -117,7 +120,7 @@ class WhilePattern : public PatternClause {
 
 class IfPattern : public PatternClause {
  public:
-  IfPattern(Declaration syn, EntRef lhs) : PatternClause(syn, lhs) {
+  IfPattern(Declaration syn, EntRef lhs, bool is_not) : PatternClause(syn, lhs, is_not) {
     Validate();
   }
 

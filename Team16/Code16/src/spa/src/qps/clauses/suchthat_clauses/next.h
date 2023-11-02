@@ -17,8 +17,8 @@ class Next : public SuchThatClause {
     return RelRefType::NEXT;
   }
 
-  Next(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  Next(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -40,8 +40,8 @@ class NextT : public SuchThatClause {
     return RelRefType::NEXTT;
   }
 
-  NextT(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  NextT(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

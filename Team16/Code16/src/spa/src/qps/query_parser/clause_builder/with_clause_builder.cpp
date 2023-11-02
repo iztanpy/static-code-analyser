@@ -98,6 +98,5 @@ void WithClauseBuilder::setRhs(const QueryToken& param, const std::vector<Declar
 }
 
 std::unique_ptr<WithClause> WithClauseBuilder::getClause() const {
-  return std::make_unique<WithClause>(lhs, rhs);
+  return std::make_unique<WithClause>(lhs, rhs, is_not);
 }
-

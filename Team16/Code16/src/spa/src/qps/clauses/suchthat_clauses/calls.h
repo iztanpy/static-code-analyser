@@ -18,8 +18,8 @@ class Calls : public SuchThatClause {
     return RelRefType::CALLS;
   }
 
-  Calls(EntRef lhs, EntRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  Calls(EntRef lhs, EntRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -41,8 +41,8 @@ class CallsT : public SuchThatClause {
     return RelRefType::CALLST;
   }
 
-  CallsT(EntRef lhs, EntRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  CallsT(EntRef lhs, EntRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

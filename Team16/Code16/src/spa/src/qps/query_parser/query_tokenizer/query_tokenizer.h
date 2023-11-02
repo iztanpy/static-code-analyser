@@ -26,7 +26,9 @@ enum class PQLTokenType {
   WITH_PROCNAME,
   WITH_VARNAME,
   WITH_VALUE,
-  WITH_STMTNO
+  WITH_STMTNO,
+  NOT_CLAUSE,
+  NORMAL_CLAUSE
 };
 
 struct QueryToken {

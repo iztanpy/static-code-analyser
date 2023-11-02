@@ -34,6 +34,9 @@ size_t SelectClause::Hash() const {
 }
 
 bool SelectClause::equals(const Clause* other) const {
+  if (!Clause::equals(other)) {
+    return false;
+  }
   const auto* other_clause = dynamic_cast<const SelectClause*>(other);
   return other_clause != nullptr && *this == *other_clause;
 }

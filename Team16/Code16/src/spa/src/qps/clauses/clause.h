@@ -12,6 +12,10 @@
  */
 class Clause {
  public:
+  bool is_not;
+
+  explicit Clause(bool is_not) : is_not(is_not) {}
+
   /*!
    * Gets the relationship reference of this clause.
    * @return the relationship reference of this clause
@@ -36,13 +40,23 @@ class Clause {
    * @param other the other clause to compare to
    * @return true if the clauses are equal, false otherwise
    */
-  virtual bool equals(const Clause* other) const = 0;
+  virtual bool equals(const Clause* other) const {
+    return GetRelRef() == other->GetRelRef() && is_not == other->is_not;
+  }
 
   /*!
    * Gets the hash of this clause.
    * @return hash of this clause
    */
-  virtual size_t Hash() const { return std::hash<int>{}(static_cast<int>(GetRelRef())); }
+  virtual size_t Hash() const {
+    return std::hash<int>{}(static_cast<int>(GetRelRef())) ^ (std::hash<bool>{}(is_not) << 1);
+  }
+
+  /*!
+   * Checks if this clause is a has a not attached to it
+   * @return true if it has a not attached, else false
+   */
+  bool IsNot() const { return is_not; }
 
   virtual ~Clause() = default;
 

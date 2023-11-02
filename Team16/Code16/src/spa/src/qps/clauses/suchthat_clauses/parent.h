@@ -18,8 +18,8 @@ class Parent : public SuchThatClause {
     return RelRefType::PARENT;
   }
 
-  Parent(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  Parent(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -41,8 +41,8 @@ class ParentT : public SuchThatClause {
     return RelRefType::PARENTT;
   }
 
-  ParentT(StmtRef lhs, StmtRef rhs)
-      : SuchThatClause(lhs, rhs), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  ParentT(StmtRef lhs, StmtRef rhs, bool is_not)
+      : SuchThatClause(lhs, rhs, is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

@@ -24,8 +24,9 @@ class SuchThatClause : public Clause {
   RefParam lhs;
   RefParam rhs;
 
-  SuchThatClause(RefParam lhs, RefParam rhs)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {}
+  SuchThatClause(RefParam lhs, RefParam rhs, bool is_not)
+      : Clause(is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  }
 
   /*!
    * Checks if two RefParams are equal

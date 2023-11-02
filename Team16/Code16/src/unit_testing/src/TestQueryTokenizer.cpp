@@ -270,6 +270,7 @@ TEST_CASE("Test extract clause tokens") {
   };
 
   std::vector<QueryToken> such_that_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Uses", PQLTokenType::RELREF},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM}
@@ -282,13 +283,12 @@ TEST_CASE("Test extract clause tokens") {
       {}
   };
 
-  REQUIRE(results[0][0].text == expected[0][0].text);
-  REQUIRE(results[0][0].type == expected[0][0].type);
-  REQUIRE(results[0][1].text == expected[0][1].text);
-  REQUIRE(results[0][1].type == expected[0][1].type);
-  REQUIRE(results[0][2].text == expected[0][2].text);
-  REQUIRE(results[0][2].type == expected[0][2].type);
+  for (int i = 0; i < such_that_tokens.size(); i++) {
+    REQUIRE(results[0][i].text == expected[0][i].text);
+    REQUIRE(results[0][i].type == expected[0][i].type);
+  }
   REQUIRE(results[1].empty());
+  REQUIRE(results[2].empty());
 
   std::string select_statement_2 = "Select v pattern a (v, \"x\")";
   std::vector<Declaration> declarations_2 = {
@@ -297,6 +297,7 @@ TEST_CASE("Test extract clause tokens") {
   };
 
   std::vector<QueryToken> pattern_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
       {"x", PQLTokenType::EXACTEXPR}
@@ -309,13 +310,12 @@ TEST_CASE("Test extract clause tokens") {
       {}
   };
 
-  REQUIRE(results_2[1][0].text == expected_2[1][0].text);
-  REQUIRE(results_2[1][0].type == expected_2[1][0].type);
-  REQUIRE(results_2[1][1].text == expected_2[1][1].text);
-  REQUIRE(results_2[1][1].type == expected_2[1][1].type);
-  REQUIRE(results_2[1][2].text == expected_2[1][2].text);
-  REQUIRE(results_2[1][2].type == expected_2[1][2].type);
+  for (int i = 0; i < pattern_tokens.size(); i++) {
+    REQUIRE(results_2[1][i].text == expected_2[1][i].text);
+    REQUIRE(results_2[1][i].type == expected_2[1][i].type);
+  }
   REQUIRE(results_2[0].empty());
+  REQUIRE(results_2[2].empty());
 
   std::vector<Declaration> error_declarations = {
       {"v", DesignEntity::VARIABLE}
@@ -333,11 +333,13 @@ TEST_CASE("Test extract one select and on pattern") {
       {"a", DesignEntity::ASSIGN}
   };
   std::vector<QueryToken> such_that_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Uses", PQLTokenType::RELREF},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM}
   };
   std::vector<QueryToken> pattern_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD}
@@ -352,19 +354,15 @@ TEST_CASE("Test extract one select and on pattern") {
       {}
   };
 
-  REQUIRE(results[0][0].text == expected[0][0].text);
-  REQUIRE(results[0][0].type == expected[0][0].type);
-  REQUIRE(results[0][1].text == expected[0][1].text);
-  REQUIRE(results[0][1].type == expected[0][1].type);
-  REQUIRE(results[0][2].text == expected[0][2].text);
-  REQUIRE(results[0][2].type == expected[0][2].type);
+  for (int i = 0; i < such_that_tokens.size(); i++) {
+    REQUIRE(results[0][i].text == expected[0][i].text);
+    REQUIRE(results[0][i].type == expected[0][i].type);
+  }
 
-  REQUIRE(results[1][0].text == expected[1][0].text);
-  REQUIRE(results[1][0].type == expected[1][0].type);
-  REQUIRE(results[1][1].text == expected[1][1].text);
-  REQUIRE(results[1][1].type == expected[1][1].type);
-  REQUIRE(results[1][2].text == expected[1][2].text);
-  REQUIRE(results[1][2].type == expected[1][2].type);
+  for (int i = 0; i < such_that_tokens.size(); i++) {
+    REQUIRE(results[1][i].text == expected[1][i].text);
+    REQUIRE(results[1][i].type == expected[1][i].type);
+  }
 }
 
 TEST_CASE("Tokenizer and tokenise pattern expressions") {
@@ -373,6 +371,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
       {"a1", DesignEntity::ASSIGN}
   };
   std::vector<QueryToken> pattern_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a1", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
       {"((abc)+((cde)%(fgh)))", PQLTokenType::PARTIALEXPR}
@@ -381,13 +380,11 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<std::vector<QueryToken>>
       results = QueryTokenizer::extractClauseTokens(sample_query_1, declarations);
 
-  REQUIRE(results[1].size() == 3);
-  REQUIRE(results[1][0].type == pattern_tokens[0].type);
-  REQUIRE(results[1][0].text == pattern_tokens[0].text);
-  REQUIRE(results[1][1].type == pattern_tokens[1].type);
-  REQUIRE(results[1][1].text == pattern_tokens[1].text);
-  REQUIRE(results[1][2].type == pattern_tokens[2].type);
-  REQUIRE(results[1][2].text == pattern_tokens[2].text);
+  REQUIRE(results[1].size() == 4);
+  for (int i = 0; i < pattern_tokens.size(); i++) {
+    REQUIRE(results[1][i].type == pattern_tokens[i].type);
+    REQUIRE(results[1][i].text == pattern_tokens[i].text);
+  }
 
   std::string sample_query_2 = "Select a1 pattern a1(v, \"abc + cde % fgh\")";
   std::vector<Declaration> declarations_2 = {
@@ -395,6 +392,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
       {"v", DesignEntity::VARIABLE}
   };
   std::vector<QueryToken> pattern_tokens_2 = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a1", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
       {"abc+cde%fgh", PQLTokenType::EXACTEXPR}
@@ -403,13 +401,12 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
   std::vector<std::vector<QueryToken>>
       results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
 
-  REQUIRE(results_2[1].size() == 3);
-  REQUIRE(results_2[1][0].type == pattern_tokens_2[0].type);
-  REQUIRE(results_2[1][0].text == pattern_tokens_2[0].text);
-  REQUIRE(results_2[1][1].type == pattern_tokens_2[1].type);
-  REQUIRE(results_2[1][1].text == pattern_tokens_2[1].text);
-  REQUIRE(results_2[1][2].type == pattern_tokens_2[2].type);
-  REQUIRE(results_2[1][2].text == pattern_tokens_2[2].text);
+  REQUIRE(results_2[1].size() == 4);
+
+  for (int i = 0; i < pattern_tokens_2.size(); i++) {
+    REQUIRE(results_2[1][i].type == pattern_tokens_2[i].type);
+    REQUIRE(results_2[1][i].text == pattern_tokens_2[i].text);
+  }
 
   std::string sample_query_3 = "Select a1 pattern a1(v, \"+ cde % fgh\")";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations), QpsSyntaxError);
@@ -423,6 +420,7 @@ TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
   };
 
   std::vector<QueryToken> such_that_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Calls", PQLTokenType::RELREF},
       {"p", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD}
@@ -431,17 +429,16 @@ TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
   std::vector<std::vector<QueryToken>>
       results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
 
-  REQUIRE(results_1[0].size() == 3);
-  REQUIRE(results_1[0][0].text == such_that_tokens[0].text);
-  REQUIRE(results_1[0][0].type == such_that_tokens[0].type);
-  REQUIRE(results_1[0][1].text == such_that_tokens[1].text);
-  REQUIRE(results_1[0][1].type == such_that_tokens[1].type);
-  REQUIRE(results_1[0][2].text == such_that_tokens[2].text);
-  REQUIRE(results_1[0][2].type == such_that_tokens[2].type);
+  REQUIRE(results_1[0].size() == 4);
+  for (int i = 0; i < such_that_tokens.size(); i++) {
+    REQUIRE(results_1[0][i].text == such_that_tokens[i].text);
+    REQUIRE(results_1[0][i].type == such_that_tokens[i].type);
+  }
 
   std::string sample_query_2 = "Select p such that Calls*(p, \"Third\")";
 
   std::vector<QueryToken> such_that_tokens_2 = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Calls*", PQLTokenType::RELREF},
       {"p", PQLTokenType::SYNONYM},
       {"Third", PQLTokenType::IDENT}
@@ -450,13 +447,11 @@ TEST_CASE("Tokenizer can tokenize Calls and Calls*") {
   std::vector<std::vector<QueryToken>>
       results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1);
 
-  REQUIRE(results_2[0].size() == 3);
-  REQUIRE(results_2[0][0].text == such_that_tokens_2[0].text);
-  REQUIRE(results_2[0][0].type == such_that_tokens_2[0].type);
-  REQUIRE(results_2[0][1].text == such_that_tokens_2[1].text);
-  REQUIRE(results_2[0][1].type == such_that_tokens_2[1].type);
-  REQUIRE(results_2[0][2].text == such_that_tokens_2[2].text);
-  REQUIRE(results_2[0][2].type == such_that_tokens_2[2].type);
+  REQUIRE(results_2[0].size() == 4);
+  for (int i = 0; i < such_that_tokens_2.size(); i++) {
+    REQUIRE(results_2[0][i].text == such_that_tokens_2[i].text);
+    REQUIRE(results_2[0][i].type == such_that_tokens_2[i].type);
+  }
 }
 
 TEST_CASE("Tokenizer can tokenize Next and Next*") {
@@ -467,6 +462,7 @@ TEST_CASE("Tokenizer can tokenize Next and Next*") {
   };
 
   std::vector<QueryToken> such_that_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Next", PQLTokenType::RELREF},
       {"s1", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD}
@@ -475,17 +471,16 @@ TEST_CASE("Tokenizer can tokenize Next and Next*") {
   std::vector<std::vector<QueryToken>>
       results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
 
-  REQUIRE(results_1[0].size() == 3);
-  REQUIRE(results_1[0][0].text == such_that_tokens[0].text);
-  REQUIRE(results_1[0][0].type == such_that_tokens[0].type);
-  REQUIRE(results_1[0][1].text == such_that_tokens[1].text);
-  REQUIRE(results_1[0][1].type == such_that_tokens[1].type);
-  REQUIRE(results_1[0][2].text == such_that_tokens[2].text);
-  REQUIRE(results_1[0][2].type == such_that_tokens[2].type);
+  REQUIRE(results_1[0].size() == 4);
+  for (int i = 0; i < such_that_tokens.size(); i++) {
+    REQUIRE(results_1[0][i].text == such_that_tokens[i].text);
+    REQUIRE(results_1[0][i].type == such_that_tokens[i].type);
+  }
 
   std::string sample_query_2 = "Select s1 such that Next*(2, 9)";
 
   std::vector<QueryToken> such_that_tokens_2 = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Next*", PQLTokenType::RELREF},
       {"2", PQLTokenType::INTEGER},
       {"9", PQLTokenType::INTEGER}
@@ -494,13 +489,11 @@ TEST_CASE("Tokenizer can tokenize Next and Next*") {
   std::vector<std::vector<QueryToken>>
       results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1);
 
-  REQUIRE(results_2[0].size() == 3);
-  REQUIRE(results_2[0][0].text == such_that_tokens_2[0].text);
-  REQUIRE(results_2[0][0].type == such_that_tokens_2[0].type);
-  REQUIRE(results_2[0][1].text == such_that_tokens_2[1].text);
-  REQUIRE(results_2[0][1].type == such_that_tokens_2[1].type);
-  REQUIRE(results_2[0][2].text == such_that_tokens_2[2].text);
-  REQUIRE(results_2[0][2].type == such_that_tokens_2[2].type);
+  REQUIRE(results_2[0].size() == 4);
+  for (int i = 0; i < such_that_tokens_2.size(); i++) {
+    REQUIRE(results_2[0][i].text == such_that_tokens_2[i].text);
+    REQUIRE(results_2[0][i].type == such_that_tokens_2[i].type);
+  }
 }
 
 TEST_CASE("Tokenizer can tokenize Affects") {
@@ -512,6 +505,7 @@ TEST_CASE("Tokenizer can tokenize Affects") {
   };
 
   std::vector<QueryToken> such_that_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Affects", PQLTokenType::RELREF},
       {"a1", PQLTokenType::SYNONYM},
       {"a2", PQLTokenType::SYNONYM}
@@ -520,13 +514,11 @@ TEST_CASE("Tokenizer can tokenize Affects") {
   std::vector<std::vector<QueryToken>>
       results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
 
-  REQUIRE(results_1[0].size() == 3);
-  REQUIRE(results_1[0][0].text == such_that_tokens[0].text);
-  REQUIRE(results_1[0][0].type == such_that_tokens[0].type);
-  REQUIRE(results_1[0][1].text == such_that_tokens[1].text);
-  REQUIRE(results_1[0][1].type == such_that_tokens[1].type);
-  REQUIRE(results_1[0][2].text == such_that_tokens[2].text);
-  REQUIRE(results_1[0][2].type == such_that_tokens[2].type);
+  REQUIRE(results_1[0].size() == 4);
+  for (int i = 0; i < such_that_tokens.size(); i++) {
+    REQUIRE(results_1[0][i].text == such_that_tokens[i].text);
+    REQUIRE(results_1[0][i].type == such_that_tokens[i].type);
+  }
 }
 
 TEST_CASE("Tokenizer can tokenize while pattern") {
@@ -537,6 +529,7 @@ TEST_CASE("Tokenizer can tokenize while pattern") {
   };
 
   std::vector<QueryToken> pattern_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w", PQLTokenType::PATTERN_WHILE},
       {"x", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD}
@@ -545,13 +538,11 @@ TEST_CASE("Tokenizer can tokenize while pattern") {
   std::vector<std::vector<QueryToken>>
       results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
 
-  REQUIRE(results_1[1].size() == 3);
-  REQUIRE(results_1[1][0].text == pattern_tokens[0].text);
-  REQUIRE(results_1[1][0].type == pattern_tokens[0].type);
-  REQUIRE(results_1[1][1].text == pattern_tokens[1].text);
-  REQUIRE(results_1[1][1].type == pattern_tokens[1].type);
-  REQUIRE(results_1[1][2].text == pattern_tokens[2].text);
-  REQUIRE(results_1[1][2].type == pattern_tokens[2].type);
+  REQUIRE(results_1[1].size() == 4);
+  for (int i = 0; i < pattern_tokens.size(); i++) {
+    REQUIRE(results_1[1][i].text == pattern_tokens[i].text);
+    REQUIRE(results_1[1][i].type == pattern_tokens[i].type);
+  }
 
   // Invalid syntax for RHS pattern
   std::string sample_query_2 = "Select w pattern w (\"x\", \"x\")";
@@ -570,6 +561,7 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
   };
 
   std::vector<QueryToken> pattern_tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"ifs", PQLTokenType::PATTERN_IF},
       {"_", PQLTokenType::WILDCARD},
       {"_", PQLTokenType::WILDCARD}
@@ -578,13 +570,11 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
   std::vector<std::vector<QueryToken>>
       results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
 
-  REQUIRE(results_1[1].size() == 3);
-  REQUIRE(results_1[1][0].text == pattern_tokens[0].text);
-  REQUIRE(results_1[1][0].type == pattern_tokens[0].type);
-  REQUIRE(results_1[1][1].text == pattern_tokens[1].text);
-  REQUIRE(results_1[1][1].type == pattern_tokens[1].type);
-  REQUIRE(results_1[1][2].text == pattern_tokens[2].text);
-  REQUIRE(results_1[1][2].type == pattern_tokens[2].type);
+  REQUIRE(results_1[1].size() == 4);
+  for (int i = 0; i < pattern_tokens.size(); i++) {
+    REQUIRE(results_1[1][i].text == pattern_tokens[i].text);
+    REQUIRE(results_1[1][i].type == pattern_tokens[i].type);
+  }
 
   // Not enough arguments for if pattern
   std::string sample_query_2 = "Select ifs pattern ifs(_,_)";
@@ -604,9 +594,11 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
   };
 
   std::vector<QueryToken> pattern_tokens =  {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w", PQLTokenType::PATTERN_WHILE},
       {"x", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD},
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w1", PQLTokenType::PATTERN_WHILE},
       {"y", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD}
@@ -615,9 +607,9 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
   std::vector<std::vector<QueryToken>>
       results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
 
-  REQUIRE(results_1[1].size() == 6);
+  REQUIRE(results_1[1].size() == 8);
 
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < pattern_tokens.size(); i++) {
     REQUIRE(results_1[1][i].text == pattern_tokens[i].text);
     REQUIRE(results_1[1][i].type == pattern_tokens[i].type);
   }
@@ -631,12 +623,15 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
   };
 
   std::vector<QueryToken> pattern_tokens_2 =  {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w", PQLTokenType::PATTERN_WHILE},
       {"x", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD},
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w1", PQLTokenType::PATTERN_WHILE},
       {"y", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD},
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w2", PQLTokenType::PATTERN_WHILE},
       {"z", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD}
@@ -645,9 +640,9 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
   std::vector<std::vector<QueryToken>>
       results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
 
-  REQUIRE(results_2[1].size() == 9);
+  REQUIRE(results_2[1].size() == 12);
 
-  for (int i = 0; i < 9; i++) {
+  for (int i = 0; i < pattern_tokens_2.size(); i++) {
     REQUIRE(results_2[1][i].text == pattern_tokens_2[i].text);
     REQUIRE(results_2[1][i].type == pattern_tokens_2[i].type);
   }
@@ -660,15 +655,18 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
   };
 
   std::vector<QueryToken> such_that_tokens_3 = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Parent*", PQLTokenType::RELREF},
       {"w", PQLTokenType::SYNONYM},
       {"a", PQLTokenType::SYNONYM},
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Modifies", PQLTokenType::RELREF},
       {"a", PQLTokenType::SYNONYM},
       {"x", PQLTokenType::IDENT}
   };
 
   std::vector<QueryToken> pattern_tokens_3 =  {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"w", PQLTokenType::PATTERN_WHILE},
       {"x", PQLTokenType::IDENT},
       {"_", PQLTokenType::WILDCARD}
@@ -677,15 +675,15 @@ TEST_CASE("Tokeniser can tokenise multiple clauses") {
   std::vector<std::vector<QueryToken>>
       results_3 = QueryTokenizer::extractClauseTokens(sample_query_3, declarations_3);
 
-  REQUIRE(results_3[0].size() == 6);
-  REQUIRE(results_3[1].size() == 3);
+  REQUIRE(results_3[0].size() == 8);
+  REQUIRE(results_3[1].size() == 4);
 
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < such_that_tokens_3.size(); i++) {
     REQUIRE(results_3[0][i].text == such_that_tokens_3[i].text);
     REQUIRE(results_3[0][i].type == such_that_tokens_3[i].type);
   }
 
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < pattern_tokens_3.size(); i++) {
     REQUIRE(results_3[1][i].text == pattern_tokens_3[i].text);
     REQUIRE(results_3[1][i].type == pattern_tokens_3[i].type);
   }
@@ -813,12 +811,13 @@ TEST_CASE("Tokeniser can tokenize with clause") {
 
   std::vector<std::vector<QueryToken>> results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
   std::vector<QueryToken> expected_with_tokens_1 = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"c", PQLTokenType::WITH_PROCNAME},
       {"p", PQLTokenType::WITH_PROCNAME}
   };
 
   std::vector<QueryToken> with_tokens_1 = results_1[2];
-  REQUIRE(with_tokens_1.size() == 2);
+  REQUIRE(with_tokens_1.size() == 3);
   for (int i = 0; i < with_tokens_1.size(); i++) {
     REQUIRE(with_tokens_1[i].text == expected_with_tokens_1[i].text);
     REQUIRE(with_tokens_1[i].type == expected_with_tokens_1[i].type);
@@ -832,12 +831,13 @@ TEST_CASE("Tokeniser can tokenize with clause") {
 
   std::vector<std::vector<QueryToken>> results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
   std::vector<QueryToken> expected_with_tokens_2 = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"s1", PQLTokenType::WITH_STMTNO},
       {"10", PQLTokenType::INTEGER}
   };
 
   std::vector<QueryToken> with_tokens_2 = results_2[2];
-  REQUIRE(with_tokens_2.size() == 2);
+  REQUIRE(with_tokens_2.size() == 3);
   for (int i = 0; i < with_tokens_2.size(); i++) {
     REQUIRE(with_tokens_2[i].text == expected_with_tokens_2[i].text);
     REQUIRE(with_tokens_2[i].type == expected_with_tokens_2[i].type);
@@ -851,4 +851,112 @@ TEST_CASE("Tokeniser can tokenize with clause") {
 
   std::string sample_query_5 = "Select s.stmt# such that Follows* (s, s1) with s1smt#=10";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_5, declarations_2), QpsSyntaxError);
+}
+
+TEST_CASE("Tokenizer can tokenize not clauses") {
+  std::string sample_query_1 = "Select r.varName with not p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  std::vector<Declaration> declarations_1 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT}
+  };
+  std::vector<std::vector<QueryToken>> results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  std::vector<QueryToken> expected_with_tokens_1 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"p", PQLTokenType::WITH_VARNAME},
+      {"r", PQLTokenType::WITH_VARNAME},
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"5", PQLTokenType::INTEGER},
+      {"5", PQLTokenType::INTEGER},
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"x", PQLTokenType::IDENT},
+      {"x", PQLTokenType::IDENT},
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"p", PQLTokenType::WITH_VARNAME},
+      {"number", PQLTokenType::IDENT}
+  };
+  std::vector<QueryToken> with_tokens_1 = results_1[2];
+  REQUIRE(with_tokens_1.size() == 12);
+  for (int i = 0; i < with_tokens_1.size(); i++) {
+    REQUIRE(with_tokens_1[i].text == expected_with_tokens_1[i].text);
+    REQUIRE(with_tokens_1[i].type == expected_with_tokens_1[i].type);
+  }
+
+  std::string sample_query_2 = "Select r.varName with not p.varName = r.varName such that not Parent*(s,  a) pattern not a(v,_\"digit \"_)";
+  std::vector<Declaration> declarations_2 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT},
+      {"s", DesignEntity::STMT},
+      {"a", DesignEntity::ASSIGN},
+      {"v", DesignEntity::VARIABLE}
+  };
+  std::vector<std::vector<QueryToken>> results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
+
+  std::vector<QueryToken> expected_with_tokens_2 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"p", PQLTokenType::WITH_VARNAME},
+      {"r", PQLTokenType::WITH_VARNAME},
+  };
+
+  std::vector<QueryToken> expected_such_that_tokens_2 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"Parent*", PQLTokenType::RELREF},
+      {"s", PQLTokenType::SYNONYM},
+      {"a", PQLTokenType::SYNONYM}
+  };
+
+  std::vector<QueryToken> expected_pattern_tokens_2 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"a", PQLTokenType::SYNONYM},
+      {"v", PQLTokenType::SYNONYM},
+      {"(digit)", PQLTokenType::PARTIALEXPR}
+  };
+
+  std::vector<QueryToken> with_tokens_2 = results_2[2];
+  std::vector<QueryToken> such_that_tokens_2 = results_2[0];
+  std::vector<QueryToken> pattern_tokens_2 = results_2[1];
+
+  REQUIRE(with_tokens_2.size() == 3);
+  REQUIRE(such_that_tokens_2.size() == 4);
+  REQUIRE(pattern_tokens_2.size() == 4);
+  for (int i = 0; i < with_tokens_2.size(); i++) {
+    REQUIRE(with_tokens_2[i].text == expected_with_tokens_2[i].text);
+    REQUIRE(with_tokens_2[i].type == expected_with_tokens_2[i].type);
+  }
+  for (int i = 0; i < such_that_tokens_2.size(); i++) {
+    REQUIRE(such_that_tokens_2[i].text == expected_such_that_tokens_2[i].text);
+    REQUIRE(such_that_tokens_2[i].type == expected_such_that_tokens_2[i].type);
+  }
+  for (int i = 0; i < pattern_tokens_2.size(); i++) {
+    REQUIRE(pattern_tokens_2[i].text == expected_pattern_tokens_2[i].text);
+    REQUIRE(pattern_tokens_2[i].type == expected_pattern_tokens_2[i].type);
+  }
+}
+
+TEST_CASE("Tokeniser can handle invalid not clauses") {
+  // 'not' coming before 'with'
+  std::string sample_query_1 = "Select r.varName not with not p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  std::vector<Declaration> declarations_1 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT}
+  };
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1), QpsSyntaxError);
+
+  // misspelled not
+  std::string sample_query_2 = "Select r.varName with nottt p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSyntaxError);
+
+  // double not
+  std::string sample_query_3 = "Select r.varName with not not p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSyntaxError);
+}
+
+TEST_CASE("debug") {
+  std:: string sample_query = "Select BOOLEAN >";
+  std::vector<Declaration> declarations_1 = {
+      {"not", DesignEntity::VARIABLE},
+      {"a", DesignEntity::ASSIGN},
+      {"p", DesignEntity::PRINT}
+  };
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query), QpsSyntaxError);
 }

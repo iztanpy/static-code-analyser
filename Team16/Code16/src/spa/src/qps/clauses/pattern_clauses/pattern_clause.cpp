@@ -1,8 +1,7 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
-
 std::unordered_set<Synonym> PatternClause::GetSynonyms() const {
-  std::unordered_set < Synonym > synonyms;
+  std::unordered_set<Synonym> synonyms;
   synonyms.insert(declaration.synonym);
 
   if (std::holds_alternative<Declaration>(lhs)) {
@@ -29,10 +28,13 @@ size_t AssignPattern::Hash() const {
 }
 
 bool operator==(const PatternClause& lhs, const PatternClause& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs;
+  return lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs;
 }
 
 bool PatternClause::equals(const Clause* other) const {
+  if (!Clause::equals(other)) {
+    return false;
+  }
   const auto* other_clause = dynamic_cast<const PatternClause*>(other);
   return other_clause != nullptr && *this == *other_clause;
 }
@@ -77,11 +79,13 @@ size_t PatternClause::Hash() const {
 }
 
 bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs
-      && lhs.rhs == rhs.rhs;
+  return lhs.rhs == rhs.rhs;
 }
 
 bool AssignPattern::equals(const Clause* other) const {
+  if (!PatternClause::equals(other)) {
+    return false;
+  }
   const auto* other_clause = dynamic_cast<const AssignPattern*>(other);
   return other_clause != nullptr && *this == *other_clause;
 }

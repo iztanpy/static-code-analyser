@@ -14,7 +14,7 @@ class WithClause : public Clause {
   Ref lhs;
   Ref rhs;
 
-  WithClause(Ref lhs, Ref rhs) : lhs(std::move(lhs)), rhs(std::move(rhs)) {
+  WithClause(Ref lhs, Ref rhs, bool is_not) : Clause(is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 

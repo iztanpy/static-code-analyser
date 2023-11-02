@@ -11,6 +11,7 @@ const char kComma = ',';
 const char kEqual = '=';
 const char kSemicolon = ';';
 const char kWildcard = '_';
+const std::string kNot = "not";
 
 const std::vector<char> kSpecialTokens = {
     kOpenBracket,
@@ -32,4 +33,5 @@ const std::regex kOnlyAnd("and$");
 const std::regex kOnlyWith("with$");
 
 const std::regex kTupleRegex("<[^>]+>");
+const std::regex kFirstWordRegex(" [\\S]");
 }  // namespace qps_constants

@@ -89,7 +89,7 @@ TEST_CASE("Query Parser can return a parsed query") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], EntRef(declarations[0]), Wildcard::Value));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], EntRef(declarations[0]), Wildcard::Value, false));
 
   REQUIRE(parsed_pattern_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_pattern_query.clauses, expected_clauses));
@@ -111,7 +111,7 @@ TEST_CASE("Parser can parse Calls and Calls*") {
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
-    expected_clauses.insert(std::make_unique<Calls>(EntRef(declarations[0]), Wildcard::Value));
+    expected_clauses.insert(std::make_unique<Calls>(EntRef(declarations[0]), Wildcard::Value, false));
 
     REQUIRE(parsed_query.selects == expected_selects);
     REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -132,7 +132,7 @@ TEST_CASE("Parser can parse Calls and Calls*") {
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
-    expected_clauses.insert(std::make_unique<CallsT>(EntRef(declarations[0]), "Third"));
+    expected_clauses.insert(std::make_unique<CallsT>(EntRef(declarations[0]), "Third", false));
 
     REQUIRE(parsed_query.selects == expected_selects);
     REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -162,7 +162,7 @@ TEST_CASE("Parser can parse Next and Next*") {
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
-    expected_clauses.insert(std::make_unique<Next>(2, 3));
+    expected_clauses.insert(std::make_unique<Next>(2, 3, false));
 
     REQUIRE(parsed_query.selects == expected_selects);
     REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -183,7 +183,7 @@ TEST_CASE("Parser can parse Next and Next*") {
 
     ClauseSet expected_clauses;
     expected_clauses.insert(std::move(expected_select_clause_ptr));
-    expected_clauses.insert(std::make_unique<NextT>(2, 9));
+    expected_clauses.insert(std::make_unique<NextT>(2, 9, false));
 
     REQUIRE(parsed_query.selects == expected_selects);
     REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -203,7 +203,7 @@ TEST_CASE("Parser can parse Affects") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<Affects>(2, 6));
+  expected_clauses.insert(std::make_unique<Affects>(2, 6, false));
 
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -224,7 +224,7 @@ TEST_CASE("Parser can parse while pattern") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x"));
+  expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x", false));
 
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -245,7 +245,7 @@ TEST_CASE("Parser can parse if pattern") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<IfPattern>(declarations[0], Wildcard::Value));
+  expected_clauses.insert(std::make_unique<IfPattern>(declarations[0], Wildcard::Value, false));
 
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -266,9 +266,9 @@ TEST_CASE("Parser can parse multiple such that clauses") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<ModifiesS>(declarations[0], "x"));
-  expected_clauses.insert(std::make_unique<ParentT>(declarations[1], declarations[0]));
-  expected_clauses.insert(std::make_unique<NextT>(1, declarations[0]));
+  expected_clauses.insert(std::make_unique<ModifiesS>(declarations[0], "x", false));
+  expected_clauses.insert(std::make_unique<ParentT>(declarations[1], declarations[0], false));
+  expected_clauses.insert(std::make_unique<NextT>(1, declarations[0], false));
 
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -291,9 +291,9 @@ TEST_CASE("Parser can parse multiple pattern clauses") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x"));
-  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "y", PartialExpr{"((x)+(y))"}));
-  expected_clauses.insert(std::make_unique<IfPattern>(declarations[2], "z"));
+  expected_clauses.insert(std::make_unique<WhilePattern>(declarations[0], "x", false));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "y", PartialExpr{"((x)+(y))"}, false));
+  expected_clauses.insert(std::make_unique<IfPattern>(declarations[2], "z", false));
 
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -315,9 +315,9 @@ TEST_CASE("Parser can parse multiple different clauses") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<ParentT>(declarations[0], declarations[1]));
-  expected_clauses.insert(std::make_unique<NextT>(1, declarations[1]));
-  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "x", Wildcard::Value));
+  expected_clauses.insert(std::make_unique<ParentT>(declarations[0], declarations[1], false));
+  expected_clauses.insert(std::make_unique<NextT>(1, declarations[1], false));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], "x", Wildcard::Value, false));
 
   REQUIRE(parsed_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_query.clauses, expected_clauses));
@@ -371,9 +371,9 @@ TEST_CASE("Parser can parse with clause") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<FollowsT>(declarations[0], declarations[1]));
+  expected_clauses.insert(std::make_unique<FollowsT>(declarations[0], declarations[1], false));
   AttrRef expected_with_lhs = {declarations[1], AttrName::STMTNUM};
-  expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs, 10));
+  expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs, 10, false));
 
   REQUIRE(parsed_query_1.selects == expected_selects);
    REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
@@ -397,7 +397,31 @@ TEST_CASE("Parser can parse select attr ref") {
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
   expected_clauses.insert(std::move(expected_select_clause_ptr_2));
-  expected_clauses.insert(std::make_unique<Affects>(declarations[0], declarations[1]));
+  expected_clauses.insert(std::make_unique<Affects>(declarations[0], declarations[1], false));
   REQUIRE(parsed_query_1.selects == expected_selects);
+  REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
+}
+
+TEST_CASE("Parser can parse not clauses") {
+  std::string sample_query_1 = "read r; print p;\n"
+                               "Select r.varName with not p.varName = r.varName and 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  ParsedQuery parsed_query_1 = QueryParser::ParseTokenizedQuery(sample_query_1);
+  std::vector<Declaration> declarations_1 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT}
+  };
+  std::vector<std::string> expected_selects = {declarations_1[0].synonym};
+  std::unique_ptr<SelectClause>
+      expected_select_clause_ptr = std::make_unique<SelectClause>(AttrRef(declarations_1[0], AttrName::VARNAME));
+  ClauseSet expected_clauses;
+  expected_clauses.insert(std::move(expected_select_clause_ptr));
+
+  AttrRef expected_with_lhs_1 = {declarations_1[1], AttrName::VARNAME};
+  AttrRef expected_with_rhs_1 = {declarations_1[0], AttrName::VARNAME};
+  expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs_1, expected_with_rhs_1, true));
+  expected_clauses.insert(std::make_unique<WithClause>(5, 5, false));
+  expected_clauses.insert(std::make_unique<WithClause>("x", "x", true));
+  AttrRef expected_with_lhs_2 = {declarations_1[1], AttrName::VARNAME};
+  expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs_2, "number", true));
   REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
 }

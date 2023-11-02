@@ -11,27 +11,27 @@ TEST_CASE("Uses::Uses", "[Uses]") {
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref(Wildcard::Value);
     EntRef ent_ref(Declaration{"x", DesignEntity::VARIABLE});
-    REQUIRE_THROWS_AS(UsesS(stmt_ref, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(UsesS(stmt_ref, ent_ref), "[Uses/Modifies] LHS cannot be wildcard");
+    REQUIRE_THROWS_AS(UsesS(stmt_ref, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(UsesS(stmt_ref, ent_ref, false), "[Uses/Modifies] LHS cannot be wildcard");
   }
 
   SECTION("Constructor throws semantic error") {
     EntRef ent_ref1("a");
     EntRef ent_ref2(Declaration{"x", DesignEntity::PROCEDURE});
-    REQUIRE_THROWS_AS(UsesP(ent_ref1, ent_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(UsesP(ent_ref1, ent_ref2), "[Uses/Modifies] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(UsesP(ent_ref1, ent_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(UsesP(ent_ref1, ent_ref2, false), "[Uses/Modifies] Invalid RHS synonym");
   }
 
   SECTION("Constructor not throwing semantic error") {
     StmtRef ent_ref1(Declaration{"x", DesignEntity::READ});
     EntRef ent_ref2("y");
-    REQUIRE_NOTHROW(UsesS(ent_ref1, ent_ref2));
+    REQUIRE_NOTHROW(UsesS(ent_ref1, ent_ref2, false));
   }
 
   SECTION("Constructor not throws semantic error") {
     EntRef ent_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     EntRef ent_ref2(Wildcard::Value);
-    REQUIRE_NOTHROW(UsesP(ent_ref1, ent_ref2));
+    REQUIRE_NOTHROW(UsesP(ent_ref1, ent_ref2, false));
   }
 }
 
@@ -39,34 +39,34 @@ TEST_CASE("Modifies::Modifies", "[Modifies]") {
   SECTION("Constructor not throwing semantic error") {
     StmtRef stmt_ref(Declaration{"x", DesignEntity::PRINT});
     EntRef ent_ref("y");
-    REQUIRE_NOTHROW(ModifiesS(stmt_ref, ent_ref));
+    REQUIRE_NOTHROW(ModifiesS(stmt_ref, ent_ref, false));
   }
 
   SECTION("Constructor not throwing semantic error") {
     EntRef ent_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     EntRef ent_ref2("y");
-    REQUIRE_NOTHROW(ModifiesP(ent_ref1, ent_ref2));
+    REQUIRE_NOTHROW(ModifiesP(ent_ref1, ent_ref2, false));
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref(1);
     EntRef ent_ref(Declaration{"x", DesignEntity::PRINT});
-    REQUIRE_THROWS_AS(ModifiesS(stmt_ref, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(ModifiesS(stmt_ref, ent_ref), "[Uses/Modifies] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(ModifiesS(stmt_ref, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(ModifiesS(stmt_ref, ent_ref, false), "[Uses/Modifies] Invalid RHS synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref(1);
     EntRef ent_ref(Declaration{"x", DesignEntity::PROCEDURE});
-    REQUIRE_THROWS_AS(ModifiesS(stmt_ref, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(ModifiesS(stmt_ref, ent_ref), "[Uses/Modifies] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(ModifiesS(stmt_ref, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(ModifiesS(stmt_ref, ent_ref, false), "[Uses/Modifies] Invalid RHS synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     EntRef ent_ref1("main");
     EntRef ent_ref2(Declaration{"x", DesignEntity::PROCEDURE});
-    REQUIRE_THROWS_AS(ModifiesP(ent_ref1, ent_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(ModifiesP(ent_ref1, ent_ref2), "[Uses/Modifies] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(ModifiesP(ent_ref1, ent_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(ModifiesP(ent_ref1, ent_ref2, false), "[Uses/Modifies] Invalid RHS synonym");
   }
 }
 
@@ -74,15 +74,15 @@ TEST_CASE("Parent::Parent", "[Parent]") {
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     StmtRef stmt_ref2(1);
-    REQUIRE_THROWS_AS(Parent(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Parent(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Parent(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Parent(stmt_ref1, stmt_ref2, false), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
-    REQUIRE_THROWS_AS(ParentT(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(ParentT(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(ParentT(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(ParentT(stmt_ref1, stmt_ref2, false), "Invalid RHS synonym. Must be statements entities");
   }
 }
 
@@ -90,15 +90,15 @@ TEST_CASE("Follows::Follows", "[Follows]") {
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::VARIABLE});
     StmtRef stmt_ref2(1);
-    REQUIRE_THROWS_AS(Follows(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Follows(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Follows(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Follows(stmt_ref1, stmt_ref2, false), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::CONSTANT});
-    REQUIRE_THROWS_AS(FollowsT(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(FollowsT(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(FollowsT(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(FollowsT(stmt_ref1, stmt_ref2, false), "Invalid RHS synonym. Must be statements entities");
   }
 }
 
@@ -106,21 +106,21 @@ TEST_CASE("Calls::Calls", "[Calls]") {
   SECTION("Constructor throws semantic error") {
     EntRef ent_ref1("a");
     EntRef ent_ref2(Declaration{"a", DesignEntity::VARIABLE});
-    REQUIRE_THROWS_AS(Calls(ent_ref1, ent_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Calls(ent_ref1, ent_ref2), "[Calls] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(Calls(ent_ref1, ent_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Calls(ent_ref1, ent_ref2, false), "[Calls] Invalid RHS synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     EntRef ent_ref1(Declaration{"a", DesignEntity::ASSIGN});
     EntRef ent_ref2("a");
-    REQUIRE_THROWS_AS(Calls(ent_ref1, ent_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Calls(ent_ref1, ent_ref2), "[Calls] Invalid LHS synonym");
+    REQUIRE_THROWS_AS(Calls(ent_ref1, ent_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Calls(ent_ref1, ent_ref2, false), "[Calls] Invalid LHS synonym");
   }
 
   SECTION("Constructor not throwing semantic error") {
     EntRef ent_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     EntRef ent_ref2(Declaration{"y", DesignEntity::PROCEDURE});
-    REQUIRE_NOTHROW(Calls(ent_ref1, ent_ref2));
+    REQUIRE_NOTHROW(Calls(ent_ref1, ent_ref2, false));
   }
 }
 
@@ -128,21 +128,21 @@ TEST_CASE("CallsT::CallsT", "[CallsT]") {
   SECTION("Constructor throws semantic error") {
     EntRef ent_ref1("a");
     EntRef ent_ref2(Declaration{"a", DesignEntity::STMT});
-    REQUIRE_THROWS_AS(CallsT(ent_ref1, ent_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(CallsT(ent_ref1, ent_ref2), "[Calls] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(CallsT(ent_ref1, ent_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(CallsT(ent_ref1, ent_ref2, false), "[Calls] Invalid RHS synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     EntRef ent_ref1(Declaration{"a", DesignEntity::PROCEDURE});
     EntRef ent_ref2(Declaration{"a", DesignEntity::READ});
-    REQUIRE_THROWS_AS(CallsT(ent_ref1, ent_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(CallsT(ent_ref1, ent_ref2), "[Calls] Invalid RHS synonym");
+    REQUIRE_THROWS_AS(CallsT(ent_ref1, ent_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(CallsT(ent_ref1, ent_ref2, false), "[Calls] Invalid RHS synonym");
   }
 
   SECTION("Constructor not throwing semantic error") {
     EntRef ent_ref1(Wildcard::Value);
     EntRef ent_ref2(Declaration{"x", DesignEntity::PROCEDURE});
-    REQUIRE_NOTHROW(CallsT(ent_ref1, ent_ref2));
+    REQUIRE_NOTHROW(CallsT(ent_ref1, ent_ref2, false));
   }
 }
 
@@ -151,16 +151,16 @@ TEST_CASE("AssignPattern::AssignPattern", "[AssignPattern]") {
     Declaration syn({"x", DesignEntity::STMT});
     EntRef ent_ref("a");
     PartialExpr expr_spec({"x"});
-    REQUIRE_THROWS_AS(AssignPattern(syn, ent_ref, expr_spec), QpsSemanticError);
-    REQUIRE_THROWS_WITH(AssignPattern(syn, ent_ref, expr_spec), "[AssignPattern] syn-assign is not an assign synonym");
+    REQUIRE_THROWS_AS(AssignPattern(syn, ent_ref, expr_spec, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AssignPattern(syn, ent_ref, expr_spec, false), "[AssignPattern] syn-assign is not an assign synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     Declaration syn({"x", DesignEntity::ASSIGN});
     EntRef ent_ref(Declaration{"a", DesignEntity::ASSIGN});
     Wildcard expr_spec(Wildcard::Value);
-    REQUIRE_THROWS_AS(AssignPattern(syn, ent_ref, expr_spec), QpsSemanticError);
-    REQUIRE_THROWS_WITH(AssignPattern(syn, ent_ref, expr_spec),
+    REQUIRE_THROWS_AS(AssignPattern(syn, ent_ref, expr_spec, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(AssignPattern(syn, ent_ref, expr_spec, false),
                         "[Pattern] Invalid LHS synonym. Must be VARIABLE synonym");
   }
 
@@ -168,7 +168,7 @@ TEST_CASE("AssignPattern::AssignPattern", "[AssignPattern]") {
     Declaration syn({"x", DesignEntity::ASSIGN});
     EntRef ent_ref(Declaration{"a", DesignEntity::VARIABLE});
     ExactExpr expr_spec({"x"});
-    REQUIRE_NOTHROW(AssignPattern(syn, ent_ref, expr_spec));
+    REQUIRE_NOTHROW(AssignPattern(syn, ent_ref, expr_spec, false));
   }
 }
 
@@ -176,21 +176,21 @@ TEST_CASE("Next::Next", "[Next]") {
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     StmtRef stmt_ref2(1);
-    REQUIRE_THROWS_AS(Next(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Next(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Next(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Next(stmt_ref1, stmt_ref2, false), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
-    REQUIRE_THROWS_AS(NextT(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(NextT(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(NextT(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(NextT(stmt_ref1, stmt_ref2, false), "Invalid RHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor not throwing semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::STMT});
-    REQUIRE_NOTHROW(NextT(stmt_ref1, stmt_ref2));
+    REQUIRE_NOTHROW(NextT(stmt_ref1, stmt_ref2, false));
   }
 }
 
@@ -198,21 +198,21 @@ TEST_CASE("Affects::Affects", "[Affects]") {
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Declaration{"x", DesignEntity::PROCEDURE});
     StmtRef stmt_ref2(1);
-    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2), "Invalid LHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2, false), "Invalid LHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor throws semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::VARIABLE});
-    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2), QpsSemanticError);
-    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2), "Invalid RHS synonym. Must be statements entities");
+    REQUIRE_THROWS_AS(Affects(stmt_ref1, stmt_ref2, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(Affects(stmt_ref1, stmt_ref2, false), "Invalid RHS synonym. Must be statements entities");
   }
 
   SECTION("Constructor not throwing semantic error") {
     StmtRef stmt_ref1(Wildcard::Value);
     StmtRef stmt_ref2(Declaration{"x", DesignEntity::STMT});
-    REQUIRE_NOTHROW(Affects(stmt_ref1, stmt_ref2));
+    REQUIRE_NOTHROW(Affects(stmt_ref1, stmt_ref2, false));
   }
 }
 
@@ -220,21 +220,21 @@ TEST_CASE("IfPattern::IfPattern", "[IfPattern]") {
   SECTION("Constructor throws semantic error") {
     Declaration syn({"x", DesignEntity::READ});
     EntRef ent_ref("a");
-    REQUIRE_THROWS_AS(IfPattern(syn, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(IfPattern(syn, ent_ref), "[IfPattern] syn-if is not an if synonym");
+    REQUIRE_THROWS_AS(IfPattern(syn, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(IfPattern(syn, ent_ref, false), "[IfPattern] syn-if is not an if synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     Declaration syn({"x", DesignEntity::IF_STMT});
     EntRef ent_ref(Declaration{"a", DesignEntity::PRINT});
-    REQUIRE_THROWS_AS(IfPattern(syn, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(IfPattern(syn, ent_ref), "[Pattern] Invalid LHS synonym. Must be VARIABLE synonym");
+    REQUIRE_THROWS_AS(IfPattern(syn, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(IfPattern(syn, ent_ref, false), "[Pattern] Invalid LHS synonym. Must be VARIABLE synonym");
   }
 
   SECTION("Constructor not throwing semantic error") {
     Declaration syn({"x", DesignEntity::IF_STMT});
     EntRef ent_ref(Wildcard::Value);
-    REQUIRE_NOTHROW(IfPattern(syn, ent_ref));
+    REQUIRE_NOTHROW(IfPattern(syn, ent_ref, false));
   }
 }
 
@@ -242,21 +242,21 @@ TEST_CASE("WhilePattern::WhilePattern", "[WhilePattern]") {
   SECTION("Constructor throws semantic error") {
     Declaration syn({"x", DesignEntity::READ});
     EntRef ent_ref("a");
-    REQUIRE_THROWS_AS(WhilePattern(syn, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(WhilePattern(syn, ent_ref), "[WhilePattern] syn-while is not a while synonym");
+    REQUIRE_THROWS_AS(WhilePattern(syn, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(WhilePattern(syn, ent_ref, false), "[WhilePattern] syn-while is not a while synonym");
   }
 
   SECTION("Constructor throws semantic error") {
     Declaration syn({"x", DesignEntity::WHILE_LOOP});
     EntRef ent_ref(Declaration{"a", DesignEntity::CALL});
-    REQUIRE_THROWS_AS(WhilePattern(syn, ent_ref), QpsSemanticError);
-    REQUIRE_THROWS_WITH(WhilePattern(syn, ent_ref), "[Pattern] Invalid LHS synonym. Must be VARIABLE synonym");
+    REQUIRE_THROWS_AS(WhilePattern(syn, ent_ref, false), QpsSemanticError);
+    REQUIRE_THROWS_WITH(WhilePattern(syn, ent_ref, false), "[Pattern] Invalid LHS synonym. Must be VARIABLE synonym");
   }
 
   SECTION("Constructor not throwing semantic error") {
     Declaration syn({"x", DesignEntity::WHILE_LOOP});
     EntRef ent_ref("xyr");
-    REQUIRE_NOTHROW(WhilePattern(syn, ent_ref));
+    REQUIRE_NOTHROW(WhilePattern(syn, ent_ref, false));
   }
 }
 
@@ -332,35 +332,35 @@ TEST_CASE("WithClause::WithClause", "[WithClause]") {
 
     // Test 0: Mismatch between Name and INTEGER for procedure name
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), 8),
+        WithClause(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), 8, false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 1: Mismatch between Name and INTEGER for statement number
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), std::string("10")),
+        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), std::string("10"), false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 2: Mismatch between Name and INTEGER for procedure name
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME), 123),
+        WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME), 123, false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 3: Mismatch between Name and INTEGER for variable name
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), 999),
+        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), 999, false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 4: Mismatch between INTEGER for statement number and Name for read variable
     REQUIRE_THROWS_MATCHES(
-        WithClause(AttrRef({"r", DesignEntity::READ}, AttrName::STMTNUM), std::string("someVar")),
+        WithClause(AttrRef({"r", DesignEntity::READ}, AttrName::STMTNUM), std::string("someVar"), false),
         QpsSemanticError,
         message_matcher
     );
@@ -368,14 +368,14 @@ TEST_CASE("WithClause::WithClause", "[WithClause]") {
     // Test 5: Mismatch between INTEGER for constant value and Name for call procedure
     REQUIRE_THROWS_MATCHES(
         WithClause(AttrRef({"con", DesignEntity::CONSTANT}, AttrName::VALUE),
-                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME)),
+                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), false),
         QpsSemanticError,
         message_matcher
     );
 
     // Test 6: Mismatch between INTEGER and string
     REQUIRE_THROWS_MATCHES(
-        WithClause(5, std::string("five")),
+        WithClause(5, std::string("five"), false),
         QpsSemanticError,
         message_matcher
     );
@@ -385,81 +385,81 @@ TEST_CASE("WithClause::WithClause", "[WithClause]") {
     // Test 1: PROCNAME and VARNAME has the same underlying type
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME),
-                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME))
+                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), false)
     );
 
     // Test 2: STMTNUM and VALUE has the same underlying type
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE),
-                   AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM))
+                   AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), false)
     );
 
     // Test 3: Mismatch between INTEGER types (read and print)
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"p", DesignEntity::PROCEDURE}, AttrName::PROCNAME),
-                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME))
+                   AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME), false)
     );
 
     // Test 4: Mismatch between INTEGER types (read and print)
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"pt", DesignEntity::PRINT}, AttrName::VARNAME),
-                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME))
+                   AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), false)
     );
-    REQUIRE_NOTHROW(WithClause(7, 10));
-    REQUIRE_NOTHROW(WithClause("procedureName", "varName"));
+    REQUIRE_NOTHROW(WithClause(7, 10, false));
+    REQUIRE_NOTHROW(WithClause("procedureName", "varName", false));
 
     // Matching Name types for procedure name with another procedure name
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"p1", DesignEntity::PROCEDURE}, AttrName::PROCNAME),
-                   AttrRef({"p2", DesignEntity::PROCEDURE}, AttrName::PROCNAME))
+                   AttrRef({"p2", DesignEntity::PROCEDURE}, AttrName::PROCNAME), false)
     );
 
     // Matching Name types for variable name with a string
     REQUIRE_NOTHROW(
-        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), std::string("variableName"))
+        WithClause(AttrRef({"v", DesignEntity::VARIABLE}, AttrName::VARNAME), std::string("variableName"), false)
     );
 
     // Matching Name types for call procedure name with read variable name
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"c", DesignEntity::CALL}, AttrName::PROCNAME),
-                   AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME))
+                   AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME), false)
     );
 
     // Matching Name types for print variable name with a string
     REQUIRE_NOTHROW(
-        WithClause("printVar", AttrRef({"pr", DesignEntity::PRINT}, AttrName::VARNAME))
+        WithClause("printVar", AttrRef({"pr", DesignEntity::PRINT}, AttrName::VARNAME), false)
     );
 
     // Matching INTEGER types for statement number with integer
     REQUIRE_NOTHROW(
-        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), 5)
+        WithClause(AttrRef({"s", DesignEntity::STMT}, AttrName::STMTNUM), 5, false)
     );
 
     // Matching INTEGER types for constant value with integer
     REQUIRE_NOTHROW(
-        WithClause(10, AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE))
+        WithClause(10, AttrRef({"c", DesignEntity::CONSTANT}, AttrName::VALUE), false)
     );
 
     // Matching INTEGER types for assign statement number with read statement number
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"a", DesignEntity::ASSIGN}, AttrName::STMTNUM),
-                   AttrRef({"rd", DesignEntity::READ}, AttrName::STMTNUM))
+                   AttrRef({"rd", DesignEntity::READ}, AttrName::STMTNUM), false)
     );
 
     // Matching Name types for call procedure name with a string
     REQUIRE_NOTHROW(
-        WithClause(AttrRef({"cal", DesignEntity::CALL}, AttrName::PROCNAME), std::string("someProcedure"))
+        WithClause(AttrRef({"cal", DesignEntity::CALL}, AttrName::PROCNAME), std::string("someProcedure"), false)
     );
 
     // Matching INTEGER types for while statement number with integer
     REQUIRE_NOTHROW(
-        WithClause(20, AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::STMTNUM))
+        WithClause(20, AttrRef({"w", DesignEntity::WHILE_LOOP}, AttrName::STMTNUM), false)
     );
 
     // Matching Name types for read variable name with print variable name
     REQUIRE_NOTHROW(
         WithClause(AttrRef({"r", DesignEntity::READ}, AttrName::VARNAME),
-                   AttrRef({"pt", DesignEntity::PRINT}, AttrName::VARNAME))
+                   AttrRef({"pt", DesignEntity::PRINT}, AttrName::VARNAME), false)
     );
 
   }

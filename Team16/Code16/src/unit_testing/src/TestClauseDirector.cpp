@@ -49,6 +49,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of parent relat
 TEST_CASE("Clause Director can create such that clause with parent relation") {
   SuchThatClauseBuilder builder;
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Parent", PQLTokenType::RELREF},
       {"a", PQLTokenType::SYNONYM},
       {"7", PQLTokenType::INTEGER}
@@ -69,6 +70,7 @@ TEST_CASE("Clause Director can create such that clause with parent relation") {
 TEST_CASE("Such that Clause Builder successfully sets attributes of parent* relation") {
   SuchThatClauseBuilder builder;
   std::vector<QueryToken> params = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Parent*", PQLTokenType::RELREF},
       {"a", PQLTokenType::SYNONYM},
       {"7", PQLTokenType::INTEGER}
@@ -78,9 +80,10 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of parent* rela
       {"a", DesignEntity::ASSIGN}
   };
 
-  builder.setRelRef(RelRef::fromString(params[0].text));
-  builder.setLhs(params[1], declarations);
-  builder.setRhs(params[2], declarations);
+  builder.setNot(params[0]);
+  builder.setRelRef(RelRef::fromString(params[1].text));
+  builder.setLhs(params[2], declarations);
+  builder.setRhs(params[3], declarations);
   std::unique_ptr<SuchThatClause> such_that_clause = builder.getClause();
   auto* clause = dynamic_cast<ParentT*>(such_that_clause.get());
   RefParam expectedLhs = StmtRef(declarations[0]);
@@ -92,6 +95,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of parent* rela
 TEST_CASE("Clause Director can create such that clause with parent* relation") {
   SuchThatClauseBuilder builder;
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Parent*", PQLTokenType::RELREF},
       {"a", PQLTokenType::SYNONYM},
       {"7", PQLTokenType::INTEGER}
@@ -135,6 +139,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of follows rela
 TEST_CASE("Clause Director can create such that clause with follows relation") {
   SuchThatClauseBuilder builder;
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Follows", PQLTokenType::RELREF},
       {"7", PQLTokenType::INTEGER},
       {"s", PQLTokenType::SYNONYM},
@@ -224,6 +229,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of ModifiesS('s
 TEST_CASE("Clause Director can create such that clause with ModifiesS('stmtRef', 'entRef') relation") {
   SuchThatClauseBuilder builder;
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Modifies", PQLTokenType::RELREF},
       {"p", PQLTokenType::SYNONYM},
       {"x", PQLTokenType::IDENT},
@@ -267,6 +273,7 @@ TEST_CASE("Such that Clause Builder successfully sets attributes of ModifiesP('e
 TEST_CASE("Clause Director can create such that clause with ModifiesS with wildcard") {
   SuchThatClauseBuilder builder;
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"Modifies", PQLTokenType::RELREF},
       {"p", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
@@ -286,6 +293,7 @@ TEST_CASE("Clause Director can create such that clause with ModifiesS with wildc
 
 TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExpr)'") {
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
       {"x+y", PQLTokenType::PARTIALEXPR}
@@ -310,6 +318,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExp
 
 TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'") {
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
       {"x+y", PQLTokenType::PARTIALEXPR}
@@ -333,6 +342,7 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
 
 TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
   std::vector<QueryToken> tokens = {
+      {"", PQLTokenType::NORMAL_CLAUSE},
       {"a", PQLTokenType::SYNONYM},
       {"_", PQLTokenType::WILDCARD},
       {"x+y", PQLTokenType::PARTIALEXPR}
