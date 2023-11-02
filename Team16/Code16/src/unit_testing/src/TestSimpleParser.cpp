@@ -284,6 +284,10 @@ TEST_CASE("Test follows relation one level nesting") {
             x = x + 1;
 	   }
        else = else + 1; 
+       call c; 
+    }
+    procedure c {
+       x = 2; 
     }
      )";
     sourceProcessor.processSource(simpleProgram3);
@@ -291,6 +295,7 @@ TEST_CASE("Test follows relation one level nesting") {
         {1, 2},
         {3, 4},
         {2, 5},
+        {5, 6}
     };
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
        {2, {3,4}},

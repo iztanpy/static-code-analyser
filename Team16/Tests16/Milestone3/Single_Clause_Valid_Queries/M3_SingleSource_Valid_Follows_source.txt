@@ -1,0 +1,20 @@
+procedure Four {
+    if ((x%2==0) || (a+b==2)) then {
+        x = x + 2; 
+        call Three;
+    } else {
+        while (x == 1) {
+            a = a + b;
+            x = x + 1; 
+            x = x + 2; 
+        }
+    }
+    x = x + 2; 
+    call Three; 
+}
+
+procedure Three {
+    read x; 
+    read abc; 
+    read lkjasdlkjasldjalsdsdjfnsjfhdjjkdsnfdsdsfdsfdsfsdfdsfsdfsdfdsf;
+}

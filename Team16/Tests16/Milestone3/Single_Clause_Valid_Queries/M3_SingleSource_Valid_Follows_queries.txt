@@ -1,0 +1,50 @@
+1 - follows with 2 wildcards returns true
+read r;
+Select r such that Follows(_,_)
+10, 11, 12 
+5000
+2 - follows with 2 valid statement numbers returns true
+call c; 
+Select c such that Follows(2,3)
+3, 9
+5000 
+3 - follows with 2 invalid statement numbers returns none
+call c; 
+Select c such that Follows(3,2)
+none
+5000 
+4 - follows with 2 statements from separate stmt list return none 
+call c; 
+Select c such that Follows(3,5)
+none
+5000 
+5 - select all assignment statements that follow the call statement
+assign a; 
+Select a such that Follows(3,a)
+none
+5000 
+6 - follow statements should not have a transitive relation across procedures
+assign a; 
+Select a such that Follows(9,10)
+none
+5000 
+7 - follow statements with wildcard int should return true
+assign a; 
+Select a such that Follows(10,_)
+2, 5, 6, 7, 8
+5000 
+8 - follow statements with wildcard int should return true
+assign a; 
+Select a such that Follows(_,1)
+none
+5000 
+9 - follow statements with 2 synonyms should return true
+if i; assign a;
+Select i such that Follows(i, a)
+1
+5000
+10 - follow statements with 2 synonyms should return assignment
+if i; assign a;
+Select a such that Follows(i, a)
+8
+5000

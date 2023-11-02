@@ -49,6 +49,7 @@ int CallParser::parse(std::vector<Token>& tokens) {
     index = index + 3;
     std::shared_ptr<TNode> root = TNodeFactory::createNode(call, lineNumber);
     Cfg::handleStatement(lineNumber);
+    followsStatementStack.top().insert(lineNumber);
     designExtractor->extractDesign(root, visitor);
     lineNumber++;
     return index;

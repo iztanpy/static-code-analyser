@@ -1,0 +1,51 @@
+procedure master {
+    read x;
+    read y;
+    sum = x + y;
+    if (x > y) then {
+        z = x * 2;
+        if (y < 10) then {
+            y = y + 1;
+        } else {
+            y = y - 5;
+        }
+    } else {
+        z = y * 3;
+    }
+    while (x < 20) {
+        x = x + 1;
+        while (y > 5) {
+            y = y - 4;
+            y = k * 10;
+            y = t / 5;
+            if (x == y) then {
+                break = 1;
+            } else {
+                continue = 1;
+            }
+        }
+    }
+    print x;
+    print y;
+    print z;
+}
+procedure call {
+    call master;
+    if (x > y) then {
+        while (x < 20) {
+            call master;
+        }
+        read call;
+        call main;
+    } else {
+        print call;
+        call master;
+    }
+    while (((x < 20) || (y > 5)) && ((x < 20) || (y > 5))) {
+        call master;
+    }
+}
+procedure main {
+    call master;
+    call = call * call;
+}
