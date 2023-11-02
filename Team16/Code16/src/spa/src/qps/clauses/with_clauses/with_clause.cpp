@@ -39,7 +39,7 @@ bool WithClause::equals(const Clause* other) const {
 }
 
 bool operator==(const WithClause& first, const WithClause& second) {
-  return first.lhs == second.lhs && first.rhs == second.rhs;
+  return first.lhs == second.lhs && first.rhs == second.rhs && first.is_not == second.is_not;
 }
 
 RefUnderlyingType WithClause::GetType(const Ref& param) {

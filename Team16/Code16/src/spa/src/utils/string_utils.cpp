@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include "utils/string_utils.h"
+#include "qps/constants.h"
 
 // ai-gen start(gpt3, 1)
 std::string string_util::LeftTrim(const std::string& str) {
@@ -82,15 +83,26 @@ std::string string_util::RemoveFirstWordFromArgs(std::string& str) {
 }
 
 std::string string_util::RemoveFirstWord(std::string& str) {
-  // Find the position of the first space character
-  size_t pos = str.find(' ');
+  std::string result = str;
 
-  if (pos != std::string::npos) {
-    // Use substring to extract the portion of the string after the first space
-    return str.substr(pos + 1);
+  // Search for the first match in the input string
+  std::smatch match;
+  if (std::regex_search(result, match, qps_constants::kFirstWordRegex)) {
+    // Find the position of the matched word
+    size_t pos = result.find(match.str());
+    if (pos != std::string::npos) {
+      // Remove the matched word and any following spaces
+      result.erase(0, pos);
+    }
+
+    // Remove leading and trailing spaces
+    result = std::regex_replace(result, std::regex("^ +| +$|( ) +"), "$1");
+
+    // Return the modified string
+    return result;
   }
 
-  // If there's no space, return an empty string
+  // If no word is found, return the original string
   return "";
 }
 

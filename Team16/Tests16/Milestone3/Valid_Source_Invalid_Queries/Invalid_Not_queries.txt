@@ -1,0 +1,65 @@
+1 - wrong positioning for not before with
+read r; print p;
+Select r.varName not with p.varName = r.varName and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+2 - wrong positioning for not before and
+read r; print p;
+Select r.varName with p.varName = r.varName not and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+3 - wrong positioning for not before such that
+read r; print p; stmt s; assign a;
+Select r.varName not such that Parent*(s, a) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+4 - wrong positioning for not before pattern
+read r; print p; stmt s; assign a;
+Select r.varName not pattern a(a, _) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+5 - wrong positioning for not in select clause
+read r; print p; stmt s; assign a;
+Select not <r.varName> pattern a(a, _) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+6 - incorrect position of not in such that clause
+assign a; stmt s1, s2, s3;
+Select a such that Parent(s1, s2) not and Follows*(s1, s3)
+SyntaxError
+5000
+7 - incorrect position of not in with clause
+assign a; variable q;
+Select a with q.varName = not 10
+SyntaxError
+5000
+8 - multiple nots in with clause
+assign a; variable q;
+Select a with not not not not not not q.varName = 10
+SyntaxError
+5000
+9 - multiple nots in end of clause
+assign a; stmt s1, s2, s3;
+Select a such that Parent(s1, s2) and Follows*(s1, s3) not not not not
+SyntaxError
+5000
+10 - mixing not in various clauses
+assign a; stmt s1, s2;
+Select a such that not not Follows*(s1, s2) and not pattern not a(a, _"x+y"_)
+SyntaxError
+5000
+11 - capitalization of Not
+assign a; stmt s1, s2, s3;
+Select a such that Not Parent(s1, s2) and Follows*(s1, s3)
+SyntaxError
+5000
+12 - missing relationship reference
+assign a; stmt s1, s2, s3;
+Select a such that not (s1, s2) and Follows*(s1, s3)
+SyntaxError
+5000
+13 - Pattern followed by with clause
+read r; print p; stmt s; assign a; variable not;
+Select not pattern not a(not, _) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
