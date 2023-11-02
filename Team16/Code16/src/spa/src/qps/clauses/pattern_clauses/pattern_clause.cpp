@@ -28,7 +28,8 @@ size_t AssignPattern::Hash() const {
 }
 
 bool operator==(const PatternClause& lhs, const PatternClause& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs;
+  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration
+  && lhs.lhs == rhs.lhs && lhs.is_not == rhs.is_not;
 }
 
 bool PatternClause::equals(const Clause* other) const {

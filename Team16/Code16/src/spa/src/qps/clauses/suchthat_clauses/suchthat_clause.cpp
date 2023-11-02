@@ -107,7 +107,7 @@ bool operator==(const SuchThatClause& lhs, const SuchThatClause& rhs) {
   bool a = lhs.GetRelRef() == rhs.GetRelRef();
   bool b = lhs.lhs == rhs.lhs;
   bool c = lhs.rhs == rhs.rhs;
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.lhs == rhs.lhs && lhs.rhs == rhs.rhs;
+  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.lhs == rhs.lhs && lhs.rhs == rhs.rhs && lhs.is_not == rhs.is_not;
 }
 
 bool SuchThatClause::equals(const Clause* other) const {

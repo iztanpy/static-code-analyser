@@ -117,7 +117,6 @@ std::vector<QueryToken> processSelectClause(std::string& select_statement, Selec
         PQLTokenType token_type = QueryTokenizer::getAttrTokenType(attr_name);
         results.push_back({attr_syn, token_type});
       }
-      // results.push_back({select_statement, PQLTokenType::SYNONYM});
       break;
     case SelectValueType::MUTLIPLE:
       select_with_tuple_removed = QueryUtil::RemoveTuple(select_statement);
@@ -146,7 +145,7 @@ std::string QueryTokenizer::removeResultClause(std::string& select_statement) {
     // Replace the result-cl with an empty string
     modifiedQuery = std::regex_replace(select_statement, qps_constants::kTupleRegex, "");
   } else {
-    // either a BOOLEAN or synonym
+    // either a BOOLEAN or synonym or attrRef
     modifiedQuery = string_util::RemoveFirstWord(select_statement);
   }
   // Remove any extra spaces or whitespace characters

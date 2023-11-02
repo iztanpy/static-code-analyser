@@ -1,0 +1,145 @@
+1 - wrong positioning for not before with
+read r; print p;
+Select r.varName not with p.varName = r.varName and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+2 - wrong positioning for not before and
+read r; print p;
+Select r.varName with p.varName = r.varName not and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+3 - wrong positioning for not before such that
+read r; print p; stmt s; assign a;
+Select r.varName not such that Parent*(s, a) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+4 - wrong positioning for not before pattern
+read r; print p; stmt s; assign a;
+Select r.varName not pattern a(a, _) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+5 - wrong positioning for not in select clause
+read r; print p; stmt s; assign a;
+Select not <r.varName> pattern a(a, _) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+6 - incorrect position of not in such that clause
+assign a; stmt s1, s2, s3;
+Select a such that Parent(s1, s2) not and Follows*(s1, s3)
+SyntaxError
+5000
+7 - incorrect position of not in with clause
+assign a; variable q;
+Select a with q.varName = not 10
+SyntaxError
+5000
+8 - multiple nots in with clause
+assign a; variable q;
+Select a with not not not not not not q.varName = 10
+SyntaxError
+5000
+9 - multiple nots in end of clause
+assign a; stmt s1, s2, s3;
+Select a such that Parent(s1, s2) and Follows*(s1, s3) not not not not
+SyntaxError
+5000
+10 - mixing not in various clauses
+assign a; stmt s1, s2;
+Select a such that not not Follows*(s1, s2) and not pattern not a(a, _"x+y"_)
+SyntaxError
+5000
+11 - capitalization of Not
+assign a; stmt s1, s2, s3;
+Select a such that Not Parent(s1, s2) and Follows*(s1, s3)
+SyntaxError
+5000
+12 - missing relationship reference
+assign a; stmt s1, s2, s3;
+Select a such that not (s1, s2) and Follows*(s1, s3)
+SyntaxError
+5000
+13 - Pattern followed by with clause
+read r; print p; stmt s; assign a; variable not;
+Select not pattern not a(not, _) and 5=5 and "x"="x" and p.varName = "number"
+SyntaxError
+5000
+14 - declaration of variable not takes precedence over not in with clause
+constant c; variable not;
+Select c with not 5 = 10
+SyntaxError
+5000
+15 - declaration of assign not takes precedence over not in pattern clause
+while w; variable v; assign not;
+Select w pattern not w("y", _)
+SyntaxError
+5000
+16 - declaration of read not takes precedence over not in such that clause
+procedure p; variable v; read not;
+Select p such that not Calls* (p, "Third")
+SyntaxError
+5000
+17 - declaration of procedure not takes precedence over not in multiple clauses
+assign a; stmt s1, s2; procedure not;
+Select a such that Follows*(s1, s2) and not pattern a(a, _"x+y"_)
+SyntaxError
+5000
+18 - declaration of call not takes precedence over not in multiple clauses
+assign a; stmt s1, s2; procedure p; call not;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) with not p.procName = "Third"
+SyntaxError
+5000
+19 - declaration of stmt not takes precedence over not in multiple clauses
+assign a; stmt s1, s2, not; procedure p, p2;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Calls(p, p2)
+SyntaxError
+5000
+20 - declaration of print not takes precedence over not in multiple clauses
+assign a; stmt s1, s2; procedure p, p2; print not;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Next(s1, s2)
+SyntaxError
+5000
+21 - declaration of if not takes precedence over not in multiple clauses
+assign a; stmt s1, s2; procedure p, p2; if not;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Affects(1, 2)
+SyntaxError
+5000
+22 - declaration of while not takes precedence over not in multiple clauses
+assign a; stmt s1, s2; procedure p, p2; while not;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Calls*(p, p2)
+SyntaxError
+5000
+23 - wrong clause after such that and not
+assign a; stmt s1, s2; procedure p, p2;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Calls*(p, p2) and not a(a, _"1"_)
+SyntaxError
+5000
+24 - wrong clause after pattern and not
+assign a; stmt s1, s2; procedure p, p2;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) and not Calls*(p, p2)
+SyntaxError
+5000
+25 - wrong clause after with and not
+assign a; stmt s1, s2; procedure p, p2;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) with p.procName = "main" and not a(a, _"1"_)
+SyntaxError
+5000
+26 - extra not after and not in with clause
+assign a; variable q;
+Select a with not q.varName = 10 and not not q.varName = 11
+SyntaxError
+5000
+27 - extra not after and not in such that clause
+assign a; stmt s1, s2; procedure p, p2;
+Select a such that Follows*(s1, s2) and not not Follows(s1, s2)
+SyntaxError
+5000
+28 - extra not after and not in pattern clause
+assign a; stmt s1, s2; procedure p, p2;
+Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) and not not a(a, _"1"_)
+SyntaxError
+5000
+29 - wrong positioning for not before select clause
+read r; print p;
+not Select r.varName with p.varName = r.varName and p.varName = "number"
+SyntaxError
+5000

@@ -852,3 +852,111 @@ TEST_CASE("Tokeniser can tokenize with clause") {
   std::string sample_query_5 = "Select s.stmt# such that Follows* (s, s1) with s1smt#=10";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_5, declarations_2), QpsSyntaxError);
 }
+
+TEST_CASE("Tokenizer can tokenize not clauses") {
+  std::string sample_query_1 = "Select r.varName with not p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  std::vector<Declaration> declarations_1 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT}
+  };
+  std::vector<std::vector<QueryToken>> results_1 = QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1);
+
+  std::vector<QueryToken> expected_with_tokens_1 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"p", PQLTokenType::WITH_VARNAME},
+      {"r", PQLTokenType::WITH_VARNAME},
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"5", PQLTokenType::INTEGER},
+      {"5", PQLTokenType::INTEGER},
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"x", PQLTokenType::IDENT},
+      {"x", PQLTokenType::IDENT},
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"p", PQLTokenType::WITH_VARNAME},
+      {"number", PQLTokenType::IDENT}
+  };
+  std::vector<QueryToken> with_tokens_1 = results_1[2];
+  REQUIRE(with_tokens_1.size() == 12);
+  for (int i = 0; i < with_tokens_1.size(); i++) {
+    REQUIRE(with_tokens_1[i].text == expected_with_tokens_1[i].text);
+    REQUIRE(with_tokens_1[i].type == expected_with_tokens_1[i].type);
+  }
+
+  std::string sample_query_2 = "Select r.varName with not p.varName = r.varName such that not Parent*(s,  a) pattern not a(v,_\"digit \"_)";
+  std::vector<Declaration> declarations_2 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT},
+      {"s", DesignEntity::STMT},
+      {"a", DesignEntity::ASSIGN},
+      {"v", DesignEntity::VARIABLE}
+  };
+  std::vector<std::vector<QueryToken>> results_2 = QueryTokenizer::extractClauseTokens(sample_query_2, declarations_2);
+
+  std::vector<QueryToken> expected_with_tokens_2 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"p", PQLTokenType::WITH_VARNAME},
+      {"r", PQLTokenType::WITH_VARNAME},
+  };
+
+  std::vector<QueryToken> expected_such_that_tokens_2 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"Parent*", PQLTokenType::RELREF},
+      {"s", PQLTokenType::SYNONYM},
+      {"a", PQLTokenType::SYNONYM}
+  };
+
+  std::vector<QueryToken> expected_pattern_tokens_2 = {
+      {"not", PQLTokenType::NOT_CLAUSE},
+      {"a", PQLTokenType::SYNONYM},
+      {"v", PQLTokenType::SYNONYM},
+      {"(digit)", PQLTokenType::PARTIALEXPR}
+  };
+
+  std::vector<QueryToken> with_tokens_2 = results_2[2];
+  std::vector<QueryToken> such_that_tokens_2 = results_2[0];
+  std::vector<QueryToken> pattern_tokens_2 = results_2[1];
+
+  REQUIRE(with_tokens_2.size() == 3);
+  REQUIRE(such_that_tokens_2.size() == 4);
+  REQUIRE(pattern_tokens_2.size() == 4);
+  for (int i = 0; i < with_tokens_2.size(); i++) {
+    REQUIRE(with_tokens_2[i].text == expected_with_tokens_2[i].text);
+    REQUIRE(with_tokens_2[i].type == expected_with_tokens_2[i].type);
+  }
+  for (int i = 0; i < such_that_tokens_2.size(); i++) {
+    REQUIRE(such_that_tokens_2[i].text == expected_such_that_tokens_2[i].text);
+    REQUIRE(such_that_tokens_2[i].type == expected_such_that_tokens_2[i].type);
+  }
+  for (int i = 0; i < pattern_tokens_2.size(); i++) {
+    REQUIRE(pattern_tokens_2[i].text == expected_pattern_tokens_2[i].text);
+    REQUIRE(pattern_tokens_2[i].type == expected_pattern_tokens_2[i].type);
+  }
+}
+
+TEST_CASE("Tokeniser can handle invalid not clauses") {
+  // 'not' coming before 'with'
+  std::string sample_query_1 = "Select r.varName not with not p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  std::vector<Declaration> declarations_1 = {
+      {"r", DesignEntity::READ},
+      {"p", DesignEntity::PRINT}
+  };
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_1, declarations_1), QpsSyntaxError);
+
+  // misspelled not
+  std::string sample_query_2 = "Select r.varName with nottt p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSyntaxError);
+
+  // double not
+  std::string sample_query_3 = "Select r.varName with not not p.varName = r.varName and not 5=5 and not \"x\"=\"x\" and not p.varName = \"number\"";
+  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSyntaxError);
+}
+
+TEST_CASE("debug") {
+  std:: string sample_query = "Select not pattern not a(not, _)";
+  std::vector<Declaration> declarations_1 = {
+      {"not", DesignEntity::VARIABLE},
+      {"a", DesignEntity::ASSIGN},
+      {"p", DesignEntity::PRINT}
+  };
+  REQUIRE_NOTHROW(QueryTokenizer::extractClauseTokens(sample_query, declarations_1));
+}
