@@ -76,17 +76,6 @@ class ConstraintTable {
   Table table;
 
   /*!
-   * Check if ConstraintTable has been given a Constraint that evaluates
-   * to false before. This is useful for HasNoValidValues() function
-   */
-  bool has_at_least_one_false_constraint;
-
-  /*!
-   * Check if ConstraintTable has only been given True Constraint
-   */
-  bool has_only_true_constraint;
-
-  /*!
    * @brief Constructor for ConstraintTable for unit test or integration test, not to be used in main code
    * @param mock_table
    */

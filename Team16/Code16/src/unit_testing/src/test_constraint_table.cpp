@@ -65,62 +65,6 @@ void REQUIRE_TABLE_CONTENT(Table& table,
   }
 }
 
-TEST_CASE("ConstraintTable::HasNoValidValues", "[ConstraintTable]") {
-  ConstraintTable ct;
-
-  SECTION("Only True Constraint") {
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint1 = true;
-    ct.Solve(constraint1);
-    // Only has True Constraint so far
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint2 = true;
-    ct.Solve(constraint2);
-    // Only has True Constraint so far
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint3 = UnaryConstraint{"a", {}};
-    ct.Solve(constraint3);
-    // Face non-bool constraint which is empty
-    REQUIRE(!ct.IsValid());
-  }
-
-  SECTION("Face at least 1 false constraint") {
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint1 = true;
-    ct.Solve(constraint1);
-    // Only has True Constraint so far
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint2 = UnaryConstraint{"a", {"1", "2", "3"}};
-    ct.Solve(constraint2);
-    // Has a valid non-bool constraint that has some valid assignments
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint3 = true;
-    ct.Solve(constraint3);
-    // A true constraint shouldn't affect anything
-    REQUIRE(ct.IsValid());
-
-    Constraint constraint4 = false;
-    ct.Solve(constraint4);
-    REQUIRE(!ct.IsValid());
-
-    Constraint constraint5 = true;
-    ct.Solve(constraint5);
-    // Once it has been set to IsValid, it will not toggle back
-    REQUIRE(!ct.IsValid());
-
-    Constraint constraint6 = UnaryConstraint{"b", {"34", "42", "38"}};
-    ct.Solve(constraint6);
-    // Once it has been set to IsValid, it will not toggle back
-    REQUIRE(!ct.IsValid());
-  }
-}
-
 TEST_CASE("ConstraintTable::AddNewUnaryConstraint", "[ConstraintTable]") {
 
   SECTION("Adding a new unary constraint to new table") {
