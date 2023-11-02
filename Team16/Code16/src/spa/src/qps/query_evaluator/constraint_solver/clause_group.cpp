@@ -86,3 +86,7 @@ ConstraintTable ClauseGroup::Evaluate(ReadFacade& pkb_reader) const {
   }
   return table;
 }
+
+int ClauseGroup::SizeForTesting() const {
+  return clauses_.size();
+}

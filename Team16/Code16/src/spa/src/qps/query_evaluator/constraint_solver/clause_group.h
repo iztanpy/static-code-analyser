@@ -37,6 +37,12 @@ class ClauseGroup {
    */
   int Score() const;
 
+  /*!
+   * Returns the number of clauses in the ClauseGroup
+   * @return int number of clauses
+   */
+  int SizeForTesting() const;
+
  private:
   std::vector<std::unique_ptr<Clause>> clauses_;
 };
