@@ -79,7 +79,7 @@ ConstraintTable ClauseGroup::Evaluate(ReadFacade& pkb_reader) const {
   ConstraintTable table;
   for (const auto& clause : clauses_) {
     Constraint constraint = clause->Evaluate(pkb_reader);
-    table.Solve(constraint);
+    table.Solve(constraint, clause->IsNot());
     if (!table.IsValid()) {
       return table;
     }

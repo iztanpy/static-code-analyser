@@ -36,7 +36,7 @@ class ConstraintTable {
    *
    * @param constraint The constraint to be added to the constraint table.
    */
-  void Solve(Constraint& constraint);
+  void Solve(Constraint& constraint, bool is_not);
 
   /*!
   // To check if Constraints supplied so far are valid
@@ -85,47 +85,47 @@ class ConstraintTable {
    * @brief Adds a new unary constraint to the constraint table.
    * @param constraint
    */
-  void Solve(const UnaryConstraint& constraint);
+  void Solve(const UnaryConstraint& constraint, bool is_not);
 
   /*!
    * @brief Adds a new binary constraint to the constraint table.
    * @param constraint
    */
-  void Solve(const BinaryConstraint& constraint);
+  void Solve(const BinaryConstraint& constraint, bool is_not);
 
   /*!
    * @brief Adds a new boolean constraint to the constraint table.
    * @param constraint
    */
-  void Solve(const bool constraint);
+  void Solve(const bool constraint, bool is_not);
 
   /*!
    * @brief Adds a new unary constraint to the constraint table.
    * @param new_constraint
    */
-  void AddNewUnaryConstraint(const UnaryConstraint& new_constraint);
+  void AddNewUnaryConstraint(const UnaryConstraint& new_constraint, bool is_not);
 
   /*!
    * @brief Adds a new binary constraint to the constraint table.
    * @param new_constraint
    */
-  void AddNewBinaryConstraint(const BinaryConstraint& new_constraint);
+  void AddNewBinaryConstraint(const BinaryConstraint& new_constraint, bool is_not);
 
   /*!
    * @brief Adds a existing unary constraint to the constraint table.
    * @param existing_constraint
    */
-  void AddExistingUnaryConstraint(const UnaryConstraint& existing_constraint);
+  void AddExistingUnaryConstraint(const UnaryConstraint& existing_constraint, bool is_not);
 
   /*!
    * @brief Adds a existing binary constraint to the constraint table.
    * @param existing_constraint
    */
-  void AddExistingBinaryConstraint(const BinaryConstraint& existing_constraint);
+  void AddExistingBinaryConstraint(const BinaryConstraint& existing_constraint, bool is_not);
 
   /*!
    * @brief Adds a binary constraint with 1 new column name and 1 existing column name
    * @param constraint
    */
-  void AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint);
+  void AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint, bool is_not);
 };
