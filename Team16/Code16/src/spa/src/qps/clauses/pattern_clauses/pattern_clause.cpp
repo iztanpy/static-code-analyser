@@ -28,11 +28,13 @@ size_t AssignPattern::Hash() const {
 }
 
 bool operator==(const PatternClause& lhs, const PatternClause& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration
-      && lhs.lhs == rhs.lhs && lhs.is_not == rhs.is_not;
+  return lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs;
 }
 
 bool PatternClause::equals(const Clause* other) const {
+  if (!Clause::equals(other)) {
+    return false;
+  }
   const auto* other_clause = dynamic_cast<const PatternClause*>(other);
   return other_clause != nullptr && *this == *other_clause;
 }
@@ -77,11 +79,13 @@ size_t PatternClause::Hash() const {
 }
 
 bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {
-  return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration && lhs.lhs == rhs.lhs
-      && lhs.rhs == rhs.rhs && lhs.is_not == rhs.is_not;
+  return lhs.rhs == rhs.rhs;
 }
 
 bool AssignPattern::equals(const Clause* other) const {
+  if (!PatternClause::equals(other)) {
+    return false;
+  }
   const auto* other_clause = dynamic_cast<const AssignPattern*>(other);
   return other_clause != nullptr && *this == *other_clause;
 }

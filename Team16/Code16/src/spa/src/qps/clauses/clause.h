@@ -40,13 +40,17 @@ class Clause {
    * @param other the other clause to compare to
    * @return true if the clauses are equal, false otherwise
    */
-  virtual bool equals(const Clause* other) const = 0;
+  virtual bool equals(const Clause* other) const {
+    return GetRelRef() == other->GetRelRef() && is_not == other->is_not;
+  }
 
   /*!
    * Gets the hash of this clause.
    * @return hash of this clause
    */
-  virtual size_t Hash() const { return std::hash<int>{}(static_cast<int>(GetRelRef())); }
+  virtual size_t Hash() const {
+    return std::hash<int>{}(static_cast<int>(GetRelRef())) ^ (std::hash<bool>{}(is_not) << 1);
+  }
 
   /*!
    * Checks if this clause is a has a not attached to it
