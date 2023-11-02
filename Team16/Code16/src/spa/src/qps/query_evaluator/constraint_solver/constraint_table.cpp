@@ -201,8 +201,8 @@ void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing
   std::vector<Cell>& existing_values = table[existing_header];
 
   for (std::size_t i = 0; i < existing_values.size(); ++i) {
-    if (filter_values.find(existing_values[i]) != filter_values.end()) {
-      // If it exists in filter set
+    bool value_found = filter_values.find(existing_values[i]) != filter_values.end();
+    if (is_not != value_found) {
       filter_indices.push_back(i);
     }
   }
@@ -228,7 +228,9 @@ void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existi
   for (int i = 0; i < existing_values1.size(); ++i) {
     std::pair<Cell, Cell> existing_pair{existing_values1[i], existing_values2[i]};
 
-    if (existing_constraint.pair_values.find(existing_pair) != existing_constraint.pair_values.end()) {
+    bool value_found = existing_constraint.pair_values.find(existing_pair) != existing_constraint.pair_values.end();
+
+    if (is_not != value_found) {
       indices.push_back(i);
     }
   }
