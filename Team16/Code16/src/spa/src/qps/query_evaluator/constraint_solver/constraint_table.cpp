@@ -129,7 +129,7 @@ std::unordered_set<ColName> ConstraintTable::AvailableColName() {
 
 void ConstraintTable::AddNewUnaryConstraint(const UnaryConstraint& constraint, bool is_not) {
   if (is_not)
-    assert(false && "New Unary Constraint should not be negated");
+    throw std::runtime_error("New unary constraint should not be negated");
 
   assert(table.find(constraint.col_name) == table.end() && "Supposedly new ColName found in the table!");
 
@@ -156,7 +156,7 @@ void ConstraintTable::AddNewUnaryConstraint(const UnaryConstraint& constraint, b
 
 void ConstraintTable::AddNewBinaryConstraint(const BinaryConstraint& constraint, bool is_not) {
   if (is_not)
-    assert(false && "New Binary Constraint should not be negated");
+    throw std::runtime_error("New binary constraint should not be negated");
 
   assert(table.find(constraint.pair_col_names.first) == table.end()
              || table.find(constraint.pair_col_names.second) == table.end()
@@ -243,7 +243,7 @@ void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existi
 
 void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint, bool is_not) {
   if (is_not)
-    assert(false && "Half Existing Binary Constraint should not be negated");
+    throw std::runtime_error("Half existing binary constraint should not be negated");
 
   ColName existing_colname;
   ColName new_colname;
