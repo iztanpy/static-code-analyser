@@ -84,7 +84,7 @@ class AssignPattern : public PatternClause {
   }
 
   AssignPattern(Declaration syn, EntRef lhs, ExprSpec rhs, bool is_not)
-      : PatternClause(std::move(syn), std::move(lhs), is_not), rhs(std::move(rhs)) {
+      : PatternClause(syn, lhs, is_not), rhs(rhs) {
     Validate();
   }
 
@@ -107,7 +107,7 @@ class AssignPattern : public PatternClause {
 
 class WhilePattern : public PatternClause {
  public:
-  WhilePattern(Declaration syn, EntRef lhs, bool is_not) : PatternClause(std::move(syn), std::move(lhs), is_not) {
+  WhilePattern(Declaration syn, EntRef lhs, bool is_not) : PatternClause(syn, lhs, is_not) {
     Validate();
   }
 
@@ -123,7 +123,7 @@ class WhilePattern : public PatternClause {
 
 class IfPattern : public PatternClause {
  public:
-  IfPattern(Declaration syn, EntRef lhs, bool is_not) : PatternClause(std::move(syn), std::move(lhs), is_not) {
+  IfPattern(Declaration syn, EntRef lhs, bool is_not) : PatternClause(syn, lhs, is_not) {
     Validate();
   }
 
