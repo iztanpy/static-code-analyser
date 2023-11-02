@@ -33,5 +33,5 @@ const std::regex kOnlyAnd("and$");
 const std::regex kOnlyWith("with$");
 
 const std::regex kTupleRegex("<[^>]+>");
-const std::regex kFirstWordRegex(" [\"A-Za-z0-9<]");
+const std::regex kFirstWordRegex(" [\\S]");
 }  // namespace qps_constants

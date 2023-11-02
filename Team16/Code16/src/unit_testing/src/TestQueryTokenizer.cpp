@@ -952,11 +952,11 @@ TEST_CASE("Tokeniser can handle invalid not clauses") {
 }
 
 TEST_CASE("debug") {
-  std:: string sample_query = "Select not pattern not a(not, _)";
+  std:: string sample_query = "Select BOOLEAN >";
   std::vector<Declaration> declarations_1 = {
       {"not", DesignEntity::VARIABLE},
       {"a", DesignEntity::ASSIGN},
       {"p", DesignEntity::PRINT}
   };
-  REQUIRE_NOTHROW(QueryTokenizer::extractClauseTokens(sample_query, declarations_1));
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query), QpsSyntaxError);
 }
