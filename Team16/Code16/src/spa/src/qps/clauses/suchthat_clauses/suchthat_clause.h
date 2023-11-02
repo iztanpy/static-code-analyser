@@ -23,11 +23,9 @@ class SuchThatClause : public Clause {
  public:
   RefParam lhs;
   RefParam rhs;
-  bool is_not;
 
   SuchThatClause(RefParam lhs, RefParam rhs, bool is_not)
-      : lhs(std::move(lhs)), rhs(std::move(rhs)) {
-    this->is_not = is_not;
+      : Clause(is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
   }
 
   /*!
@@ -65,8 +63,6 @@ class SuchThatClause : public Clause {
    * Functions to support hashing of clauses
    */
   size_t Hash() const override;
-
-  bool IsNot() const override;
 
   RelRefType GetRelRef() const override = 0;
 

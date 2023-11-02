@@ -29,7 +29,7 @@ size_t AssignPattern::Hash() const {
 
 bool operator==(const PatternClause& lhs, const PatternClause& rhs) {
   return lhs.GetRelRef() == rhs.GetRelRef() && lhs.declaration == rhs.declaration
-  && lhs.lhs == rhs.lhs && lhs.is_not == rhs.is_not;
+      && lhs.lhs == rhs.lhs && lhs.is_not == rhs.is_not;
 }
 
 bool PatternClause::equals(const Clause* other) const {
@@ -74,10 +74,6 @@ size_t PatternClause::Hash() const {
   result = result * 31 + std::hash<Declaration>{}(declaration);
   result = result * 31 + std::hash<EntRef>{}(lhs);
   return static_cast<size_t>(result);
-}
-
-bool PatternClause::IsNot() const {
-  return is_not;
 }
 
 bool operator==(const AssignPattern& lhs, const AssignPattern& rhs) {

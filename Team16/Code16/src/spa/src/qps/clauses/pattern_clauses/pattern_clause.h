@@ -25,10 +25,9 @@ class PatternClause : public Clause {
    */
   Declaration declaration;
   EntRef lhs;
-  bool is_not;
 
-  PatternClause(Declaration declaration, EntRef lhs, bool is_not) : declaration(std::move(declaration)), lhs(lhs) {
-    this->is_not = is_not;
+  PatternClause(Declaration declaration, EntRef lhs, bool is_not) :
+      Clause(is_not), declaration(std::move(declaration)), lhs(lhs) {
   }
 
   /*!
@@ -56,8 +55,6 @@ class PatternClause : public Clause {
    * Functions to support hashing of clauses
    */
   size_t Hash() const override;
-
-  bool IsNot() const override;
 
   bool equals(const Clause* other) const override;
 

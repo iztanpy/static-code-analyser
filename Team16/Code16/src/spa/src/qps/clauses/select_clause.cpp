@@ -41,8 +41,3 @@ bool SelectClause::equals(const Clause* other) const {
 bool operator==(const SelectClause& lhs, const SelectClause& rhs) {
   return lhs.attr_ref == rhs.attr_ref;
 }
-
-bool SelectClause::IsNot() const {
-  // Select clauses will never have not attached
-  return false;
-}

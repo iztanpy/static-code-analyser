@@ -14,7 +14,7 @@ class SelectClause : public Clause {
  public:
   AttrRef attr_ref;
 
-  explicit SelectClause(AttrRef attr_ref) : attr_ref(std::move(attr_ref)) {}
+  explicit SelectClause(AttrRef attr_ref) : Clause(false), attr_ref(std::move(attr_ref)) {}
 
   /*!
    * Checks if this Select clause is equal to another Select clause
@@ -58,8 +58,6 @@ class SelectClause : public Clause {
    * @return true if they are equal, else false
    */
   bool equals(const Clause* other) const override;
-
-  bool IsNot() const override;
 
   /*!
   * Gets the RelRefType of this clause

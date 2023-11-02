@@ -72,7 +72,7 @@ bool SuchThatClause::are_ent_ref_equal(const RefParam& param_1, const RefParam& 
 
 // ai-gen start (3.5, 0)
 std::unordered_set<Synonym> SuchThatClause::GetSynonyms() const {
-  std::unordered_set < Synonym > synonyms;
+  std::unordered_set<Synonym> synonyms;
 
   // Helper lambda to extract Declaration from StmtRef or EntRef
   auto extractSynonym = [&](const RefParam& param) {
@@ -113,8 +113,4 @@ bool operator==(const SuchThatClause& lhs, const SuchThatClause& rhs) {
 bool SuchThatClause::equals(const Clause* other) const {
   const auto* other_clause = dynamic_cast<const SuchThatClause*>(other);
   return other_clause != nullptr && *this == *other_clause;
-}
-
-bool SuchThatClause::IsNot() const {
-  return is_not;
 }

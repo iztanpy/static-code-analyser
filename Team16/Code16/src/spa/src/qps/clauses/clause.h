@@ -12,6 +12,10 @@
  */
 class Clause {
  public:
+  bool is_not;
+
+  explicit Clause(bool is_not) : is_not(is_not) {}
+
   /*!
    * Gets the relationship reference of this clause.
    * @return the relationship reference of this clause
@@ -48,7 +52,7 @@ class Clause {
    * Checks if this clause is a has a not attached to it
    * @return true if it has a not attached, else false
    */
-  virtual bool IsNot() const = 0;
+  bool IsNot() const { return is_not; }
 
   virtual ~Clause() = default;
 

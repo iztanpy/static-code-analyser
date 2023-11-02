@@ -13,10 +13,8 @@ class WithClause : public Clause {
  public:
   Ref lhs;
   Ref rhs;
-  bool is_not;
 
-  WithClause(Ref lhs, Ref rhs, bool is_not) : lhs(std::move(lhs)), rhs(std::move(rhs)) {
-    this->is_not = is_not;
+  WithClause(Ref lhs, Ref rhs, bool is_not) : Clause(is_not), lhs(std::move(lhs)), rhs(std::move(rhs)) {
     Validate();
   }
 
@@ -37,8 +35,6 @@ class WithClause : public Clause {
    * Functions to support hashing of clauses
    */
   size_t Hash() const override;
-
-  bool IsNot() const override;
 
   bool equals(const Clause* other) const override;
 
