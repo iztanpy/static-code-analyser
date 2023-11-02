@@ -19,8 +19,7 @@ void ClauseGrouper::TopUpSelectClause() {
           std::make_unique<SelectClause>(
               AttrRef(
                   Declaration{not_synonym, DesignEntity::VARIABLE},
-                  AttrName::NONE)
-          )
+                  AttrName::NONE));
       clauses_.insert(std::move(select_clause));
     }
   }
