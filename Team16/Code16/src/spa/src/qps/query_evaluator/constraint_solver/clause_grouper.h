@@ -5,9 +5,12 @@
 #include <utility>
 #include <algorithm>
 #include <memory>
+#include <unordered_set>
 
 #include "qps/clauses/clause.h"
 #include "qps/query_evaluator/constraint_solver/clause_group.h"
+#include "qps/clauses/attr_ref.h"
+#include "qps/clauses/select_clause.h"
 
 class ClauseGrouper {
  public:
@@ -27,6 +30,26 @@ class ClauseGrouper {
  private:
   ClauseSet clauses_;
   std::unordered_map<Synonym, Synonym> map_;  // for Union-Find
+  std::unordered_set<Synonym> synonyms_;
+  std::unordered_set<Synonym> not_synonyms_;
+
+  /*!
+   * Finds the root of the synonym in the Union-Find data structure
+   * @param syn - synonym to find
+   * @return root of the synonym
+   */
   Synonym Find(const Synonym& syn);
+
+  /*!
+   * Unions the two synonyms in the Union-Find data structure
+   * @param clause - clause to be unioned
+   */
   void Union(const std::unique_ptr<Clause>& clause);
+
+  /*!
+   * This function will look at synonyms_ and not_synonyms_ and
+   * top up clauses_ with Select clauses of synonyms that's in not_synonyms but
+   * not in synonyms_
+   */
+  void TopUpSelectClause();
 };
