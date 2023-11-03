@@ -12,13 +12,24 @@ int ClauseGroup::Score() const {
 
 ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
   size_t originalSize = clauseSet.size();
+  // 0. Seperate out binary NOT clause
+  std::list<std::unique_ptr<Clause>> not_binary_clauses;
+  ClauseSet filtered_clause_set;
+
+  for (const auto& clause : clauseSet) {
+    if (clause->IsNot() && clause->GetSynonyms().size() == 2) {
+      not_binary_clauses.push_back(std::move(const_cast<std::unique_ptr<Clause>&>(clause)));
+    } else {
+      filtered_clause_set.insert(std::move(const_cast<std::unique_ptr<Clause>&>(clause)));
+    }
+  }
 
   // 1. Build a hash map between Synonym to Clauses that are connected to that Synonym.
   // Change the declaration of synonymToClauses to:
   std::unordered_map<Synonym, std::vector<Clause*>> synonymToClauses;
 
   // And when inserting:
-  for (const auto& clause : clauseSet) {
+  for (const auto& clause : filtered_clause_set) {
     auto synonyms = clause->GetSynonyms();
     assert(synonyms.size() == 1 || synonyms.size() == 2);
     for (const auto& synonym : synonyms) {
@@ -35,7 +46,7 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
   // 3. Find the Clause with the smallest score, must not be NOT clause
   const std::unique_ptr<Clause>* min_clause = nullptr;
   int min_score = std::numeric_limits<int>::max();
-  for (auto& clause : clauseSet) {
+  for (auto& clause : filtered_clause_set) {
     if (!clause->IsNot() && clause->Score() < min_score) {
       min_clause = &clause;
       min_score = clause->Score();
@@ -50,6 +61,7 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
 
   // 4. While candidates is not empty, pop the top Clause, add it to result vector.
   std::unordered_set<Clause*> visited;
+  std::unordered_set<Synonym> visitedSynonyms;
 
   while (!candidates.empty()) {
     auto current = candidates.top();
@@ -61,12 +73,12 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
     visited.insert(current);
 
     // Find the unique_ptr in the set that matches the raw pointer
-    auto it = std::find_if(clauseSet.begin(), clauseSet.end(),
+    auto it = std::find_if(filtered_clause_set.begin(), filtered_clause_set.end(),
                            [current](const std::unique_ptr<Clause>& ptr) {
                              return ptr.get() == current;
                            });
 
-    if (it != clauseSet.end()) {
+    if (it != filtered_clause_set.end()) {
       clauses_.push_back(std::move(const_cast<std::unique_ptr<Clause>&>(*it)));
     }
 
