@@ -11,6 +11,7 @@
 #include <climits>
 #include <algorithm>
 #include <utility>
+#include <limits>
 
 #include "qps/clauses/clause.h"
 #include "qps/query_evaluator/constraint_solver/constraint_table.h"

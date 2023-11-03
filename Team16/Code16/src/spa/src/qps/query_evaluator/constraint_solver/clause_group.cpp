@@ -32,14 +32,23 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
   };
   std::priority_queue<Clause*, std::vector<Clause*>, decltype(compare)> candidates(compare);
 
-  // 3. Find the Clause with the smallest score.
-  auto it = std::min_element(clauseSet.begin(), clauseSet.end(),
-                             [](const std::unique_ptr<Clause>& lhs, const std::unique_ptr<Clause>& rhs) {
-                               return lhs->Score() < rhs->Score();
-                             });
+  // 3. Find the Clause with the smallest score, must not be NOT clause
+  const std::unique_ptr<Clause>* min_clause = nullptr;
+  int min_score = std::numeric_limits<int>::max();
+  for (auto& clause : clauseSet) {
+    if (!clause->IsNot() && clause->Score() < min_score) {
+      min_clause = &clause;
+      min_score = clause->Score();
+    }
+  }
 
-  candidates.push(it->get());
+  if (min_clause != nullptr) {
+    candidates.push(min_clause->get());
+  } else {
+    throw std::runtime_error("No non-NOT clause found in this ClauseGroup");
+  }
 
+  // 4. While candidates is not empty, pop the top Clause, add it to result vector.
   std::unordered_set<Clause*> visited;
 
   while (!candidates.empty()) {
