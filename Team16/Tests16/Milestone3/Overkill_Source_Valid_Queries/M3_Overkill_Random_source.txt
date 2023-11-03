@@ -1,0 +1,60 @@
+procedure p1 {
+	a = a + b; 
+}
+
+procedure p2 {
+	if ((x % 2 == 0) || (x + 4 == 4)) then {
+		while (x == 2) {
+			if (a + b == 2) then {
+				call p1; 
+				a = a + b;
+			} else {
+				read apple; 
+				print orange; 
+				call p3;
+				read ab; 
+			}
+		}
+	}
+	a = a + b; 
+	x = x + 1; 
+	y = y + 1; 
+}
+
+procedure p3 {
+	a = a + b;
+	if (a + b == 2) then {
+		if (x + 1 == 3) then {
+			read x; 
+			read y; 
+			print x;
+		} else {
+			read a; 
+			read b;
+			read c;
+		}
+
+		if (a + b == 2) then {
+			read a; 
+			x = 2; 
+			x = 3; 
+			x = 4;
+			if (a + y == 3) then {
+				if = if + 1; 
+				then = then + 1; 
+				while = while + 1; 
+				a = a + 1; 
+			} 
+			read y;
+		}
+	} else {
+		a =                      a + b; 
+		y =  y +            2; 
+		while (             a == 0) {
+			y = y  + 2; 
+			y = y + 3; 
+			a = a + 2; 
+		}
+		x =      ljfalsdfsdfdsfs + 2; 
+	}
+}
