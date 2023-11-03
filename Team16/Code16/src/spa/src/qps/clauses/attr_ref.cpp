@@ -17,10 +17,10 @@ void AttrRef::Validate() {
 Constraint AttrRef::Evaluate(ReadFacade& pkb_reader) {
   if (IsComplexCase()) {
     auto synonyms = GetSynonyms();
-    auto it = synonyms.begin();
     std::unordered_set<std::pair<int, std::string>, PairHash>
         raw_results = pkb_reader.getStatementsAndVariable(ConvertToStmtEntity(declaration.design_entity));
-    return BinaryConstraint{std::make_pair(*it, *(++it)), EvaluatorUtil::ToStringPairSet(raw_results)};
+    return BinaryConstraint{{synonyms[0].synonym, synonyms[1].synonym},
+                            EvaluatorUtil::ToStringPairSet(raw_results)};
   } else {
     auto values = [&]() -> std::unordered_set<std::string> {
       switch (declaration.design_entity) {
@@ -53,11 +53,12 @@ size_t AttrRef::Hash() const {
   return static_cast<size_t>(result);
 }
 
-std::vector<Synonym> AttrRef::GetSynonyms() const {
+std::vector<Declaration> AttrRef::GetSynonyms() const {
   if (IsComplexCase()) {
-    return {declaration.synonym, declaration.synonym + kAttrSynonym};
+    Declaration attr_declaration = {declaration.synonym + kAttrSynonym, declaration.design_entity};
+    return {declaration, attr_declaration};
   } else {
-    return {declaration.synonym};
+    return {declaration};
   }
 }
 

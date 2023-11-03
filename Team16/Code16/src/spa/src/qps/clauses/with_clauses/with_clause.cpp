@@ -1,11 +1,11 @@
 #include "qps/clauses/with_clauses/with_clause.h"
 
-std::unordered_set<Synonym> WithClause::GetSynonyms() const {
+std::unordered_set<Declaration> WithClause::ComputeSynonyms() const {
   if (lhs == rhs) {
     return {};
   }
 
-  std::unordered_set<Synonym> synonyms;
+  std::unordered_set<Declaration> synonyms;
   if (std::holds_alternative<AttrRef>(lhs)) {
     synonyms.insert(std::get<AttrRef>(lhs).GetSynonyms().front());
   }

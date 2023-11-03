@@ -63,7 +63,6 @@ read r; print p; stmt s; assign a; variable not;
 Select not pattern not a(not, _) and 5=5 and "x"="x" and p.varName = "number"
 SyntaxError
 5000
-5000
 14 - declaration of procedure not takes precedence over not in multiple clauses
 assign a; stmt s1, s2; procedure not;
 Select a such that Follows*(s1, s2) and not pattern a(a, _"x+y"_)

@@ -18,6 +18,10 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
     if (is_boolean_clause) {
       // Evaluate boolean clauses
       bool result = std::get<bool>(clause_ptr->Evaluate(pkb));
+      // Flip the sign if it's a not clause
+      if (clause_ptr->IsNot()) {
+        result = !result;
+      }
       if (!result) {
         return BlankResult(is_boolean_select);
       }

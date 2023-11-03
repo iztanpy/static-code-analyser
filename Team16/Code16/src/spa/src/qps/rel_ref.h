@@ -51,7 +51,12 @@ class RelRef {
    * Return score of clause. The lower the score, the higher the priority
    * @param rel_ref
    * @param num_synonym
+   * @param is_not indicates whether the clause is a NOT clause
    * @return
    */
-  static int getClauseScore(RelRefType rel_ref, int num_synonym);
+  static int getClauseScore(RelRefType rel_ref, int num_synonym, bool is_not);
+
+ private:
+  static int getClauseScoreNormal(RelRefType rel_ref, int num_synonym);
+  static int getClauseScoreNot(RelRefType rel_ref, int num_synonym);
 };

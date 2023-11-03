@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <memory>
+#include <optional>
 
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "PKB/API/ReadFacade.h"
@@ -11,10 +12,12 @@
  * Represents a clause in a query
  */
 class Clause {
- public:
-  bool is_not;
+ private:
+  bool is_not_;
+  mutable std::optional<std::unordered_set<Synonym>> synonyms_cache_;
 
-  explicit Clause(bool is_not) : is_not(is_not) {}
+ public:
+  explicit Clause(bool is_not) : is_not_(is_not) {}
 
   /*!
    * Gets the relationship reference of this clause.
@@ -33,7 +36,21 @@ class Clause {
    * Gets the synonyms involved in this clause.
    * @return the synonyms involved in this clause
    */
-  virtual std::unordered_set<Synonym> GetSynonyms() const = 0;
+  virtual std::unordered_set<Declaration> ComputeSynonyms() const = 0;
+
+  /*!
+   * Gets the synonyms involved in this clause. Use the cached if computed
+   * @return the synonyms involved in this clause
+   */
+  std::unordered_set<Synonym> GetSynonyms() const {
+    if (!synonyms_cache_) {
+      synonyms_cache_.emplace();
+      for (const auto& decl : ComputeSynonyms()) {
+        synonyms_cache_->insert(decl.synonym);
+      }
+    }
+    return *synonyms_cache_;
+  }
 
   /*!
    * Checks if this clause is equal to another clause.
@@ -41,7 +58,7 @@ class Clause {
    * @return true if the clauses are equal, false otherwise
    */
   virtual bool equals(const Clause* other) const {
-    return GetRelRef() == other->GetRelRef() && is_not == other->is_not;
+    return GetRelRef() == other->GetRelRef() && is_not_ == other->is_not_;
   }
 
   /*!
@@ -49,14 +66,14 @@ class Clause {
    * @return hash of this clause
    */
   virtual size_t Hash() const {
-    return std::hash<int>{}(static_cast<int>(GetRelRef())) ^ (std::hash<bool>{}(is_not) << 1);
+    return std::hash<int>{}(static_cast<int>(GetRelRef())) ^ (std::hash<bool>{}(is_not_) << 1);
   }
 
   /*!
    * Checks if this clause is a has a not attached to it
    * @return true if it has a not attached, else false
    */
-  bool IsNot() const { return is_not; }
+  bool IsNot() const { return is_not_; }
 
   virtual ~Clause() = default;
 
@@ -65,7 +82,7 @@ class Clause {
    * @return the score of this clause
    */
   int Score() const {
-    return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size());
+    return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size(), IsNot());
   }
 };
 

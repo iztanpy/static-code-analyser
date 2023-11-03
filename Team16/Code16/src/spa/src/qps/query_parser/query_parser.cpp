@@ -23,7 +23,7 @@ ParsedQuery QueryParser::ParseTokenizedQuery(std::string& query) {
 
     for (const std::unique_ptr<Clause>& clause : selectClauses) {
       const auto* select_clause = static_cast<const SelectClause*>(clause.get());
-      selects.push_back(select_clause->GetSelectedSynonym());
+      selects.push_back(select_clause->GetSelectedSynonym().synonym);
     }
 
     clauses.insert(std::make_move_iterator(selectClauses.begin()), std::make_move_iterator(selectClauses.end()));

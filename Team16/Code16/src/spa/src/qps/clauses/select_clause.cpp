@@ -8,8 +8,8 @@ Constraint SelectClause::Evaluate(ReadFacade& pkb_reader) {
   return attr_ref.Evaluate(pkb_reader);
 }
 
-std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
-  std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
+std::unordered_set<Declaration> SelectClause::ComputeSynonyms() const {
+  std::vector<Declaration> synonyms = attr_ref.GetSynonyms();
   // Check if synonyms vector size is not 1 or 2
   if (synonyms.empty() || synonyms.size() > 2) {
     throw std::runtime_error("SelectClause::GetSelectedSynonym. Synonyms size must be 1 or 2.");
@@ -17,8 +17,8 @@ std::unordered_set<Synonym> SelectClause::GetSynonyms() const {
   return {synonyms.begin(), synonyms.end()};
 }
 
-Synonym SelectClause::GetSelectedSynonym() const {
-  std::vector<Synonym> synonyms = attr_ref.GetSynonyms();
+Declaration SelectClause::GetSelectedSynonym() const {
+  std::vector<Declaration> synonyms = attr_ref.GetSynonyms();
   // Check if synonyms vector size is not 1 or 2
   if (synonyms.empty() || synonyms.size() > 2) {
     throw std::runtime_error("SelectClause::GetSelectedSynonym. Synonyms size must be 1 or 2.");

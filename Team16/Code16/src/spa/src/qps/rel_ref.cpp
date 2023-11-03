@@ -49,7 +49,14 @@ std::set<std::string> RelRef::getStringRelRef() {
           "Calls", "Calls*", "Next", "Next*", "Affects"};
 }
 
-int RelRef::getClauseScore(RelRefType rel_ref, int num_synonym) {
+int RelRef::getClauseScore(RelRefType rel_ref, int num_synonym, bool is_not) {
+  if (is_not) {
+    return getClauseScoreNot(rel_ref, num_synonym);
+  }
+  return getClauseScoreNormal(rel_ref, num_synonym);
+}
+
+int RelRef::getClauseScoreNormal(RelRefType rel_ref, int num_synonym) {
   static const int kSynonymPenalty = 8;
   static const std::map<RelRefType, int> kClauseScore = {
       {RelRefType::WITH, 1},
@@ -70,4 +77,26 @@ int RelRef::getClauseScore(RelRefType rel_ref, int num_synonym) {
 
   assert((num_synonym == 1 || num_synonym == 2) && "[num_synonym] can only be 1 or 2");
   return kClauseScore.at(rel_ref) + (num_synonym == 2 ? kSynonymPenalty : 0);
+}
+
+int RelRef::getClauseScoreNot(RelRefType rel_ref, int num_synonym) {
+  static const std::map<RelRefType, int> kClauseScore = {
+      {RelRefType::WITH, 12},
+      {RelRefType::NEXT, 11}, {RelRefType::FOLLOWS, 11},
+      {RelRefType::CALLS, 10}, {RelRefType::CALLST, 10},
+      {RelRefType::PARENT, 9},
+      {RelRefType::FOLLOWST, 8}, {RelRefType::PARENTT, 8},
+      {RelRefType::MODIFIESS, 7},
+      {RelRefType::MODIFIESP, 6},
+      {RelRefType::WHILE, 5}, {RelRefType::IF, 5},
+      {RelRefType::ASSIGN, 4},
+      {RelRefType::USESS, 3},
+      {RelRefType::SELECT, 2},
+      {RelRefType::USESP, 1},
+      {RelRefType::NEXTT, 21},
+      {RelRefType::AFFECTS, 25},
+  };
+
+  assert((num_synonym == 1 || num_synonym == 2) && "[num_synonym] can only be 1 or 2");
+  return kClauseScore.at(rel_ref);
 }

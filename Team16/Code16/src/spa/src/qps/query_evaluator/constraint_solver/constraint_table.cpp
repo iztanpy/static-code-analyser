@@ -54,8 +54,6 @@ std::string RowToString(const Table& table,
 
 ConstraintTable::ConstraintTable() {
   table = {};
-  has_at_least_one_false_constraint = false;
-  has_only_true_constraint = true;
 }
 
 Table ConstraintTable::GetTableForTesting() {
@@ -63,51 +61,42 @@ Table ConstraintTable::GetTableForTesting() {
 }
 
 bool ConstraintTable::IsValid() {
-  if (has_only_true_constraint) {
-    return true;
-  }
-  if (has_at_least_one_false_constraint) {
-    return false;
-  }
   return !table.empty() && !table.begin()->second.empty();
 }
 
-void ConstraintTable::Solve(const UnaryConstraint& constraint) {
-  has_only_true_constraint = false;
+void ConstraintTable::Solve(const UnaryConstraint& constraint, bool is_not) {
   ColName col_name = constraint.col_name;
   if (table.find(col_name) == table.end()) {
     // Add new ColName to the table
-    return AddNewUnaryConstraint(constraint);
+    return AddNewUnaryConstraint(constraint, is_not);
   }
-  return AddExistingUnaryConstraint(constraint);
+  return AddExistingUnaryConstraint(constraint, is_not);
 }
 
-void ConstraintTable::Solve(const BinaryConstraint& constraint) {
-  has_only_true_constraint = false;
+void ConstraintTable::Solve(const BinaryConstraint& constraint, bool is_not) {
   ColName col_name1 = constraint.pair_col_names.first;
   ColName col_name2 = constraint.pair_col_names.second;
 
   if (table.find(col_name1) == table.end() && table.find(col_name2) == table.end()) {
     // Add new ColName to the table
-    return AddNewBinaryConstraint(constraint);
+    return AddNewBinaryConstraint(constraint, is_not);
   }
 
   if (table.find(col_name1) != table.end() && table.find(col_name2) != table.end()) {
     // Add existing ColName pair to the table
-    return AddExistingBinaryConstraint(constraint);
+    return AddExistingBinaryConstraint(constraint, is_not);
   }
 
-  return AddHalfExistingBinaryConstraint(constraint);
+  return AddHalfExistingBinaryConstraint(constraint, is_not);
 }
 
-void ConstraintTable::Solve(const bool constraint) {
-  has_only_true_constraint = has_only_true_constraint && constraint;
-  has_at_least_one_false_constraint = has_at_least_one_false_constraint || !constraint;
+void ConstraintTable::Solve(const bool constraint, bool is_not) {
+  assert(false && "Solve(bool) should not be called");
 }
 
-void ConstraintTable::Solve(Constraint& constraint) {
-  std::visit([this](const auto& obj) {
-    Solve(obj);
+void ConstraintTable::Solve(Constraint& constraint, bool is_not) {
+  std::visit([this, is_not](const auto& obj) {
+    Solve(obj, is_not);
   }, constraint);
 }
 
@@ -138,7 +127,10 @@ std::unordered_set<ColName> ConstraintTable::AvailableColName() {
   return result;
 }
 
-void ConstraintTable::AddNewUnaryConstraint(const UnaryConstraint& constraint) {
+void ConstraintTable::AddNewUnaryConstraint(const UnaryConstraint& constraint, bool is_not) {
+  if (is_not)
+    throw std::runtime_error("New unary constraint should not be negated");
+
   assert(table.find(constraint.col_name) == table.end() && "Supposedly new ColName found in the table!");
 
   ColName new_header = constraint.col_name;
@@ -162,7 +154,10 @@ void ConstraintTable::AddNewUnaryConstraint(const UnaryConstraint& constraint) {
   table[new_header] = std::move(RepeatVector(new_values, table_size));
 }
 
-void ConstraintTable::AddNewBinaryConstraint(const BinaryConstraint& constraint) {
+void ConstraintTable::AddNewBinaryConstraint(const BinaryConstraint& constraint, bool is_not) {
+  if (is_not)
+    throw std::runtime_error("New binary constraint should not be negated");
+
   assert(table.find(constraint.pair_col_names.first) == table.end()
              || table.find(constraint.pair_col_names.second) == table.end()
                  && "Supposedly new pair of ColNames found in the table!");
@@ -196,7 +191,7 @@ void ConstraintTable::AddNewBinaryConstraint(const BinaryConstraint& constraint)
   table[col_name2] = std::move(RepeatVector(new_values2, table_size));
 }
 
-void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing_constraint) {
+void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing_constraint, bool is_not) {
   assert(table.find(existing_constraint.col_name) != table.end() && "Existing ColName not found in the table!");
 
   ColName existing_header = existing_constraint.col_name;
@@ -206,8 +201,8 @@ void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing
   std::vector<Cell>& existing_values = table[existing_header];
 
   for (std::size_t i = 0; i < existing_values.size(); ++i) {
-    if (filter_values.find(existing_values[i]) != filter_values.end()) {
-      // If it exists in filter set
+    bool value_found = filter_values.find(existing_values[i]) != filter_values.end();
+    if (is_not != value_found) {
       filter_indices.push_back(i);
     }
   }
@@ -218,7 +213,7 @@ void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing
   }
 }
 
-void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existing_constraint) {
+void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existing_constraint, bool is_not) {
   ColName existing_header1 = existing_constraint.pair_col_names.first;
   ColName existing_header2 = existing_constraint.pair_col_names.second;
 
@@ -233,7 +228,9 @@ void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existi
   for (int i = 0; i < existing_values1.size(); ++i) {
     std::pair<Cell, Cell> existing_pair{existing_values1[i], existing_values2[i]};
 
-    if (existing_constraint.pair_values.find(existing_pair) != existing_constraint.pair_values.end()) {
+    bool value_found = existing_constraint.pair_values.find(existing_pair) != existing_constraint.pair_values.end();
+
+    if (is_not != value_found) {
       indices.push_back(i);
     }
   }
@@ -244,7 +241,10 @@ void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existi
   }
 }
 
-void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint) {
+void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& constraint, bool is_not) {
+  if (is_not)
+    throw std::runtime_error("Half existing binary constraint should not be negated");
+
   ColName existing_colname;
   ColName new_colname;
   std::unordered_map<Cell, std::unordered_set<Cell >> new_values;
