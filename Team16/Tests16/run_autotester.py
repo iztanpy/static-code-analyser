@@ -156,7 +156,7 @@ class Runner:
 
 
 if __name__ == "__main__":
-    FOLDERS = ["Milestone1", "Milestone2"]
+    FOLDERS = ["Milestone1", "Milestone2", "Milestone3"]
 
     start_time = time.time()
     runner = Runner()
