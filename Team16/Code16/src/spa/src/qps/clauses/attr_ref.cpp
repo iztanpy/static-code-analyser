@@ -19,7 +19,7 @@ Constraint AttrRef::Evaluate(ReadFacade& pkb_reader) {
     auto synonyms = GetSynonyms();
     std::unordered_set<std::pair<int, std::string>, PairHash>
         raw_results = pkb_reader.getStatementsAndVariable(ConvertToStmtEntity(declaration.design_entity));
-    return BinaryConstraint{std::make_pair(synonyms[0].synonym, synonyms[1].synonym),
+    return BinaryConstraint{{synonyms[0].synonym, synonyms[1].synonym},
                             EvaluatorUtil::ToStringPairSet(raw_results)};
   } else {
     auto values = [&]() -> std::unordered_set<std::string> {

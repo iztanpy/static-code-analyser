@@ -59,6 +59,8 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
     candidates.push(min_clause->get());
   } else {
     TopUpSelectClause(not_binary_clauses, visitedSynonyms);
+    // Exit the loop early
+    return;
   }
 
   // 4. While candidates is not empty, pop the top Clause, add it to result vector.
@@ -107,8 +109,17 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
       }
     }
 
-    TopUpSelectClause(not_binary_clauses, visitedSynonyms);
+    // 5. Look up the HashMap, add all connected Clause to candidates PQ.
+    for (const auto& synonym : current->GetSynonyms()) {
+      for (const auto& connected : synonymToClauses[synonym]) {
+        if (visited.find(connected) == visited.end()) {
+          candidates.push(connected);
+        }
+      }
+    }
   }
+
+  TopUpSelectClause(not_binary_clauses, visitedSynonyms);
 }
 
 ConstraintTable ClauseGroup::Evaluate(ReadFacade& pkb_reader) const {
