@@ -70,7 +70,13 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
       continue;
     }
 
+    // Update visited data structure
+    int visitedSynonymsSize = visitedSynonyms.size();
     visited.insert(current);
+    for (const auto& synonym : current->GetSynonyms()) {
+      visitedSynonyms.insert(synonym);
+    }
+    int visitedSynonymsSizeAfter = visitedSynonyms.size();
 
     // Find the unique_ptr in the set that matches the raw pointer
     auto it = std::find_if(filtered_clause_set.begin(), filtered_clause_set.end(),
@@ -78,8 +84,28 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
                              return ptr.get() == current;
                            });
 
+    // Insert the clause into the result vector
     if (it != filtered_clause_set.end()) {
       clauses_.push_back(std::move(const_cast<std::unique_ptr<Clause>&>(*it)));
+    }
+
+    // Insert NOT binary clause if the visitedSynonyms size has changed
+    if (visitedSynonymsSizeAfter > visitedSynonymsSize) {
+      for (auto it = not_binary_clauses.begin(); it != not_binary_clauses.end();) {
+        bool shouldInsert = true;
+        for (const auto& synonym : (*it)->GetSynonyms()) {
+          if (visitedSynonyms.find(synonym) == visitedSynonyms.end()) {
+            shouldInsert = false;
+            break;
+          }
+        }
+        if (shouldInsert) {
+          clauses_.push_back(std::move(*it));
+          it = not_binary_clauses.erase(it);
+        } else {
+          ++it;
+        }
+      }
     }
 
     // 4. Look up the HashMap, add all connected Clause to candidates PQ.
