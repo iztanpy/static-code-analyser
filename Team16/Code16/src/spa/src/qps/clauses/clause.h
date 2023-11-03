@@ -79,7 +79,7 @@ class Clause {
    * @return the score of this clause
    */
   int Score() const {
-    return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size());
+    return RelRef::getClauseScore(GetRelRef(), GetSynonyms().size(), IsNot());
   }
 };
 
