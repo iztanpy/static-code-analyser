@@ -1,11 +1,11 @@
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
-std::unordered_set<Synonym> PatternClause::ComputeSynonyms() const {
-  std::unordered_set<Synonym> synonyms;
-  synonyms.insert(declaration.synonym);
+std::unordered_set<Declaration> PatternClause::ComputeSynonyms() const {
+  std::unordered_set<Declaration> synonyms;
+  synonyms.insert(declaration);
 
   if (std::holds_alternative<Declaration>(lhs)) {
-    synonyms.insert(std::get<Declaration>(lhs).synonym);
+    synonyms.insert(std::get<Declaration>(lhs));
   }
 
   return synonyms;

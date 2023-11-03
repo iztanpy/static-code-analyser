@@ -14,7 +14,7 @@
 class Clause {
  private:
   bool is_not_;
-  mutable std::optional<std::unordered_set<Synonym>> symnoyms_cache_;
+  mutable std::optional<std::unordered_set<Synonym>> synonyms_cache_;
 
  public:
   explicit Clause(bool is_not) : is_not_(is_not) {}
@@ -36,17 +36,20 @@ class Clause {
    * Gets the synonyms involved in this clause.
    * @return the synonyms involved in this clause
    */
-  virtual std::unordered_set<Synonym> ComputeSynonyms() const = 0;
+  virtual std::unordered_set<Declaration> ComputeSynonyms() const = 0;
 
   /*!
    * Gets the synonyms involved in this clause. Use the cached if computed
    * @return the synonyms involved in this clause
    */
   std::unordered_set<Synonym> GetSynonyms() const {
-    if (!symnoyms_cache_.has_value()) {
-      symnoyms_cache_ = ComputeSynonyms();
+    if (!synonyms_cache_) {
+      synonyms_cache_.emplace();
+      for (const auto& decl : ComputeSynonyms()) {
+        synonyms_cache_->insert(decl.synonym);
+      }
     }
-    return symnoyms_cache_.value();
+    return *synonyms_cache_;
   }
 
   /*!

@@ -92,7 +92,7 @@ class AttrRef {
    *    in which case the second synonym will be the synonym with .ATTR appended
    * Only 1 element if it's a normal case
    */
-  std::vector<Synonym> GetSynonyms() const;
+  std::vector<Declaration> GetSynonyms() const;
 
  private:
   constexpr static const char kAttrSynonym[] = ".ATTR";

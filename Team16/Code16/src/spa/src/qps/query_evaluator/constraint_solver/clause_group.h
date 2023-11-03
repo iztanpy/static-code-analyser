@@ -17,6 +17,7 @@
 #include "qps/clauses/clause.h"
 #include "qps/query_evaluator/constraint_solver/constraint_table.h"
 #include "PKB/API/ReadFacade.h"
+#include "qps/clauses/select_clause.h"
 
 class ClauseGroup {
  public:
@@ -47,4 +48,6 @@ class ClauseGroup {
 
  private:
   std::vector<std::unique_ptr<Clause>> clauses_;
+  void TopUpSelectClause(std::list<std::unique_ptr<Clause>>& not_binary_clauses,
+                         std::unordered_set<Synonym>& visitedSynonyms);
 };

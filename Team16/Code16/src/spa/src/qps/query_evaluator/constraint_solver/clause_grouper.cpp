@@ -2,34 +2,11 @@
 
 // Adds a clause to the internal clause set.
 void ClauseGrouper::addClause(std::unique_ptr<Clause> clause) {
-  std::unordered_set clause_synonyms = clause->GetSynonyms();
-  if (clause->IsNot()) {
-    not_synonyms_.insert(clause_synonyms.begin(), clause_synonyms.end());
-  } else {
-    synonyms_.insert(clause_synonyms.begin(), clause_synonyms.end());
-  }
-
   clauses_.insert(std::move(clause));
-}
-
-void ClauseGrouper::TopUpSelectClause() {
-  for (const auto& not_synonym : not_synonyms_) {
-    if (synonyms_.find(not_synonym) == synonyms_.end()) {
-      std::unique_ptr<Clause> select_clause =
-          std::make_unique<SelectClause>(
-              AttrRef(
-                  Declaration{not_synonym, DesignEntity::VARIABLE},
-                  AttrName::NONE));
-      clauses_.insert(std::move(select_clause));
-    }
-  }
 }
 
 // Sorts and returns ClauseGroups based on their score.
 std::vector<ClauseGroup> ClauseGrouper::GetClauseGroupOrder() {
-  // Top up Select Clause
-  TopUpSelectClause();
-
   for (const auto& clause : clauses_) {
     Union(clause);
   }

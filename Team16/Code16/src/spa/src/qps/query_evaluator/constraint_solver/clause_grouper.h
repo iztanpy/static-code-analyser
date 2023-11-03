@@ -30,8 +30,6 @@ class ClauseGrouper {
  private:
   ClauseSet clauses_;
   std::unordered_map<Synonym, Synonym> map_;  // for Union-Find
-  std::unordered_set<Synonym> synonyms_;
-  std::unordered_set<Synonym> not_synonyms_;
 
   /*!
    * Finds the root of the synonym in the Union-Find data structure

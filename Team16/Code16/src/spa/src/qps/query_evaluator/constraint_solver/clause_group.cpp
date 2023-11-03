@@ -11,7 +11,6 @@ int ClauseGroup::Score() const {
 }
 
 ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
-  size_t originalSize = clauseSet.size();
   // 0. Seperate out binary NOT clause
   std::list<std::unique_ptr<Clause>> not_binary_clauses;
   ClauseSet filtered_clause_set;
@@ -53,16 +52,16 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
     }
   }
 
-  if (min_clause != nullptr) {
-    candidates.push(min_clause->get());
-  } else {
-    throw std::runtime_error("No non-NOT clause found in this ClauseGroup");
-  }
-
-  // 4. While candidates is not empty, pop the top Clause, add it to result vector.
   std::unordered_set<Clause*> visited;
   std::unordered_set<Synonym> visitedSynonyms;
 
+  if (min_clause != nullptr) {
+    candidates.push(min_clause->get());
+  } else {
+    TopUpSelectClause(not_binary_clauses, visitedSynonyms);
+  }
+
+  // 4. While candidates is not empty, pop the top Clause, add it to result vector.
   while (!candidates.empty()) {
     auto current = candidates.top();
     candidates.pop();
@@ -108,18 +107,8 @@ ClauseGroup::ClauseGroup(ClauseSet& clauseSet) {
       }
     }
 
-    // 4. Look up the HashMap, add all connected Clause to candidates PQ.
-    for (const auto& synonym : current->GetSynonyms()) {
-      for (const auto& connected : synonymToClauses[synonym]) {
-        if (visited.find(connected) == visited.end()) {
-          candidates.push(connected);
-        }
-      }
-    }
+    TopUpSelectClause(not_binary_clauses, visitedSynonyms);
   }
-
-  // 5. Double check that length of result vector is the same length as the input ClauseSet
-  assert(clauses_.size() == originalSize);
 }
 
 ConstraintTable ClauseGroup::Evaluate(ReadFacade& pkb_reader) const {
@@ -136,4 +125,21 @@ ConstraintTable ClauseGroup::Evaluate(ReadFacade& pkb_reader) const {
 
 int ClauseGroup::SizeForTesting() const {
   return clauses_.size();
+}
+
+void ClauseGroup::TopUpSelectClause(std::list<std::unique_ptr<Clause>>& not_binary_clauses,
+                                    std::unordered_set<Synonym>& visitedSynonyms) {
+  // Top up select clauses for leftover NOT binary
+  for (auto& clause : not_binary_clauses) {
+    for (const auto& decl : clause->ComputeSynonyms()) {
+      if (visitedSynonyms.find(decl.synonym) == visitedSynonyms.end()) {
+        // If synonyms hasn't been visited, we insert a select first
+        clauses_.push_back(
+            std::make_unique<SelectClause>(
+                AttrRef(decl, AttrName::NONE)));
+        visitedSynonyms.insert(decl.synonym);
+      }
+    }
+    clauses_.push_back(std::move(clause));
+  }
 }
