@@ -52,7 +52,8 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
 std::vector<std::string> SPtokeniser::splitLines(const std::string & input) {
     std::vector<std::string> result;
     std::istringstream iss(input);
-    std::unordered_set<char> delimiters = { ';', '{', '}', '+', '-', '=', '(', ')', '*', '/', '%', '<', '>', '&', '|', '!', ' ', '\t', '\r', '\v', '\f', '\0' };
+    std::unordered_set<char> delimiters = { ';', '{', '}', '+', '-', '=', '(', ')',
+        '*', '/', '%', '<', '>', '&', '|', '!', ' ', '\t', '\r', '\v', '\f', '\0' };
     std::string line;
     while (std::getline(iss, line)) {
         extractTokens(line, delimiters, result);
@@ -60,7 +61,9 @@ std::vector<std::string> SPtokeniser::splitLines(const std::string & input) {
     return result;
 }
 
-void SPtokeniser::extractTokens(const std::string& line, const std::unordered_set<char>& delimiters, std::vector<std::string>& result) {
+void SPtokeniser::extractTokens(const std::string& line,
+    const std::unordered_set<char>& delimiters,
+    std::vector<std::string>& result) {
     std::string currentToken;
     size_t start = 0;
 
@@ -79,13 +82,18 @@ void SPtokeniser::extractTokens(const std::string& line, const std::unordered_se
         // add current word if not empty, accounts for double whitespaces and onwards
         if (!curr_word.empty()) result.push_back(curr_word);
         // include delimiters (excluding whitespaces) as tokens
-        handleOperator(line, word_char_index, curr_word, delimiters, result); 
+        handleOperator(line, word_char_index, curr_word, delimiters, result);
         // only add non-whitespaces tokens, accounts for double whitespaces and onwards
         i = word_char_index + 1;
     }
 }
 
-void SPtokeniser::handleOperator(const std::string& line, size_t& word_char_index, std::string& curr_word, const std::unordered_set<char>& delimiters, std::vector<std::string>&result) {
+void SPtokeniser::handleOperator(const std::string& line,
+    size_t& word_char_index,
+    std::string& curr_word,
+    const std::unordered_set<char>& delimiters,
+    std::vector<std::string>&result) {
+
     char curr_char = line[word_char_index];
     auto delimiterItr = delimiters.find(curr_char);
     if (delimiterItr != delimiters.end() && !isspace(*delimiterItr) && *delimiterItr != '\0') {

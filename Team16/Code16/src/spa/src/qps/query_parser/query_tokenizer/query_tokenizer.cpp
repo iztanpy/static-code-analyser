@@ -157,7 +157,7 @@ std::string QueryTokenizer::removeResultClause(std::string& select_statement) {
 std::string QueryTokenizer::removeAfterResultClause(std::string& select_statement) {
   std::string preservedResultClause = select_statement;
   std::smatch match;
-  if (std::regex_search(select_statement, match,qps_constants::kTupleRegex)) {
+  if (std::regex_search(select_statement, match, qps_constants::kTupleRegex)) {
     preservedResultClause = match[0];
   } else {
     // either a BOOLEAN or synonym

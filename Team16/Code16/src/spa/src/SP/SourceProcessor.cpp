@@ -1,6 +1,7 @@
 #include "SourceProcessor.h"
 
-SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) : writeFacade(writeFacadePtr), simpleParser(&this->visitor) {}
+SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) :
+    writeFacade(writeFacadePtr), simpleParser(&this->visitor) {}
 
 void SourceProcessor::processSource(const std::string& simpleProgram) {
     std::vector<struct Token> tokens = tokeniser.tokenise(simpleProgram);
