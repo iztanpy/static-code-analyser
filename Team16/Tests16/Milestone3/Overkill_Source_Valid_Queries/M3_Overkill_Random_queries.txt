@@ -1,0 +1,15 @@
+1 - P, with
+stmt s; constant c;
+Select <s, c.value> such that Parent(_, s) with s.stmt# = c.value
+3 3, 4 4
+5000
+2 - C, with
+procedure p1, p2;
+Select p1 such that Calls(p1, p2) with p2.procName = "p1"
+p2
+5000
+3 - N, M, with
+stmt s1, s2; read r1, r2;
+Select <s1, r1, s2> with "apple" = r1.varName such that Next(r1, s1) and Modifies(s2, "if")
+8 7 29, 8 7 15,8 7 2,8 7 23,8 7 28,8 7 3,8 7 4,8 7 9
+5000

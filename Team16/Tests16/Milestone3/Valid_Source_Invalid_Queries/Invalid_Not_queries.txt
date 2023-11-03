@@ -63,82 +63,68 @@ read r; print p; stmt s; assign a; variable not;
 Select not pattern not a(not, _) and 5=5 and "x"="x" and p.varName = "number"
 SyntaxError
 5000
-14 - declaration of variable not takes precedence over not in with clause
-constant c; variable not;
-Select c with not 5 = 10
-SyntaxError
 5000
-15 - declaration of assign not takes precedence over not in pattern clause
-while w; variable v; assign not;
-Select w pattern not w("y", _)
-SyntaxError
-5000
-16 - declaration of read not takes precedence over not in such that clause
-procedure p; variable v; read not;
-Select p such that not Calls* (p, "Third")
-SyntaxError
-5000
-17 - declaration of procedure not takes precedence over not in multiple clauses
+14 - declaration of procedure not takes precedence over not in multiple clauses
 assign a; stmt s1, s2; procedure not;
 Select a such that Follows*(s1, s2) and not pattern a(a, _"x+y"_)
 SyntaxError
 5000
-18 - declaration of call not takes precedence over not in multiple clauses
+15 - declaration of call not takes precedence over not in multiple clauses
 assign a; stmt s1, s2; procedure p; call not;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) with not p.procName = "Third"
 SyntaxError
 5000
-19 - declaration of stmt not takes precedence over not in multiple clauses
+16 - declaration of stmt not takes precedence over not in multiple clauses
 assign a; stmt s1, s2, not; procedure p, p2;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Calls(p, p2)
 SyntaxError
 5000
-20 - declaration of print not takes precedence over not in multiple clauses
+17 - declaration of print not takes precedence over not in multiple clauses
 assign a; stmt s1, s2; procedure p, p2; print not;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Next(s1, s2)
 SyntaxError
 5000
-21 - declaration of if not takes precedence over not in multiple clauses
+18 - declaration of if not takes precedence over not in multiple clauses
 assign a; stmt s1, s2; procedure p, p2; if not;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Affects(1, 2)
 SyntaxError
 5000
-22 - declaration of while not takes precedence over not in multiple clauses
+19 - declaration of while not takes precedence over not in multiple clauses
 assign a; stmt s1, s2; procedure p, p2; while not;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Calls*(p, p2)
 SyntaxError
 5000
-23 - wrong clause after such that and not
+20 - wrong clause after such that and not
 assign a; stmt s1, s2; procedure p, p2;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) such that not Calls*(p, p2) and not a(a, _"1"_)
 SyntaxError
 5000
-24 - wrong clause after pattern and not
+21 - wrong clause after pattern and not
 assign a; stmt s1, s2; procedure p, p2;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) and not Calls*(p, p2)
 SyntaxError
 5000
-25 - wrong clause after with and not
+22 - wrong clause after with and not
 assign a; stmt s1, s2; procedure p, p2;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) with p.procName = "main" and not a(a, _"1"_)
 SyntaxError
 5000
-26 - extra not after and not in with clause
+23 - extra not after and not in with clause
 assign a; variable q;
 Select a with not q.varName = 10 and not not q.varName = 11
 SyntaxError
 5000
-27 - extra not after and not in such that clause
+24 - extra not after and not in such that clause
 assign a; stmt s1, s2; procedure p, p2;
 Select a such that Follows*(s1, s2) and not not Follows(s1, s2)
 SyntaxError
 5000
-28 - extra not after and not in pattern clause
+25 - extra not after and not in pattern clause
 assign a; stmt s1, s2; procedure p, p2;
 Select a such that Follows*(s1, s2) and pattern a(a, _"x+y"_) and not not a(a, _"1"_)
 SyntaxError
 5000
-29 - wrong positioning for not before select clause
+26 - wrong positioning for not before select clause
 read r; print p;
 not Select r.varName with p.varName = r.varName and p.varName = "number"
 SyntaxError

@@ -33,6 +33,13 @@ std::string Trim(const std::string & str);
 std::string RemoveWhiteSpaces(const std::string & str);
 
 /*!
+ * Trims any white spaces on on either side of a period
+ * @param str the string to trim
+ * @return trimmed string
+ */
+std::string RemoveWhiteSpacesAroundPeriod(const std::string & str);
+
+/*!
  * Checks if the string is a white space
  * @param str is the specified string
  * @return true if the string is a white space, else false
