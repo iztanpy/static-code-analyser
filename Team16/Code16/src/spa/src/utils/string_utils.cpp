@@ -36,7 +36,29 @@ std::string string_util::RemoveWhiteSpaces(const std::string& str) {
   std::string trimmedStr;
   std::unique_copy(str.begin(), str.end(), std::back_insert_iterator<std::string>(trimmedStr),
                    [](char a, char b) { return isspace(a) && isspace(b); });
+  trimmedStr = RemoveWhiteSpacesAroundPeriod(trimmedStr);
   return Trim(trimmedStr);
+}
+
+std::string string_util::RemoveWhiteSpacesAroundPeriod(const std::string& str) {
+  std::string trimmedStr = str;
+  size_t pos = 0;
+  while ((pos = trimmedStr.find('.', pos)) != std::string::npos) {
+    // Remove spaces on the left of the period
+    while (pos > 0 && std::isspace(trimmedStr[pos - 1])) {
+      trimmedStr.erase(pos - 1, 1);
+      pos--;
+    }
+
+    // Remove spaces on the right of the period
+    while (pos < trimmedStr.length() - 1 && std::isspace(trimmedStr[pos + 1])) {
+      trimmedStr.erase(pos + 1, 1);
+    }
+
+    pos++;
+  }
+
+  return trimmedStr;
 }
 
 std::vector<std::string> string_util::SplitStringBy(const char& delimiter, std::string& str) {
@@ -83,28 +105,18 @@ std::string string_util::RemoveFirstWordFromArgs(std::string& str) {
 }
 
 std::string string_util::RemoveFirstWord(std::string& str) {
-  std::string result = str;
+  // Find the position of the first ( character
+  size_t pos = str.find(' ');
 
-  // Search for the first match in the input string
-  std::smatch match;
-  if (std::regex_search(result, match, qps_constants::kFirstWordRegex)) {
-    // Find the position of the matched word
-    size_t pos = result.find(match.str());
-    if (pos != std::string::npos) {
-      // Remove the matched word and any following spaces
-      result.erase(0, pos);
-    }
-
-    // Remove leading and trailing spaces
-    result = std::regex_replace(result, std::regex("^ +| +$|( ) +"), "$1");
-
-    // Return the modified string
-    return result;
+  if (pos != std::string::npos) {
+    // Use substring to extract the portion of the string after the first space
+    return RemoveWhiteSpaces(str.substr(pos));
   }
 
-  // If no word is found, return the original string
+  // If there's no space, return an empty string
   return "";
 }
+
 
 std::string string_util::RemoveSpacesFromExpr(const std::string& str) {
   std::string result;
