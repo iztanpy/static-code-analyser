@@ -49,63 +49,62 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
  * @param input The input source program as a single string.
  * @return A vector of strings containing the extracted tokens from the source program.
  */
-std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
-    // Create an input string stream to process the input line by line
-    std::istringstream iss(input);
-
-    // Initialize a vector to store the extracted tokens
+std::vector<std::string> SPtokeniser::splitLines(const std::string & input) {
     std::vector<std::string> result;
-
-    // Initialize a string to store each line
+    std::istringstream iss(input);
+    std::unordered_set<char> delimiters = { ';', '{', '}', '+', '-', '=', '(', ')', '*', '/', '%', '<', '>', '&', '|', '!', ' ', '\t', '\r', '\v', '\f', '\0' };
     std::string line;
-
-    std::unordered_set<char> delimiters = {';', '{', '}', '+', '-', '=', '(', ')', '*', '/', '%', '<', '>', '&', '|',
-                                           '!', ' ', '\t', '\r', '\v', '\f', '\0'};
-
-    // Iterate through each character in the line
     while (std::getline(iss, line)) {
-        std::string currentToken;
-        size_t start = 0;
-
-        // filter out whitespaces
-        size_t i = 0;
-        while (i < line.length()) {
-            // remove all white spaces
-            std::string curr_word;
-            // Iterate through each character in the line, filter out whitespaces
-            size_t word_char_index = i;
-            char curr_char = line[word_char_index];
-            while (delimiters.find(curr_char) == delimiters.end()) {
-                curr_word.push_back(curr_char);  // change to line.substr(start, i - start)
-                curr_char = line[++word_char_index];
-            }
-            // add current word if not empty, accounts for double whitespaces and onwards
-            if (!curr_word.empty()) result.push_back(curr_word);
-            // include delimiters (excluding whitespaces) as tokens
-            auto delimiterItr = delimiters.find(curr_char);
-            if (delimiterItr != delimiters.end() &&  !isspace(*delimiterItr) && *delimiterItr != '\0') {
-                curr_word = curr_char;
-                // check if next char is a two-char operator
-                if (word_char_index + 1 < line.length()) {
-                    char next_char = line[word_char_index + 1];
-                    if ((curr_word == "=" && next_char == '=')
-                        || (curr_word == "!" && next_char == '=')
-                        || (curr_word == "<" && next_char == '=')
-                        || (curr_word == ">" && next_char == '=')
-                        || (curr_word == "&" && next_char == '&')
-                        || (curr_word == "|" && next_char == '|')) {
-                        curr_word.push_back(next_char);
-                        word_char_index++;
-                    }
-                }
-                result.push_back(curr_word);
-            }
-            // only add non-whitespaces tokens, accounts for double whitespaces and onwards
-            i = word_char_index + 1;
-        }
+        extractTokens(line, delimiters, result);
     }
-
     return result;
+}
+
+void SPtokeniser::extractTokens(const std::string& line, const std::unordered_set<char>& delimiters, std::vector<std::string>& result) {
+    std::string currentToken;
+    size_t start = 0;
+
+    // filter out whitespaces
+    size_t i = 0;
+    while (i < line.length()) {
+        // remove all white spaces
+        std::string curr_word;
+        // Iterate through each character in the line, filter out whitespaces
+        size_t word_char_index = i;
+        char curr_char = line[word_char_index];
+        while (delimiters.find(curr_char) == delimiters.end()) {
+            curr_word.push_back(curr_char);  // change to line.substr(start, i - start)
+            curr_char = line[++word_char_index];
+        }
+        // add current word if not empty, accounts for double whitespaces and onwards
+        if (!curr_word.empty()) result.push_back(curr_word);
+        // include delimiters (excluding whitespaces) as tokens
+        handleOperator(line, word_char_index, curr_word, delimiters, result); 
+        // only add non-whitespaces tokens, accounts for double whitespaces and onwards
+        i = word_char_index + 1;
+    }
+}
+
+void SPtokeniser::handleOperator(const std::string& line, size_t& word_char_index, std::string& curr_word, const std::unordered_set<char>& delimiters, std::vector<std::string>&result) {
+    char curr_char = line[word_char_index];
+    auto delimiterItr = delimiters.find(curr_char);
+    if (delimiterItr != delimiters.end() && !isspace(*delimiterItr) && *delimiterItr != '\0') {
+        curr_word = curr_char;
+        // check if next char is a two-char operator
+        if (word_char_index + 1 < line.length()) {
+            char next_char = line[word_char_index + 1];
+            if ((curr_word == "=" && next_char == '=')
+                || (curr_word == "!" && next_char == '=')
+                || (curr_word == "<" && next_char == '=')
+                || (curr_word == ">" && next_char == '=')
+                || (curr_word == "&" && next_char == '&')
+                || (curr_word == "|" && next_char == '|')) {
+                curr_word.push_back(next_char);
+                word_char_index++;
+            }
+        }
+        result.push_back(curr_word);
+    }
 }
 
 /**

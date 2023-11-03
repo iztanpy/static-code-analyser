@@ -76,4 +76,24 @@ class SPtokeniser {
       * @param matchedValue The matched value of the current token.
      */
     void checkValidLiteral(std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue);
+    /**
+    * Extracts tokens from a given line based on the provided delimiters and adds them to the 'result' vector.
+    *
+    * @param line The input line to be tokenized.
+    * @param delimiters A set of characters used as delimiters to split the line into tokens.
+    * @param result A vector to store the extracted tokens from the line.
+    */
+    void extractTokens(const std::string& line, const std::unordered_set<char>& delimiters, std::vector<std::string>& result);
+    /**
+     * Handles the extraction of operator tokens within a line.
+     * The operator tokens are identified and added to the 'result' vector.
+     *
+     * @param line The input line to be tokenized.
+     * @param word_char_index The current character index within the line.
+     * @param curr_word The current word being constructed from characters in the line.
+     * @param delimiters A set of characters used as delimiters to split the line into tokens.
+     * @param result A vector to store the extracted tokens from the line.
+     */
+    void handleOperator(const std::string& line, size_t& word_char_index, std::string& curr_word, const std::unordered_set<char>& delimiters, std::vector<std::string>& result);
+
 };
