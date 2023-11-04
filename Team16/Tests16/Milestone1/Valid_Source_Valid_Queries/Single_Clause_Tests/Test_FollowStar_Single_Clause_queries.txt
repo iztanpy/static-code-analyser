@@ -79,6 +79,7 @@ Select i such that Follows*(5, 5)
 none
 5000
 17 -  Not test case 16
+if i; assign a;
 Select i such that not Follows*(5, 5)
 5,10
 5000
