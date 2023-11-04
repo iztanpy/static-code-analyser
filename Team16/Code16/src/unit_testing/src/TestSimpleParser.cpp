@@ -310,7 +310,7 @@ TEST_CASE("Test follows relation one level nesting") {
 TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(&writeFacade, new ASTVisitor());
+    SimpleParser parser(new ASTVisitor());
     std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
                                  tokenEnd, tokenCloseBrace};
     REQUIRE(parser.parse(my_tokens) == 10);
