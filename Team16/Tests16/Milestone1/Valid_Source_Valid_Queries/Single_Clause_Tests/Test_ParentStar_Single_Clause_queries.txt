@@ -73,3 +73,13 @@ while mix1;
 Select mix1 such that Parent*(mix1, mix1)
 
 5000
+16 - not testcase 13
+while nest1, nest2; if nest3; variable nestVar;
+Select nest1 such that not Parent*(nest1, nest3)
+
+5000
+17 - not testcase 9
+assign a13, a14; variable v10;
+Select a13 such that not Parent*(6, a14)
+
+5000

@@ -43,3 +43,13 @@ stmt s;
 Select s such that Follows(2, s)
 7
 5000
+10 - testcase 1 NOT
+stmt s;
+Select s such that not Follows(2, s)
+1,2,3,4,5,6
+5000
+11 - testcase 2 NOT
+read r;
+Select r such that not Follows(r, _)
+none
+5000

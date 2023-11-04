@@ -48,5 +48,14 @@ assign a; variable v;
 Select a such that Follows(14, _) pattern a(v, _"a"_)
 none
 5000
-
+11 - testcase 3 w negation of pattern
+assign a1; assign a2;
+Select a1 such that Follows(a1, a2) pattern not a1("x", _)
+2,7
+5000
+12 - testcase 10 w negation of main clause
+assign a; variable v;
+Select a such that not Follows (a, _) pattern a(v, _"1"_)
+11
+5000
 

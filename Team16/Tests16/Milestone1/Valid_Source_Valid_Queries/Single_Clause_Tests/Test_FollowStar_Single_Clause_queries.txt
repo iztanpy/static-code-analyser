@@ -78,3 +78,12 @@ if i; assign a;
 Select i such that Follows*(5, 5)
 none
 5000
+17 -  Not test case 16
+Select i such that not Follows*(5, 5)
+5,10
+5000
+18 - Not test case 12
+stmt s;
+Select s such that not Follows*(7, s)
+1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17
+5000
