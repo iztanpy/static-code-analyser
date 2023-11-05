@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <memory>
 #include <list>
+#include <unordered_set>
 
 #include "qps/clauses/clause.h"
 #include "qps/query_evaluator/constraint_solver/clause_group.h"

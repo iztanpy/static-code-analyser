@@ -30,8 +30,7 @@ ClauseGroup::ClauseGroup(std::vector<std::unique_ptr<Clause>> unordered_clauses)
   // First of all, just pick out all the binary, put them all at the back
   std::partition(unordered_clauses.begin(), unordered_clauses.end(),
                  [](const std::unique_ptr<Clause>& ptr) {
-                   return ptr->IsNot()
-                       && ptr->GetSynonyms().size() == 2;
+                   return !(ptr->IsNot());
                  });
   clauses_ = std::move(unordered_clauses);
 }

@@ -7,10 +7,15 @@ void ClauseGrouper::addClause(std::unique_ptr<Clause> clause) {
 
 // Sorts and returns ClauseGroups based on their score.
 std::vector<ClauseGroup> ClauseGrouper::GetClauseGroupOrder() {
+  // Top up Select Clause
+  TopUpSelectClause();
+
+  // Union
   for (const auto& clause : clauses_) {
     Union(clause);
   }
 
+  // Find
   std::unordered_map<Synonym, std::vector<std::unique_ptr<Clause>>> synonymToClauses;
 
   for (auto& clause_ptr : clauses_) {
@@ -54,6 +59,28 @@ void ClauseGrouper::Union(const std::unique_ptr<Clause>& clause) {
 
     if (root1 != root2) {
       map_[root1] = root2;
+    }
+  }
+}
+
+void ClauseGrouper::TopUpSelectClause() {
+  std::unordered_set<Declaration> normal_decls;
+  std::unordered_set<Declaration> not_decls;
+
+  for (const auto& clause : clauses_) {
+    auto decls = clause->ComputeSynonyms();
+    if (clause->IsNot()) {
+      not_decls.insert(decls.begin(), decls.end());
+    } else {
+      normal_decls.insert(decls.begin(), decls.end());
+    }
+  }
+
+  for (const auto& not_decl : not_decls) {
+    if (normal_decls.find(not_decl) == normal_decls.end()) {
+      clauses_.push_back(
+          std::make_unique<SelectClause>(
+              AttrRef(not_decl, AttrName::NONE)));
     }
   }
 }
