@@ -2,7 +2,7 @@
 
 // Adds a clause to the internal clause set.
 void ClauseGrouper::addClause(std::unique_ptr<Clause> clause) {
-  clauses_.insert(std::move(clause));
+  clauses_.push_back(std::move(clause));
 }
 
 // Sorts and returns ClauseGroups based on their score.
@@ -11,18 +11,18 @@ std::vector<ClauseGroup> ClauseGrouper::GetClauseGroupOrder() {
     Union(clause);
   }
 
-  std::unordered_map<Synonym, ClauseSet> synonymToClauses;
+  std::unordered_map<Synonym, std::vector<std::unique_ptr<Clause>>> synonymToClauses;
 
   for (auto& clause_ptr : clauses_) {
     Synonym root = Find(*clause_ptr->GetSynonyms().begin());
-    synonymToClauses[root].insert(std::move(const_cast<std::unique_ptr<Clause>&>(clause_ptr)));
+    synonymToClauses[root].push_back(std::move(clause_ptr));
   }
 
   // Convert ClauseSet to ClauseGroup
   std::vector<ClauseGroup> clauseGroups;
 
   for (auto& pair : synonymToClauses) {
-    ClauseGroup group(pair.second);
+    ClauseGroup group(std::move(pair.second));
     clauseGroups.push_back(std::move(group));
   }
 

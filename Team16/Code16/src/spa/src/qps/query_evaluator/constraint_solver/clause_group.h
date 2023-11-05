@@ -25,7 +25,7 @@ class ClauseGroup {
    * Constructs a ClauseGroup from a ClauseSet
    * @param clause_set
    */
-  explicit ClauseGroup(ClauseSet& clause_set);
+  explicit ClauseGroup(std::vector<std::unique_ptr<Clause>> unordered_clauses);
 
   /*!
    * Evaluates clauses within the ClauseGroup and return the ConstraintTable of result
@@ -48,6 +48,4 @@ class ClauseGroup {
 
  private:
   std::vector<std::unique_ptr<Clause>> clauses_;
-  void TopUpSelectClause(std::list<std::unique_ptr<Clause>>& not_binary_clauses,
-                         std::unordered_set<Synonym>& visitedSynonyms);
 };
