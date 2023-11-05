@@ -31,5 +31,5 @@ Select a such that Follows* (s, w) such that not Parent (w, a) such that Follows
 7 - multiclause negated follows and parent
 assign a; read a2; stmt s; variable v; if ifs; while w; print p;
 Select a such that not Follows* (s, w) such that Parent (w, a) such that Follows (s, p)
-
+6, 7, 18, 19
 5000
