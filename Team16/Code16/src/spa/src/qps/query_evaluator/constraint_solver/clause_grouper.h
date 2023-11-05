@@ -5,6 +5,7 @@
 #include <utility>
 #include <algorithm>
 #include <memory>
+#include <list>
 #include <unordered_set>
 
 #include "qps/clauses/clause.h"
@@ -28,7 +29,7 @@ class ClauseGrouper {
   std::vector<ClauseGroup> GetClauseGroupOrder();
 
  private:
-  ClauseSet clauses_;
+  std::list<std::unique_ptr<Clause>> clauses_;
   std::unordered_map<Synonym, Synonym> map_;  // for Union-Find
 
   /*!
