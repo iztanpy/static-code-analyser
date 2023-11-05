@@ -1,4 +1,6 @@
 #include "NextStore.h"
+#include "SP/sp_cfg/Cfg.h"
+#include "SP/sp_cfg/CfgNode.h"
 //
 // Created by Isaac Tan on 18/10/23.
 //
@@ -7,6 +9,7 @@ typedef std::string variable;
 typedef int statementNumber;
 
 NextStore::NextStore() {
+    std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
     std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
@@ -23,8 +26,8 @@ void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set
     }
 }
 
-void NextStore::storeCfg(Cfg cfg) {
-    this->cfg = cfg;
+void NextStore::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
+    this->cfgRoots = cfgRoots;
 }
 
 void NextStore::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
@@ -77,13 +80,13 @@ bool NextStore::isNextStar(statementNumber num, Wildcard) {
 }
 
 bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
-    // check the cache to see if the statement numbers are inside
+    // cache
+    // for each element in cfgLegend
     if (NextStarMap.find(num1) != NextStarMap.end()) {
         if (NextStarMap[num1].find(num2) != NextStarMap[num1].end()) {
             return true;
         }
     }
-
     std::shared_ptr<CfgNode> startNode = cfgLegend[num1];
     std::shared_ptr<CfgNode> endNode = cfgLegend[num2];
 
@@ -91,18 +94,37 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
         return false;
     }
 
-    if (startNode == endNode) {
-        // check the statement list to determine which number comes first
-        std::set nodeStatementNumberList = startNode->getStmtNumberSet();
-        if (*nodeStatementNumberList.find(num1) < *nodeStatementNumberList.find(num2)) {
+    for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
+        auto visitedNums = std::unordered_set<statementNumber>();
+        for (auto i: it->second->getStmtNumberSet()) {
+            NextStarMap[i] = std::unordered_set<statementNumber>();
+            // add visitedNums to NextStarMap[i]
+            for (auto j: visitedNums) {
+                NextStarMap[i].insert(j);
+            }
+            visitedNums.insert(i);
+        }
+        // 'it' is an iterator that points to a key-value pair
+        auto node = it->second;
+        // populate the whole NextStarMap
+        auto fakeEndPoint = std::make_shared<CfgNode>();
+        isNodeFollowing(node,
+                        fakeEndPoint,
+                        std::unordered_set<std::shared_ptr<CfgNode>>(),
+                                std::unordered_set<statementNumber>());
+    }
+
+    if (NextStarMap.find(num1) != NextStarMap.end()) {
+        if (NextStarMap[num1].find(num2) != NextStarMap[num1].end()) {
             return true;
         }
     }
-    auto visited = std::unordered_set<std::shared_ptr<CfgNode>>();
-    auto visitedNums = std::unordered_set<statementNumber>();
-    if (isNodeFollowing(startNode, endNode, visited, visitedNums)) {
-        return true;
-    }
+    // check the cache to see if the statement numbers are inside
+//    auto visited = std::unordered_set<std::shared_ptr<CfgNode>>();
+//    auto visitedNums = std::unordered_set<statementNumber>();
+//    if (isNodeFollowing(startNode, endNode, visited, visitedNums)) {
+//        return true;
+//    }
     return false;
 }
 
@@ -110,6 +132,10 @@ bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
                                 std::shared_ptr<CfgNode> endNode,
                                 std::unordered_set<std::shared_ptr<CfgNode> > visited,
                                 std::unordered_set<statementNumber> visitedNums) {
+    // start cache
+
+    // traverse the entire cfgLegend and populate the NextStarMap
+
     if (startNode == nullptr || endNode == nullptr) {
         return false;
     }

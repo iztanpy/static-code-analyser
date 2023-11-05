@@ -28,22 +28,22 @@ void parse(SourceProcessor& sp, std::string filename) {
   sp.processSource(input);
 }
 
-//
-//TEST_CASE("Test Local") {
-//  std::string filename = "../../../tests/Sample_source.txt";
-//  std::string query = "procedure p, p1,p2; variable v,v1; if if; read r; while while;\n"
-//                      "Select <p2.procName,v1> such that Modifies(p2,v1) such that Calls(p,p1) and Calls*(p1,p2) pattern if(v,_,_) and while(v,_) with r.varName = v.varName";
-//
-//  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-//  SourceProcessor sourceProcessor(&writeFacade);
-//
-//  parse(sourceProcessor, filename);
-//
-//  ReadFacade readFacade = ReadFacade(*pkb_ptr);
-//  QPS qps(readFacade);
-//
-//  std::unordered_set<std::string> results = qps.Evaluate(query);
-//
-//  REQUIRE(results == std::unordered_set<std::string>({"SemanticError"}));
-//}
+
+TEST_CASE("Test Local") {
+  std::string filename = "../../../tests/Sample_source.txt";
+  std::string query = "print coffee;\n"
+                      "Select coffee such that Next*(coffee,_)";
+
+  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+  SourceProcessor sourceProcessor(&writeFacade);
+
+  parse(sourceProcessor, filename);
+
+  ReadFacade readFacade = ReadFacade(*pkb_ptr);
+  QPS qps(readFacade);
+
+  std::unordered_set<std::string> results = qps.Evaluate(query);
+
+  REQUIRE(results == std::unordered_set<std::string>({"24"}));
+}

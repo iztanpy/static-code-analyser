@@ -112,6 +112,7 @@ TEST_CASE("If else in a while loop") {
     sourceProcessor.processSource(simpleProgram4);
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
     nextStore.storeCfgLegend(cfgLegend);
+    nextStore.storeCfg(sourceProcessor.getCfgNodesMap());
     // same node
     REQUIRE(nextStore.isNextStar(2, 3));
 }

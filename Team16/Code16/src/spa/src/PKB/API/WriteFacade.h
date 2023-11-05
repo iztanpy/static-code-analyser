@@ -155,7 +155,7 @@ class WriteFacade {
 
     void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
 
-    void storeCfg(Cfg cfg);
+    void storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots);
 
     void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 };
