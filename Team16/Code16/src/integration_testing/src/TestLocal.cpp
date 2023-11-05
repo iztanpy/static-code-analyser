@@ -32,7 +32,7 @@ void parse(SourceProcessor& sp, std::string filename) {
 TEST_CASE("Test Local") {
   std::string filename = "../../../tests/Sample_source.txt";
   std::string query = "print coffee;\n"
-                      "Select coffee such that Next*(coffee,_)";
+                      "Select coffee such that Next*(19,17) and Next*(16,22)";
 
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   WriteFacade writeFacade = WriteFacade(*pkb_ptr);
@@ -44,6 +44,8 @@ TEST_CASE("Test Local") {
   QPS qps(readFacade);
 
   std::unordered_set<std::string> results = qps.Evaluate(query);
+
+
 
   REQUIRE(results == std::unordered_set<std::string>({"24"}));
 }

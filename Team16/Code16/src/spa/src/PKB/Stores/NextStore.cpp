@@ -96,13 +96,16 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
 
     for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
         auto visitedNums = std::unordered_set<statementNumber>();
-        for (auto i: it->second->getStmtNumberSet()) {
-            NextStarMap[i] = std::unordered_set<statementNumber>();
+        auto currentNums = it->second->getStmtNumberSet();
+        auto num = *currentNums.rbegin();
+        auto reversedCurrentNums = std::set<int>(currentNums.rbegin(), currentNums.rend());
+        for (std::set<int>::reverse_iterator i = currentNums.rbegin(); i != currentNums.rend(); ++i) {
+            NextStarMap[*i] = std::unordered_set<statementNumber>();
             // add visitedNums to NextStarMap[i]
             for (auto j: visitedNums) {
-                NextStarMap[i].insert(j);
+                NextStarMap[*i].insert(j);
             }
-            visitedNums.insert(i);
+            visitedNums.insert(*i);
         }
         // 'it' is an iterator that points to a key-value pair
         auto node = it->second;
@@ -136,15 +139,11 @@ bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
 
     // traverse the entire cfgLegend and populate the NextStarMap
 
-    if (startNode == nullptr || endNode == nullptr) {
-        return false;
-    }
-
     // if the startnode is the endnode, and we have visited the startnode before, this is a while loop
     if (startNode == endNode && visited.count(startNode) != 0) {
         return true;
     }
-    // else if the endnode is not the startnode, but we have traversed the whole tree, then we return false
+    // telse if the endnode is not the startnode, but we have traversed the whole tree, hen we return false
     if (visited.count(startNode) != 0) {
         return false;
     }
@@ -160,6 +159,19 @@ bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
             NextStarMap[num].insert(nodeNum);
         }
     }
+    // if there are more than 1 line number in a certain set, we need to add those in too
+    if (nodeStatementNumberList.size() > 1) {
+        auto localVisted = std::unordered_set<statementNumber>();
+        for (std::set<int>::reverse_iterator i =
+                nodeStatementNumberList.rbegin(); i != nodeStatementNumberList.rend(); ++i) {
+            // add visitedNums to NextStarMap[i]
+            for (auto j: localVisted) {
+                NextStarMap[*i].insert(j);
+            }
+            visitedNums.insert(*i);
+        }
+    }
+
     // add the statementNumberList to the visited Nums
     for (auto num : nodeStatementNumberList) {
         visitedNums.insert(num);
