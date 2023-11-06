@@ -8,6 +8,7 @@ add_executable(integration_testing ${srcs}
         src/TestSpPkbIf.cpp
         src/TestSpPkbWhile.cpp
         src/TestSPPkbNext.cpp
+        src/testUses.cpp
 )
 
 
