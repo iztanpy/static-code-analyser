@@ -43,3 +43,18 @@ stmt s;
 Select s
 13, 12, 11, 2, 9, 6, 5, 1, 7, 10, 8, 4, 3
 5000
+10 - Select statements with varname = number 
+stmt s; variable v; 
+Select s such that Uses(s,v) with v.varName="sum" 
+6, 9, 13, 4, 8
+5000
+11 - Select statements with stmtNumber = c.value
+stmt s; constant c;
+Select <s, c.value> such that Parent(_, s) with s.stmt# = c.value
+10 10
+5000
+12 - Select invalid procedure
+procedure p1; stmt s;
+Select s with p1.procName="apple" 
+none
+5000
