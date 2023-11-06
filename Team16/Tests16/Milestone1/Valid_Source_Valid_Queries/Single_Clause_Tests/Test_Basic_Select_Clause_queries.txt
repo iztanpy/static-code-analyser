@@ -58,3 +58,18 @@ procedure p1; stmt s;
 Select s with p1.procName="apple" 
 none
 5000
+13 - False with clause, should not output anything
+procedure p1; stmt s;
+Select s with "v1"="apple"
+none
+5000
+14 - False with clause, should not output anything
+procedure p1; stmt s;
+Select p1 with 100 = s.stmt#
+none
+5000
+15 - False with clause, should not output anything
+procedure p1; stmt s; variable v;
+Select s with p1.procName=v.varName
+none
+5000
