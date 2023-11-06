@@ -51,9 +51,9 @@ ClauseGroup::ClauseGroup(std::vector<std::unique_ptr<Clause>> unordered_clauses)
       notBinaryClauses.push_back(i);
       notBinarySynonyms.insert(synonyms.begin(), synonyms.end());
     } else {
-      // Logic to find the smallest normal clause
+      // Logic to find the smallest normal clause, can't be not clause also
       int curr_score = clause->Score();
-      if (curr_score < smallest_score) {
+      if (curr_score < smallest_score && !clause->IsNot()) {
         smallest_score = curr_score;
         smallestNormalClause = i;
       }
