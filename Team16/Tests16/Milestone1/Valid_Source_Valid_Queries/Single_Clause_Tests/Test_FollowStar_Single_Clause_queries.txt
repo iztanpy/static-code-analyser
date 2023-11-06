@@ -88,3 +88,18 @@ stmt s;
 Select s such that not Follows*(7, s)
 1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17
 5000
+19 -  with testcase 1
+stmt s; read r;
+Select s such that Follows*(r, _) with r.varName="bombastic" 
+none
+5000
+20 - with testcase 2
+while w1; stmt s;
+Select w1.stmt# such that Follows*(w1,s) with s.stmt#=7
+none
+5000
+21 - with testcase 3
+while w1; if if1; stmt s;
+Select <w1.stmt#, if1.stmt#> such that Follows*(w1,if1) with if1.stmt#=10
+6 10
+5000
