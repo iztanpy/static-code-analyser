@@ -36,7 +36,12 @@ bool WithEvaluator::Handle(std::string& string, int integer, ReadFacade& pkb_rea
 
 UnaryConstraint WithEvaluator::Handle(AttrRef& attr, int integer, ReadFacade& pkb_reader) {
   // Since rhs is an int, lhs cannot be call.procName, read.varName, print.varName
-  return UnaryConstraint{attr.declaration.synonym, {std::to_string(integer)}};
+  UnaryConstraint results = std::get<UnaryConstraint>(attr.Evaluate(pkb_reader));
+  std::string str = std::to_string(integer);
+  if (results.values.find(str) != results.values.end()) {
+    return UnaryConstraint{attr.declaration.synonym, {str}};
+  }
+  return UnaryConstraint{attr.declaration.synonym, {}};
 }
 
 UnaryConstraint WithEvaluator::Handle(int integer, AttrRef& attr, ReadFacade& pkb_reader) {
@@ -54,7 +59,11 @@ UnaryConstraint WithEvaluator::Handle(AttrRef& attr, std::string& string, ReadFa
     }
     return UnaryConstraint{attr.declaration.synonym, results};
   } else {
-    return UnaryConstraint{attr.declaration.synonym, {string}};
+    UnaryConstraint results = std::get<UnaryConstraint>(attr.Evaluate(pkb_reader));
+    if (results.values.find(string) != results.values.end()) {
+      return UnaryConstraint{attr.declaration.synonym, {string}};
+    }
+    return UnaryConstraint{attr.declaration.synonym, {}};
   }
 }
 
