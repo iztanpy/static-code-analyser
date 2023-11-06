@@ -73,3 +73,24 @@ read r;
 Select r such that not Parent(1,2)
 1
 5000
+16 - with test case 1
+stmt s; constant c;
+Select <s, c.value> such that Parent(_, s) with s.stmt# = c.value
+none
+5000; 
+17 - with test case 2
+stmt s; constant c;
+Select <s, c.value> such that Parent(s, _) with s.stmt# = c.value
+2 2
+5000; 
+18 - with test case 3
+stmt s; constant c; procedure p1;
+Select <s, c.value> such that Parent(s, _) with p1.procName="test"
+none
+5000; 
+19 - with test case 4
+stmt s; constant c; procedure p1;
+Select <s, c.value> such that Parent(s, _) with p1.procName="dad"
+2 1,2 2,2 20,3 1,3 2,3 20
+5000; 
+
