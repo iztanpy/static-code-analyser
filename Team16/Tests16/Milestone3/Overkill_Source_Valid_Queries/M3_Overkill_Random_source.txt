@@ -56,5 +56,23 @@ procedure p3 {
 			a = a + 2; 
 		}
 		x =      ljfalsdfsdfdsfs + 2; 
+		call p4;
+		x = 2;
 	}
+}
+
+
+procedure p4 {
+  if (!((!(x != 24)) && (x == 32))) then {
+	x = x + 1; 
+	read apple; 
+	while (((abracadabra % (rose + bandung) == b) && (a * (b / (c)) == d)) || ((a == b) || (c == d))) {
+		print a; 
+		if ((!(apple == 100))&&(  (a%((rose + milk)%(3%(2+4)))) == (a%(b%(c%(3)))) )  ) then {
+			x = x + 2;
+		} else {
+			y = y + 1;
+		}
+	}
+  } 
 }
