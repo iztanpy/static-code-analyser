@@ -28,3 +28,13 @@ print pn1; variable v1;
 Select pn1.varName with v1.varName = pn1.varName such that Calls("p2","p3")
 orange, x, a
 5000
+7 - read, with varName 
+read r1; variable v1; 
+Select r1.varName with v1.varName = r1.varName such that Calls("p3","p1")
+none
+5000
+8 - While, with 
+while w1; variable v1; 
+Select <w1.stmt#, v1> such that Parent(_, w1) and Uses(w1, v1) with v1.varName="rose"
+46 rose, 3 rose
+5000
