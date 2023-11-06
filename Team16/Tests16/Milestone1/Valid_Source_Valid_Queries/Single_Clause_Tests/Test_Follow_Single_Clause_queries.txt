@@ -53,3 +53,13 @@ read r;
 Select r such that not Follows(r, _)
 none
 5000
+12 - testcase 1 with
+stmt s; read r;
+Select s such that Follows(r, _) with r.varName="bombastic" 
+none
+5000
+13 - testcase 2 with
+while w1; stmt s;
+Select w1.stmt# such that Follows(w1,s) with s.stmt#=7
+2
+5000
