@@ -18,6 +18,7 @@
 #include "qps/query_evaluator/constraint_solver/constraint_table.h"
 #include "PKB/API/ReadFacade.h"
 #include "qps/clauses/select_clause.h"
+#include "utils/algorithm_utils.h"
 
 class ClauseGroup {
  public:

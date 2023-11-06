@@ -20,4 +20,20 @@ std::unordered_set<T> intersect(const std::unordered_set<T>& set1, const std::un
 
   return result;
 }
+
+template<typename T>
+bool is_subset(const std::unordered_set<T>& subset, const std::unordered_set<T>& set) {
+  if (subset.size() > set.size()) {
+    return false;  // A subset cannot be larger than the set it's supposed to be part of.
+  }
+
+  for (const auto& elem : subset) {
+    if (set.find(elem) == set.end()) {
+      return false;  // Element of the subset is not found in the set.
+    }
+  }
+
+  return true;  //  All elements of subset were found in the set.
+}
+
 }  // namespace algorithm_utils
