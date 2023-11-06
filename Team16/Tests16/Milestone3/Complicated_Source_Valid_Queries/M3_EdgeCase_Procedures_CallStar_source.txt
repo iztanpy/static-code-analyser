@@ -1,0 +1,65 @@
+procedure ProcedureNoUses {
+    read ProcedureNoUses;
+}
+procedure ProcedureNoModifies {
+    print ProcedureNoModifies;
+}
+procedure ProcedureUsesAndModifies {
+    read ProcedureUsesAndModifies;
+    print ProcedureUsesAndModifies;
+}
+procedure ProcedureWhile {
+    while (! ((ProcedureWhile > ProcedureWhile)&&( (ProcedureWhile == ProcedureWhile) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((0))))))))))))))) {
+        a = 1;
+    }
+}
+procedure ProcedureHasIfNoElse {
+    if (x > 0) then {
+        ProcedureHasIfNoElse = ProcedureHasIfNoElse + 1;
+    }
+}
+procedure ProcedureHasIfAndElse {
+    if (x > 0) then {
+        ProcedureHasIfAndElse = ProcedureHasIfAndElse + 1;
+    } else {
+        ProcedureHasIfAndElse = ProcedureHasIfAndElse + 1;
+    }
+}
+procedure ProcedureNoNext {
+    read ProcedureNoNext;
+}
+procedure ProcedureNoFollows {
+    while (i > 0) {
+        a = a + 1;
+    }
+}
+procedure ProcedureNoParent {
+    print ProcedureNoParent;
+    read ProcedureNoParent;
+    ProcedureNoParent = ProcedureNoParent * ProcedureNoParent;
+}
+procedure ProcedureNoAssign {
+    print ProcedureNoAssign;
+    read ProcedureNoAssign;
+}
+procedure ProcedureNoModifiesWithCalls {
+    print ProcedureNoModifiesWithCalls;
+    call ProcedureNoModifies;
+}
+procedure ProcedureNoUsesWithCalls {
+    read ProcedureNoUsesWithCalls;
+    call ProcedureNoUses;
+}
+procedure ProcedureUsesWithCalls {
+    call ProcedureNoModifiesWithCalls;
+}
+procedure ProcedureModifiesWithCalls {
+    call ProcedureNoUsesWithCalls;
+}
+procedure ProcedureAffectsWithNestedCalls {
+    if (Fourteen >= Fourteen) then {
+        call ProcedureNoUsesWithCalls;
+    } else {
+        print ProcedureAffectsWithNestedCalls;
+    }
+}
