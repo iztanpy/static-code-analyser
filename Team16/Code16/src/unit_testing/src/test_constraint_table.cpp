@@ -197,13 +197,33 @@ TEST_CASE("ConstraintTable::AddExistingUnaryConstraint", "[ConstraintTable]") {
     REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
   };
 
-  SECTION("Adding a new NOT unary constraint to existing table") {
+  SECTION("Adding a existing empty unary constraint") {
+    Constraint constraint_1 = UnaryConstraint{"a", {}};
+
+    ct.Solve(constraint_1, false);
+    Table table1 = ct.GetTableForTesting();
+    REQUIRE(!ct.IsValid());
+  };
+
+  SECTION("Adding a NOT unary constraint to existing table") {
     Constraint constraint = UnaryConstraint{"a", {"2"}};
     ct.Solve(constraint, true);
     auto table = ct.GetTableForTesting();
 
     std::vector<ColName> col_names = {"a", "b", "c"};
     std::vector<std::vector<Cell>> rows = {{"1", "3", "5"}, {"8", "10", "12"}, {"9", "11", "13"}};
+    REQUIRE_TABLE_CONTENT(table, col_names, rows);
+    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+  }
+
+  SECTION("Adding empty NOT unary constraint to existing table") {
+    Constraint constraint = UnaryConstraint{"a", {}};
+    ct.Solve(constraint, true);
+    auto table = ct.GetTableForTesting();
+
+    std::vector<ColName> col_names = {"a", "b", "c"};
+    std::vector<std::vector<Cell>>
+        rows = {{"1", "3", "5"}, {"2", "4", "6"}, {"8", "10", "12"}, {"9", "11", "13"}, {"2", "8", "32"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
     REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
   }
@@ -229,7 +249,22 @@ TEST_CASE("ConstraintTable::AddExistingBinaryConstraint", "[ConstraintTable]") {
     REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
   }
 
-  SECTION("Adding a new NOT binary constraint to existing tables") {
+  SECTION("Adding a existing empty unary constraint") {
+    ConstraintTable ct = ConstraintTable::ForTestingOnly(
+        {
+            {"a", {"1", "2", "8", "9"}},
+            {"b", {"3", "4", "10", "11"}},
+            {"c", {"5", "6", "12", "13"}},
+        }
+    );
+    Constraint constraint_1 = BinaryConstraint{{"a", "b"}, {}};
+
+    ct.Solve(constraint_1, false);
+    Table table1 = ct.GetTableForTesting();
+    REQUIRE(!ct.IsValid());
+  };
+
+  SECTION("Adding a NOT binary constraint to existing tables") {
     ConstraintTable ct = ConstraintTable::ForTestingOnly(
         {
             {"a", {"1", "1", "3", "2", "9", "2"}},
@@ -246,6 +281,27 @@ TEST_CASE("ConstraintTable::AddExistingBinaryConstraint", "[ConstraintTable]") {
     std::vector<std::vector<Cell>> rows = {
         {"3", "5", "4", "3"},
         {"9", "4", "6", "9"},
+    };
+    REQUIRE_TABLE_CONTENT(table, col_names, rows);
+    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+  }
+
+  SECTION("Adding a NOT binary constraint to existing tables") {
+    ConstraintTable ct = ConstraintTable::ForTestingOnly(
+        {
+            {"a", {"1", "1"}},
+            {"b", {"3", "5"}},
+            {"c", {"9", "2"}},
+        });
+
+    Constraint constraint = BinaryConstraint{{"a", "b"}, {}};
+    ct.Solve(constraint, true);
+    auto table = ct.GetTableForTesting();
+
+    std::vector<ColName> col_names = {"a", "b", "c"};
+    std::vector<std::vector<Cell>> rows = {
+        {"1", "3", "9"},
+        {"1", "5", "2"},
     };
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
     REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
