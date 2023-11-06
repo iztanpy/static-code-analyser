@@ -42,7 +42,12 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
       if (is_boolean_select) {
         continue;
       } else {
-        aggregate_table.JoinTable(table);
+        std::unordered_set<ColName> selects =
+            algorithm_utils::intersect(table.AvailableColName(), {query.selects.begin(), query.selects.end()});
+        if (!selects.empty()) {
+          table.Filter(query.selects);
+          aggregate_table.JoinTable(table);
+        }
       }
     }
   }
