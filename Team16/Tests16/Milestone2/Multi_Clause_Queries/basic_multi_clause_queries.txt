@@ -23,3 +23,18 @@ assign a; variable v;
 Select <a,v> pattern a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
 6 g
 5000
+7 - negated pattern clause tc4
+assign a; variable v; stmt s;constant c;
+Select a pattern not a(v,_"h"_) and a(v,_"4"_) such that Modifies(a,v)
+32,33
+5000
+8 - negated and clause tc4
+assign a; variable v; stmt s;constant c;
+Select a pattern a(v,_"s"_) and not a(v,_"4"_) such that Modifies(a,v)
+15
+5000
+9 - negated such that clause tc4
+assign a; variable v; stmt s;constant c;
+Select a pattern a(v,_"h"_) and a(v,_"4"_) such that not Modifies(a,v)
+none
+5000

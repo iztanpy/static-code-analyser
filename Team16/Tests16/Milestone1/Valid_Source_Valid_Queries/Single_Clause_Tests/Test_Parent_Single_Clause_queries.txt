@@ -63,3 +63,13 @@ if i;
 Select i such that Parent(_, i)
 3
 5000
+14 - not testcase 13
+if i;
+Select i such that not Parent(_, i)
+none
+5000
+15 - not testcase 8
+read r;
+Select r such that not Parent(1,2)
+1
+5000
