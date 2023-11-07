@@ -42,7 +42,10 @@ TEST_CASE("Test NextStar Store if") {
       })";
     sourceProcessor.processSource(simpleProgram4);
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    auto map = sourceProcessor.getNextStatementMap();
+    nextStore.storeNext(map);
     nextStore.storeCfgLegend(cfgLegend);
+    nextStore.storeCfg(sourceProcessor.getCfgNodesMap());
     // same node
     REQUIRE(nextStore.isNextStar(1, 2));
     // different node
@@ -72,7 +75,9 @@ TEST_CASE("Test NextStar Store while") {
       })";
     sourceProcessor.processSource(simpleProgram4);
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    nextStore.storeNext(sourceProcessor.getNextStatementMap());
     nextStore.storeCfgLegend(cfgLegend);
+    nextStore.storeCfg(sourceProcessor.getCfgNodesMap());
     // same node
     REQUIRE(nextStore.isNextStar(1, 2));
     // different node
@@ -111,6 +116,8 @@ TEST_CASE("If else in a while loop") {
       })";
     sourceProcessor.processSource(simpleProgram4);
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+    auto map = sourceProcessor.getNextStatementMap();
+    nextStore.storeNext(map);
     nextStore.storeCfgLegend(cfgLegend);
     nextStore.storeCfg(sourceProcessor.getCfgNodesMap());
     // same node
@@ -140,8 +147,9 @@ TEST_CASE("While in a if else") {
       })";
     sourceProcessor.processSource(simpleProgram4);
     std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
-    auto map = sourceProcessor.getNextStatementMap();
+    nextStore.storeNext(sourceProcessor.getNextStatementMap());
     nextStore.storeCfgLegend(cfgLegend);
+    nextStore.storeCfg(sourceProcessor.getCfgNodesMap());
     // same node
     REQUIRE(nextStore.isNextStar(2, 3));
     // node is not reachable

@@ -106,7 +106,6 @@ void NextStore::initialiseNextStar() {
             for (auto nextStatement: nextStatements) {
                 // insert the visited list into the hashmap
                 bool changed = false;
-
                 for (auto num: visited) {
                     if (NextStarMap[num].find(nextStatement) == NextStarMap[num].end()) {
                         NextStarMap[num].insert(nextStatement);
