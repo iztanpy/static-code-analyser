@@ -65,6 +65,8 @@ class NextStore {
 
     std::unordered_set<statementNumber> getNextReverse(statementNumber num);
 
+    void initialiseNextStar();
+
 
     void clearCache();
 };

@@ -31,8 +31,8 @@ void parse(SourceProcessor& sp, std::string filename) {
 
 TEST_CASE("Test Local") {
   std::string filename = "../../../tests/Sample_source.txt";
-  std::string query = "print coffee;\n"
-                      "Select coffee such that Next*(19,17) and Next*(16,22)";
+  std::string query = "read r;\n"
+                      "Select r such that Next*(3,7)";
 
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   WriteFacade writeFacade = WriteFacade(*pkb_ptr);

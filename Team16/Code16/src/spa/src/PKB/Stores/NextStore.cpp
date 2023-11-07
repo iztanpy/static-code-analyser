@@ -14,7 +14,6 @@ NextStore::NextStore() {
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
     std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
     auto NextStarMap = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
-    auto NextStarMapReverse = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
 }
 
 void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
@@ -80,121 +79,56 @@ bool NextStore::isNextStar(statementNumber num, Wildcard) {
 }
 
 bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
-    // cache
+    if (NextStarMap.empty()) {
+        initialiseNextStar();
+    }
     // for each element in cfgLegend
     if (NextStarMap.find(num1) != NextStarMap.end()) {
         if (NextStarMap[num1].find(num2) != NextStarMap[num1].end()) {
             return true;
         }
     }
-    std::shared_ptr<CfgNode> startNode = cfgLegend[num1];
-    std::shared_ptr<CfgNode> endNode = cfgLegend[num2];
-
-    if (startNode == nullptr || endNode == nullptr) {
-        return false;
-    }
-
-    for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
-        auto visitedNums = std::unordered_set<statementNumber>();
-        auto currentNums = it->second->getStmtNumberSet();
-        auto num = *currentNums.rbegin();
-        auto reversedCurrentNums = std::set<int>(currentNums.rbegin(), currentNums.rend());
-        for (std::set<int>::reverse_iterator i = currentNums.rbegin(); i != currentNums.rend(); ++i) {
-            NextStarMap[*i] = std::unordered_set<statementNumber>();
-            // add visitedNums to NextStarMap[i]
-            for (auto j: visitedNums) {
-                NextStarMap[*i].insert(j);
-            }
-            visitedNums.insert(*i);
-        }
-        // 'it' is an iterator that points to a key-value pair
-        auto node = it->second;
-        // populate the whole NextStarMap
-        auto fakeEndPoint = std::make_shared<CfgNode>();
-        isNodeFollowing(node,
-                        fakeEndPoint,
-                        std::unordered_set<std::shared_ptr<CfgNode>>(),
-                                std::unordered_set<statementNumber>());
-    }
-
-    if (NextStarMap.find(num1) != NextStarMap.end()) {
-        if (NextStarMap[num1].find(num2) != NextStarMap[num1].end()) {
-            return true;
-        }
-    }
-    // check the cache to see if the statement numbers are inside
-//    auto visited = std::unordered_set<std::shared_ptr<CfgNode>>();
-//    auto visitedNums = std::unordered_set<statementNumber>();
-//    if (isNodeFollowing(startNode, endNode, visited, visitedNums)) {
-//        return true;
-//    }
     return false;
 }
 
-bool NextStore::isNodeFollowing(std::shared_ptr<CfgNode> startNode,
-                                std::shared_ptr<CfgNode> endNode,
-                                std::unordered_set<std::shared_ptr<CfgNode> > visited,
-                                std::unordered_set<statementNumber> visitedNums) {
-    // start cache
+void NextStore::initialiseNextStar() {
+    for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
+        auto firstNum = *it->second->getStmtNumberSet().begin(); // first number of the first node
+        std::stack<std::pair<statementNumber,std::unordered_set<statementNumber>>> stack;
+        std::unordered_set<statementNumber> initial;
+        initial.insert(firstNum);
+        stack.push(std::make_pair(firstNum,initial));
+        while (!stack.empty()) {
+            statementNumber currentStatement = stack.top().first;
+            auto visited = stack.top().second;
+            stack.pop();
+            auto nextStatements = getNext(currentStatement);
+            for (auto nextStatement: nextStatements) {
+                // insert the visited list into the hashmap
+                bool changed = false;
 
-    // traverse the entire cfgLegend and populate the NextStarMap
-
-    // if the startnode is the endnode, and we have visited the startnode before, this is a while loop
-    if (startNode == endNode && visited.count(startNode) != 0) {
-        return true;
-    }
-    // telse if the endnode is not the startnode, but we have traversed the whole tree, hen we return false
-    if (visited.count(startNode) != 0) {
-        return false;
-    }
-    // else we have not visited the startnode before, and we add it to the visited list
-    visited.insert(startNode);
-
-    // CACHING
-
-    // there exists a path from all the visited nodes to the statement number list that we specified.
-    std::set<statementNumber> nodeStatementNumberList = startNode->getStmtNumberSet();
-    for (auto num : visitedNums) {
-        for (auto nodeNum : nodeStatementNumberList) {
-            NextStarMap[num].insert(nodeNum);
-        }
-    }
-    // if there are more than 1 line number in a certain set, we need to add those in too
-    if (nodeStatementNumberList.size() > 1) {
-        auto localVisted = std::unordered_set<statementNumber>();
-        for (std::set<int>::reverse_iterator i =
-                nodeStatementNumberList.rbegin(); i != nodeStatementNumberList.rend(); ++i) {
-            // add visitedNums to NextStarMap[i]
-            for (auto j: localVisted) {
-                NextStarMap[*i].insert(j);
+                for (auto num: visited) {
+                    if (NextStarMap[num].find(nextStatement) == NextStarMap[num].end()) {
+                        NextStarMap[num].insert(nextStatement);
+                        changed = true;
+                    }
+                }
+                if (!changed) {
+                    continue;
+                }
+                std::unordered_set<int> newVisited(visited);
+                newVisited.insert(nextStatement);
+                stack.push(std::make_pair(nextStatement,newVisited));
             }
-            visitedNums.insert(*i);
         }
     }
-
-    // add the statementNumberList to the visited Nums
-    for (auto num : nodeStatementNumberList) {
-        visitedNums.insert(num);
-    }
-
-    std::set<std::shared_ptr<CfgNode>> childrens = startNode->getChildren();
-    if (childrens.count(endNode) > 0) {
-        return true;
-    }
-    // we want to keep track of the nodes that we have visited
-    for (auto child : childrens) {
-        if (isNodeFollowing(child, endNode, visited, visitedNums)) {
-            return true;
-        }
-    }
-    return false;
 }
 
 std::unordered_set<statementNumber> NextStore::getNext(statementNumber num) {
     if (NextMap.find(num) != NextMap.end()) {
         return NextMap[num];
     }
-    return std::unordered_set<statementNumber>();
+    return {};
 }
 
 std::unordered_set<statementNumber> NextStore::getNextReverse(statementNumber num) {
@@ -206,5 +140,4 @@ std::unordered_set<statementNumber> NextStore::getNextReverse(statementNumber nu
 
 void NextStore::clearCache() {
     NextStarMap.clear();
-    NextStarMapReverse.clear();
 }
