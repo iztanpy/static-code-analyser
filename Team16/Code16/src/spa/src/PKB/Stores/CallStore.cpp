@@ -25,12 +25,14 @@ void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<proc
 
     for (const auto& [node, children] : callTable) {
         std::unordered_set<procedure> visited;
-        std::unordered_set<procedure> stack;
-        stack.insert(children.begin(), children.end());
+        std::stack<procedure> stack;
+        for (procedure child : children) {
+            stack.push(child);
+        }
 
         while (!stack.empty()) {
-            procedure current = *stack.begin();
-            stack.erase(stack.begin());
+            procedure current = stack.top();
+            stack.pop();
 
             if (visited.find(current) == visited.end()) {
                 if (node == current) {
@@ -40,7 +42,7 @@ void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<proc
                 visited.insert(current);
                 for (procedure child : callTable[current]) {
                     if (visited.find(child) == visited.end()) {
-                        stack.insert(child);
+                        stack.push(child);
                     }
                 }
             }
