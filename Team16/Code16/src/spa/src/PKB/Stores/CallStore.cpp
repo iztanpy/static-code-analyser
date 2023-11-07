@@ -17,51 +17,37 @@ CallStore::CallStore() {
 void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<procedure>> callTable) {
     this->callTable = callTable;
 
-    for (auto it = callTable.begin(); it != callTable.end(); ++it) {
-        procedure caller = it->first;
-        std::unordered_set<procedure> callees = it->second;
-
-        for (auto it2 = callees.begin(); it2 != callees.end(); ++it2) {
-            procedure callee = *it2;
-            this->callTableReverse[callee].insert(caller);
+    for (auto const& x : callTable) {
+        for (auto const& y : x.second) {
+            this->callTableReverse[y].insert(x.first);
         }
     }
 
-    for (auto it = callTable.begin(); it != callTable.end(); ++it) {
-        procedure caller = it->first;
-        std::unordered_set<procedure> callees = it->second;
+    for (const auto& [node, children] : callTable) {
+        std::unordered_set<procedure> visited;
+        std::unordered_set<procedure> stack;
+        visited.insert(node);
+        stack.insert(children.begin(), children.end());
 
-        for (auto it2 = callees.begin(); it2 != callees.end(); ++it2) {
-            procedure callee = *it2;
-            this->callTableStar[caller].insert(callee);
-            this->callTableStarReverse[callee].insert(caller);
-        }
-    }
+        while (!stack.empty()) {
+            procedure current = *stack.begin();
+            stack.erase(stack.begin());
 
-    std::stack<procedure> callStack;
-    for (auto it = callTable.begin(); it != callTable.end(); ++it) {
-        procedure caller = it->first;
-        std::unordered_set<procedure> callees = it->second;
-
-        for (auto it2 = callees.begin(); it2 != callees.end(); ++it2) {
-            procedure callee = *it2;
-            callStack.push(callee);
-        }
-
-        while (!callStack.empty()) {
-            procedure callee = callStack.top();
-            callStack.pop();
-
-            std::unordered_set<procedure> calleeCallees = callTable[callee];
-            for (auto it3 = calleeCallees.begin(); it3 != calleeCallees.end(); ++it3) {
-                procedure calleeCallee = *it3;
-                if (caller == calleeCallee) {
-                    throw InvalidSemanticError();
+            if (visited.find(current) == visited.end()) {
+                callTableStar[node].insert(current);
+                visited.insert(current);
+                for (procedure child : callTable[current]) {
+                    if (visited.find(child) == visited.end()) {
+                        stack.insert(child);
+                    }
                 }
-                this->callTableStar[caller].insert(calleeCallee);
-                this->callTableStarReverse[calleeCallee].insert(caller);
-                callStack.push(calleeCallee);
             }
+        }
+    }
+
+    for (const auto& [node, children] : callTableStar) {
+        for (procedure child : children) {
+            callTableStarReverse[child].insert(node);
         }
     }
 }
