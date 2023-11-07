@@ -26,7 +26,6 @@ void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<proc
     for (const auto& [node, children] : callTable) {
         std::unordered_set<procedure> visited;
         std::unordered_set<procedure> stack;
-        visited.insert(node);
         stack.insert(children.begin(), children.end());
 
         while (!stack.empty()) {
@@ -34,6 +33,9 @@ void CallStore::storeCalls(std::unordered_map<procedure, std::unordered_set<proc
             stack.erase(stack.begin());
 
             if (visited.find(current) == visited.end()) {
+                if (node == current) {
+                    throw InvalidSemanticError();
+                }
                 callTableStar[node].insert(current);
                 visited.insert(current);
                 for (procedure child : callTable[current]) {
