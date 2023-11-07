@@ -11,7 +11,8 @@
 #include <unordered_map>
 #include <set>
 #include <memory>
-
+#include <utility>
+#include <stack>
 
 #include "SP/sp_cfg/Cfg.h"
 #include "SP/sp_cfg/CfgNode.h"

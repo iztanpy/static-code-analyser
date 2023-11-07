@@ -93,20 +93,20 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
 
 void NextStore::initialiseNextStar() {
     for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
-        auto firstNum = *it->second->getStmtNumberSet().begin(); // first number of the first node
-        std::stack<std::pair<statementNumber,std::unordered_set<statementNumber>>> stack;
+        auto firstNum = *it->second->getStmtNumberSet().begin();
+        std::stack<std::pair<statementNumber, std::unordered_set<statementNumber>>> stack;
         std::unordered_set<statementNumber> initial;
         initial.insert(firstNum);
-        stack.push(std::make_pair(firstNum,initial));
+        stack.push(std::make_pair(firstNum, initial));
         while (!stack.empty()) {
             statementNumber currentStatement = stack.top().first;
             auto visited = stack.top().second;
             stack.pop();
             auto nextStatements = getNext(currentStatement);
-            for (auto nextStatement: nextStatements) {
+            for (auto nextStatement : nextStatements) {
                 // insert the visited list into the hashmap
                 bool changed = false;
-                for (auto num: visited) {
+                for (auto num : visited) {
                     if (NextStarMap[num].find(nextStatement) == NextStarMap[num].end()) {
                         NextStarMap[num].insert(nextStatement);
                         changed = true;
@@ -117,7 +117,7 @@ void NextStore::initialiseNextStar() {
                 }
                 std::unordered_set<int> newVisited(visited);
                 newVisited.insert(nextStatement);
-                stack.push(std::make_pair(nextStatement,newVisited));
+                stack.push(std::make_pair(nextStatement, newVisited));
             }
         }
     }
