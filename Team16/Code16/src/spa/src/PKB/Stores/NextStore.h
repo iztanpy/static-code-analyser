@@ -1,7 +1,6 @@
 //
 // Created by Isaac Tan on 18/10/23.
 //
-
 #pragma once
 
 #include <string>
@@ -11,61 +10,62 @@
 #include <unordered_map>
 #include <set>
 #include <memory>
-
+#include <utility>
+#include <stack>
+#include <queue>
 
 #include "SP/sp_cfg/Cfg.h"
 #include "SP/sp_cfg/CfgNode.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
-
-
+#include "utils/hash_utils.h"
 
 class NextStore {
  private:
-    typedef std::string variable;
-    typedef int statementNumber;
-    Cfg cfg;
-    std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
-    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextStarMap;
-    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextStarMapReverse;
-    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
-    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
+  typedef std::string variable;
+  typedef int statementNumber;
+  std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots;
+  std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
+  std::unordered_map<statementNumber, std::unordered_set<std::shared_ptr<CfgNode>>> NextStarMap;
+  std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
+  std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
 
  public:
-    NextStore();
+  NextStore();
 
-    void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
+  void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
 
-    void storeCfg(Cfg cfg);
+  void storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots);
 
-    void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
+  void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
 
-    bool isNext(Wildcard, Wildcard);
+  bool isNext(Wildcard, Wildcard);
 
-    bool isNext(Wildcard, statementNumber num);
+  bool isNext(Wildcard, statementNumber num);
 
-    bool isNext(statementNumber num, Wildcard);
+  bool isNext(statementNumber num, Wildcard);
 
-    bool isNext(statementNumber num1, statementNumber num2);
+  bool isNext(statementNumber num1, statementNumber num2);
 
-    bool isNextStar(Wildcard, Wildcard);
+  bool isNextStar(Wildcard, Wildcard);
 
-    bool isNextStar(Wildcard, statementNumber num);
+  bool isNextStar(Wildcard, statementNumber num);
 
-    bool isNextStar(statementNumber num, Wildcard);
+  bool isNextStar(statementNumber num, Wildcard);
 
-    bool isNextStar(statementNumber num1, statementNumber num2);
+  bool isNextStar(statementNumber num1, statementNumber num2);
 
-    bool isNodeFollowing(std::shared_ptr<CfgNode> startNode,
-                         std::shared_ptr<CfgNode> endNode,
-                         std::unordered_set<std::shared_ptr<CfgNode>> visitedNodes,
-                         std::unordered_set<statementNumber> visitedNums);
+  bool isNodeFollowing(std::shared_ptr<CfgNode> startNode,
+                       std::shared_ptr<CfgNode> endNode,
+                       std::unordered_set<std::shared_ptr<CfgNode>> visitedNodes,
+                       std::unordered_set<statementNumber> visitedNums);
 
-    std::unordered_set<statementNumber> getNext(statementNumber num);
+  std::unordered_set<statementNumber> getNext(statementNumber num);
 
-    std::unordered_set<statementNumber> getNextReverse(statementNumber num);
+  std::unordered_set<statementNumber> getNextReverse(statementNumber num);
 
+  void initialiseNextStar();
 
-    void clearCache();
+  void clearCache();
 };
 

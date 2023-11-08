@@ -115,7 +115,7 @@ void SourceProcessor::populatePKB() {
     // Store Next
     writeFacade->storeNext(getNextStatementMap());
     //   Store CFG root nodes
-    //  writeFacade->storeCfg(getCfgNodesMap());
+    writeFacade->storeCfg(getCfgNodesMap());
     //  Store CFG legend
     writeFacade->storeCfgLegend(getStmtNumberToCfgNodeHashmap());
 }

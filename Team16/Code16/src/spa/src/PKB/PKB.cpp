@@ -834,8 +834,8 @@ void PKB::storeNext(std::unordered_map<statementNumber, std::unordered_set<state
     nextStore->storeNext(NextMap);
 }
 
-void PKB::storeCfg(Cfg cfg) {
-    nextStore->storeCfg(cfg);
+void PKB::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
+    nextStore->storeCfg(cfgRoots);
 }
 
 void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {

@@ -1329,7 +1329,7 @@ class PKB {
     *
     * @param cfg The Control Flow Graph to be stored.
     */
-    void storeCfg(Cfg cfg);
+    void storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots);
 
     /**
     * @brief Stores a mapping of statement numbers to corresponding CFG nodes in a CFG legend.
