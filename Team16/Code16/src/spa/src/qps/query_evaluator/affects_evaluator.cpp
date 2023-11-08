@@ -1,5 +1,11 @@
 #include "qps/query_evaluator/affects_evaluator.h"
 
+namespace {
+bool IsDeclAffectsStmt(Declaration& declaration) {
+  return declaration.design_entity == DesignEntity::ASSIGN || declaration.design_entity == DesignEntity::STMT;
+}
+}  // anonymous namespace
+
 bool AffectsEvaluator::Handle(int lhs, int rhs, ReadFacade& pkb_reader) {
   return pkb_reader.isAffects(lhs, rhs);
 }
@@ -17,31 +23,39 @@ bool AffectsEvaluator::Handle(int lhs, Wildcard& rhs, ReadFacade& pkb_reader) {
 }
 
 UnaryConstraint AffectsEvaluator::Handle(Declaration& lhs, Wildcard& rhs, ReadFacade& pkb_reader) {
-  StmtEntity stmt_entity = ConvertToStmtEntity(lhs.design_entity);
-  std::unordered_set<statementNumber> results = pkb_reader.Affects(stmt_entity, rhs);
+  if (!IsDeclAffectsStmt(lhs)) {
+    return {lhs.synonym, {}};
+  }
+  std::unordered_set<statementNumber> results = pkb_reader.Affects(StmtEntity::kAssign, rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint AffectsEvaluator::Handle(int lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  StmtEntity stmt_entity = ConvertToStmtEntity(rhs.design_entity);
-  std::unordered_set<statementNumber> results = pkb_reader.Affects(lhs, stmt_entity);
+  if (!IsDeclAffectsStmt(rhs)) {
+    return {rhs.synonym, {}};
+  }
+  std::unordered_set<statementNumber> results = pkb_reader.Affects(lhs, StmtEntity::kAssign);
   return {rhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint AffectsEvaluator::Handle(Declaration& lhs, int rhs, ReadFacade& pkb_reader) {
-  StmtEntity stmt_entity = ConvertToStmtEntity(lhs.design_entity);
-  std::unordered_set<statementNumber> results = pkb_reader.Affects(stmt_entity, rhs);
+  if (!IsDeclAffectsStmt(lhs)) {
+    return {lhs.synonym, {}};
+  }
+  std::unordered_set<statementNumber> results = pkb_reader.Affects(StmtEntity::kAssign, rhs);
   return {lhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 UnaryConstraint AffectsEvaluator::Handle(Wildcard& lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  StmtEntity stmt_entity = ConvertToStmtEntity(rhs.design_entity);
-  std::unordered_set<statementNumber> results = pkb_reader.Affects(lhs, stmt_entity);
+  if (!IsDeclAffectsStmt(rhs)) {
+    return {rhs.synonym, {}};
+  }
+  std::unordered_set<statementNumber> results = pkb_reader.Affects(lhs, StmtEntity::kAssign);
   return {rhs.synonym, EvaluatorUtil::ToStringSet(results)};
 }
 
 Constraint AffectsEvaluator::Handle(Declaration& lhs, Declaration& rhs, ReadFacade& pkb_reader) {
-  if (lhs.design_entity != DesignEntity::ASSIGN || rhs.design_entity != DesignEntity::ASSIGN) {
+  if (!IsDeclAffectsStmt(lhs) || !IsDeclAffectsStmt(rhs)) {
     if (lhs == rhs) {
       return UnaryConstraint{lhs.synonym, {}};
     } else {
