@@ -3,6 +3,7 @@
 #include "SP/sp_cfg/CfgNode.h"
 #include <queue>
 #include <unordered_set>
+#include "utils/hash_utils.h"
 //
 // Created by Isaac Tan on 18/10/23.
 //
@@ -15,7 +16,8 @@ NextStore::NextStore() {
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
     std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
-    auto NextStarMap = std::unordered_map<statementNumber, std::unordered_set<statementNumber>>();
+    auto NextStarMap = std::unordered_map<statementNumber,
+    std::unordered_set<std::shared_ptr<CfgNode>>>();
 }
 
 void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
@@ -84,9 +86,25 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
     if (NextStarMap.empty()) {
         initialiseNextStar();
     }
+
+    // if they are in the same node and num1 is before num 2 this is true
+    if (cfgLegend[num1] == cfgLegend[num2] && cfgLegend[num1] != nullptr) {
+        auto stmtNums = cfgLegend[num1]->getStmtNumberSet();
+        auto it = stmtNums.find(num1);
+        auto it2 = stmtNums.find(num2);
+        if (*it < *it2) {
+            return true;
+        } else {
+            // check if node1 can be reached from itself
+            if (NextStarMap[num1].find(cfgLegend[num1]) != NextStarMap[num1].end()) {
+                return true;
+            }
+            return false;
+        }
+    }
     // for each element in cfgLegend
     if (NextStarMap.find(num1) != NextStarMap.end()) {
-        if (NextStarMap[num1].find(num2) != NextStarMap[num1].end()) {
+        if (NextStarMap[num1].find(cfgLegend[num2]) != NextStarMap[num1].end()) {
             return true;
         }
     }
@@ -101,35 +119,34 @@ struct CustomComparator {
 
 void NextStore::initialiseNextStar() {
     for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
-        auto firstNum = *it->second->getStmtNumberSet().begin();
-        std::priority_queue<std::pair<int, std::unordered_set<int>>,
-                std::vector<std::pair<int, std::unordered_set<int>>>,
-                CustomComparator> stack;
-        std::unordered_set<statementNumber> initial;
-        initial.insert(firstNum);
-        stack.push(std::make_pair(firstNum, initial));
-        int counter = 0;
+        auto firstNode = it->second;
+        auto firstNum = firstNode->getStmtNumberSet();
+        std::stack<
+                std::pair<std::shared_ptr<CfgNode>, std::set<int>>
+                > stack;
+        stack.push(std::make_pair(firstNode, firstNum));
         while (!stack.empty()) {
-            statementNumber currentStatement = stack.top().first;
+            auto currentNode = stack.top().first;
             auto visited = stack.top().second;
             stack.pop();
-            auto nextStatements = getNext(currentStatement);
-            for (auto nextStatement : nextStatements) {
+            auto nextNodes = currentNode->getChildren();
+            for (auto node : nextNodes) {
                 // insert the visited list into the hashmap
                 bool changed = false;
                 for (auto num : visited) {
-                    if (NextStarMap[num].find(nextStatement) == NextStarMap[num].end()) {
-                        NextStarMap[num].insert(nextStatement);
+                    auto pink = NextStarMap[num];
+                    if (NextStarMap[num].find(node) == NextStarMap[num].end()) {
+                        NextStarMap[num].insert(node);
                         changed = true;
                     }
                 }
                 if (changed) {
-                    std::unordered_set<int> newVisited(visited);
-                    newVisited.insert(nextStatement);
-                    stack.push(std::make_pair(nextStatement, newVisited));
-                    counter = counter + 1;
+                    std::set<int> newVisited(visited);
+                    for (auto num : node->getStmtNumberSet()) {
+                        newVisited.insert(num);
+                    }
+                    stack.push(std::make_pair(node, newVisited));
                 }
-
             }
         }
     }

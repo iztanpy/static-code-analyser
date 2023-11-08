@@ -27,8 +27,7 @@ class NextStore {
     typedef int statementNumber;
     std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots;
     std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
-    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextStarMap;
-    std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextStarMapReverse;
+    std::unordered_map<statementNumber, std::unordered_set<std::shared_ptr<CfgNode>>> NextStarMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
     std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
 

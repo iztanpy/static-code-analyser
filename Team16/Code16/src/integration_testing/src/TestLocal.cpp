@@ -29,23 +29,23 @@ void parse(SourceProcessor& sp, std::string filename) {
 }
 
 
-// TEST_CASE("Test Local") {
-//   std::string filename = "../../../tests/Sample_source.txt";
-//   std::string query = "read r;\n"
-//                       "Select r such that Next*(3,7)";
+ TEST_CASE("Test Local") {
+   std::string filename = "../../../tests/Sample_source.txt";
+   std::string query = "stmt s1;\n"
+                       "Select BOOLEAN such that Next*(1,113)\n";
 
-//   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//   WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-//   SourceProcessor sourceProcessor(&writeFacade);
+   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
+   WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+   SourceProcessor sourceProcessor(&writeFacade);
 
-//   parse(sourceProcessor, filename);
+   parse(sourceProcessor, filename);
 
-//   ReadFacade readFacade = ReadFacade(*pkb_ptr);
-//   QPS qps(readFacade);
+   ReadFacade readFacade = ReadFacade(*pkb_ptr);
+   QPS qps(readFacade);
 
-//   std::unordered_set<std::string> results = qps.Evaluate(query);
+   std::unordered_set<std::string> results = qps.Evaluate(query);
 
 
 
-//   REQUIRE(results == std::unordered_set<std::string>({"24"}));
-// }
+   REQUIRE(results == std::unordered_set<std::string>({"24"}));
+ }
