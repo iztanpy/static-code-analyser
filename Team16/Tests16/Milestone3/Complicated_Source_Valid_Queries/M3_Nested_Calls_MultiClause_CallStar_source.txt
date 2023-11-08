@@ -1,0 +1,140 @@
+procedure One {
+    call Two;
+    print print;
+}
+procedure Two {
+    call Three;
+    print print;
+}
+procedure Three {
+    call Four;
+    print print;
+}
+procedure Four {
+    while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((0))))))))))))))) {
+        a = 1;
+        call Five;
+    }
+    if ((x % 2) + y == a + b) then {
+        else = else + then;
+    } else {
+        print print;
+    }
+
+}
+procedure Five {
+    call Six;
+    read read;
+}
+procedure Six {
+    call Seven;
+    read read;
+}
+procedure Seven {
+    call Eight;
+    read read;
+}
+procedure Eight {
+    call Nine;
+    read read;
+
+}
+procedure Nine {
+    while (! ((x > temp)&&( (x == temp) || ((x != temp) && ((x < temp) || ((x <= temp) && (x>= (0+(0-(0*(0/(0%(((0))))))))))))))) {
+        a = 1;
+        call noCallStatement;
+    }
+}
+procedure Ten {
+    while (i > 0) {
+        call Eleven;
+    }
+    call Eleven;
+}
+procedure Eleven {
+    while (!(Eleven == Eleven)) {
+        call Twelve;
+    }
+}
+procedure Twelve {
+    while (!(Twelve != Twelve)) {
+        call noCallStatement;
+    }
+    call noCallStatement;
+}
+procedure Thirteen {
+    if (Thirteen >= Fourteen) then {
+        Thirteen = Thirteen;
+    } else {
+        read Thirteen;
+    }
+    call Fourteen;
+}
+procedure Fourteen {
+    if (Fourteen >= Fourteen) then {
+        Fourteen = Fourteen;
+    } else {
+        print Fourteen;
+    }
+    call Fifteen;
+}
+procedure Fifteen {
+    if (Fourteen >= Fourteen) then {
+        Fifteen = Fifteen + (1 * 1 / 1);
+    } else {
+        print Fourteen;
+        call noCallStatement;
+    }
+}
+procedure Sixteen {
+    if (Sixteen >= Fourteen) then {
+        Sixteen = Fifteen + (1 * 1 / 1);
+        call Seventeen;
+    }
+}
+procedure Seventeen {
+    call Eighteen;
+}
+procedure Eighteen {
+    call noCallStatement;
+}
+procedure Nineteen {
+    call Twenty;
+}
+procedure Twenty {
+    call noCallStatement;
+}
+procedure TwentyOne {
+    call TwentyTwo;
+}
+procedure TwentyTwo {
+    call noCallStatement;
+}
+procedure noOneCallsThisProcedure {
+    noOneCallsThisProcedure = noOneCallsThisProcedure + 1;
+    if (i > 0) then {
+        call One;
+        if ( i > 0 ) then {
+            call Sixteen;
+        }
+        call Fourteen;
+    } else {
+        call Eighteen;
+        call Nineteen;
+        call TwentyTwo;
+    }
+}
+procedure callsEveryPossibleProcedure {
+    call One;
+    call Ten;
+    call Sixteen;
+    call Fourteen;
+    call Eighteen;
+    call Nineteen;
+    call TwentyTwo;
+}
+procedure noCallStatement {
+    read read;
+    print print;
+    TwentyTwo = TwentyTwo + 1;
+}

@@ -1,0 +1,80 @@
+2 - Calls*(_,IDENT) is true
+procedure p;procedure q;
+Select <p.  procName,q> such that Calls*(_,"One") and Calls*(_, "Ten") and Calls*(_, "Fourteen") and Calls*(_, "Sixteen") and Calls*(_, "Eighteen") and Calls*(_, "Nineteen") and Calls*(_, "TwentyTwo") and Calls*(_, "noCallStatement") with q.procName="noCallStatement" such that not Calls*(_, p)
+noOneCallsThisProcedure noCallStatement, callsEveryPossibleProcedure noCallStatement, Thirteen noCallStatement, TwentyOne noCallStatement
+5000
+3 - Calls*(_,IDENT) is false
+procedure p;procedure q;
+Select <p.procName,q> such that Calls*(_,"One") and Calls*(_, "Ten") and Calls*(_, "Fourteen") and Calls*(_, "Sixteen") and Calls*(_, "Eighteen") and Calls*(_, "Nineteen") and Calls*(_, "TwentyTwo") and Calls*(_, "noCallStatement") with q.procName="noCallStatement" such that not Calls*(_, p) and not Calls*(_, "One")
+none
+5000
+4 - Calls*(IDENT,_) is true
+procedure p;
+Select BOOLEAN such that Calls*(_,"noCallStatement") and Calls*(_, "TwentyTwo") and Calls*(_, "Nineteen") and Calls*(_, "Twenty") and Calls*(_, "Sixteen") and Calls*(_, "Seventeen") and Calls*(_, "Eighteen") and Calls*(_, "Fourteen") and Calls*(_, "Fifteen") and Calls*(_, "Ten") and Calls*(_, "Eleven") and Calls*(_, "Twelve") and Calls*(_, "One") and Calls*(_, "Two") and Calls*(_, "Three") and Calls*(_, "Four") and Calls*(_, "Five") and Calls*(_, "Six") and Calls*(_, "Seven") and Calls*(_, "Eight") and Calls*(_, "Nine")
+TRUE
+5000
+5 - Calls*(IDENT,_) is false
+procedure p;
+Select BOOLEAN such that Calls*(_,"noCallStatement") and Calls*(_, "TwentyTwo") and Calls*(_, "Nineteen") and Calls*(_, "Twenty") and Calls*(_, "Sixteen") and Calls*(_, "Seventeen") and Calls*(_, "Eighteen") and Calls*(_, "Fourteen") and Calls*(_, "Fifteen") and Calls*(_, "Ten") and Calls*(_, "Eleven") and Calls*(_, "Twelve") and Calls*(_, "Two") and Calls*(_, "Three") and Calls*(_, "Four") and Calls*(_, "Five") and Calls*(_, "Six") and Calls*(_, "Seven") and Calls*(_, "Eight") and Calls*(_, "Nine") and Calls*(_, "Thirteen")
+FALSE
+5000
+6 - Calls*(IDENT,IDENT) is true
+procedure p;
+Select p such that Calls*("One","noCallStatement") and Calls*("Two", "noCallStatement") and Calls*("noOneCallsThisProcedure", "noCallStatement") and not Calls*("One", "noOneCallsThisProcedure") and not Calls*("callsEveryPossibleProcedure", "Thirteen") and not Calls*("noCallStatement", "Eighteen") with p.procName="One"
+One
+5000
+7 - Calls*(IDENT,IDENT) is false
+procedure p;
+Select p such that Calls*("One","Two") and Calls*("Two", "Three") and Calls*("Three", "Four") and not Calls*("One", "Four") and not Calls*("callsEveryPossibleProcedure", "Thirteen") and not Calls*("noCallStatement", "Eighteen") with p.procName="One" such that Calls*("One", "Eighteen")
+none
+5000
+8 - Calls*(_,PROC-SYN) has result
+procedure p;
+Select p such that Calls*(_,p) with p.procName="One"
+One
+5000
+9 - Calls*(_,PROC-SYN) has no result
+procedure p;
+Select p such that Calls*(_,p) with p.procName="var"
+none
+5000
+10 - Calls*(IDENT,PROC-SYN) has result
+procedure p;
+Select p.procName such that Calls*("TwentyOne",p)
+TwentyTwo, noCallStatement
+5000
+11 - Calls*(IDENT,PROC-SYN) has no result
+procedure p;
+Select p.procName such that Calls*("noCallStatement",p)
+none
+5000
+12 - Calls*(PROC-SYN,_) has result
+procedure p;
+Select p.procName such that Calls*(p,_) with p.procName = "callsEveryPossibleProcedure"
+callsEveryPossibleProcedure
+5000
+13 - Calls*(PROC-SYN,_) has no result
+procedure p;
+Select p.procName such that Calls*(p,_) and not Calls*(_, p) with not p.procName="Thirteen" and not p.procName = "TwentyOne" and not p.procName = "callsEveryPossibleProcedure" and not p.procName = "noOneCallsThisProcedure"
+none
+5000
+14 - Calls*(PROC-SYN,IDENT) has result
+procedure p;
+Select p.procName such that Calls*(p,"Two")
+One, callsEveryPossibleProcedure, noOneCallsThisProcedure
+5000
+15 - Calls*(PROC-SYN,IDENT) has no result
+procedure p;
+Select p.procName such that Calls*(p, "Thirteen")
+none
+5000
+16 - Calls*(PROC-SYN,PROC-SYN) has result
+procedure p,q;
+Select <p,q> such that Calls*(p, q) with q.procName="Twenty"
+Nineteen Twenty, noOneCallsThisProcedure Twenty, callsEveryPossibleProcedure Twenty
+5000
+17 - Calls*(PROC-SYN,PROC-SYN) has no result -- even more nested case
+procedure p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12;
+Select <        p1,p2,p3,p4 ,p5  > such that Calls*(p1, p2) and Calls*(p2,p3) such that Calls*(p3,p4) and Calls*(p4,p5) and Calls*(p5, p6) and Calls*(p6, p7) and Calls*(p7, p8) and Calls*(p8, p9) and Calls*(p9, p10) and Calls*(p10, p11) and Calls*(p11, p12)
+none
+5000

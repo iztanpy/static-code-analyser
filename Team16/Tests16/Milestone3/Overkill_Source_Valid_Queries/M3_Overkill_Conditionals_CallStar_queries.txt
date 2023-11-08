@@ -1,0 +1,85 @@
+1 - Calls*(_,IDENT) is true
+procedure p;procedure q;
+Select <p.  procName,q> such that Calls*(_,"p1") and Calls*(_, "p3") and Calls*(_, "p4")
+p1 p2, p1 p3, p1 p4, p2 p3, p2 p4, p3 p4, p1 p1,p2 p1,p2 p2,p3 p1,p3 p2,p3 p3,p4 p1,p4 p2,p4 p3,p4 p4
+5000
+2 - Calls*(_,IDENT) is false
+procedure p;procedure q;
+Select <p.procName,q> such that Calls*(_,"p2")
+none
+5000
+3 - Calls*(IDENT,_) is true
+procedure p;
+Select BOOLEAN such that Calls*("p3", _)
+TRUE
+5000
+4 - Calls*(IDENT,_) is false
+procedure p;
+Select BOOLEAN such that Calls*("p1", _)
+FALSE
+5000
+5 - Calls*(IDENT,IDENT) is true
+procedure p;
+Select p such that Calls*("p2","p4")
+p1, p2, p3, p4
+5000
+6 - Calls*(IDENT,IDENT) is false
+procedure p;
+Select p such that Calls*("p4","p2")
+none
+5000
+7 - Calls*(_,PROC-SYN) has result
+procedure p;
+Select p such that Calls*(_,p) and not Calls(p, _)
+p1, p4
+5000
+8 - Calls*(_,PROC-SYN) has no result
+procedure p;
+Select p such that Calls*(_,p) with p.procName="var"
+none
+5000
+9 - Calls*(IDENT,PROC-SYN) has result
+procedure p;
+Select p.procName such that Calls*("p2",p) with not p.procName="p1" such that not Calls("p2", p)
+p4
+5000
+10 - Calls*(IDENT,PROC-SYN) has no result
+procedure p;
+Select p.procName such that Calls*("p1",p)
+none
+5000
+11 - Calls*(PROC-SYN,_) has result
+procedure p;
+Select p.procName such that Calls*(p,_)
+p2, p3
+5000
+12 - Calls*(PROC-SYN,_) has no result
+procedure p;variable v;
+Select p.procName such that Calls*(p,_) and not Calls*(_, p) with not p.procName="p2" and not p.procName = "p3"
+none
+5000
+13 - Calls*(PROC-SYN,IDENT) has result
+procedure p;
+Select p.procName such that Calls*(p,"p1")
+p2
+5000
+14 - Calls*(PROC-SYN,IDENT) has no result
+procedure p;
+Select p.procName such that Calls*(p, "p2")
+none
+5000
+15 - Calls*(PROC-SYN,PROC-SYN) has result
+procedure p,q;
+Select <p,q> such that Calls*(p, q)
+p2 p1, p2 p3, p2 p4, p3 p4
+5000
+16 - Calls*(PROC-SYN,PROC-SYN) has result -- nested case
+procedure p,q,z,r;
+Select <p,q,z> such that Calls*(p, q) such that Calls*(q,z) and not Calls*(z, r)
+p2 p3 p4
+5000
+17 - Calls*(PROC-SYN,PROC-SYN) has no result -- even more nested case
+procedure p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12;
+Select <        p1,p2,p3,p4 ,p5  > such that Calls*(p1, p2) and Calls*(p2,p3) such that Calls*(p3,p4) and Calls*(p4,p5) and Calls*(p5, p6) and Calls*(p6, p7) and Calls*(p7, p8) and Calls*(p8, p9) and Calls*(p9, p10) and Calls*(p10, p11) and Calls*(p11, p12)
+none
+5000

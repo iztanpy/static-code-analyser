@@ -1,0 +1,90 @@
+1 - Calls(_,_) is true
+procedure p;
+Select p.procName such that Calls(_,_)
+ProcedureNoUses, ProcedureNoModifies, ProcedureUsesAndModifies, ProcedureWhile, ProcedureHasIfNoElse, ProcedureHasIfAndElse, ProcedureNoNext, ProcedureNoFollows, ProcedureNoParent, ProcedureNoAssign, ProcedureNoModifiesWithCalls, ProcedureNoUsesWithCalls, ProcedureUsesWithCalls, ProcedureModifiesWithCalls, ProcedureAffectsWithNestedCalls
+5000
+2 - Calls(_,IDENT) is true
+procedure p;procedure q;
+Select <p.  procName,q> such that Calls(_,"ProcedureNoModifies") and Calls(_, "ProcedureNoUses") and Calls(_, "ProcedureNoUsesWithCalls") and Calls(_, "ProcedureNoModifiesWithCalls") and Modifies(p, "ProcedureNoUses") and Modifies(q, "ProcedureNoUses")
+ProcedureNoUses ProcedureNoUses, ProcedureNoUsesWithCalls ProcedureNoUsesWithCalls, ProcedureModifiesWithCalls ProcedureModifiesWithCalls, ProcedureAffectsWithNestedCalls ProcedureAffectsWithNestedCalls, ProcedureNoUses ProcedureNoUsesWithCalls, ProcedureNoUses ProcedureModifiesWithCalls, ProcedureNoUses ProcedureAffectsWithNestedCalls, ProcedureNoUsesWithCalls ProcedureNoUses, ProcedureNoUsesWithCalls ProcedureModifiesWithCalls, ProcedureNoUsesWithCalls ProcedureAffectsWithNestedCalls, ProcedureModifiesWithCalls ProcedureNoUses, ProcedureModifiesWithCalls ProcedureNoUsesWithCalls, ProcedureModifiesWithCalls ProcedureAffectsWithNestedCalls, ProcedureAffectsWithNestedCalls ProcedureNoUses, ProcedureAffectsWithNestedCalls ProcedureNoUsesWithCalls, ProcedureAffectsWithNestedCalls ProcedureModifiesWithCalls
+5000
+3 - Calls(_,IDENT) is false
+procedure p;procedure q;
+Select <p.procName,q> such that Calls(_,"ProcedureNoAssign") and Calls(_,"ProcedureNoModifies") and Calls(_, "ProcedureNoUses") and Calls(_, "ProcedureNoUsesWithCalls") and Calls(_, "ProcedureNoModifiesWithCalls")
+none
+5000
+4 - Calls(IDENT,_) is true
+procedure p;
+Select BOOLEAN such that Calls(_,"ProcedureNoModifies")
+TRUE
+5000
+5 - Calls(IDENT,_) is false
+procedure p;
+Select BOOLEAN such that Calls("ProcedureNoModifies",_)
+FALSE
+5000
+6 - Calls(IDENT,IDENT) is true
+procedure p;
+Select p such that Calls("ProcedureNoUsesWithCalls","ProcedureNoUses")
+ProcedureNoUses, ProcedureNoModifies, ProcedureUsesAndModifies, ProcedureWhile, ProcedureHasIfNoElse, ProcedureHasIfAndElse, ProcedureNoNext, ProcedureNoFollows, ProcedureNoParent, ProcedureNoAssign, ProcedureNoModifiesWithCalls, ProcedureNoUsesWithCalls, ProcedureUsesWithCalls, ProcedureModifiesWithCalls, ProcedureAffectsWithNestedCalls
+5000
+7 - Calls(IDENT,IDENT) is false
+procedure p;
+Select p such that Calls("ProcedureNoUsesWithCalls","ProcedureNoUsesWithCalls")
+none
+5000
+8 - Calls(_,PROC-SYN) has result
+procedure p;
+Select p such that Calls(_,p)
+ProcedureNoModifies, ProcedureNoUses, ProcedureNoModifiesWithCalls, ProcedureNoUsesWithCalls
+5000
+9 - Calls(_,PROC-SYN) has no result
+procedure p;
+Select p such that Calls(_,p) and Calls(_,"ProcedureNoParent")
+none
+5000
+10 - Calls(IDENT,PROC-SYN) has result
+procedure p;
+Select p.procName such that Calls("ProcedureAffectsWithNestedCalls",p)
+ProcedureNoUsesWithCalls
+5000
+11 - Calls(IDENT,PROC-SYN) has no result
+procedure p;
+Select p.procName such that Calls("ProcedureNoFollows",p)
+none
+5000
+12 - Calls(PROC-SYN,_) has result
+procedure p;
+Select p.procName such that Calls(p,_)
+ProcedureNoModifiesWithCalls, ProcedureNoUsesWithCalls, ProcedureUsesWithCalls, ProcedureModifiesWithCalls, ProcedureAffectsWithNestedCalls
+5000
+13 - Calls(PROC-SYN,_) has no result
+procedure p;variable v;
+Select p.procName such that Calls(p,_) with p.procName="procName"
+none
+5000
+14 - Calls(PROC-SYN,IDENT) has result
+procedure p;
+Select p.procName such that Calls(p,"ProcedureNoUses")
+ProcedureNoUsesWithCalls
+5000
+15 - Calls(PROC-SYN,IDENT) has no result
+procedure p;
+Select p.procName such that Calls(p, "ProcedureUsesWithCalls")
+none
+5000
+16 - Calls(PROC-SYN,PROC-SYN) has result
+procedure p,q;
+Select <p,q> such that Calls(p, q)
+ProcedureNoModifiesWithCalls ProcedureNoModifies, ProcedureNoUsesWithCalls ProcedureNoUses, ProcedureUsesWithCalls ProcedureNoModifiesWithCalls, ProcedureModifiesWithCalls ProcedureNoUsesWithCalls, ProcedureAffectsWithNestedCalls ProcedureNoUsesWithCalls
+5000
+17 - Calls(PROC-SYN,PROC-SYN) has result -- nested case
+procedure p,q,z;
+Select <p,q,z> such that Calls(p, q) such that Calls(q,z)
+ProcedureUsesWithCalls ProcedureNoModifiesWithCalls ProcedureNoModifies, ProcedureModifiesWithCalls ProcedureNoUsesWithCalls ProcedureNoUses, ProcedureAffectsWithNestedCalls ProcedureNoUsesWithCalls ProcedureNoUses
+5000
+18 - Calls(PROC-SYN,PROC-SYN has no result -- even more nested case
+procedure p1,p2,p3,p4,p5;
+Select <        p1,p2,p3,p4 ,p5  > such that Calls(p1, p2) and Calls(p2,p3) such that Calls(p3,p4) and Calls(p4,p5)
+none
+5000
