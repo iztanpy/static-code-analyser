@@ -144,7 +144,6 @@ class AssignTNode : public TNode {
       type = TokenType::kEntityAssign;
   }
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  void setFullRHS(const std::string& rhs);
   std::string getFullRHS() const;
 };
 
