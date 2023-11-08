@@ -1,40 +1,95 @@
-1 - select BOOLEAN
-
-Select BOOLEAN such that not Calls ("First", "Second")
-FALSE
-5000
-2 - select constant
+1 - select constant
 constant c;
 Select c with not 5 = 10
 0, 1, 2, 5
 5000
-3 - negation of clauses with one synomym
-procedure p;
-Select p such that not Calls* (p, "Third")
-Third
-5000
-4 - negation of clauses with one synomym
+2 - negation of clauses with one synomym
 while w;
 Select w pattern not w("y", _)
 6
 5000
-5 - negation of clauses with one synomym
+3 - negation of clauses with one synomym
 assign a;
 Select a with not 13 = a.stmt#
 4, 5, 7, 9, 11, 12, 14, 15, 16, 17
 5000
-6 - Negation of clauses with two synomyms
+4 - Negation of clauses with two synomyms
 procedure p, q;
 Select p such that not Calls* (p, q)
 First, Second, Third
 5000
-7 - Negation of clauses with two synomyms
+5 - Negation of clauses with two synomyms
 while w; variable v;
 Select <w, v> pattern not w(v, _)
 6 v, 6 x, 6 y, 6 z
 5000
-8 - Negation of clauses with two synomyms
+6 - Negation of clauses with two synomyms
 while w; constant c;
 Select c with not c.value = w.stmt#
 0, 1, 2, 5
+5000
+7 - not with such that Follows
+stmt s1, s2;
+Select s1 such that not Follows(3, s2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+8 - not with such that FollowsStar
+stmt s1, s2;
+Select s1 such that not Follows*(3, s2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+9 - not with such that Parent
+stmt s1;
+Select s1 such that not Parent(6, s1)
+1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+10 - not with such that ParentStar
+stmt s1;
+Select s1 such that not Parent*(6, s1)
+1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+11 - not with such that Uses P
+procedure p;
+Select p such that not Uses(p, "x")
+Third
+5000
+12 - not with such that Uses S
+stmt s1;
+Select s1 such that not Uses(s1, "x")
+1, 2, 4, 5, 8, 9, 12, 14, 16, 17, 18
+5000
+13 - not with such that Modifies P
+procedure p;
+Select p such that not Modifies(p, "x")
+Third
+5000
+14 - not with such that Modifies S
+stmt s1;
+Select s1 such that not Modifies(s1, "x")
+2, 5, 8, 9, 12, 13, 14, 16, 17, 18
+5000
+15 - not with such that Calls
+
+Select BOOLEAN such that not Calls ("First", "Second")
+FALSE
+5000
+16 - not with such that Calls star
+procedure p;
+Select p such that not Calls* (p, "Third")
+Third
+5000
+17 - not with such that Next
+stmt not, s1;
+Select not such that not Next(not, 7)
+1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+18 - not with such that Next star
+stmt not, s1;
+Select not such that not Next*(not, not)
+1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+19 - not with such that Affects
+stmt not;
+Select not such that not Affects(4, 7)
+none
 5000

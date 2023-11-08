@@ -118,3 +118,28 @@ assign a; while w;
 Select a such that Modifies(a, "x") with 5=5 5=6 pattern a(_,_)
 SyntaxError
 5000
+25 - Invalid attr ref for procedure
+assign a; while w; procedure p;
+Select a pattern a(_,_) with p.stmt#=3 such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+26 - Invalid attr ref for call
+assign a; while w; procedure p; call c;
+Select a pattern a(_,_) with c.value=3 such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+27 - Invalid attr ref for variable
+assign a; while w; procedure p; variable v;
+Select a pattern a(_,_) with v.stmt#=3 such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+28 - Invalid attr ref for call
+assign a; while w; procedure p; read r;
+Select a pattern a(_,_) with r.value=3 such that Modifies(a, "x") and Parent*(1, a)
+SemanticError
+5000
+29 - Invalid equality
+assign a; while w; procedure p; read r;
+Select a pattern a(_,_) with r.stmt#==3 such that Modifies(a, "x") and Parent*(1, a)
+SyntaxError
+5000
