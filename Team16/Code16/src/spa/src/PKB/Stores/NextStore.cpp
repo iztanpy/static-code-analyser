@@ -1,6 +1,8 @@
 #include "NextStore.h"
 #include "SP/sp_cfg/Cfg.h"
 #include "SP/sp_cfg/CfgNode.h"
+#include <queue>
+#include <unordered_set>
 //
 // Created by Isaac Tan on 18/10/23.
 //
@@ -91,13 +93,22 @@ bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
     return false;
 }
 
+struct CustomComparator {
+    bool operator()(const std::pair<int, std::unordered_set<int>>& a, const std::pair<int, std::unordered_set<int>>& b) {
+        return a.second.size() < b.second.size(); // Reverse the comparison
+    }
+};
+
 void NextStore::initialiseNextStar() {
     for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
         auto firstNum = *it->second->getStmtNumberSet().begin();
-        std::stack<std::pair<statementNumber, std::unordered_set<statementNumber>>> stack;
+        std::priority_queue<std::pair<int, std::unordered_set<int>>,
+                std::vector<std::pair<int, std::unordered_set<int>>>,
+                CustomComparator> stack;
         std::unordered_set<statementNumber> initial;
         initial.insert(firstNum);
         stack.push(std::make_pair(firstNum, initial));
+        int counter = 0;
         while (!stack.empty()) {
             statementNumber currentStatement = stack.top().first;
             auto visited = stack.top().second;
@@ -112,12 +123,13 @@ void NextStore::initialiseNextStar() {
                         changed = true;
                     }
                 }
-                if (!changed) {
-                    continue;
+                if (changed) {
+                    std::unordered_set<int> newVisited(visited);
+                    newVisited.insert(nextStatement);
+                    stack.push(std::make_pair(nextStatement, newVisited));
+                    counter = counter + 1;
                 }
-                std::unordered_set<int> newVisited(visited);
-                newVisited.insert(nextStatement);
-                stack.push(std::make_pair(nextStatement, newVisited));
+
             }
         }
     }
