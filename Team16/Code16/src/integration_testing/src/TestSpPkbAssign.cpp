@@ -21,7 +21,7 @@ TEST_CASE("TEST Assign Pattern Exact Match") {
 
   sourceProcessor.processSource(simpleProgram);
 
-  ExactExpr rhs = ExactExpr{"z"};
+  ExactExpr rhs = ExactExpr{"(z)"};
 
   REQUIRE(readFacade.getAssignPair(rhs) ==
       std::unordered_set<std::pair<statementNumber, variable>, PairHash>({{1, "y"}}));
