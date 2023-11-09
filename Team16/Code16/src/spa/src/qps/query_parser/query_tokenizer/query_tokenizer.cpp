@@ -299,6 +299,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
     right_token = {right_hand_side, PQLTokenType::WILDCARD};
   } else if (QueryUtil::IsExactExpressionSpecification(string_util::RemoveSpacesFromExpr(right_hand_side))) {
     std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
+    remove_quotations = QueryUtil::addParentheses(remove_quotations);
     right_token = {remove_quotations, PQLTokenType::EXACTEXPR};
   } else {
     std::string remove_wildcard = string_util::Trim(right_hand_side.substr(1, right_hand_side.length() - 2));

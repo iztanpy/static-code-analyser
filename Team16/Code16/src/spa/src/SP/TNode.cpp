@@ -17,12 +17,8 @@ void ProcedureTNode::accept(ASTVisitor *visitor, std::string& key) const {
     visitor->visit(this, key);
 }
 
-void AssignTNode::setFullRHS(const std::string& rhs) {
-    fullRHS = rhs;
-}
-
 std::string AssignTNode::getFullRHS() const {
-    return fullRHS;
+    return rightChild->getContent(true);
 }
 
 void AssignTNode::accept(ASTVisitor *visitor, std::string& key) const {

@@ -242,7 +242,7 @@ TEST_CASE("Test get pattern arguments") {
                                                                             PQLTokenType::SYNONYM);
   std::pair<QueryToken, QueryToken> expected_args_3 = {
       {"s", PQLTokenType::SYNONYM},
-      {"x", PQLTokenType::EXACTEXPR}
+      {"(x)", PQLTokenType::EXACTEXPR}
   };
   REQUIRE(args_3.first.type == expected_args_3.first.type);
   REQUIRE(args_3.first.text == expected_args_3.first.text);
@@ -300,7 +300,7 @@ TEST_CASE("Test extract clause tokens") {
       {"", PQLTokenType::NORMAL_CLAUSE},
       {"a", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"x", PQLTokenType::EXACTEXPR}
+      {"(x)", PQLTokenType::EXACTEXPR}
   };
   std::vector<std::vector<QueryToken>>
       results_2 = QueryTokenizer::extractClauseTokens(select_statement_2, declarations_2);
@@ -395,7 +395,7 @@ TEST_CASE("Tokenizer and tokenise pattern expressions") {
       {"", PQLTokenType::NORMAL_CLAUSE},
       {"a1", PQLTokenType::SYNONYM},
       {"v", PQLTokenType::SYNONYM},
-      {"abc+cde%fgh", PQLTokenType::EXACTEXPR}
+      {"((abc)+((cde)%(fgh)))", PQLTokenType::EXACTEXPR}
   };
 
   std::vector<std::vector<QueryToken>>
