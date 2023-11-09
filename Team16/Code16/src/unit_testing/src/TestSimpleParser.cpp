@@ -839,9 +839,9 @@ TEST_CASE(("Test Uses: SP Assignment statement full RHS pattern")) {
   sourceProcessor.processSource(simpleProgram);
   std::unordered_map<int, std::string> fullRHSMap
       = std::unordered_map<int, std::string>({
-        {1, "(x+1)*y/5+1"},
-        {2, "five/(9-var)"},
-        {3, "((p*p))"}});
+        {1, "(((((x)+(1))*(y))/(5))+(1))"},
+        {2, "((five)/((9)-(var)))"},
+        {3, "((p)*(p))"}});
   std::unordered_map<int, std::string> fullRHSMap2 = sourceProcessor.getAssignLineFullRHSMap();
   REQUIRE(sourceProcessor.getAssignLineFullRHSMap() == fullRHSMap);
 }
