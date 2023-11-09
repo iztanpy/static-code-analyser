@@ -16,9 +16,9 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
   this->ParentMap = map;
 
   for (auto const& x : map) {
-      for (auto const& y : x.second) {
-        this->ParentMapReverse[y] = x.first;
-      }
+    for (auto const& y : x.second) {
+      this->ParentMapReverse[y] = x.first;
+    }
   }
 
   for (const auto& [node, children] : map) {
