@@ -1,0 +1,85 @@
+1 - Calls*(_,IDENT) is true
+procedure p;procedure q;
+Select <p.  procName,q> such that Calls*(_,"p1") and Calls*(_, "p3") and Calls*(_, "p4") with not 5 = 5
+none
+5000
+2 - all clauses evaluates to true
+procedure p;procedure q;
+Select <p.procName,q> such that not Calls*(_,"p2") and Calls*(_,"p1") and Calls*(_, "p3") and Calls*(_, "p4")
+p1 p1, p1 p2, p1 p3, p1 p4, p2 p1, p2 p2, p2 p3, p2 p4, p3 p1, p3 p2, p3 p3, p3 p4, p4 p1, p4 p2, p4 p3, p4 p4
+5000
+3 - Calls*(IDENT,_) is true, converse is false
+procedure p;
+Select BOOLEAN such that not Calls*("p3", _)
+FALSE
+5000
+4 - Calls*(IDENT,_) is false, converse is true
+procedure p;
+Select BOOLEAN such that not Calls*("p1", _)
+TRUE
+5000
+5 - Calls*(IDENT,IDENT) is true, converse is false
+procedure p;
+Select p such that not Calls*("p2","p4")
+none
+5000
+6 - Calls*(IDENT,IDENT) is false, converse is true
+procedure p;
+Select p such that not Calls*("p4","p2")
+p1, p2, p3, p4
+5000
+7 - Calls*(_,PROC-SYN) has result
+procedure p;
+Select p such that not Calls*(_,p) and Calls(p, _)
+p2
+5000
+8 - Calls*(_,PROC-SYN) has no result
+procedure p;
+Select p such that Calls*(_,p) with not p.procName="var"
+p1, p3, p4
+5000
+9 - Calls*(IDENT,PROC-SYN) has result
+procedure not;
+Select not.procName such that not Calls*("p2",not) with not not.procName="p1" such that not Calls("p2", not)
+p2
+5000
+10 - self loop is false, negation evaluates to true
+procedure not;
+Select not.procName such that not Calls*(not ,not)
+p1, p2, p3, p4
+5000
+11 - not wildcard is true, negation evaluates to false
+procedure p; assign not;
+Select p.procName such that Calls*(p,_) pattern not not(_, _)
+none
+5000
+12 - Calls*(PROC-SYN,_) has no result
+procedure p;variable v;
+Select p.procName such that Calls*(p,_) and not Calls*(_, p) with not p.procName = "p3"
+p2
+5000
+13 - Calls*(PROC-SYN,IDENT) has result
+procedure p;
+Select p.procName such that not Calls*(p,"p1")
+p1, p3, p4
+5000
+14 - Calls*(PROC-SYN,IDENT) has no result, negation has all proc
+procedure p;
+Select p.procName such that not Calls*(p, "p2")
+p1, p2, p3, p4
+5000
+14 - Calls*(PROC-SYN,IDENT) has no result
+procedure p;
+Select p.procName such that not Calls*(p, "p2") and Calls*(p, "p2")
+none
+5000
+15 - Calls*(PROC-SYN,PROC-SYN) has result
+procedure p,q;
+Select <p,q> such that Calls*(p, q) with not 5 = 1
+p2 p1, p2 p3, p2 p4, p3 p4
+5000
+16 - Calls*(PROC-SYN,PROC-SYN) has result -- nested case
+procedure p,q;
+Select <p,q> such that  Calls*(p, q) such that not Calls*(q,"p4")
+p2 p4, p2 p1, p3 p4
+5000

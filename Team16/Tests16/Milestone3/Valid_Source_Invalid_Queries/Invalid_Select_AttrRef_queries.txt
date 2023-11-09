@@ -13,23 +13,48 @@ assign a; variable v; stmt s;constant c;
 Select s.stmt such that Parent(s,  a) and Parent*(s,  a) and Uses(s,"number") pattern a(v,_"digit "_) with 5=5 and s.stmt#=c.value
 SyntaxError
 5000
-6 - misspelled attrRef varName in tuple select clause
+4 - misspelled attrRef varName in tuple select clause
 read r; print p; while w,w1; if if; assign a;
 Select <r, r.varNae, p, a> such that Parent(w,if) and Parent*(if,w1) and Parent(w1,a) with r.varName=p.varName pattern a(_,_"4"_)
 SyntaxError
 5000
-7 - missing dot in select clause
+5 - missing dot in select clause
 procedure p, p1,p2; variable v,v1; if if; read r; while while;
 Select <p2procName,v1> such that Modifies(p2,v1) such that Calls(p,p1) and Calls*(p1,p2) pattern if(v,_,_) and while(v,_) with r.varName = v.varName
 SemanticError
 5000
-8 - wrong attrRef for assign
+6 - wrong attrRef for assign
 assign a; variable v;
 Select a.procName pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
 SemanticError
 5000
-9 - wrong attrRef for constant
+7 - wrong attrRef for constant
 assign a; variable v; constant c;
 Select c.procName pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
 SemanticError
+5000
+8 - multiple dots
+assign a; variable v; constant c;
+Select c.......procName pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+SyntaxError
+5000
+9 - misplaced dot
+assign a; variable v; constant c;
+Select .c pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+SyntaxError
+5000
+10 - missing attr ref
+assign a; variable v; constant c;
+Select c. pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+SyntaxError
+5000
+11 - multiple dots
+assign a; variable v; constant c;
+Select c. .value pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+SyntaxError
+5000
+12 - multiple dots
+assign a; variable v; constant c;
+Select <c  .  .  , .   value> pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+SyntaxError
 5000
