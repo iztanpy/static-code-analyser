@@ -93,3 +93,83 @@ stmt not;
 Select not such that not Affects(4, 7)
 none
 5000
+20 - not with assignment pattern
+assign not;
+Select not pattern not not("x", _)
+5, 9, 12, 13, 14, 16, 17
+5000
+21 - not with if pattern
+if not; variable v;
+Select <not, v> pattern not not(v, _, _)
+10 z, 10 i, 10 y, 10 v
+5000
+22 - not with while pattern
+while not; variable v;
+Select <not, v> pattern not not(v, _)
+6 x, 6 y, 6 z, 6 v
+5000
+23 - not with proc name
+procedure not;
+Select not with not "xxxx" = not .   procName
+First, Second, Third
+5000
+24 - not with call proc name
+call not;
+Select not with not  "Second" = not .   procName
+8
+5000
+25 - not with var var name
+variable not;
+Select not with not  "x" = not .     varName
+y, z, i, v
+5000
+26 - not with read var name
+read not;
+Select not with not  "x" = not .     varName
+2
+5000
+27 - not with print var name
+print not;
+Select not with not  "x" = not .     varName
+18
+5000
+28 - not with constant value
+constant not;
+Select not with not  5 = not .     value
+0, 2, 1
+5000
+29 - not with stmt number
+stmt not;
+Select not with not  5 = not . stmt#
+1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+30 - not with read stmt number
+read not;
+Select not with not  1 = not . stmt#
+2
+5000
+31 - not with print stmt number
+print not;
+Select not with not  18 = not . stmt#
+none
+5000
+32 - not with call stmt number
+call not;
+Select not with not  18 = not . stmt#
+3, 8
+5000
+33 - not with while stmt number
+while not;
+Select not with not  18 = not . stmt#
+6
+5000
+34 - not with if stmt number
+if not;
+Select not with not  18 = not . stmt#
+10
+5000
+35 - not with assign stmt number
+assign not;
+Select not with not  4 = not . stmt#
+5, 7, 9, 11, 12, 13, 14, 15, 16, 17
+5000
