@@ -24,6 +24,7 @@ Select BOOLEAN such that Affects(s1,_) such that Affects(s2,_)
 TRUE
 5000
 6 - Affects(s3,s4) is False
+
 Select BOOLEAN such that Affects(1,100)
 FALSE
 5000
