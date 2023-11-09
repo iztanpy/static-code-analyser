@@ -20,8 +20,6 @@ class ParentStore {
  public:
   ParentStore();
 
-  void appendOne(std::unordered_set<int> parents, int num2);
-
   /**
   * @brief Stores parent-child relationships between statements.
   *

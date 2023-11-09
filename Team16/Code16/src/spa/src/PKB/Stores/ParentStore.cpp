@@ -3,6 +3,7 @@
 //
 
 #include "ParentStore.h"
+#include <stack>
 
 ParentStore::ParentStore() {
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> ParentMap;
@@ -13,38 +14,48 @@ ParentStore::ParentStore() {
 
 void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
   this->ParentMap = map;
+
   for (auto const& x : map) {
-    for (auto const& y : x.second) {
-      this->ParentMapReverse[y] = x.first;
+      for (auto const& y : x.second) {
+        this->ParentMapReverse[y] = x.first;
+      }
+  }
+
+  for (const auto& [node, children] : map) {
+    std::unordered_set<statementNumber> visited;
+    std::stack<statementNumber> stack;
+    for (statementNumber child : children) {
+      stack.push(child);
+    }
+
+    while (!stack.empty()) {
+      statementNumber current = stack.top();
+      stack.pop();
+
+      if (visited.find(current) != visited.end()) {
+        continue;
+      }
+
+      ParentStarMap[node].insert(current);
+      visited.insert(current);
+
+      if (map.find(current) == map.end()) {
+        continue;
+      }
+
+      for (statementNumber child : map.at(current)) {
+          if (visited.find(child) == visited.end()) {
+          stack.push(child);
+        }
+      }
     }
   }
 
-  for (const auto& [node, children] : ParentMap) {
-      for (auto child : children) {
-          auto set = std::unordered_set<int>();
-          set.insert(node);
-          appendOne(set, child);
-      }
-  }
   for (const auto& [node, children] : ParentStarMap) {
-    for (int child : children) {
+      for (statementNumber child : children) {
       ParentStarMapReverse[child].insert(node);
     }
   }
-}
-
-void ParentStore::appendOne(std::unordered_set<int> parents, int num2) {
-    for (int num : parents) {
-        // if num is not in ParentStarMap
-        if (ParentStarMap.find(num) == ParentStarMap.end()) {
-            ParentStarMap[num] = std::unordered_set<int>();
-        }
-        ParentStarMap[num].insert(num2);
-    }
-    parents.insert(num2);
-    for (int child : ParentMap[num2]) {
-        appendOne(parents, child);
-    }
 }
 
 std::unordered_set<ParentStore::statementNumber> ParentStore::getChildren(statementNumber statement) {
