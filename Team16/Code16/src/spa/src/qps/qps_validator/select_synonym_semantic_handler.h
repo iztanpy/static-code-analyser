@@ -9,7 +9,9 @@
 class SelectSynonymSemanticHandler: public QpsValidatorHandler {
  public:
   std::vector<Declaration>& declarations;
-  explicit SelectSynonymSemanticHandler(std::vector<Declaration>& declarations);
+  std::vector<QpsSemanticError> & semantic_errors;
+  explicit SelectSynonymSemanticHandler(std::vector<Declaration>& declarations,
+                                        std::vector<QpsSemanticError> & semantic_errors);
   void setNext(std::unique_ptr<QpsValidatorHandler> handler) override;
   void handle(std::string select_synonym) override;
 };

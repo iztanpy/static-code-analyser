@@ -10,7 +10,9 @@
 class PatternSynSemanticHandler: public QpsValidatorHandler {
  public:
   std::vector<Declaration> & declarations;
-  explicit PatternSynSemanticHandler(std::vector<Declaration> & declarations);
+  std::vector<QpsSemanticError> & semantic_errors;
+  explicit PatternSynSemanticHandler(std::vector<Declaration> & declarations,
+                                     std::vector<QpsSemanticError> & semantic_errors);
   void setNext(std::unique_ptr<QpsValidatorHandler> handler) override;
   void handle(std::string synonym) override;
 };

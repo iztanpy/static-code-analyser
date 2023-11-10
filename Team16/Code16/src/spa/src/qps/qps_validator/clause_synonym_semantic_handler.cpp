@@ -5,8 +5,9 @@
 #include "qps/qps_validator/clause_synonym_semantic_handler.h"
 #include "qps/query_parser/QueryUtil.h"
 
-ClauseSynonymSemanticHandler::ClauseSynonymSemanticHandler(std::vector<Declaration> & declarations)
-    : declarations(declarations) {}
+ClauseSynonymSemanticHandler::ClauseSynonymSemanticHandler(std::vector<Declaration> & declarations,
+                                                           std::vector<QpsSemanticError> & semantic_errors)
+    : declarations(declarations), semantic_errors(semantic_errors) {}
 
 void ClauseSynonymSemanticHandler::setNext(std::unique_ptr<QpsValidatorHandler> handler) {
   this->next = std::move(handler);
@@ -14,6 +15,6 @@ void ClauseSynonymSemanticHandler::setNext(std::unique_ptr<QpsValidatorHandler> 
 
 void ClauseSynonymSemanticHandler::handle(std::string synonym) {
   if (!QueryUtil::IsInDeclarations(synonym, declarations)) {
-    throw QpsSemanticError("Synonym not declared");
+    semantic_errors.emplace_back("Synonym not declared");
   }
 }

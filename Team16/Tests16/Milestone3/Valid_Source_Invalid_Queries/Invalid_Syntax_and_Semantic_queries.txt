@@ -1,0 +1,80 @@
+1 - Syntax should come before semantic (undeclared syn) error
+stmt s, s1;
+Select a such that Next(s, s1) wrong wrong wrong syntax
+SyntaxError
+5000
+2 - semantic (undeclared syn) error
+stmt s, s1;
+Select a such that Next(s, s1)
+SemanticError
+5000
+3 - Syntax should come before semantic (wrong attrRef) error
+stmt s, s1;
+Select <s.value> such that Next(s, s1) wrong wrong wrong syntax
+SyntaxError
+5000
+4 - semantic (wrong attrRef) error
+stmt s, s1;
+Select <s.value> such that Next(s, s1)
+SemanticError
+5000
+5 - Syntax should come before semantic (undeclared and wrong attrRef) error
+stmt s, s1;
+Select <s, a, s1.value> such that Next(s, s1) wrong wrong wrong syntax
+SyntaxError
+5000
+6 - semantic (undeclared and wrong attrRef) error
+stmt s, s1;
+Select <s, a, s1.value> such that Next(s, s1)
+SemanticError
+5000
+7 - Syntax should come before semantic (undeclared) error
+stmt s, s1;
+Select OOLEAN such that Next(s, s1) wrong wrong wrong syntax
+SyntaxError
+5000
+8 - Syntax should come before semantic (undeclared) error
+stmt s, s1;
+Select s such that Next(a, s1) wrong wrong wrong syntax
+SyntaxError
+5000
+9 - semantic (undeclared) error
+stmt s, s1;
+Select s such that Next(a, s1)
+SemanticError
+5000
+10 - Syntax should come before semantic (wrong pattern type) error
+stmt s, s1; while a;
+Select s pattern a(_, _, _) wrong wrong wrong syntax
+SyntaxError
+5000
+11 - Syntax should come before semantic (wrong pattern type) error
+stmt s, s1; while a;
+Select s pattern a(_, _, _)
+SemanticError
+5000
+12 - semantic (undeclared) error
+stmt s, s1; while a;
+Select p pattern a(_, _)
+SemanticError
+5000
+13 - Syntax should come before semantic (wrong synonym type) error
+stmt s, s1; while a;
+Select s such that Calls(a, s) wrong wrong wrong syntax
+SyntaxError
+5000
+14 - semantic (wrong synonym type) error
+stmt s, s1; while a;
+Select s such that Calls(a, s)
+SemanticError
+5000
+15 - Syntax should come before semantic (wrong equality) error
+stmt s, s1; while a;
+Select s with a.value ==== s.stmt#
+SyntaxError
+5000
+16 - semantic (wrong equality) error
+stmt s, s1; while a;
+Select s with a.value = s.stmt#
+SemanticError
+5000
