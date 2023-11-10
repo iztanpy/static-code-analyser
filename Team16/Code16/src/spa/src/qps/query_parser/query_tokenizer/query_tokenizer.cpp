@@ -39,6 +39,10 @@ QueryStructure QueryTokenizer::splitQuery(std::string sanitized_query) {
 }
 
 std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<std::string>& declaration_statements) {
+  if (semantic_errors.empty()) {
+    // prevent segmentation fault
+    semantic_errors ={};
+  }
   std::vector<Declaration> declarations;
   std::set<std::string> processed_synonyms;
   for (std::string statement : declaration_statements) {
@@ -169,6 +173,11 @@ std::string QueryTokenizer::removeAfterResultClause(std::string& select_statemen
 
 std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string& select_statement,
                                                            std::vector<Declaration>& declarations) {
+  if (semantic_errors.empty()) {
+    // prevent segmentation fault
+    semantic_errors = {};
+  }
+
   std::vector<QueryToken> select_tokens;
   qps_validator::ValidateSelectStatement(select_statement);
   // remove the Select keyword
@@ -464,6 +473,10 @@ std::string QueryTokenizer::removeSelectClause(const std::string& remaining_stat
 
 std::vector<std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::string select_statement,
                                                                        std::vector<Declaration>& declarations) {
+  if (semantic_errors.empty()) {
+    // prevent segmentation fault
+    semantic_errors ={};
+  }
   std::vector<QueryToken> such_that_tokens;
   std::vector<QueryToken> pattern_tokens;
   std::vector<QueryToken> with_tokens;
