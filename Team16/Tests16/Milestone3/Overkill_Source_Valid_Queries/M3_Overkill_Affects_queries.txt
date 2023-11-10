@@ -1,0 +1,37 @@
+1 - Affects(s1,s2) is true
+procedure p;
+Select p.procName such that Affects(37,38)
+p1, p2, p3, p4
+5000
+2 - Affects(s1,s2) is false 
+procedure p;
+Select p.procName such that Affects(25,26)
+none
+5000
+3 - Affects(_,_) is true 
+procedure p;
+Select p.procName such that Affects(_,_)
+p1, p2, p3, p4
+5000
+4 - Affects(s1,_) is true 
+stmt s1;
+Select s1.stmt# such that Affects(s1,_)
+6, 14, 35, 37, 44, 34, 38, 39 ,49 ,50
+5000
+5 - Affects(s1,_) and Affects(s2,_) is true
+stmt s1,s2;
+Select BOOLEAN such that Affects(s1,_) such that Affects(s2,_)
+TRUE
+5000
+6 - Affects(s3,s4) is False
+
+Select BOOLEAN such that Affects(1,100)
+FALSE
+5000
+7 - Query with two clauses Next Affects
+if if1; stmt s1;
+Select <if1, s1> such that Next(s1, if1) and Affects(s1,_)
+15 14
+5000
+
+
