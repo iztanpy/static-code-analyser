@@ -25,12 +25,12 @@ SemanticError
 5000
 6 - wrong attrRef for assign
 assign a; variable v;
-Select a.procName pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+Select a.procName pattern a(v,_) such that Affects(5,a) and Uses(a,v) with v.varName="number"
 SemanticError
 5000
 7 - wrong attrRef for constant
 assign a; variable v; constant c;
-Select c.procName pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName="number"
+Select c.procName pattern a(v,_) such that Affects(5,a) and Uses(a,v) with v.varName="number"
 SemanticError
 5000
 8 - multiple dots
