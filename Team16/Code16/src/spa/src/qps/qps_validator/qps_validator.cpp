@@ -142,10 +142,11 @@ void qps_validator::ValidateIfPatternClause(std::vector<std::string>& arguments,
                                             std::vector<QpsSemanticError> & semantic_errors) {
   if (arguments.size() != 3) {
     semantic_errors.emplace_back("Pattern synonym is not if statement");
-  }
-  std::string third_token = string_util::RemoveSpacesFromExpr(arguments[2]);
-  if (!QueryUtil::IsWildcard(third_token)) {
-    semantic_errors.emplace_back("Third argument of if pattern is not wildcard");
+  } else {
+    std::string third_token = string_util::RemoveSpacesFromExpr(arguments[2]);
+    if (!QueryUtil::IsWildcard(third_token)) {
+      semantic_errors.emplace_back("Third argument of if pattern is not wildcard");
+    }
   }
 }
 
