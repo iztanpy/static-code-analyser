@@ -41,7 +41,8 @@ void qps_validator::ValidateDeclarationStatement(std::string statement) {
 void qps_validator::ValidateDeclarationSynonym(std::string synonym, std::set<std::string> & processed_synonyms,
                                                std::vector<QpsSemanticError> & semantic_errors) {
   DeclarationSynonymSyntaxHandler syntax_handler = DeclarationSynonymSyntaxHandler();
-  std::unique_ptr<QpsValidatorHandler> semantic_handler(new DeclarationSynonymSemanticHandler(processed_synonyms, semantic_errors));
+  std::unique_ptr<QpsValidatorHandler> semantic_handler(new DeclarationSynonymSemanticHandler(processed_synonyms,
+                                                                                              semantic_errors));
   syntax_handler.setNext(std::move(semantic_handler));
   syntax_handler.handle(std::move(synonym));
 }
@@ -55,7 +56,8 @@ void qps_validator::ValidateSelectSynonym(std::string select_synonym, std::vecto
                                           std::vector<QpsSemanticError> & semantic_errors) {
   if (lexical_utils::IsSynonym(select_synonym)) {
     SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
-    std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectSynonymSemanticHandler(declarations, semantic_errors));
+    std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectSynonymSemanticHandler(declarations,
+                                                                                           semantic_errors));
     syntax_handler.setNext(std::move(semantic_handler));
     syntax_handler.handle(std::move(select_synonym));
   } else if (QueryUtil::IsAttrRef(select_synonym)) {
@@ -136,7 +138,8 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
   }
 }
 
-void qps_validator::ValidateIfPatternClause(std::vector<std::string>& arguments, std::vector<QpsSemanticError> & semantic_errors) {
+void qps_validator::ValidateIfPatternClause(std::vector<std::string>& arguments,
+                                            std::vector<QpsSemanticError> & semantic_errors) {
   if (arguments.size() != 3) {
     semantic_errors.emplace_back("Pattern synonym is not if statement");
   }
@@ -175,7 +178,8 @@ void qps_validator::ValidateAndClause(std::string& curr_clause) {
 void qps_validator::ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations,
                                         std::vector<QpsSemanticError> & semantic_errors) {
   SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
-  std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectTupleSynonymSemanticHandler(declarations, semantic_errors));
+  std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectTupleSynonymSemanticHandler(declarations,
+                                                                                              semantic_errors));
   syntax_handler.setNext(std::move(semantic_handler));
   std::string select_value_with_tuple_removed = QueryUtil::RemoveTuple(select_value);
   std::vector<std::string> tuple_arguments = string_util::SplitStringBy(',', select_value_with_tuple_removed);
