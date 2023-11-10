@@ -578,7 +578,7 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
 
   // Undeclared if synonym
   std::string sample_query_3 = "Select if pattern if(\"x\",_,_)";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations_1), QpsSemanticError);
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query_3), QpsSemanticError);
 }
 
 TEST_CASE("Tokeniser can tokenise multiple clauses") {
@@ -948,12 +948,7 @@ TEST_CASE("Tokeniser can handle invalid not clauses") {
 }
 
 TEST_CASE("debug") {
-  std:: string sample_query = "procedure p, q, r, s, t, u, v;assign a;\n"
-                              "Select <p, u> such that   Calls*(l, r) and pattern";
-  std::vector<Declaration> declarations_1 = {
-      {"not", DesignEntity::VARIABLE},
-      {"a", DesignEntity::ASSIGN},
-      {"p", DesignEntity::PRINT}
-  };
-  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query), QpsSyntaxError);
+  std:: string sample_query = "assign a; variable v; Select a.procName pattern a(v,_) such that Affects*(5,a) and Uses(a,v) with v.varName=\"number\"";
+
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query), QpsSemanticError);
 }
