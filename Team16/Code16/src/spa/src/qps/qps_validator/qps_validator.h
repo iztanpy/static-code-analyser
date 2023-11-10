@@ -33,10 +33,11 @@ void ValidateDeclarationStatement(std::string statement);
  * Validates the syntax of a synonym in a declaration
  * @param synonym to be validated
  * @param processed_synonyms are synonyms that have been declared before
+ * @param semantic_errors vector of semantic errors to be checked later
  * @throws QpsSyntaxError exception if syntax of synonym is invalid
- * @throws QpsSemanticError exception if synonym is repeated
  */
-void ValidateDeclarationSynonym(std::string synonym, std::set<std::string> & processed_synonyms);
+void ValidateDeclarationSynonym(std::string synonym, std::set<std::string> & processed_synonyms,
+                                std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates the select clause statement
@@ -49,10 +50,11 @@ void ValidateSelectStatement(std::string select_statement);
  * Validates select synonym
  * @param select_synonym to be validated
  * @param declarations are synonyms that have been declared
+ * @param semantic_errors vector of semantic errors to be checked later
  * @throws QpsSyntaxError if synonym syntax is invalid
- * @throws QpsSemanticError if synonym has not been declared
  */
-void ValidateSelectSynonym(std::string select_synonym, std::vector<Declaration> & declarations);
+void ValidateSelectSynonym(std::string select_synonym, std::vector<Declaration> & declarations,
+                           std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates clause indexes
@@ -89,34 +91,39 @@ void ValidateClauseArgs(std::string lhs, std::string rhs);
  * Validates the clause synonyms
  * @param synonym to be validated
  * @param declarations set of declarations
- * @throws QpsSemanticError if the synonym has not been declared
+ * @param semantic_errors vector of semantic errors to be checked later
  */
-void ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations);
+void ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations,
+                           std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates the pattern synonyms
  * @param pattern_synonym to be validated
  * @param declarations set of declarations
- * @throws QpsSemanticError if the pattern synonym is not an assignment, if or while statement
+ * @param semantic_errors vector of semantic errors to be checked later
  */
-void ValidatePatternSynonym(std::string pattern_synonym, std::vector<Declaration> & declarations);
+void ValidatePatternSynonym(std::string pattern_synonym, std::vector<Declaration> & declarations,
+                            std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Additional check that third argument if a wildcard
  * @param arguments tokens to be checked
+ * @param semantic_errors vector of semantic errors to be checked later
  */
-void ValidateIfPatternClause(std::vector<std::string>& arguments);
+void ValidateIfPatternClause(std::vector<std::string>& arguments, std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates the individual arguments of pattern clause
  * @param left_hand_side
  * @param right_hand_side
  * @param pattern_type
+ * @param semantic_errors vector of semantic errors to be checked later
  * @throws QpsSyntaxError if either arguments have invalid syntax
  */
 void ValidatePatternClauseArgs(const std::string& left_hand_side,
                                const std::string& right_hand_side,
-                               PQLTokenType pattern_type);
+                               PQLTokenType pattern_type,
+                               std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates the syntax of such that clause
@@ -150,20 +157,24 @@ void ValidateAndClause(std::string& curr_clause);
  * Validates the select string
  * @param select_value string to be validated
  * @param select_value_type type of select value
+ * @param semantic_errors vector of semantic errors to be checked later
  * @param declarations set of declarations
  * @throws QpsSyntaxError if the select value is wrong syntactically
  */
 void ValidateSelectValue(std::string& select_value,
                          SelectValueType select_value_type,
-                         std::vector<Declaration> & declarations);
+                         std::vector<Declaration> & declarations,
+                         std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates the arguments in the tuple
  * @param select_value string of tuple to be validated
  * @param declarations set of declarations
+ * @param semantic_errors vector of semantic errors to be checked later
  * @throws QpsSyntaxError if there are missing arguments or synonyms are invalid
  */
-void ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations);
+void ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations,
+                         std::vector<QpsSemanticError> & semantic_errors);
 
 /*!
  * Validates the statements after result clause in select statement
@@ -183,7 +194,9 @@ void ValidateWithClauseArgs(std::string& with_clause);
  * Validates the attribute ref of a with clause
  * @param syn_string
  * @param attrName_string
+ * @param semantic_errors vector of semantic errors to be checked later
  * @param declarations
  */
-void ValidateAttributeRef(std::string& syn_string, std::string& attrName_string, std::vector<Declaration> declarations);
+void ValidateAttributeRef(std::string& syn_string, std::string& attrName_string, std::vector<Declaration> declarations,
+                          std::vector<QpsSemanticError> & semantic_errors);
 }  // namespace qps_validator

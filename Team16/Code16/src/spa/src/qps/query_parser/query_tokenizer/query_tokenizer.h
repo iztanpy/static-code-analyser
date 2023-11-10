@@ -64,6 +64,8 @@ enum class SelectValueType {
 
 class QueryTokenizer {
  public:
+  static std::vector<QpsSemanticError> semantic_errors;
+
   /*!
    * Tokenizes the query
    * @param query the string query
@@ -219,4 +221,10 @@ class QueryTokenizer {
    * @return a PQL token type
    */
   static PQLTokenType getAttrTokenType(const std::string& attr_name);
+
+  /*!
+   * Checks for existence of any semantic errors during parsing
+   * @throws QpsSemanticError if there are any semantic errors
+   */
+  static void checkSemanticErrors();
 };

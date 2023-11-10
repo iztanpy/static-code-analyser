@@ -38,9 +38,10 @@ void qps_validator::ValidateDeclarationStatement(std::string statement) {
   handler.handle(std::move(statement));
 }
 
-void qps_validator::ValidateDeclarationSynonym(std::string synonym, std::set<std::string> & processed_synonyms) {
+void qps_validator::ValidateDeclarationSynonym(std::string synonym, std::set<std::string> & processed_synonyms,
+                                               std::vector<QpsSemanticError> & semantic_errors) {
   DeclarationSynonymSyntaxHandler syntax_handler = DeclarationSynonymSyntaxHandler();
-  std::unique_ptr<QpsValidatorHandler> semantic_handler(new DeclarationSynonymSemanticHandler(processed_synonyms));
+  std::unique_ptr<QpsValidatorHandler> semantic_handler(new DeclarationSynonymSemanticHandler(processed_synonyms, semantic_errors));
   syntax_handler.setNext(std::move(semantic_handler));
   syntax_handler.handle(std::move(synonym));
 }
@@ -50,17 +51,18 @@ void qps_validator::ValidateSelectStatement(std::string select_statement) {
   handler.handle(std::move(select_statement));
 }
 
-void qps_validator::ValidateSelectSynonym(std::string select_synonym, std::vector<Declaration> & declarations) {
+void qps_validator::ValidateSelectSynonym(std::string select_synonym, std::vector<Declaration> & declarations,
+                                          std::vector<QpsSemanticError> & semantic_errors) {
   if (lexical_utils::IsSynonym(select_synonym)) {
     SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
-    std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectSynonymSemanticHandler(declarations));
+    std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectSynonymSemanticHandler(declarations, semantic_errors));
     syntax_handler.setNext(std::move(semantic_handler));
     syntax_handler.handle(std::move(select_synonym));
   } else if (QueryUtil::IsAttrRef(select_synonym)) {
     std::vector<std::string> split_attr_ref = string_util::SplitStringBy('.', select_synonym);
     std::string attr_syn = split_attr_ref[0];
     std::string attr_name = split_attr_ref[1];
-    qps_validator::ValidateAttributeRef(attr_syn, attr_name, declarations);
+    qps_validator::ValidateAttributeRef(attr_syn, attr_name, declarations, semantic_errors);
   }
 }
 
@@ -95,19 +97,22 @@ void qps_validator::ValidateWithClauseArgs(std::string & with_clause) {
   syntax_handler.handle(with_clause);
 }
 
-void qps_validator::ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations) {
-  ClauseSynonymSemanticHandler semantic_handler = ClauseSynonymSemanticHandler(declarations);
+void qps_validator::ValidateClauseSynonym(std::string synonym, std::vector<Declaration> & declarations,
+                                          std::vector<QpsSemanticError> & semantic_errors) {
+  ClauseSynonymSemanticHandler semantic_handler = ClauseSynonymSemanticHandler(declarations, semantic_errors);
   semantic_handler.handle(std::move(synonym));
 }
 
-void qps_validator::ValidatePatternSynonym(std::string pattern_syn, std::vector<Declaration> & declarations) {
-  PatternSynSemanticHandler semantic_handler = PatternSynSemanticHandler(declarations);
+void qps_validator::ValidatePatternSynonym(std::string pattern_syn, std::vector<Declaration> & declarations,
+                                           std::vector<QpsSemanticError> & semantic_errors) {
+  PatternSynSemanticHandler semantic_handler = PatternSynSemanticHandler(declarations, semantic_errors);
   semantic_handler.handle(pattern_syn);
 }
 
 void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
                                               const std::string& right_hand_side,
-                                              PQLTokenType pattern_type) {
+                                              PQLTokenType pattern_type,
+                                              std::vector<QpsSemanticError> & semantic_errors) {
   // All pattern LHS are entRef
   if (!QueryUtil::IsEntRef(left_hand_side)) {
     throw QpsSyntaxError("Invalid argument for LHS pattern clause");
@@ -126,18 +131,18 @@ void qps_validator::ValidatePatternClauseArgs(const std::string& left_hand_side,
     if (pattern_type == PQLTokenType::PATTERN_IF) {
       throw QpsSyntaxError("Invalid if pattern syntax");
     } else if (pattern_type == PQLTokenType::PATTERN_WHILE) {
-      throw QpsSemanticError("Pattern synonym must be an assign synonym");  // because can only be wildcard
+      semantic_errors.emplace_back("Pattern synonym must be an assign synonym");
     }
   }
 }
 
-void qps_validator::ValidateIfPatternClause(std::vector<std::string>& arguments) {
+void qps_validator::ValidateIfPatternClause(std::vector<std::string>& arguments, std::vector<QpsSemanticError> & semantic_errors) {
   if (arguments.size() != 3) {
-    throw QpsSemanticError("Pattern synonym is not if statement");
+    semantic_errors.emplace_back("Pattern synonym is not if statement");
   }
   std::string third_token = string_util::RemoveSpacesFromExpr(arguments[2]);
   if (!QueryUtil::IsWildcard(third_token)) {
-    throw QpsSyntaxError("Third argument of if pattern is not wildcard");
+    semantic_errors.emplace_back("Third argument of if pattern is not wildcard");
   }
 }
 
@@ -167,9 +172,10 @@ void qps_validator::ValidateAndClause(std::string& curr_clause) {
   }
 }
 
-void qps_validator::ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations) {
+void qps_validator::ValidateSelectTuple(std::string& select_value, std::vector<Declaration> & declarations,
+                                        std::vector<QpsSemanticError> & semantic_errors) {
   SelectSynonymSyntaxHandler syntax_handler = SelectSynonymSyntaxHandler();
-  std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectTupleSynonymSemanticHandler(declarations));
+  std::unique_ptr<QpsValidatorHandler> semantic_handler(new SelectTupleSynonymSemanticHandler(declarations, semantic_errors));
   syntax_handler.setNext(std::move(semantic_handler));
   std::string select_value_with_tuple_removed = QueryUtil::RemoveTuple(select_value);
   std::vector<std::string> tuple_arguments = string_util::SplitStringBy(',', select_value_with_tuple_removed);
@@ -184,7 +190,7 @@ void qps_validator::ValidateSelectTuple(std::string& select_value, std::vector<D
       std::string attr_syn = split_attr_ref[0];
       std::string attr_name = split_attr_ref[1];
       syntax_handler.handle(attr_syn);
-      qps_validator::ValidateAttributeRef(attr_syn, attr_name, declarations);
+      qps_validator::ValidateAttributeRef(attr_syn, attr_name, declarations, semantic_errors);
     } else {
       throw QpsSyntaxError("Invalid select element");
     }
@@ -193,13 +199,14 @@ void qps_validator::ValidateSelectTuple(std::string& select_value, std::vector<D
 
 void qps_validator::ValidateSelectValue(std::string & select_value,
                                         SelectValueType select_value_type,
-                                        std::vector<Declaration> & declarations) {
+                                        std::vector<Declaration> & declarations,
+                                        std::vector<QpsSemanticError> & semantic_errors) {
   switch (select_value_type) {
     case SelectValueType::SINGLE:
-      qps_validator::ValidateSelectSynonym(select_value, declarations);
+      qps_validator::ValidateSelectSynonym(select_value, declarations, semantic_errors);
       break;
     case SelectValueType::MUTLIPLE:
-      qps_validator::ValidateSelectTuple(select_value, declarations);
+      qps_validator::ValidateSelectTuple(select_value, declarations, semantic_errors);
       break;
     default:
       throw QpsSyntaxError("Invalid select type");
@@ -218,7 +225,8 @@ void qps_validator::ValidateStatementAfterResClause(std::string & remaining_stat
 
 void qps_validator::ValidateAttributeRef(std::string & syn_string,
                                          std::string & attrName_string,
-                                         std::vector<Declaration> declarations) {
+                                         std::vector<Declaration> declarations,
+                                         std::vector<QpsSemanticError> & semantic_errors) {
   DesignEntity syn_design_entity;
   for (const Declaration& declaration : declarations) {
     if (syn_string == declaration.synonym) {
@@ -229,7 +237,7 @@ void qps_validator::ValidateAttributeRef(std::string & syn_string,
   switch (syn_design_entity) {
     case DesignEntity::PROCEDURE:
       if (attrName_string != "procName") {
-        throw QpsSemanticError("Procedure can only have .procName as attribute value");
+        semantic_errors.emplace_back("Procedure can only have .procName as attribute value");
       }
       break;
     case DesignEntity::STMT:
@@ -237,28 +245,28 @@ void qps_validator::ValidateAttributeRef(std::string & syn_string,
     case DesignEntity::IF_STMT:
     case DesignEntity::ASSIGN:
       if (attrName_string != "stmt#") {
-        throw QpsSemanticError("Synonym can only have .stmt# as attribute value");
+        semantic_errors.emplace_back("Synonym can only have .stmt# as attribute value");
       }
       break;
     case DesignEntity::CALL:
       if (attrName_string != "procName" && attrName_string != "stmt#") {
-        throw QpsSemanticError("Call can only have .stmt# or .procName as attribute value");
+        semantic_errors.emplace_back("Call can only have .stmt# or .procName as attribute value");
       }
       break;
     case DesignEntity::VARIABLE:
       if (attrName_string != "varName") {
-        throw QpsSemanticError("Variable can only have .varName as attribute value");
+        semantic_errors.emplace_back("Variable can only have .varName as attribute value");
       }
       break;
     case DesignEntity::READ:
     case DesignEntity::PRINT:
       if (attrName_string != "varName" && attrName_string != "stmt#") {
-        throw QpsSemanticError("Synonym can only have .stmt# or .varName as attribute value");
+        semantic_errors.emplace_back("Synonym can only have .stmt# or .varName as attribute value");
       }
       break;
     case DesignEntity::CONSTANT:
       if (attrName_string != "value") {
-        throw QpsSemanticError("Constant can only have .value as attribute value");
+        semantic_errors.emplace_back("Constant can only have .value as attribute value");
       }
       break;
     default:

@@ -193,9 +193,6 @@ TEST_CASE("Test get relationship reference arguments") {
 
   std::string more_that_2_arg = "(a, b, c)";
   REQUIRE_THROWS_AS(QueryTokenizer::getRelRefArgs(more_that_2_arg, error_declarations), QpsSyntaxError);
-
-  std::string not_declared_arg = "(a, b)";
-  REQUIRE_THROWS_AS(QueryTokenizer::getRelRefArgs(not_declared_arg, error_declarations), QpsSemanticError);
 }
 
 TEST_CASE("Test get pattern arguments") {
@@ -253,12 +250,12 @@ TEST_CASE("Test get pattern arguments") {
       {"s", DesignEntity::STMT}
   };
 
-  std::string more_that_2_arg = "(s, b, c)";
-  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(more_that_2_arg, error_declarations, PQLTokenType::SYNONYM),
+  std::string more_that_2_arg = "stmt s; assign a; Select s pattern a(s, b, c)";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(more_that_2_arg),
                     QpsSyntaxError);
 
-  std::string not_declared_arg = "(a, _)";
-  REQUIRE_THROWS_AS(QueryTokenizer::getPatternArgs(not_declared_arg, error_declarations, PQLTokenType::SYNONYM),
+  std::string not_declared_arg = "if f; Select f pattern f(a, _, _)";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(not_declared_arg),
                     QpsSemanticError);
 }
 
@@ -321,9 +318,8 @@ TEST_CASE("Test extract clause tokens") {
       {"v", DesignEntity::VARIABLE}
   };
 
-  std::string undeclared_pattern_statement = "Select v pattern a (a, \"v\")";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(undeclared_pattern_statement, error_declarations),
-                    QpsSemanticError);
+  std::string undeclared_pattern_statement = "variable  v; Select v pattern a (a, \"v\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(undeclared_pattern_statement), QpsSemanticError);
 }
 
 TEST_CASE("Test extract one select and on pattern") {
@@ -545,12 +541,12 @@ TEST_CASE("Tokenizer can tokenize while pattern") {
   }
 
   // Invalid syntax for RHS pattern
-  std::string sample_query_2 = "Select w pattern w (\"x\", \"x\")";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSemanticError);
+  std::string sample_query_2 = "while w; Select w pattern w (\"x\", \"x\")";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query_2), QpsSemanticError);
 
   // Undeclared while synonym throws semantic error
   std::string sample_query_3 = "Select y pattern y (\"x\", _)";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations_1), QpsSemanticError);
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query_3), QpsSemanticError);
 }
 
 TEST_CASE("Tokenizer can tokenize if pattern") {
@@ -577,8 +573,8 @@ TEST_CASE("Tokenizer can tokenize if pattern") {
   }
 
   // Not enough arguments for if pattern
-  std::string sample_query_2 = "Select ifs pattern ifs(_,_)";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_2, declarations_1), QpsSemanticError);
+  std::string sample_query_2 = "if ifs; Select ifs pattern ifs(_,_)";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query_2), QpsSemanticError);
 
   // Undeclared if synonym
   std::string sample_query_3 = "Select if pattern if(\"x\",_,_)";
@@ -755,8 +751,8 @@ TEST_CASE("Tokenizer can tokenize select BOOLEAN") {
   REQUIRE(results_1[0].type == PQLTokenType::SYNONYM);
   REQUIRE(results_1[0].text == "BOOLEAN");
 
-  std::string sample_query_2 = "Select OOLEAN such that Parent (s1, s2)";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractSelectToken(sample_query_2, declarations_1), QpsSemanticError);
+  std::string sample_query_2 = "stmt s1, s2; Select OOLEAN such that Parent (s1, s2)";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query_2), QpsSemanticError);
 }
 
 TEST_CASE("Test add parentheses for expressions") {
@@ -843,8 +839,8 @@ TEST_CASE("Tokeniser can tokenize with clause") {
     REQUIRE(with_tokens_2[i].type == expected_with_tokens_2[i].type);
   }
 
-  std::string sample_query_3 = "Select s.stmt# such that Follows* (s, s1) with s2.stmt#=10";
-  REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_3, declarations_2), QpsSemanticError);
+  std::string sample_query_3 = "stmt s, s1; Select s.stmt# such that Follows* (s, s1) with s2.stmt#=10";
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query_3), QpsSemanticError);
 
   std::string sample_query_4 = "Select s.stmt# such that Follows* (s, s1) with s1.smt#=10";
   REQUIRE_THROWS_AS(QueryTokenizer::extractClauseTokens(sample_query_4, declarations_2), QpsSyntaxError);
@@ -952,11 +948,12 @@ TEST_CASE("Tokeniser can handle invalid not clauses") {
 }
 
 TEST_CASE("debug") {
-  std:: string sample_query = "procedure p;         Select p  .    procName such      that     Calls*(\"Second\", p)";
+  std:: string sample_query = "procedure p, q, r, s, t, u, v;assign a;\n"
+                              "Select <p, u> such that   Calls*(l, r) and pattern";
   std::vector<Declaration> declarations_1 = {
       {"not", DesignEntity::VARIABLE},
       {"a", DesignEntity::ASSIGN},
       {"p", DesignEntity::PRINT}
   };
-  REQUIRE_NOTHROW(QueryTokenizer::tokenize(sample_query));
+  REQUIRE_THROWS_AS(QueryTokenizer::tokenize(sample_query), QpsSyntaxError);
 }

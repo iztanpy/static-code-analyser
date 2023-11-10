@@ -50,7 +50,7 @@ std::vector<Declaration> QueryTokenizer::extractDeclarations(const std::vector<s
     std::vector<std::string> synonyms = string_util::SplitStringBy(',', statement);
 
     for (const std::string& synonym : synonyms) {
-      qps_validator::ValidateDeclarationSynonym(synonym, processed_synonyms);
+      qps_validator::ValidateDeclarationSynonym(synonym, processed_synonyms, semantic_errors);
       processed_synonyms.insert(synonym);
       // insert each synonym into declarations
       declarations.push_back({synonym, design_entity});
@@ -178,7 +178,7 @@ std::vector<QueryToken> QueryTokenizer::extractSelectToken(std::string& select_s
   qps_validator::ValidateStatementAfterResClause(statement_after_res_cl);
   std::string select_value = QueryTokenizer::removeAfterResultClause(remaining_statement);
   SelectValueType select_value_type = getSelectValueType(select_value);
-  qps_validator::ValidateSelectValue(select_value, select_value_type, declarations);
+  qps_validator::ValidateSelectValue(select_value, select_value_type, declarations, semantic_errors);
   // then extract the synonym after 'Select'
   std::vector<QueryToken> select_query_tokens = processSelectClause(select_value, select_value_type);
   for (const QueryToken& token : select_query_tokens) {
@@ -246,7 +246,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string& cla
     std::string remove_quotations = QueryUtil::RemoveQuotations(left_hand_side);
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    qps_validator::ValidateClauseSynonym(left_hand_side, declarations);
+    qps_validator::ValidateClauseSynonym(left_hand_side, declarations, semantic_errors);
     left_token = {left_hand_side, PQLTokenType::SYNONYM};
   }
 
@@ -258,7 +258,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getRelRefArgs(std::string& cla
     std::string remove_quotations = QueryUtil::RemoveQuotations(right_hand_side);
     right_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    qps_validator::ValidateClauseSynonym(right_hand_side, declarations);
+    qps_validator::ValidateClauseSynonym(right_hand_side, declarations, semantic_errors);
     right_token = {right_hand_side, PQLTokenType::SYNONYM};
   }
 
@@ -278,10 +278,10 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
   std::string left_hand_side = string_util::RemoveSpacesFromExpr(arguments[0]);
   std::string right_hand_side = string_util::RemoveSpacesFromExpr(arguments[1]);
   // check if lhs is a entRef and lhs is valid for each pattern type
-  qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side, pattern_type);
+  qps_validator::ValidatePatternClauseArgs(left_hand_side, right_hand_side, pattern_type, semantic_errors);
   // Additional check for third argument of if pattern
   if (pattern_type == PQLTokenType::PATTERN_IF) {
-    qps_validator::ValidateIfPatternClause(arguments);
+    qps_validator::ValidateIfPatternClause(arguments, semantic_errors);
   }
 
   // Set the different types of tokens
@@ -291,7 +291,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getPatternArgs(std::string& cl
     std::string remove_quotations = QueryUtil::RemoveQuotations(left_hand_side);
     left_token = {remove_quotations, PQLTokenType::IDENT};
   } else {
-    qps_validator::ValidateClauseSynonym(left_hand_side, declarations);
+    qps_validator::ValidateClauseSynonym(left_hand_side, declarations, semantic_errors);
     left_token = {left_hand_side, PQLTokenType::SYNONYM};
   }
 
@@ -345,7 +345,7 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getWithArgs(std::string& claus
     std::vector<std::string> attrRef_split = string_util::SplitStringBy('.', left_hand_side);
     std::string syn_string = attrRef_split[0];
     std::string attrName_string = attrRef_split[1];
-    qps_validator::ValidateClauseSynonym(syn_string, declarations);
+    qps_validator::ValidateClauseSynonym(syn_string, declarations, semantic_errors);
     PQLTokenType token_type = getAttrTokenType(attrName_string);
     left_token = {syn_string, token_type};
   }
@@ -360,9 +360,9 @@ std::pair<QueryToken, QueryToken> QueryTokenizer::getWithArgs(std::string& claus
     std::vector<std::string> attrRef_split = string_util::SplitStringBy('.', right_hand_side);
     std::string syn_string = attrRef_split[0];
     std::string attrName_string = attrRef_split[1];
-    qps_validator::ValidateClauseSynonym(syn_string, declarations);
+    qps_validator::ValidateClauseSynonym(syn_string, declarations, semantic_errors);
     PQLTokenType token_type = getAttrTokenType(attrName_string);
-    qps_validator::ValidateAttributeRef(syn_string, attrName_string, declarations);
+    qps_validator::ValidateAttributeRef(syn_string, attrName_string, declarations, semantic_errors);
     right_token = {syn_string, token_type};
   }
 
@@ -433,7 +433,7 @@ std::vector<QueryToken> QueryTokenizer::processPatternClause(std::string clause_
 
   std::string pattern_arg = string_util::RemoveFirstWordFromArgs(clause_with_pattern_removed);
   std::pair<QueryToken, QueryToken> pattern_args = getPatternArgs(pattern_arg, declarations, pattern_type);
-  qps_validator::ValidatePatternSynonym(pattern_syn, declarations);
+  qps_validator::ValidatePatternSynonym(pattern_syn, declarations, semantic_errors);
   result.push_back({pattern_syn, pattern_type});
   result.push_back(pattern_args.first);
   result.push_back(pattern_args.second);
@@ -545,7 +545,17 @@ std::vector<std::vector<QueryToken>> QueryTokenizer::extractClauseTokens(std::st
   return {such_that_tokens, pattern_tokens, with_tokens};
 }
 
+std::vector<QpsSemanticError> QueryTokenizer::semantic_errors;
+
+void QueryTokenizer::checkSemanticErrors() {
+  if (!semantic_errors.empty()) {
+    QpsSemanticError first_error = semantic_errors.at(0);
+    throw QpsSemanticError(first_error.what());
+  }
+}
+
 TokenisedQuery QueryTokenizer::tokenize(const std::string& query) {
+  semantic_errors = {};
   std::vector<QueryToken> tokens;
   std::string sanitized_query = string_util::RemoveWhiteSpaces(query);
   QueryStructure statements = QueryTokenizer::splitQuery(sanitized_query);
@@ -556,6 +566,7 @@ TokenisedQuery QueryTokenizer::tokenize(const std::string& query) {
       select_tokens = QueryTokenizer::extractSelectToken(statements.select_statement, declarations);
   std::vector<std::vector<QueryToken>>
       clause_tokens = QueryTokenizer::extractClauseTokens(statements.select_statement, declarations);
+  QueryTokenizer::checkSemanticErrors();
 
   std::vector<QueryToken> such_that_tokens = clause_tokens[0];
   std::vector<QueryToken> pattern_tokens = clause_tokens[1];
