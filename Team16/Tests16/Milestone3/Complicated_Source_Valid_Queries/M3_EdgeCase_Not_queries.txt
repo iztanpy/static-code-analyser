@@ -1,0 +1,35 @@
+1 - not clause at the end
+procedure p, q, r, s, t, u, v; assign a;
+Select <p, q> such that Calls*(p, r) with 5 = 5 pattern a(_, _) such that Calls*(p, "ProcedureNoUses") with not 5 = 5
+none
+5000
+2 - not is first clause
+procedure p, q, r, s, t, u, v;assign a;
+Select <p, u> such that  not Calls*("ProcedureNoUsesWithCalls", "ProcedureNoUses") and Calls*(p, r) with 5 = 5 pattern a(_, _) such that Calls*(p, "ProcedureNoUses")
+none
+5000
+3 - not is second clause
+procedure p, q, r, s, t, u, v;assign a;
+Select <p, u> such that   Calls*(p, r) and not Calls*("ProcedureNoUsesWithCalls", "ProcedureNoUses") with 5 = 5 pattern a(_, _) such that Calls*(p, "ProcedureNoUses")
+none
+5000
+4 - all not evaluates to true
+procedure p, q, r, s, t, u, v;assign a;
+Select BOOLEAN such that not  Calls*("ProcedureNoUses", "ProcedureHasIfNoElse") and not Calls*("ProcedureNoUsesWithCalls", "ProcedureAffectsWithNestedCalls") with not 5 = 1 pattern not a("p", _)
+TRUE
+5000
+5 - all not evaluates to true
+procedure p, q, r, s, t, u, v;assign a; constant c;
+Select c such that not  Calls*("ProcedureNoUses", "ProcedureHasIfNoElse") and not Calls*("ProcedureNoUsesWithCalls", "ProcedureAffectsWithNestedCalls") with not 5 = 1 pattern not a("p", _)
+0, 1
+5000
+6 - all not evaluates to true
+assign a; constant c;
+Select c such that  Calls*("ProcedureNoUses", "ProcedureHasIfNoElse") and not Calls*("ProcedureNoUsesWithCalls", "ProcedureAffectsWithNestedCalls") with not 5 = 1 pattern not a("p", _)
+none
+5000
+7 - repeated clauses with one not evaluates to false
+assign a; constant c;
+Select c such that  Affects(29, 33) and Affects(29, 33) and Affects(29, 33) and Affects(29, 33) and Affects(29, 33) and Affects(29, 33) and not Affects(29, 33)
+none
+5000
