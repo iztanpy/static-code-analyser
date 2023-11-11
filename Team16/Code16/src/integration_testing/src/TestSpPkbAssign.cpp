@@ -4,16 +4,16 @@
 #include <string>
 
 #include "utils/hash_utils.h"
-#include "SP/TNode.h"
-#include "SP/SourceProcessor.h"
-#include "PKB/API/WriteFacade.h"
-#include "PKB/API/ReadFacade.h"
+#include "SP/tnode.h"
+#include "SP/source_processor.h"
+#include "PKB/API/write_facade.h"
+#include "PKB/API/read_facade.h"
 #include "qps/qps.h"
 
 TEST_CASE("TEST Assign Pattern Exact Match") {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   ReadFacade readFacade = ReadFacade(*pkb_ptr);
-  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+  write_facade writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   QPS qps(readFacade);
 
@@ -30,7 +30,7 @@ TEST_CASE("TEST Assign Pattern Exact Match") {
 TEST_CASE("TEST Assign Pattern Partial Match") {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
   ReadFacade readFacade = ReadFacade(*pkb_ptr);
-  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+  write_facade writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   QPS qps(readFacade);
 

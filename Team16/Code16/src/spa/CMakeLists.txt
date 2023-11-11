@@ -18,36 +18,36 @@ add_library(spa ${srcs} ${headers}
         src/qps/clauses/clause.h
         src/qps/clauses/select_clause.cpp
         src/qps/query_evaluator/constraint_solver/constraint.h
-        src/PKB/PKB.h
+        src/PKB/pkb.h
         src/qps/clauses/suchthat_clauses/suchthat_clause.cpp
         src/qps/clauses/suchthat_clauses/suchthat_clause.h
         src/qps/query_evaluator/query_evaluator.cpp
         src/qps/query_evaluator/query_evaluator.h
         src/utils/hash_utils.h
-        src/PKB/PKB.cpp
-        src/PKB/PKB.h
-        src/PKB/API/WriteFacade.cpp
-        src/PKB/API/WriteFacade.h
-        src/PKB/API/ReadFacade.h
-        src/PKB/API/ReadFacade.cpp
-        src/SP/sp_parser/SimpleParser.h
-        src/SP/sp_parser/SimpleParser.cpp
-        src/SP/sp_tokeniser/SPTokeniser.cpp
-        src/SP/sp_tokeniser/SPTokeniser.h
-        src/SP/sp_tokeniser/TokenTypes.h
-        src/SP/Visitor.cpp
-        src/SP/Visitor.h
-        src/SP/DesignExtractor.h
-        src/SP/DesignExtractor.cpp
-        src/SP/TNode.cpp
-        src/SP/sp_tokeniser/Token.h
-        src/PKB/PKB.cpp
+        src/PKB/pkb.cpp
+        src/PKB/pkb.h
+        src/PKB/API/write_facade.cpp
+        src/PKB/API/write_facade.h
+        src/PKB/API/read_facade.h
+        src/PKB/API/read_facade.cpp
+        src/SP/sp_parser/simple_parser.h
+        src/SP/sp_parser/simple_parser.cpp
+        src/SP/sp_tokeniser/sp_tokeniser.cpp
+        src/SP/sp_tokeniser/sp_tokeniser.h
+        src/SP/sp_tokeniser/token_types.h
+        src/SP/visitor.cpp
+        src/SP/visitor.h
+        src/SP/design_extractor.h
+        src/SP/design_extractor.cpp
+        src/SP/tnode.cpp
+        src/SP/sp_tokeniser/token.h
+        src/PKB/pkb.cpp
         src/qps/qps.cpp
         src/qps/qps.h
         src/qps/query_evaluator/constraint_solver/constraint_table.cpp
         src/qps/query_evaluator/constraint_solver/constraint_table.h
-        src/utils/Error.cpp
-        src/utils/Error.h
+        src/utils/error.cpp
+        src/utils/error.h
         src/qps/qps_errors/qps_error.h
         src/qps/qps_errors/qps_semantic_error.cpp
         src/qps/qps_errors/qps_semantic_error.h
@@ -57,23 +57,23 @@ add_library(spa ${srcs} ${headers}
         src/qps/rel_ref.h
         src/qps/query_parser/clause_builder/suchthat_clause_builder.cpp
         src/qps/query_parser/clause_builder/suchthat_clause_builder.h
-        src/PKB/Stores/VariableStore.cpp
-        src/PKB/Stores/VariableStore.h
-        src/PKB/Stores/ConstantStore.cpp
-        src/PKB/Stores/ConstantStore.h
-        src/PKB/Stores/AssignStore.cpp
-        src/PKB/Stores/AssignStore.h
-        src/PKB/Stores/StatementStore.cpp
-        src/PKB/Stores/StatementStore.h
-        src/PKB/Stores/AssignStore.cpp
-        src/PKB/Stores/RelationStore.cpp
-        src/PKB/Stores/RelationStore.h
-        src/PKB/Stores/FollowsStore.cpp
-        src/PKB/Stores/FollowsStore.h
-        src/PKB/Stores/CallStore.h
-        src/PKB/Stores/CallStore.cpp
-        src/utils/Error.cpp
-        src/utils/Error.h
+        src/PKB/Stores/variable_store.cpp
+        src/PKB/Stores/variable_store.h
+        src/PKB/Stores/constant_store.cpp
+        src/PKB/Stores/constant_store.h
+        src/PKB/Stores/assign_store.cpp
+        src/PKB/Stores/assign_store.h
+        src/PKB/Stores/statement_store.cpp
+        src/PKB/Stores/statement_store.h
+        src/PKB/Stores/assign_store.cpp
+        src/PKB/Stores/relation_store.cpp
+        src/PKB/Stores/relation_store.h
+        src/PKB/Stores/follows_store.cpp
+        src/PKB/Stores/follows_store.h
+        src/PKB/Stores/call_store.h
+        src/PKB/Stores/call_store.cpp
+        src/utils/error.cpp
+        src/utils/error.h
         src/qps/qps_errors/qps_error.h
         src/qps/qps_errors/qps_semantic_error.cpp
         src/qps/qps_errors/qps_semantic_error.h
@@ -83,38 +83,38 @@ add_library(spa ${srcs} ${headers}
         src/qps/rel_ref.h
         src/qps/query_parser/clause_builder/suchthat_clause_builder.cpp
         src/qps/query_parser/clause_builder/suchthat_clause_builder.h
-        src/PKB/Stores/ParentStore.cpp
-        src/PKB/Stores/ParentStore.h
+        src/PKB/Stores/parent_store.cpp
+        src/PKB/Stores/parent_store.h
         src/utils/entity_types.h
-        src/SP/sp_parser/AssignmentParser.cpp
-        src/SP/sp_parser/AssignmentParser.h
-        src/SP/sp_parser/ReadParser.cpp
-        src/SP/sp_parser/ReadParser.h
-        src/SP/sp_parser/ProcedureParser.cpp
-        src/SP/sp_parser/ProcedureParser.h
-        src/SP/sp_parser/Parser.h
-        src/SP/SourceProcessor.h
-        src/SP/SourceProcessor.cpp
-        src/SP/sp_parser/WhileParser.cpp
-        src/SP/sp_parser/WhileParser.h
-        src/SP/sp_parser/PrintParser.cpp
-        src/SP/sp_parser/PrintParser.h
-        src/SP/sp_parser/IfParser.h
-        src/SP/sp_parser/IfParser.cpp
-        src/SP/sp_parser/CallParser.cpp
-        src/SP/sp_parser/CallParser.h
-        src/SP/sp_parser/ParserFactory.h
-        src/SP/sp_parser/ParserFactory.cpp
-        src/SP/sp_parser/CallParser.cpp
-        src/SP/sp_parser/CallParser.h
-        src/SP/sp_parser/Parser.cpp
-        src/SP/sp_parser/ElseParser.cpp
-        src/SP/sp_parser/ElseParser.h
-        src/SP/sp_parser/CloseBraceParser.cpp
-        src/SP/sp_parser/CloseBraceParser.h
-        src/SP/sp_cfg/Cfg.cpp
-        src/SP/sp_cfg/Cfg.h
-        src/SP/sp_cfg/CfgNode.h
+        src/SP/sp_parser/assignment_parser.cpp
+        src/SP/sp_parser/assignment_parser.h
+        src/SP/sp_parser/read_parser.cpp
+        src/SP/sp_parser/read_parser.h
+        src/SP/sp_parser/procedure_parser.cpp
+        src/SP/sp_parser/procedure_parser.h
+        src/SP/sp_parser/parser.h
+        src/SP/source_processor.h
+        src/SP/source_processor.cpp
+        src/SP/sp_parser/while_parser.cpp
+        src/SP/sp_parser/while_parser.h
+        src/SP/sp_parser/print_parser.cpp
+        src/SP/sp_parser/print_parser.h
+        src/SP/sp_parser/if_parser.h
+        src/SP/sp_parser/if_parser.cpp
+        src/SP/sp_parser/call_parser.cpp
+        src/SP/sp_parser/call_parser.h
+        src/SP/sp_parser/parser_factory.h
+        src/SP/sp_parser/parser_factory.cpp
+        src/SP/sp_parser/call_parser.cpp
+        src/SP/sp_parser/call_parser.h
+        src/SP/sp_parser/parser.cpp
+        src/SP/sp_parser/else_parser.cpp
+        src/SP/sp_parser/else_parser.h
+        src/SP/sp_parser/close_brace_parser.cpp
+        src/SP/sp_parser/close_brace_parser.h
+        src/SP/sp_cfg/cfg.cpp
+        src/SP/sp_cfg/cfg.h
+        src/SP/sp_cfg/cfg_node.h
         src/qps/clauses/pattern_clauses/pattern_clause.cpp
         src/qps/clauses/pattern_clauses/pattern_clause.h
         src/qps/query_parser/clause_builder/pattern_clause_builder.cpp
@@ -126,8 +126,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/constants.h
         src/qps/query_parser/QueryUtil.cpp
         src/qps/query_parser/QueryUtil.h
-        src/SP/utils/ParseUtils.cpp
-        src/SP/utils/ParseUtils.h
+        src/SP/utils/parse_utils.cpp
+        src/SP/utils/parse_utils.h
         src/utils/clauses_types.h
         src/qps/clauses/suchthat_clauses/suchthat_clauses_all.h
         src/qps/clauses/suchthat_clauses/uses.cpp
@@ -150,16 +150,16 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/parent_evaluator.h
         src/qps/clauses/pattern_clauses/pattern_validator.cpp
         src/qps/clauses/pattern_clauses/pattern_validator.h
-        src/PKB/Stores/ProcedureStore.cpp
-        src/PKB/Stores/ProcedureStore.cpp
+        src/PKB/Stores/procedure_store.cpp
+        src/PKB/Stores/procedure_store.cpp
         src/qps/query_evaluator/evaluator_util.cpp
         src/qps/query_evaluator/evaluator_util.h
         src/qps/query_evaluator/assign_pattern_evaluator.cpp
         src/qps/query_evaluator/assign_pattern_evaluator.h
-        src/PKB/Stores/IfStore.cpp
-        src/PKB/Stores/IfStore.h
-        src/PKB/Stores/WhileStore.cpp
-        src/PKB/Stores/WhileStore.h
+        src/PKB/Stores/if_store.cpp
+        src/PKB/Stores/if_store.h
+        src/PKB/Stores/while_store.cpp
+        src/PKB/Stores/while_store.h
         src/qps/qps_validator/qps_validator_handler.h
         src/qps/qps_validator/qps_validator.cpp
         src/qps/qps_validator/qps_validator.h
@@ -197,8 +197,8 @@ add_library(spa ${srcs} ${headers}
         src/qps/query_evaluator/constraint_solver/clause_group.h
         src/qps/query_evaluator/constraint_solver/clause_grouper.cpp
         src/qps/query_evaluator/constraint_solver/clause_grouper.h
-        src/PKB/Stores/NextStore.cpp
-        src/PKB/Stores/NextStore.h
+        src/PKB/Stores/next_store.cpp
+        src/PKB/Stores/next_store.h
         src/qps/query_evaluator/if_evaluator.cpp
         src/qps/query_evaluator/if_evaluator.h
         src/qps/query_evaluator/while_evaluator.cpp

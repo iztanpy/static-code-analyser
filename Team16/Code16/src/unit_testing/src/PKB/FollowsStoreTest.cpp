@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <unordered_set>
 #include "catch.hpp"
-#include "PKB/Stores/FollowsStore.h"
+#include "PKB/Stores/follows_store.h"
 #include "utils/clauses_types.h"
 
 typedef int statementNumber;
 
 TEST_CASE("Test Follows Store Add") {
-  auto followsStore = FollowsStore();
+  auto followsStore = follows_store();
   followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
   REQUIRE(followsStore.getAfter(1) == 2);
   REQUIRE(followsStore.getAfter(2) == 3);
@@ -15,7 +15,7 @@ TEST_CASE("Test Follows Store Add") {
 }
 
 TEST_CASE("Test Boolean Follows") {
-  auto followsStore = FollowsStore();
+  auto followsStore = follows_store();
   followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
   REQUIRE(followsStore.isFollow(1, 2));
   REQUIRE(followsStore.isFollow(2, 3));
@@ -52,7 +52,7 @@ TEST_CASE("Test Boolean Follows") {
 }
 
 TEST_CASE("Test Follows Store Reverse") {
-  auto followsStore = FollowsStore();
+  auto followsStore = follows_store();
   followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
   REQUIRE(followsStore.getBefore(2) == 1);
   REQUIRE(followsStore.getBefore(3) == 2);
@@ -60,7 +60,7 @@ TEST_CASE("Test Follows Store Reverse") {
 }
 
 TEST_CASE("Test Follows Store Get Followers") {
-  auto followsStore = FollowsStore();
+  auto followsStore = follows_store();
   followsStore.storeFollows({{1, 2}, {2, 3}, {3, 4}});
   std::unordered_set<statementNumber> followers = followsStore.getAfters(1);
   REQUIRE(followers.size() == 3);

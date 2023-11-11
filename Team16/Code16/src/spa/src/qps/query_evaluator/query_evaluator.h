@@ -8,7 +8,7 @@
 
 #include "qps/query_parser/parsed_query.h"
 #include "qps/query_evaluator/constraint_solver/constraint_table.h"
-#include "PKB/API/ReadFacade.h"
+#include "PKB/API/read_facade.h"
 #include "qps/query_evaluator/constraint_solver/clause_grouper.h"
 
 /*!

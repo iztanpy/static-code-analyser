@@ -12,7 +12,7 @@
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/clauses_types.h"
-#include "PKB/API/ReadFacade.h"
+#include "PKB/API/read_facade.h"
 
 /**
  * Represents a such that clause in a parsed query. Query Evaluator

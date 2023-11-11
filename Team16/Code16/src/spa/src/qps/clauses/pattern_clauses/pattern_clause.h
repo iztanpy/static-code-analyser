@@ -11,7 +11,7 @@
 #include "qps/query_evaluator/assign_pattern_evaluator.h"
 #include "qps/query_evaluator/if_evaluator.h"
 #include "qps/query_evaluator/while_evaluator.h"
-#include "PKB/API/ReadFacade.h"
+#include "PKB/API/read_facade.h"
 #include "utils/clauses_types.h"
 #include "utils/entity_types.h"
 

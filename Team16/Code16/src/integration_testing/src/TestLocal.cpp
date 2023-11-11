@@ -5,18 +5,18 @@
 #include <fstream>
 #include <memory>
 
-#include "PKB/API/ReadFacade.h"
-#include "PKB/API/WriteFacade.h"
-#include "PKB/PKB.h"
+#include "PKB/API/read_facade.h"
+#include "PKB/API/write_facade.h"
+#include "PKB/pkb.h"
 #include "qps/qps.h"
-#include "SP/SourceProcessor.h"
+#include "SP/source_processor.h"
 
 void parse(SourceProcessor& sp, std::string filename) {
   std::ifstream file(filename);
   std::string file_contents;
 
   if (!file.is_open()) {
-    std::cerr << "Error: Unable to open file " << filename << std::endl;
+    std::cerr << "error: Unable to open file " << filename << std::endl;
   }
 
   std::string input;
@@ -35,7 +35,7 @@ void parse(SourceProcessor& sp, std::string filename) {
 //                      "Select <p2.procName,v1> such that Modifies(p2,v1) such that Calls(p,p1) and Calls*(p1,p2) pattern if(v,_,_) and while(v,_) with r.varName = v.varName";
 //
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+//  write_facade writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //
 //  parse(sourceProcessor, filename);

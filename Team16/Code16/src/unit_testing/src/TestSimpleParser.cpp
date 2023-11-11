@@ -1,7 +1,7 @@
 #include "catch.hpp"
-#include "SP/sp_tokeniser/Token.h"
-#include "SP/SourceProcessor.h"
-#include "PKB/API/WriteFacade.h"
+#include "SP/sp_tokeniser/token.h"
+#include "SP/source_processor.h"
+#include "PKB/API/write_facade.h"
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
@@ -41,7 +41,7 @@ Token tokenRead = Token(readType);
 
 TEST_CASE("Test Hardcore Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = R"(procedure Four {
         if ((a+b)||((x == 1)&&(x==2))) then {
@@ -97,7 +97,7 @@ TEST_CASE("Test Hardcore Next") {
 
 TEST_CASE("Test Sample Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(procedure 
                                Second
@@ -144,7 +144,7 @@ TEST_CASE("Test Sample Next") {
 
 TEST_CASE("Test Complicated Next") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = R"(procedure Second {
         while (x==0) {
@@ -184,7 +184,7 @@ TEST_CASE("Test Complicated Next") {
 
 TEST_CASE("Test call sn rs.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
     procedure p {
@@ -211,7 +211,7 @@ TEST_CASE("Test call sn rs.") {
 
 TEST_CASE("Test caller callee rs.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
     procedure p {
@@ -233,7 +233,7 @@ TEST_CASE("Test caller callee rs.") {
 
 TEST_CASE("Test storing of procedure line numbers.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
     procedure p {
@@ -258,7 +258,7 @@ TEST_CASE("Test storing of procedure line numbers.") {
 
 TEST_CASE("Test invalid else statement at the end.") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
     procedure p {
@@ -274,7 +274,7 @@ TEST_CASE("Test invalid else statement at the end.") {
 
 TEST_CASE("Test follows relation one level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
     procedure p {
@@ -307,10 +307,10 @@ TEST_CASE("Test follows relation one level nesting") {
     REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
 
-TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
+TEST_CASE("Test simple_parser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
-    SimpleParser parser(new ASTVisitor());
+    write_facade writeFacade = write_facade(*pkb_ptr);
+    simple_parser parser(new ASTVisitor());
     std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
                                  tokenEnd, tokenCloseBrace};
     REQUIRE(parser.parse(my_tokens) == 10);
@@ -318,7 +318,7 @@ TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
 
 TEST_CASE("Test key and variable same name one level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; }";
     sourceProcessor.processSource(simpleProgram3);
@@ -332,7 +332,7 @@ TEST_CASE("Test key and variable same name one level nesting") {
 
 TEST_CASE("Test follows & parent relation two level nesting") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
         procedure p {
@@ -374,7 +374,7 @@ TEST_CASE("Test follows & parent relation two level nesting") {
 
 TEST_CASE("Test if else nested loop retrieval") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = "procedure p { if (number > 0) then { if (x == 1) then { x = x + 1; } } else { x = x + 1; } }";
     sourceProcessor.processSource(simpleProgram3);
@@ -388,7 +388,7 @@ TEST_CASE("Test if else nested loop retrieval") {
 
 TEST_CASE("Test if else loop retrieval") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p { if (number > 0) then { x = x + y; } else { x = 3; } }";
     sourceProcessor.processSource(simpleProgram2);
@@ -401,7 +401,7 @@ TEST_CASE("Test if else loop retrieval") {
 
 TEST_CASE("Test if-else-while nested retrieval") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string complexProgram = "procedure p { "
         "while (number > 0) { " // 1
@@ -433,7 +433,7 @@ TEST_CASE("Test if-else-while nested retrieval") {
 
 TEST_CASE(("Test multiple while while nested retrieval")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p {  while (number > 0) { while (x > 0) { while (a > b) {x = x + 1; } } }}";
     sourceProcessor.processSource(simpleProgram2);
@@ -448,7 +448,7 @@ TEST_CASE(("Test multiple while while nested retrieval")) {
 
 TEST_CASE(("Test SP storing of assignment statements")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram =
         "procedure p {x = x + 1; read r; while (i == 0) { read f;} } procedure wee { y = y + x + 1;}";
@@ -468,7 +468,7 @@ TEST_CASE(("Test SP storing of assignment statements")) {
 
 TEST_CASE(("Test SP Uses: nested while and if/then/else")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
       "procedure p {x = x + 1; read r; while (i == 0) { if( (a==3)||(b>1) ) then{ read f;} else{ read k; }} } "
@@ -496,7 +496,7 @@ TEST_CASE(("Test SP Uses: nested while and if/then/else")) {
 
 TEST_CASE(("Test Single While Loop Retrieval")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p {  while (number > 0)  { digit = number + 10; sum = sum + digit; } }";
     sourceProcessor.processSource(simpleProgram2);
@@ -511,7 +511,7 @@ TEST_CASE(("Test Single While Loop Retrieval")) {
 
 TEST_CASE(("Test 2 Nested While Loops Retrieval")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p {  while (number > 0)  { while (test > 2) { test = 0; a= x+y; } } }";
     sourceProcessor.processSource(simpleProgram2);
@@ -527,7 +527,7 @@ TEST_CASE(("Test 2 Nested While Loops Retrieval")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval1")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = R"(
         procedure Main {
@@ -552,7 +552,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval1")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval2")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram3 = "procedure q { while (    (  ((((((a + b))/c + e*j)) != 1) && (  (((((z + 2)/0)*u)) > e) || (z > n)   )) || (  !((c > nb ) || (!(z < w)))  )  )  || (!(b > n))  ) { read x; } }";
   sourceProcessor.processSource(simpleProgram3);
@@ -561,7 +561,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval2")) {
 
 TEST_CASE(("Test Conditional Tokens Retrievale2")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = "procedure q { while ( (a > nb) || ( c < j)  ) { read x; } }";
     sourceProcessor.processSource(simpleProgram3);
@@ -569,7 +569,7 @@ TEST_CASE(("Test Conditional Tokens Retrievale2")) {
 }
 TEST_CASE(("Test Conditional Tokens Retrieval3")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram4 = "procedure r { while (!(x == 1)) { read x; } }";
   sourceProcessor.processSource(simpleProgram4);
@@ -578,7 +578,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval3")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval4")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram5 = "procedure a { while ((!(x)) || (x == y)) { read x; } }";
   sourceProcessor.processSource(simpleProgram5);
@@ -587,7 +587,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval4")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval5")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram6 = "procedure b {   while (1>= 1%((0-1))) { read x; } }";
   sourceProcessor.processSource(simpleProgram6);
@@ -596,7 +596,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval5")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval6")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram7 = "procedure s { while (1>= 1%((1)) ) { read x; } }";
   sourceProcessor.processSource(simpleProgram7);
@@ -605,7 +605,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval6")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval7")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram8 = "procedure z { while (! ((1==0) && (1==0))) { read x; } }";
   sourceProcessor.processSource(simpleProgram8);
@@ -614,7 +614,7 @@ TEST_CASE(("Test Conditional Tokens Retrieval7")) {
 
 TEST_CASE(("Test Conditional Tokens Retrieval8")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram9 = "procedure v { while (x>=(0+0)) { read x; } }";
   sourceProcessor.processSource(simpleProgram9);
@@ -623,14 +623,14 @@ TEST_CASE(("Test Conditional Tokens Retrieval8")) {
 
 TEST_CASE(("Test Print Parser")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram2 = "procedure p { print k; }";
     REQUIRE(1 == 1);
 }
 
 
-TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
+TEST_CASE("Test design_extractor only using variables and constants") { // x = x + 1 + w
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(1);
     std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(1, tokenW.value);
     std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(1, tokenX.value);
@@ -646,7 +646,7 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
     nodePlus2->addChild(nodew);
     nodeEqual->addChild(nodePlus2);
 
-    DesignExtractor de = *new DesignExtractor();
+    design_extractor de = *new design_extractor();
     auto* visitor = new ASTVisitor();
     de.extractDesign(nodeEqual, visitor);
 
@@ -659,7 +659,7 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
 
 TEST_CASE(("Test SP single procedure")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = "procedure p {x = x + 1;}";
     sourceProcessor.processSource(simpleProgram);
@@ -680,7 +680,7 @@ TEST_CASE(("Test SP single procedure")) {
 
 TEST_CASE(("Test SP multi procedure with keyword names")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = "procedure p {x = x + 1;} procedure procedure {y = y + x; w = w + 1;}";
     sourceProcessor.processSource(simpleProgram);
@@ -706,7 +706,7 @@ TEST_CASE(("Test SP multi procedure with keyword names")) {
 
 TEST_CASE(("Test SP storing of Uses: Assign")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1;} procedure wee { y = y + x + 1;}";
     sourceProcessor.processSource(simpleProgram);
@@ -732,7 +732,7 @@ TEST_CASE(("Test SP storing of Uses: Assign")) {
 
 TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; read k;} procedure wee { y = y + x + 1;}";
     sourceProcessor.processSource(simpleProgram);
@@ -746,7 +746,7 @@ TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
 
 TEST_CASE(("Test SP read")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    auto writeFacade = WriteFacade(*pkb_ptr);
+    auto writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram = "procedure p {a = x + 1; y = y + x + 1; } procedure wee { y = y + x + 1;}";
     sourceProcessor.processSource(simpleProgram);
@@ -766,7 +766,7 @@ TEST_CASE(("Test SP read")) {
 
 TEST_CASE(("Test SP to PKB LineUsesVar")) {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
 
     std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; } procedure wee { w = x + 1;}";
@@ -780,7 +780,7 @@ TEST_CASE(("Test SP to PKB LineUsesVar")) {
 
 TEST_CASE(("Test SP storing of Uses: Print")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = "procedure p {x = x + 1; y = y + x + 1; print k;} procedure wee {y =y +x + 1;print kay;}";
   sourceProcessor.processSource(simpleProgram);
@@ -805,7 +805,7 @@ TEST_CASE(("Test SP storing of Uses: Print")) {
 
 TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = "procedure p {a = (x + 1) * y / 5 + 1; kay = five / 9 - var;}";
   sourceProcessor.processSource(simpleProgram);
@@ -832,7 +832,7 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
 
 TEST_CASE(("Test Uses: SP Assignment statement full RHS pattern")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
       "procedure p {a = (x + 1) * y / 5 + 1; kay = five / (9 - var);} procedure a {p = ((p * p));}";
@@ -848,7 +848,7 @@ TEST_CASE(("Test Uses: SP Assignment statement full RHS pattern")) {
 
 TEST_CASE(("Test Uses: SP Assignment statement partial RHS pattern")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = R"(
       procedure p {
@@ -880,7 +880,7 @@ TEST_CASE(("Test Uses: SP Assignment statement partial RHS pattern")) {
 
 TEST_CASE(("Test SP Statement type storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
       "procedure p { while (a==1) { if (i != 0) then { read f; } else { print k; a = 1 + w; }}}";
@@ -898,7 +898,7 @@ TEST_CASE(("Test SP Statement type storage")) {
 
 TEST_CASE(("Test SP Modifies storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = "procedure p { if (i != 0) then { x = x + 1 + r; } else { read k; a = 1 + w; }}";
   sourceProcessor.processSource(simpleProgram);
@@ -914,7 +914,7 @@ TEST_CASE(("Test SP Modifies storage")) {
 
 TEST_CASE(("Test SP Procedures storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram =
       "procedure p { if (i != 0) then { x = x + 1 + r; }} procedure k { read r; } procedure kay { print k; a = w; }";
@@ -925,7 +925,7 @@ TEST_CASE(("Test SP Procedures storage")) {
 
 //TEST_CASE(("Test SP valid SIMPLE - keywords as names")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i != 0) then { else = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
@@ -934,7 +934,7 @@ TEST_CASE(("Test SP Procedures storage")) {
 
 TEST_CASE(("Test SP: CFG storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = R"(
       procedure Second {
@@ -969,7 +969,7 @@ TEST_CASE(("Test SP: CFG storage")) {
   sourceProcessor.processSource(simpleProgram);
 
   // check root name in map
-  std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::shared_ptr<cfg_node> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set<int>({1, 2}));
   REQUIRE(rootSecond->getChildren().size() == 1);
@@ -979,8 +979,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   // check 456 & 7
   std::set<int> statementNumberSet456 = std::set<int>({4, 5, 6});
   std::set<int> statementNumberSet7 = std::set<int>({7});
-  std::shared_ptr<CfgNode> node7;
-  std::shared_ptr<CfgNode> node456;
+  std::shared_ptr<cfg_node> node7;
+  std::shared_ptr<cfg_node> node456;
   bool is456Found = false;
   bool is7Found = false;
   for (auto& it : rootSecond->getChildren().begin()->get()->getChildren()) {
@@ -1000,8 +1000,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(node7->getChildren().size() == 2);
   std::set<int> statementNumberSet8 = std::set<int>({8});
   std::set<int> statementNumberSet9 = std::set<int>({9});
-  std::shared_ptr<CfgNode> node8;
-  std::shared_ptr<CfgNode> node9;
+  std::shared_ptr<cfg_node> node8;
+  std::shared_ptr<cfg_node> node9;
   bool is8Found = false;
   bool is9Found = false;
   for (auto& it : node7->getChildren()) {
@@ -1025,7 +1025,7 @@ TEST_CASE(("Test SP: CFG storage")) {
 
   // PROCEDURE THIRD CHECK
   // check root name in map
-  std::shared_ptr<CfgNode> rootThird = sourceProcessor.getCfgNodesMap().at("Third");
+  std::shared_ptr<cfg_node> rootThird = sourceProcessor.getCfgNodesMap().at("Third");
   // check 13, 14, 15
   REQUIRE(rootThird->getStmtNumberSet() == std::set<int>({13, 14, 15}));
   REQUIRE(rootThird->getChildren().size() == 1);
@@ -1033,8 +1033,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(rootThird->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({16}));
   REQUIRE(rootThird->getChildren().begin()->get()->getChildren().size() == 2);
   // check 16 -> 17 && 16 -> END
-  std::shared_ptr<CfgNode> node17;
-  std::shared_ptr<CfgNode> nodeEnd;
+  std::shared_ptr<cfg_node> node17;
+  std::shared_ptr<cfg_node> nodeEnd;
   bool is17Found = false;
   bool isEndFound = false;
   for (auto& it : rootThird->getChildren().begin()->get()->getChildren()) {
@@ -1051,8 +1051,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(node17->getChildren().size() == 1);
   REQUIRE(node17->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({18}));
   // check 18 -> 19 && 18 -> END
-  std::shared_ptr<CfgNode> node19;
-  std::shared_ptr<CfgNode> nodeEnd2;
+  std::shared_ptr<cfg_node> node19;
+  std::shared_ptr<cfg_node> nodeEnd2;
   bool is19Found = false;
   bool isEnd2Found = false;
   for (auto& it : node17->getChildren().begin()->get()->getChildren()) {
@@ -1072,7 +1072,7 @@ TEST_CASE(("Test SP: CFG storage")) {
 
 TEST_CASE(("Test SP: nested if/while CFG storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  auto writeFacade = WriteFacade(*pkb_ptr);
+  auto writeFacade = write_facade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = R"(
       procedure Second {
@@ -1101,10 +1101,10 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
       }
   )";
   sourceProcessor.processSource(simpleProgram);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
 
   // check root name in map
-  std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::shared_ptr<cfg_node> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set < int > ({ 1, 2 }));
   REQUIRE(rootSecond->getChildren().size() == 1);
@@ -1115,8 +1115,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(rootSecond->getChildren().begin()->get()->getChildren().size() == 2);
   REQUIRE(cfgLegend.at(3) == *rootSecond->getChildren().begin());
   // check 3 -> 4 5 6 and 14 15 16 17
-  std::shared_ptr<CfgNode> node456;
-  std::shared_ptr<CfgNode> node14151617;
+  std::shared_ptr<cfg_node> node456;
+  std::shared_ptr<cfg_node> node14151617;
   bool is456Found = false;
   bool is14151617Found = false;
   for (auto& it : rootSecond->getChildren().begin()->get()->getChildren()) {
@@ -1136,8 +1136,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(7) == *node456->getChildren().begin());
   // check 7 -> 8 and 13
   REQUIRE(node456->getChildren().begin()->get()->getChildren().size() == 2);
-  std::shared_ptr<CfgNode> node8;
-  std::shared_ptr<CfgNode> node13;
+  std::shared_ptr<cfg_node> node8;
+  std::shared_ptr<cfg_node> node13;
   bool is8Found = false;
   bool is13Found = false;
   for (auto& it : node456->getChildren().begin()->get()->getChildren()) {
@@ -1153,7 +1153,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(8) == node8);
   REQUIRE(cfgLegend.at(13) == node13);
   // check 8 -> 9
-  std::shared_ptr<CfgNode> node9;
+  std::shared_ptr<cfg_node> node9;
   REQUIRE(node8->getChildren().size() == 1);
   REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 9 }));
   for (auto& it : node8->getChildren()) {
@@ -1162,8 +1162,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(9) == node9);
   // check 9 -> 10 and empty (end while)
   REQUIRE(node9->getChildren().size() == 2);
-  std::shared_ptr<CfgNode> node10;
-  std::shared_ptr<CfgNode> nodeEndWhile;
+  std::shared_ptr<cfg_node> node10;
+  std::shared_ptr<cfg_node> nodeEndWhile;
   bool is10Found = false;
   bool isEndWhileFound = false;
   for (auto& it : node9->getChildren()) {
@@ -1183,7 +1183,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(11) == *node10->getChildren().begin());
   // check 11 -> 12
   REQUIRE(node10->getChildren().begin()->get()->getChildren().size() == 1);
-  std::shared_ptr<CfgNode> node12;
+  std::shared_ptr<cfg_node> node12;
   bool is12Found = false;
   for (auto& it : node10->getChildren().begin()->get()->getChildren()) {
     if (it->getStmtNumberSet() == std::set < int > ({ 12 })) {
@@ -1231,7 +1231,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
 
 TEST_CASE(("Test SP Control Variable storage")) {
   std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-  WriteFacade writeFacade(*pkb_ptr);
+  write_facade writeFacade(*pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   std::string simpleProgram = R"(
     procedure A {
@@ -1327,7 +1327,7 @@ TEST_CASE(("Test SP Control Variable storage")) {
 }
 TEST_CASE("Test complicated conditionals") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
         procedure Four {
@@ -1363,7 +1363,7 @@ TEST_CASE("Test complicated conditionals") {
 }
 TEST_CASE("Test valid complicated conditionals for bug fix") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-    WriteFacade writeFacade(*pkb_ptr);
+    write_facade writeFacade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     std::string simpleProgram3 = R"(
         procedure Four {
@@ -1407,7 +1407,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 // Invalid testcases - uncomment to test for errors
 //TEST_CASE(("Test SP invalid SIMPLE - else after opening bracket but not any statement type")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i != 0) then { else; }} ";
@@ -1415,7 +1415,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE(("Test SP invalid SIMPLE - else after closing bracket but not any statement type")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i != 0) then { a = 1; } else; } ";
@@ -1423,7 +1423,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE(("Test SP invalid SIMPLE - else without if")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i != 0) then { else {} } } ";
@@ -1431,7 +1431,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE(("Test SP invalid SIMPLE - only ';' in statement lists")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i == 0) then {;} else {;;;;;} } ";
@@ -1439,7 +1439,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE(("Test SP invalid SIMPLE - empty statement lists")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i == 0) then {} else {} } ";
@@ -1447,7 +1447,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE(("Test SP invalid - integers on left of assignment statements")) {
 //  std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//  auto writeFacade = WriteFacade(*pkb_ptr);
+//  auto writeFacade = write_facade(*pkb_ptr);
 //  SourceProcessor sourceProcessor(&writeFacade);
 //  std::string simpleProgram =
 //      "procedure p { if (i != 0) then { 1 = else + 1; } call q; call procedure;} procedure jj { call alot; } ";
@@ -1455,7 +1455,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE("Test Multiple Procedures") {
 //    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
+//    write_facade writeFacade(*pkb_ptr);
 //    SourceProcessor sourceProcessor(&writeFacade);
 //    std::string simpleProgram3 = "procedure p { x = x + 1; x = x + 2; x = x + 3; } procedure p { x = x + 1; x = x + 2; x = x + 3; }";
 //    sourceProcessor.processSource(simpleProgram3);
@@ -1464,7 +1464,7 @@ TEST_CASE("Test valid complicated conditionals for bug fix") {
 //}
 //TEST_CASE("Test Calling Non-existent Procedure") {
 //    std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
-//    WriteFacade writeFacade(*pkb_ptr);
+//    write_facade writeFacade(*pkb_ptr);
 //    SourceProcessor sourceProcessor(&writeFacade);
 //    std::string simpleProgram3 = "procedure one { x = x + 2; call two; } procedure two { call one; call q; }";
 //    sourceProcessor.processSource(simpleProgram3);
