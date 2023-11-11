@@ -31,16 +31,14 @@ class AssignStore {
   std::unordered_set<statementNumber> getAssignsWcF(Wildcard lhs, full rhs);
   std::unordered_set<statementNumber> getAssignsFF(full lhs, full rhs);
 
-
-
-    /**
-    * @brief Adds a mapping of statement numbers to partial match sets for right-hand sides (RHS) of assignments.
-    *
-    * This method adds a mapping of statement numbers to sets of partial matches representing the right-hand sides (RHS)
-    * of assignments. The mapping allows for efficient retrieval of RHS information for assignments.
-    *
-    * @param numRHSMap An unordered map of statement numbers to sets of partial matches for RHS.
-    */
+  /**
+  * @brief Adds a mapping of statement numbers to partial match sets for right-hand sides (RHS) of assignments.
+  *
+  * This method adds a mapping of statement numbers to sets of partial matches representing the right-hand sides (RHS)
+  * of assignments. The mapping allows for efficient retrieval of RHS information for assignments.
+  *
+  * @param numRHSMap An unordered map of statement numbers to sets of partial matches for RHS.
+  */
   void addNumRHSMap(std::unordered_map<statementNumber, std::unordered_set<partialMatch>> numRHSMap);
 
   /**

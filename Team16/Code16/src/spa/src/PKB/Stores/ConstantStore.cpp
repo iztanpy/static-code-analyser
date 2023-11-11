@@ -4,15 +4,15 @@ typedef std::string possibleCombinations;
 typedef int statementNumber;
 
 ConstantStore::ConstantStore() {
-    constants = std::unordered_set<constant>();
+  constants = std::unordered_set<constant>();
 }
 
 void ConstantStore::addConstants(std::unordered_set<constant> constants) {
-    this->constants = constants;
+  this->constants = constants;
 }
 
 std::unordered_set<constant> ConstantStore::getConstants() {
-    return constants;
+  return constants;
 }
 
 

@@ -44,7 +44,7 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
       }
 
       for (statementNumber child : map.at(current)) {
-          if (visited.find(child) == visited.end()) {
+        if (visited.find(child) == visited.end()) {
           stack.push(child);
         }
       }
@@ -52,7 +52,7 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
   }
 
   for (const auto& [node, children] : ParentStarMap) {
-      for (statementNumber child : children) {
+    for (statementNumber child : children) {
       ParentStarMapReverse[child].insert(node);
     }
   }
