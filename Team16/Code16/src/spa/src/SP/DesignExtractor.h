@@ -28,20 +28,20 @@ class ASTVisitor;
  */
 class DesignExtractor {
  public:
-    /**
-     * @brief Constructs a DesignExtractor object.
-    */
-    DesignExtractor() = default;
-    /**
-      * @brief Extracts design information from the AST and populates the Program Knowledge Base (PKB).
-      *
-      * This method is responsible for extracting design-related information from the abstract syntax tree (AST)
-      * and populating the Program Knowledge Base (PKB). It performs the necessary analysis and data collection
-      * to enable subsequent program analysis tasks.
-      *
-      * @param root A shared pointer to the root of the abstract syntax tree (AST).
-      * @param visitor A pointer to the ASTVisitor used for visiting nodes in the AST.
-      * @return An integer status code indicating the success or failure of the extraction process.
-    */
-    int extractDesign(std::shared_ptr<TNode> root, ASTVisitor* visitor);
+  /**
+   * @brief Constructs a DesignExtractor object.
+  */
+  DesignExtractor() = default;
+  /**
+    * @brief Extracts design information from the AST and populates the Program Knowledge Base (PKB).
+    *
+    * This method is responsible for extracting design-related information from the abstract syntax tree (AST)
+    * and populating the Program Knowledge Base (PKB). It performs the necessary analysis and data collection
+    * to enable subsequent program analysis tasks.
+    *
+    * @param root A shared pointer to the root of the abstract syntax tree (AST).
+    * @param visitor A pointer to the ASTVisitor used for visiting nodes in the AST.
+    * @return An integer status code indicating the success or failure of the extraction process.
+  */
+  int extractDesign(std::shared_ptr<TNode> root, ASTVisitor* visitor);
 };

@@ -121,10 +121,10 @@ class CfgNode {
   * @return last statement number if exists, else return -2.
   */
   int getLastStatementNumber() {
-      auto lastElementIt = statementNumberSet.rbegin();
-      if (lastElementIt != statementNumberSet.rend()) {
-          return *lastElementIt;
-      }
-      return -2;
+    auto lastElementIt = statementNumberSet.rbegin();
+    if (lastElementIt != statementNumberSet.rend()) {
+      return *lastElementIt;
+    }
+    return -2;
   }
 };

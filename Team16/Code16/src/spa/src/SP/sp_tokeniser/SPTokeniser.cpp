@@ -49,70 +49,69 @@ std::vector<std::pair<TokenType, std::regex>> regex_rules = {
  * @param input The input source program as a single string.
  * @return A vector of strings containing the extracted tokens from the source program.
  */
-std::vector<std::string> SPtokeniser::splitLines(const std::string & input) {
-    std::vector<std::string> result;
-    std::istringstream iss(input);
-    std::unordered_set<char> delimiters = { ';', '{', '}', '+', '-', '=', '(', ')',
-        '*', '/', '%', '<', '>', '&', '|', '!', ' ', '\t', '\r', '\v', '\f', '\0' };
-    std::string line;
-    while (std::getline(iss, line)) {
-        extractTokens(line, delimiters, result);
-    }
-    return result;
+std::vector<std::string> SPtokeniser::splitLines(const std::string& input) {
+  std::vector<std::string> result;
+  std::istringstream iss(input);
+  std::unordered_set<char> delimiters = {';', '{', '}', '+', '-', '=', '(', ')',
+                                         '*', '/', '%', '<', '>', '&', '|', '!', ' ', '\t', '\r', '\v', '\f', '\0'};
+  std::string line;
+  while (std::getline(iss, line)) {
+    extractTokens(line, delimiters, result);
+  }
+  return result;
 }
 
 void SPtokeniser::extractTokens(const std::string& line,
-    const std::unordered_set<char>& delimiters,
-    std::vector<std::string>& result) {
-    std::string currentToken;
-    size_t start = 0;
+                                const std::unordered_set<char>& delimiters,
+                                std::vector<std::string>& result) {
+  std::string currentToken;
+  size_t start = 0;
 
-    // filter out whitespaces
-    size_t i = 0;
-    while (i < line.length()) {
-        // remove all white spaces
-        std::string curr_word;
-        // Iterate through each character in the line, filter out whitespaces
-        size_t word_char_index = i;
-        char curr_char = line[word_char_index];
-        while (delimiters.find(curr_char) == delimiters.end()) {
-            curr_word.push_back(curr_char);  // change to line.substr(start, i - start)
-            curr_char = line[++word_char_index];
-        }
-        // add current word if not empty, accounts for double whitespaces and onwards
-        if (!curr_word.empty()) result.push_back(curr_word);
-        // include delimiters (excluding whitespaces) as tokens
-        handleOperator(line, word_char_index, curr_word, delimiters, result);
-        // only add non-whitespaces tokens, accounts for double whitespaces and onwards
-        i = word_char_index + 1;
+  // filter out whitespaces
+  size_t i = 0;
+  while (i < line.length()) {
+    // remove all white spaces
+    std::string curr_word;
+    // Iterate through each character in the line, filter out whitespaces
+    size_t word_char_index = i;
+    char curr_char = line[word_char_index];
+    while (delimiters.find(curr_char) == delimiters.end()) {
+      curr_word.push_back(curr_char);  // change to line.substr(start, i - start)
+      curr_char = line[++word_char_index];
     }
+    // add current word if not empty, accounts for double whitespaces and onwards
+    if (!curr_word.empty()) result.push_back(curr_word);
+    // include delimiters (excluding whitespaces) as tokens
+    handleOperator(line, word_char_index, curr_word, delimiters, result);
+    // only add non-whitespaces tokens, accounts for double whitespaces and onwards
+    i = word_char_index + 1;
+  }
 }
 
 void SPtokeniser::handleOperator(const std::string& line,
-    size_t& word_char_index,
-    std::string& curr_word,
-    const std::unordered_set<char>& delimiters,
-    std::vector<std::string>&result) {
-
-    char curr_char = line[word_char_index];
-    auto delimiterItr = delimiters.find(curr_char);
-    if (delimiterItr != delimiters.end() && !isspace(*delimiterItr) && *delimiterItr != '\0') {
-        curr_word = curr_char;
-        // check if next char is a two-char operator
-        if (word_char_index + 1 < line.length()) {
-            char next_char = line[word_char_index + 1];
-            if ((curr_word == "=" && next_char == '=')
-                || (curr_word == "!" && next_char == '=')
-                || (curr_word == "<" && next_char == '=')
-                || (curr_word == ">" && next_char == '=')
-                || (curr_word == "&" && next_char == '&')
-                || (curr_word == "|" && next_char == '|')) {
-                curr_word.push_back(next_char);
-                word_char_index++;
-            }
-        }
-        result.push_back(curr_word);
+                                 size_t& word_char_index,
+                                 std::string& curr_word,
+                                 const std::unordered_set<char>& delimiters,
+                                 std::vector<std::string>& result) {
+  char curr_char = line[word_char_index];
+  auto delimiterItr = delimiters.find(curr_char);
+  if (delimiterItr != delimiters.end() && !isspace(*delimiterItr) && *delimiterItr != '\0') {
+    curr_word = curr_char;
+    // check if next char is a two-char operator
+    if (word_char_index + 1 < line.length()) {
+      char next_char = line[word_char_index + 1];
+      if ((curr_word == "=" && next_char == '=')
+          || (curr_word == "!" && next_char == '=')
+          || (curr_word == "<" && next_char == '=')
+          || (curr_word == ">" && next_char == '=')
+          || (curr_word == "&" && next_char == '&')
+          || (curr_word == "|" && next_char == '|')) {
+        curr_word.push_back(next_char);
+        word_char_index++;
+      }
     }
+    result.push_back(curr_word);
+  }
 }
 
 /**
@@ -127,82 +126,80 @@ void SPtokeniser::handleOperator(const std::string& line,
  * @throws std::runtime_error if an invalid token type or name is encountered.
  */
 std::vector<struct Token> SPtokeniser::tokenise(const std::string& input) {
-    std::vector<Token> tokens;
-    std::vector<std::string> lines = splitLines(input);
-    std::stack<char> braceStack;
+  std::vector<Token> tokens;
+  std::vector<std::string> lines = splitLines(input);
+  std::stack<char> braceStack;
 
-    for (const std::string& line : lines) {
-        TokenType matchedType = TokenType::kUnknownTokenType;
-        std::string matchedValue;
-        std::pair<TokenType, std::string> result = matchRegex(line);
-        matchedType = result.first;
-        matchedValue = result.second;
+  for (const std::string& line : lines) {
+    TokenType matchedType = TokenType::kUnknownTokenType;
+    std::string matchedValue;
+    std::pair<TokenType, std::string> result = matchRegex(line);
+    matchedType = result.first;
+    matchedValue = result.second;
 
-        if (matchedType == TokenType::kUnknownTokenType) { throw InvalidTokenTypeError(); }
+    if (matchedType == TokenType::kUnknownTokenType) { throw InvalidTokenTypeError(); }
 
-        if (matchedType == TokenType::kSepOpenBrace || matchedType == TokenType::kSepOpenParen) {
-            braceStack.push(matchedValue[0]);
-        }
-
-        if (matchedType == TokenType::kWhiteSpace) {
-        } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
-            checkBraceStack(braceStack, tokens, matchedType, matchedValue);
-        } else if (matchedType == TokenType::kLiteralName) {
-            checkValidLiteral(tokens, matchedType, matchedValue);
-        } else {
-            Token token{matchedType, matchedValue};
-            tokens.push_back(token);
-        }
+    if (matchedType == TokenType::kSepOpenBrace || matchedType == TokenType::kSepOpenParen) {
+      braceStack.push(matchedValue[0]);
     }
-    if (!braceStack.empty()) {
-        throw InvalidSyntaxError();
+
+    if (matchedType == TokenType::kWhiteSpace) {
+    } else if (matchedType == TokenType::kSepCloseBrace || matchedType == TokenType::kSepCloseParen) {
+      checkBraceStack(braceStack, tokens, matchedType, matchedValue);
+    } else if (matchedType == TokenType::kLiteralName) {
+      checkValidLiteral(tokens, matchedType, matchedValue);
+    } else {
+      Token token{matchedType, matchedValue};
+      tokens.push_back(token);
     }
-    return tokens;
+  }
+  if (!braceStack.empty()) {
+    throw InvalidSyntaxError();
+  }
+  return tokens;
 }
 
-
 void SPtokeniser::checkBraceStack(std::stack<char>& braceStack,
-    std::vector<Token>& tokens,
-    TokenType matchedType,
-    std::string matchedValue) {
-    if (braceStack.empty()) {
-        throw InvalidSyntaxError();
+                                  std::vector<Token>& tokens,
+                                  TokenType matchedType,
+                                  std::string matchedValue) {
+  if (braceStack.empty()) {
+    throw InvalidSyntaxError();
+  } else {
+    char top = braceStack.top();
+    if (matchedValue[0] == '}' && top == '{') {
+      braceStack.pop();
+      Token token{matchedType, matchedValue};
+      tokens.push_back(token);
+    } else if (matchedValue[0] == ')' && top == '(') {
+      braceStack.pop();
+      // insert ')' as a token
+      Token token{matchedType, matchedValue};
+      tokens.push_back(token);
     } else {
-        char top = braceStack.top();
-        if (matchedValue[0] == '}' && top == '{') {
-            braceStack.pop();
-            Token token{ matchedType, matchedValue };
-            tokens.push_back(token);
-        } else if (matchedValue[0] == ')' && top == '(') {
-            braceStack.pop();
-            // insert ')' as a token
-            Token token{ matchedType, matchedValue };
-            tokens.push_back(token);
-        } else {
-            throw InvalidSyntaxError();
-        }
+      throw InvalidSyntaxError();
     }
+  }
 }
 
 std::pair<TokenType, std::string> SPtokeniser::matchRegex(const std::string& line) {
-    for (const auto& regex_rule : regex_rules) {
-        std::regex regex_pattern = regex_rule.second;
-        std::smatch match;
+  for (const auto& regex_rule : regex_rules) {
+    std::regex regex_pattern = regex_rule.second;
+    std::smatch match;
 
-        // Iterate through defined regular expressions to match token types
-        if (std::regex_search(line.begin(), line.end(), match, regex_pattern)) {
-            return { regex_rule.first, match[0] };
-        }
+    // Iterate through defined regular expressions to match token types
+    if (std::regex_search(line.begin(), line.end(), match, regex_pattern)) {
+      return {regex_rule.first, match[0]};
     }
-    return { TokenType::kUnknownTokenType, "" };  // Return default values if no match is found
+  }
+  return {TokenType::kUnknownTokenType, ""};  // Return default values if no match is found
 }
-
 
 void SPtokeniser::checkValidLiteral(std::vector<Token>& tokens, TokenType matchedType, std::string matchedValue) {
   if (std::isdigit(matchedValue[0])) {
     throw InvalidTokenTypeError();
   } else {
-    Token token{ matchedType, matchedValue };
+    Token token{matchedType, matchedValue};
     tokens.push_back(token);
   }
 }

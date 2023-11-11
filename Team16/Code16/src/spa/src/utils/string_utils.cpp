@@ -117,7 +117,6 @@ std::string string_util::RemoveFirstWord(std::string& str) {
   return "";
 }
 
-
 std::string string_util::RemoveSpacesFromExpr(const std::string& str) {
   std::string result;
   for (char c : str) {

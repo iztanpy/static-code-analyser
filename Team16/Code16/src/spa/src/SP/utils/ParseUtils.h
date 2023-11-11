@@ -38,11 +38,11 @@ class ParseUtils {
   static std::unordered_map<int, std::vector<int>> condIndexMap;
 
  public:
- /**
-  * @brief Checks if the token represents an addition or subtraction operator.
-  * @param token The token to be checked.
-  * @return True if the token is a plus or minus operator, otherwise false.
- */
+  /**
+   * @brief Checks if the token represents an addition or subtraction operator.
+   * @param token The token to be checked.
+   * @return True if the token is a plus or minus operator, otherwise false.
+  */
   static bool isPlusOrMinus(const Token& token);
   /**
    * @brief Checks if the token represents a multiplication, division, or modulo operator.

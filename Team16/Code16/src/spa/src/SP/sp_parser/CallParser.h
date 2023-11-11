@@ -26,24 +26,24 @@ class DesignExtractor;
  */
 class CallParser : public Parser {
  private:
-    ASTVisitor* visitor;
+  ASTVisitor* visitor;
 
  public:
-    /**
-     * @brief Constructs a CallParser object with an associated ASTVisitor.
-     * @param visitor A pointer to an ASTVisitor used for visiting nodes in the abstract syntax tree.
-    */
-    explicit CallParser(ASTVisitor* visitor) : visitor(visitor) {}
-    /**
-     * @brief Parses a function call statement starting from the given index in the token vector.
-     *
-     * This method is responsible for parsing a function call statement from a vector of tokens starting
-     * at the specified index. It processes the function call and its associated content.
-     *
-     * @param tokens The vector of tokens representing the input code.
-     * @param curr_index The current index in the token vector where parsing should start.
-     * @return The index in the token vector after parsing the function call statement.
-     */
-    int parse(std::vector<Token>& tokens) override;
+  /**
+   * @brief Constructs a CallParser object with an associated ASTVisitor.
+   * @param visitor A pointer to an ASTVisitor used for visiting nodes in the abstract syntax tree.
+  */
+  explicit CallParser(ASTVisitor* visitor) : visitor(visitor) {}
+  /**
+   * @brief Parses a function call statement starting from the given index in the token vector.
+   *
+   * This method is responsible for parsing a function call statement from a vector of tokens starting
+   * at the specified index. It processes the function call and its associated content.
+   *
+   * @param tokens The vector of tokens representing the input code.
+   * @param curr_index The current index in the token vector where parsing should start.
+   * @return The index in the token vector after parsing the function call statement.
+   */
+  int parse(std::vector<Token>& tokens) override;
 };
 

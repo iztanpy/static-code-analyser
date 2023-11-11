@@ -29,8 +29,6 @@ class ASTVisitor;
 
 typedef std::unordered_map<TokenType, Parser*> ParserMap;
 
-
-
 /**
  * @class ParserFactory
  * @brief A factory class for creating and managing parsers for different statement types.
@@ -41,28 +39,28 @@ typedef std::unordered_map<TokenType, Parser*> ParserMap;
  */
 class ParserFactory {
  protected:
-    ASTVisitor* visitor;
+  ASTVisitor* visitor;
 
  public:
-    explicit ParserFactory(ASTVisitor* visitor);
+  explicit ParserFactory(ASTVisitor* visitor);
 
-    /**
-   * Create a parser for a given statement type.
-   *
-   * @return A pointer to a parser for the given statement type.
-   */
-    Parser* createParser(TokenType type, int lineNumber, int curr_index);
+  /**
+ * Create a parser for a given statement type.
+ *
+ * @return A pointer to a parser for the given statement type.
+ */
+  Parser* createParser(TokenType type, int lineNumber, int curr_index);
 
  private:
-    ParserMap parserMap;
-    AssignmentParser* assignmentParser = new AssignmentParser(visitor);
-    ProcedureParser* procedureParser = new ProcedureParser(visitor);
-    ReadParser* readParser = new ReadParser(visitor);
-    WhileParser* whileParser = new WhileParser(visitor);
-    PrintParser* printParser = new PrintParser(visitor);
-    IfParser* ifParser = new IfParser(visitor);
-    ElseParser* elseParser = new ElseParser(visitor);
-    CallParser* callParser = new CallParser(visitor);
-    CloseBraceParser* closeBraceParser = new CloseBraceParser(visitor);
-    void setUpParserMap();
+  ParserMap parserMap;
+  AssignmentParser* assignmentParser = new AssignmentParser(visitor);
+  ProcedureParser* procedureParser = new ProcedureParser(visitor);
+  ReadParser* readParser = new ReadParser(visitor);
+  WhileParser* whileParser = new WhileParser(visitor);
+  PrintParser* printParser = new PrintParser(visitor);
+  IfParser* ifParser = new IfParser(visitor);
+  ElseParser* elseParser = new ElseParser(visitor);
+  CallParser* callParser = new CallParser(visitor);
+  CloseBraceParser* closeBraceParser = new CloseBraceParser(visitor);
+  void setUpParserMap();
 };

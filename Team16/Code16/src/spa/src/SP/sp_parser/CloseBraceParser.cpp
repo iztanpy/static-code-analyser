@@ -13,11 +13,11 @@ int CloseBraceParser::parse(std::vector<Token>& tokens) {
     parentStatementStack.pop();  // Pop the parent statement
     currWhileDepth--;  // Decrease the depth
   } else if (!controlStructureStack.empty() && controlStructureStack.top() == "else" && currIfDepth >= 1) {
-      Cfg::handleEndElseStatement();  // End of Else Block CFG
-      currIfDepth--;  // Decrease the depth
-      controlStructureStack.pop();  // Pop the 'else'
-      controlStructureStack.pop();  // Pop the 'if'
-      parentStatementStack.pop();  // Pop the parent statement
+    Cfg::handleEndElseStatement();  // End of Else Block CFG
+    currIfDepth--;  // Decrease the depth
+    controlStructureStack.pop();  // Pop the 'else'
+    controlStructureStack.pop();  // Pop the 'if'
+    parentStatementStack.pop();  // Pop the parent statement
   } else if (!controlStructureStack.empty() && controlStructureStack.top() == "if" && currIfDepth >= 1) {
     bool hasElse = index + 2 < tokens.size()
         && tokens[index + 1].getValue() == "else"

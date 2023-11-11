@@ -35,6 +35,6 @@ struct Token {
   Token(TokenType t, std::string v) : tokenType(t), value(std::move(v)) {}
 
   [[nodiscard]] std::string getValue() const {
-      return value;
+    return value;
   }
 };

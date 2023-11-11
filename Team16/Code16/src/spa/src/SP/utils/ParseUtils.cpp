@@ -46,9 +46,8 @@ int ParseUtils::getIndex() {
 }
 
 std::string ParseUtils::getProcedureName() {
-    return procedureName;
+  return procedureName;
 }
-
 
 void ParseUtils::setValues(int index, int lineNumber) {
   ParseUtils::index = index;
@@ -121,50 +120,50 @@ std::shared_ptr<TNode> ParseUtils::parseCondExpression(const std::vector<Token>&
 
   // check for !
   if (tokens[index].tokenType == TokenType::kOperatorLogicalNot) {
-      std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
-      incrementIndex();
+    std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
+    incrementIndex();
 
-      if (tokens[index].tokenType == TokenType::kSepOpenParen) {
-          incrementIndex();
-          std::shared_ptr<TNode> child = parseCondExpression(tokens);
-          operatorNode->addChild(child);
-          tree = operatorNode;
-          if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-              throw InvalidSyntaxError();
-          }
-          incrementIndex();
-      } else {
-          throw InvalidSyntaxError();
+    if (tokens[index].tokenType == TokenType::kSepOpenParen) {
+      incrementIndex();
+      std::shared_ptr<TNode> child = parseCondExpression(tokens);
+      operatorNode->addChild(child);
+      tree = operatorNode;
+      if (tokens[index].tokenType != TokenType::kSepCloseParen) {
+        throw InvalidSyntaxError();
       }
-  } else if (condIndexMap.find(index) != condIndexMap.end()) {
-      int& condEndIndex = condIndexMap[index][2];
-      int& condOprIndex = condIndexMap[index][1];
-
-      // this is a conditional expression
       incrementIndex();
-      // lhs conditional expression
-      tree = parseCondExpression(tokens);
+    } else {
+      throw InvalidSyntaxError();
+    }
+  } else if (condIndexMap.find(index) != condIndexMap.end()) {
+    int& condEndIndex = condIndexMap[index][2];
+    int& condOprIndex = condIndexMap[index][1];
+
+    // this is a conditional expression
+    incrementIndex();
+    // lhs conditional expression
+    tree = parseCondExpression(tokens);
 //      if (tokens[index].tokenType != TokenType::kSepCloseParen) {
 //          throw InvalidSyntaxError();
 //      }
 
-      // conditional operator
-      incrementIndex();
-      if (index != condOprIndex) throw InvalidSyntaxError();
-      std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
-      operatorNode->addChild(tree);
-      incrementIndex();
+    // conditional operator
+    incrementIndex();
+    if (index != condOprIndex) throw InvalidSyntaxError();
+    std::shared_ptr<TNode> operatorNode = TNodeFactory::createNode(tokens[index], lineNumber);
+    operatorNode->addChild(tree);
+    incrementIndex();
 
-      // rhs conditional expression
-      incrementIndex();
-      std::shared_ptr<TNode> rhs = parseCondExpression(tokens);
-      operatorNode->addChild(rhs);
-      tree = operatorNode;
+    // rhs conditional expression
+    incrementIndex();
+    std::shared_ptr<TNode> rhs = parseCondExpression(tokens);
+    operatorNode->addChild(rhs);
+    tree = operatorNode;
 
-      // check end of conditional expression
-      int i = index;
-      if (index != condEndIndex) throw InvalidSyntaxError();
-      incrementIndex();
+    // check end of conditional expression
+    int i = index;
+    if (index != condEndIndex) throw InvalidSyntaxError();
+    incrementIndex();
 //
 //      // conditional operator
 //      if (ParseUtils::isCondExpressionOperator(tokens[index])) {
@@ -259,37 +258,37 @@ bool ParseUtils::validCondExpression(const std::vector<Token>& tokens) {
 }
 
 void ParseUtils::setUpCondIndexMap(const std::vector<Token>& tokens) {
-    condIndexMap.clear();
-    int i = index;
-    std::shared_ptr<std::stack<int>> openParenIndexStack = std::make_shared<std::stack<int>>();
-    std::shared_ptr<std::stack<std::vector<int>>> currCondIndex = std::make_shared<std::stack<std::vector<int>>>();
-    while (i < tokens.size()) {
-        if (tokens[i].tokenType == TokenType::kSepOpenParen) {
-            openParenIndexStack->push(i);
-        } else if (tokens[i].tokenType == TokenType::kSepCloseParen) {
-            int& openParenIndex = openParenIndexStack->top();
-            openParenIndexStack->pop();
-            if (openParenIndexStack->empty()) {
-                break;
-            } else if (!currCondIndex.get()->empty() && openParenIndex == currCondIndex->top()[1] + 1) {
-                // closing a cond expression
-                std::vector<int>& curr = currCondIndex->top();
-                curr.push_back(i);
-                condIndexMap[curr[0]] = curr;
-                currCondIndex->pop();
-            } else if (i + 2 < tokens.size()
-                && isCondExpressionOperator(tokens[i + 1])
-                && tokens[i + 2].tokenType == TokenType::kSepOpenParen) {
-                // cond expression detected save [cond start index, cond operator index]
-                std::vector<int> curr = std::vector<int>();
-                curr.push_back(openParenIndex);
-                curr.push_back(i + 1);
-                currCondIndex->push(curr);
-                i++;
-            }
-        } else if (isCondExpressionOperator(tokens[i])) {
-            throw InvalidSyntaxError();
-        }
+  condIndexMap.clear();
+  int i = index;
+  std::shared_ptr<std::stack<int>> openParenIndexStack = std::make_shared<std::stack<int>>();
+  std::shared_ptr<std::stack<std::vector<int>>> currCondIndex = std::make_shared<std::stack<std::vector<int>>>();
+  while (i < tokens.size()) {
+    if (tokens[i].tokenType == TokenType::kSepOpenParen) {
+      openParenIndexStack->push(i);
+    } else if (tokens[i].tokenType == TokenType::kSepCloseParen) {
+      int& openParenIndex = openParenIndexStack->top();
+      openParenIndexStack->pop();
+      if (openParenIndexStack->empty()) {
+        break;
+      } else if (!currCondIndex.get()->empty() && openParenIndex == currCondIndex->top()[1] + 1) {
+        // closing a cond expression
+        std::vector<int>& curr = currCondIndex->top();
+        curr.push_back(i);
+        condIndexMap[curr[0]] = curr;
+        currCondIndex->pop();
+      } else if (i + 2 < tokens.size()
+          && isCondExpressionOperator(tokens[i + 1])
+          && tokens[i + 2].tokenType == TokenType::kSepOpenParen) {
+        // cond expression detected save [cond start index, cond operator index]
+        std::vector<int> curr = std::vector<int>();
+        curr.push_back(openParenIndex);
+        curr.push_back(i + 1);
+        currCondIndex->push(curr);
         i++;
+      }
+    } else if (isCondExpressionOperator(tokens[i])) {
+      throw InvalidSyntaxError();
     }
+    i++;
+  }
 }

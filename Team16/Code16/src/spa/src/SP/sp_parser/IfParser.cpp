@@ -31,13 +31,13 @@ int IfParser::parse(std::vector<Token>& tokens) {
 
   // Validate close parenthesis
   if (tokens[index].tokenType != TokenType::kSepCloseParen) {
-      throw InvalidSyntaxError();
+    throw InvalidSyntaxError();
   }
   index++;
 
   // Validate 'then' keyword
   if (tokens[index].getValue() != "then") {
-      throw InvalidSyntaxError();
+    throw InvalidSyntaxError();
   }
   index++;
 

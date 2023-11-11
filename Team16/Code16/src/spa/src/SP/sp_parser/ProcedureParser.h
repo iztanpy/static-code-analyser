@@ -28,23 +28,23 @@ class DesignExtractor;
  */
 class ProcedureParser : public Parser {
  public:
-    /**
-    * @brief Constructs a ProcedureParser object with an associated ASTVisitor.
-    * @param visitor A pointer to an ASTVisitor used for visiting nodes in the abstract syntax tree.
-    */
-    explicit ProcedureParser(ASTVisitor* visitor) : visitor(visitor) {}
-    /**
-     * @brief Parses a procedure statement starting from the given index in the token vector.
-     *
-     * This method is responsible for parsing a procedure statement from a vector of tokens starting
-     * at the specified index. It processes the procedure statement and its associated content.
-     *
-     * @param tokens The vector of tokens representing the input code.
-     * @param curr_index The current index in the token vector where parsing should start.
-     * @return The index in the token vector after parsing the procedure statement.
-     */
-    int parse(std::vector<Token>& tokens) override;
-    static void addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<CfgNode> cfgNode);
-    ASTVisitor* visitor;
+  /**
+  * @brief Constructs a ProcedureParser object with an associated ASTVisitor.
+  * @param visitor A pointer to an ASTVisitor used for visiting nodes in the abstract syntax tree.
+  */
+  explicit ProcedureParser(ASTVisitor* visitor) : visitor(visitor) {}
+  /**
+   * @brief Parses a procedure statement starting from the given index in the token vector.
+   *
+   * This method is responsible for parsing a procedure statement from a vector of tokens starting
+   * at the specified index. It processes the procedure statement and its associated content.
+   *
+   * @param tokens The vector of tokens representing the input code.
+   * @param curr_index The current index in the token vector where parsing should start.
+   * @return The index in the token vector after parsing the procedure statement.
+   */
+  int parse(std::vector<Token>& tokens) override;
+  static void addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<CfgNode> cfgNode);
+  ASTVisitor* visitor;
 };
 
