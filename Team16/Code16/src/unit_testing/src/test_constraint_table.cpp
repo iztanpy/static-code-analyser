@@ -14,8 +14,6 @@
  * - We test if we can find all rows in our final table.
  */
 
-// TODO(phuccuongngo99): Maybe test to make sure no duplicate rows in the table
-
 // Test length of table
 void REQUIRE_LENGTH(const Table& table, int length) {
   for (const auto& [col_name, col_values] : table) {

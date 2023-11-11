@@ -1,6 +1,5 @@
 #include "qps/query_evaluator/constraint_solver/constraint_table.h"
 
-// TODO(phuccuongngo99): Convert these function to template and throw them into Util
 // {1, 2, 3}, 2 -> {1, 1, 2, 2, 3, 3}
 std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, size_t n) {
   std::vector<std::string> result;

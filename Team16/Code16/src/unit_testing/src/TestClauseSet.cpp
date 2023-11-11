@@ -5,9 +5,6 @@
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/clauses/pattern_clauses/pattern_clause.h"
 
-// TODO(phuccuongngo99): This file is to test putting clauses together in a ClauseSet
-// and also QueryParser from a lot of clauses
-
 TEST_CASE("Test 1") {
   std::string
       sample_query_1 = "procedure p; Select p such that Calls(p, _) such that Calls(_, p) such that Parent(_, _)";
