@@ -1,0 +1,15 @@
+1 - affects with similar synonyms
+stmt s1, s2;
+Select s1 such that Affects(s1, s1)
+7
+5000
+2 - affects and with statements
+stmt s1, s2;
+Select <s1, s2> such that Affects(s1, s2) with s1.stmt# = 7
+7 7, 7 13, 7 15, 7 11
+5000
+3 - two affects clauses
+stmt s1, s2;
+Select <s1, s2> such that Affects(s1, s1) and Affects(s1, s2)
+7 7, 7 13, 7 15, 7 11
+5000
