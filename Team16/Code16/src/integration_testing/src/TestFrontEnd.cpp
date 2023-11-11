@@ -4,15 +4,15 @@
 #include "SP/TNode.h"
 #include "catch.hpp"
 #include "SP/SourceProcessor.h"
-#include "PKB/API/WriteFacade.h"
-#include "PKB/API/ReadFacade.h"
+#include "PKB/API/write_facade.h"
+#include "PKB/API/read_facade.h"
 #include "qps/qps.h"
 
 TEST_CASE("One print statement 1") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -34,7 +34,7 @@ TEST_CASE("One read statement 1") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -53,7 +53,7 @@ TEST_CASE("One read statement 1") {
 TEST_CASE("TEST SP-PKB-QPS UsesP ModifiesP") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
     std::string simpleProgram = "procedure poo { y = x + 1; read k; print l; }";
@@ -68,7 +68,7 @@ TEST_CASE("TEST SP-PKB-QPS UsesP ModifiesP") {
 TEST_CASE("TEST SP-PKB Connection 2") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
 
     writeFacade.storeCalls({ {"main", {"p", "q"}}, {"p", {"q"}}, });
 
@@ -165,7 +165,7 @@ TEST_CASE("TEST SP-PKB Connection 2") {
 TEST_CASE("Calls and Callstar methods") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
 
     writeFacade.storeCalls({ {"main", {"p"}}, {"p", {"q"}}, });
 
@@ -229,7 +229,7 @@ TEST_CASE("Calls and Callstar methods") {
 TEST_CASE("Calls and Callstar methods error") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
 
     REQUIRE_THROWS(writeFacade.storeCalls({ {"main", {"p"}}, {"p", {"main"}}}));
     REQUIRE_THROWS(writeFacade.storeCalls({ {"main", {"p"}}, {"p", {"q"}}, {"q", {"main"}}}));
@@ -239,7 +239,7 @@ TEST_CASE("Test Calls ") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -262,7 +262,7 @@ TEST_CASE("Test Calls ") {
 TEST_CASE("Test SP-PKB connection") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
 
     std::string simpleProgram = "procedure p {x = z - 3 + I; x = x + 1; y = y + z + 4;}";
@@ -338,7 +338,7 @@ TEST_CASE("One assign statement 1") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -377,7 +377,7 @@ TEST_CASE("One assign statement with white-spaces") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -395,7 +395,7 @@ TEST_CASE("Simple assign statements") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -413,7 +413,7 @@ TEST_CASE("Multiple assign statements") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -431,7 +431,7 @@ TEST_CASE("Assign statements with many SIMPLE RHS terms and whitespaces") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
     std::string simpleProgram = "procedure p{x = z - 3 + I - \n 100 + \t u100 + U48ka - \n \t OoOhd; \t  y = y + 4; }";
@@ -449,7 +449,7 @@ TEST_CASE("Assign statements with mixed-case PQL synonyms & many declarations") 
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -469,7 +469,7 @@ TEST_CASE("Selecting Assign statements") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -486,7 +486,7 @@ TEST_CASE("Selecting Assign statements") {
 TEST_CASE("Test Call Store functionalityies") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
 
@@ -521,7 +521,7 @@ TEST_CASE("Test Call Store functionalityies") {
 TEST_CASE("Test affects testcase") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
     std::string simpleProgram = R"(procedure Second {
@@ -653,7 +653,7 @@ TEST_CASE("Test affects testcase") {
 TEST_CASE("Test affects testcase 2") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
     std::string simpleProgram = R"(procedure Third {
@@ -675,7 +675,7 @@ TEST_CASE("Test affects testcase 2") {
 TEST_CASE("Test failing modifies testcase") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
     std::string simpleProgram = R"(procedure q {
@@ -706,7 +706,7 @@ TEST_CASE("Test call failing testcase") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
 
     ReadFacade readFacade = ReadFacade(*pkb_ptr);
-    WriteFacade writeFacade = WriteFacade(*pkb_ptr);
+    write_facade writeFacade = write_facade(*pkb_ptr);
     SourceProcessor sourceProcessor(&writeFacade);
     QPS qps(readFacade);
     std::string simpleProgram = R"(

@@ -13,7 +13,7 @@
 #include "Parser.h"
 
 // Headers from other directories
-#include "PKB/PKB.h"
+#include "PKB/pkb.h"
 #include "utils/Error.h"
 
 class DesignExtractor;

@@ -7,7 +7,7 @@
 #include "utils/entity_types.h"
 #include "utils/hash_utils.h"
 
-class WhileStore {
+class while_store {
  private:
   typedef std::string variable;
   typedef int statementNumber;
@@ -15,7 +15,7 @@ class WhileStore {
   std::unordered_map<variable, std::unordered_set<statementNumber>> reverseVariableMap;
 
  public:
-  WhileStore();
+  while_store();
 /**
  * Adds a mapping of statement numbers to sets of variables in the variableMap.
  *

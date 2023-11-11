@@ -6,19 +6,19 @@
 #include <set>
 #include <memory>
 #include <utility>
-#include "PKB/PKB.h"
+#include "PKB/pkb.h"
 
 typedef std::string variable;
 typedef int statementNumber;
 typedef std::string possibleCombinations;
 typedef std::string constant;
 
-class WriteFacade {
+class write_facade {
  private:
   PKB& pkb;
 
  public:
-  explicit WriteFacade(PKB& pkb);
+  explicit write_facade(PKB& pkb);
 
   /**
   * @brief Stores assignments information in the program.

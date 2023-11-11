@@ -8,7 +8,7 @@
 #include "utils/entity_types.h"
 #include "qps/declaration.h"
 
-class CallStore {
+class call_store {
  private:
   typedef std::string procedure;
   typedef int statementNumber;
@@ -19,7 +19,7 @@ class CallStore {
   std::unordered_set<std::pair<statementNumber, procedure>, PairHash> callPairs;
 
  public:
-  CallStore();
+  call_store();
 
   /**
   * @brief Stores a call relationship table.

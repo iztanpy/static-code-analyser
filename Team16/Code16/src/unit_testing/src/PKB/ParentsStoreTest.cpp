@@ -1,12 +1,12 @@
 #include <unordered_set>
 #include <iostream>
 #include "catch.hpp"
-#include "PKB/Stores/ParentStore.h"
+#include "PKB/Stores/parent_store.h"
 
 typedef int statementNumber;
 
 TEST_CASE("Test Parent Store Add") {
-  auto parentStore = ParentStore();
+  auto parentStore = parent_store();
   parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}, {6, {8, 9}}});
   REQUIRE(parentStore.getParent(2) == std::unordered_set<statementNumber>{1});
   REQUIRE(parentStore.getParent(3) == std::unordered_set<statementNumber>{1});
@@ -79,7 +79,7 @@ TEST_CASE("Test Parent Store Add") {
 }
 
 TEST_CASE("Test getChildrens") {
-  auto parentStore = ParentStore();
+  auto parentStore = parent_store();
   parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
   std::unordered_set<statementNumber> childrens = parentStore.getChildrens(1);
   REQUIRE(childrens == std::unordered_set<statementNumber>{2, 3, 4, 5, 6, 7});
@@ -91,7 +91,7 @@ TEST_CASE("Test getChildrens") {
 }
 
 TEST_CASE("Test getParents") {
-  auto parentStore = ParentStore();
+  auto parentStore = parent_store();
   parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
   std::unordered_set<statementNumber> parents = parentStore.getParents(2);
   REQUIRE(parents == std::unordered_set<statementNumber>{1});
@@ -100,7 +100,7 @@ TEST_CASE("Test getParents") {
 }
 
 TEST_CASE("Test getChildren") {
-  auto parentStore = ParentStore();
+  auto parentStore = parent_store();
   parentStore.storeParent({{1, {2, 3}}, {2, {4, 5}}, {3, {6, 7}}});
   std::unordered_set<statementNumber> children = parentStore.getChildren(1);
   REQUIRE(children == std::unordered_set<statementNumber>{2, 3});

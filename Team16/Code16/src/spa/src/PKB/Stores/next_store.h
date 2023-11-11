@@ -20,7 +20,7 @@
 #include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
 
-class NextStore {
+class next_store {
  private:
   typedef std::string variable;
   typedef int statementNumber;
@@ -31,7 +31,7 @@ class NextStore {
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
 
  public:
-  NextStore();
+  next_store();
 
   void storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap);
 

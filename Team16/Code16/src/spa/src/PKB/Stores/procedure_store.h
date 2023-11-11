@@ -5,7 +5,7 @@
 #include <set>
 #include <utility>
 
-class ProcedureStore {
+class procedure_store {
  private:
   typedef std::string procedure;
   typedef int startStatement;
@@ -15,7 +15,7 @@ class ProcedureStore {
   std::unordered_map<procedure, std::pair<startStatement, endStatement>> procedureMap;
 
  public:
-  ProcedureStore();
+  procedure_store();
 
   void addProcedures(std::unordered_map<procedure, std::pair<startStatement, endStatement>> procedures);
 

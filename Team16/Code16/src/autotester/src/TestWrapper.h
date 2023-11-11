@@ -6,9 +6,9 @@
 #include <fstream>
 #include <memory>
 
-#include "PKB/API/ReadFacade.h"
-#include "PKB/API/WriteFacade.h"
-#include "PKB/PKB.h"
+#include "PKB/API/read_facade.h"
+#include "PKB/API/write_facade.h"
+#include "PKB/pkb.h"
 #include "qps/qps.h"
 #include "SP/SourceProcessor.h"
 #include "AbstractWrapper.h"

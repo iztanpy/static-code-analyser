@@ -2,16 +2,16 @@
 // Created by Isaac Tan on 5/10/23.
 //
 
-#include "IfStore.h"
-typedef std::string variable;
+#include "PKB/Stores/while_store.h"
 typedef int statementNumber;
+typedef std::string variable;
 
-IfStore::IfStore() {
+while_store::while_store() {
   variableMap = std::unordered_map<statementNumber, std::unordered_set<variable>>();
   reverseVariableMap = std::unordered_map<variable, std::unordered_set<statementNumber>>();
 }
 
-void IfStore::addVariableMap(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
+void while_store::addVariableMap(std::unordered_map<statementNumber, std::unordered_set<variable>> variableMap) {
   this->variableMap = variableMap;
   for (auto const& [key, value] : variableMap) {
     for (auto const& x : value) {
@@ -20,7 +20,7 @@ void IfStore::addVariableMap(std::unordered_map<statementNumber, std::unordered_
   }
 }
 
-std::unordered_set<statementNumber> IfStore::getIf(Wildcard wc) {
+std::unordered_set<statementNumber> while_store::getWhile(Wildcard wc) {
   std::unordered_set<statementNumber> result;
   for (auto const& [key, value] : variableMap) {
     result.insert(key);
@@ -28,7 +28,7 @@ std::unordered_set<statementNumber> IfStore::getIf(Wildcard wc) {
   return result;
 }
 
-std::unordered_set<statementNumber> IfStore::getIf(variable v) {
+std::unordered_set<statementNumber> while_store::getWhile(variable v) {
   std::unordered_set<statementNumber> result;
   if (reverseVariableMap.find(v) != reverseVariableMap.end()) {
     for (auto const& x : reverseVariableMap[v]) {
@@ -38,7 +38,7 @@ std::unordered_set<statementNumber> IfStore::getIf(variable v) {
   return result;
 }
 
-std::unordered_set<std::pair<statementNumber, variable>, PairHash> IfStore::getAllIf() {
+std::unordered_set<std::pair<statementNumber, variable>, PairHash> while_store::getAllWhile() {
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> result;
   for (auto const& [key, value] : variableMap) {
     for (auto const& x : value) {

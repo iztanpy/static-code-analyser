@@ -10,7 +10,7 @@
 #include "qps/declaration.h"
 #include "qps/query_evaluator/constraint_solver/constraint.h"
 #include "qps/query_evaluator/evaluator_util.h"
-#include "PKB/API/ReadFacade.h"
+#include "PKB/API/read_facade.h"
 
 /*!
  * Represents a type of attrName in PQL grammar

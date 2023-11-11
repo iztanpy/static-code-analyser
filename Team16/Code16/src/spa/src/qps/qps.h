@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "PKB/API/ReadFacade.h"
+#include "PKB/API/read_facade.h"
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
 #include "qps/query_parser/query_parser.h"
 #include "qps/query_evaluator/query_evaluator.h"

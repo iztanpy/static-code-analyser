@@ -5,7 +5,7 @@
 #include <utility>
 #include "utils/hash_utils.h"
 
-class RelationStore {
+class relation_store {
  private:
   typedef std::string variable;
   typedef std::string procedure;
@@ -18,7 +18,7 @@ class RelationStore {
   std::unordered_map<variable, std::unordered_set<procedure>> ReverseProcedureStore;
 
  public:
-  RelationStore();
+  relation_store();
 
   /**
   * @brief Stores unspecified relation relationships between statements and variables.

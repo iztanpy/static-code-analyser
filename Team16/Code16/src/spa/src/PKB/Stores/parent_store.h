@@ -8,7 +8,7 @@
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
 
-class ParentStore {
+class parent_store {
  private:
   typedef std::string variable;
   typedef int statementNumber;
@@ -18,7 +18,7 @@ class ParentStore {
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> ParentStarMapReverse;
 
  public:
-  ParentStore();
+  parent_store();
 
   /**
   * @brief Stores parent-child relationships between statements.

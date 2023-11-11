@@ -6,9 +6,9 @@
 
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
-#include "./StatementStore.h"
+#include "./statement_store.h"
 
-class FollowsStore {
+class follows_store {
  private:
   typedef int statementNumber;
   typedef std::string variable;
@@ -19,7 +19,7 @@ class FollowsStore {
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> FollowStarMapReverse;
 
  public:
-  FollowsStore();
+  follows_store();
 
   /**
   * @brief Stores follows relationships between statements.

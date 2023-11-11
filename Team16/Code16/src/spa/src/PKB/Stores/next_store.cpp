@@ -1,12 +1,12 @@
 //
 // Created by Isaac Tan on 18/10/23.
 //
-#include "NextStore.h"
+#include "PKB/Stores/next_store.h"
 
 typedef std::string variable;
 typedef int statementNumber;
 
-NextStore::NextStore() {
+next_store::next_store() {
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
@@ -15,7 +15,7 @@ NextStore::NextStore() {
                                         std::unordered_set<std::shared_ptr<CfgNode>>>();
 }
 
-void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
+void next_store::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
   this->NextMap = NextMap;
   for (auto const& x : NextMap) {
     for (auto const& y : x.second) {
@@ -24,15 +24,15 @@ void NextStore::storeNext(std::unordered_map<statementNumber, std::unordered_set
   }
 }
 
-void NextStore::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
+void next_store::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
   this->cfgRoots = cfgRoots;
 }
 
-void NextStore::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+void next_store::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
   this->cfgLegend = cfgLegend;
 }
 
-bool NextStore::isNext(Wildcard, Wildcard) {
+bool next_store::isNext(Wildcard, Wildcard) {
   if (this->NextMap.empty()) {
     return false;
   }
@@ -40,21 +40,21 @@ bool NextStore::isNext(Wildcard, Wildcard) {
 }
 
 // return true if statement number that is after anything
-bool NextStore::isNext(Wildcard, statementNumber num) {
+bool next_store::isNext(Wildcard, statementNumber num) {
   if (NextMapReverse.find(num) != NextMapReverse.end()) {
     return true;
   }
   return false;
 }
 
-bool NextStore::isNext(statementNumber num, Wildcard) {
+bool next_store::isNext(statementNumber num, Wildcard) {
   if (NextMap.find(num) != NextMap.end()) {
     return true;
   }
   return false;
 }
 
-bool NextStore::isNext(statementNumber num1, statementNumber num2) {
+bool next_store::isNext(statementNumber num1, statementNumber num2) {
   if (NextMap.find(num1) != NextMap.end()) {
     if (NextMap[num1].find(num2) != NextMap[num1].end()) {
       return true;
@@ -63,21 +63,21 @@ bool NextStore::isNext(statementNumber num1, statementNumber num2) {
   return false;
 }
 
-bool NextStore::isNextStar(Wildcard, Wildcard) {
+bool next_store::isNextStar(Wildcard, Wildcard) {
   return this->isNext(Wildcard(), Wildcard());
 }
 
 // first move to the statement number node
-bool NextStore::isNextStar(Wildcard, statementNumber num) {
+bool next_store::isNextStar(Wildcard, statementNumber num) {
   // first locate the node using the nodelegend
   return this->isNext(Wildcard(), num);
 }
 
-bool NextStore::isNextStar(statementNumber num, Wildcard) {
+bool next_store::isNextStar(statementNumber num, Wildcard) {
   return this->isNext(num, Wildcard());
 }
 
-bool NextStore::isNextStar(statementNumber num1, statementNumber num2) {
+bool next_store::isNextStar(statementNumber num1, statementNumber num2) {
   if (NextStarMap.empty()) {
     initialiseNextStar();
   }
@@ -112,7 +112,7 @@ struct CustomComparator {
   }
 };
 
-void NextStore::initialiseNextStar() {
+void next_store::initialiseNextStar() {
   for (auto it = cfgRoots.begin(); it != cfgRoots.end(); ++it) {
     auto firstNode = it->second;
     auto firstNum = firstNode->getStmtNumberSet();
@@ -147,20 +147,20 @@ void NextStore::initialiseNextStar() {
   }
 }
 
-std::unordered_set<statementNumber> NextStore::getNext(statementNumber num) {
+std::unordered_set<statementNumber> next_store::getNext(statementNumber num) {
   if (NextMap.find(num) != NextMap.end()) {
     return NextMap[num];
   }
   return {};
 }
 
-std::unordered_set<statementNumber> NextStore::getNextReverse(statementNumber num) {
+std::unordered_set<statementNumber> next_store::getNextReverse(statementNumber num) {
   if (NextMapReverse.find(num) != NextMapReverse.end()) {
     return NextMapReverse[num];
   }
   return std::unordered_set<statementNumber>();
 }
 
-void NextStore::clearCache() {
+void next_store::clearCache() {
   NextStarMap.clear();
 }

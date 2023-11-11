@@ -7,7 +7,7 @@
 #include "utils/entity_types.h"
 #include "utils/hash_utils.h"
 
-class AssignStore {
+class assign_store {
  private:
   typedef std::string variable;
   typedef std::string full;
@@ -22,7 +22,7 @@ class AssignStore {
   std::unordered_map<full, std::unordered_set<statementNumber>> reverseFullRHSMap;
 
  public:
-  AssignStore();
+  assign_store();
 
   void storeFullPatternAssign(std::unordered_map<statementNumber, full> relations);
 

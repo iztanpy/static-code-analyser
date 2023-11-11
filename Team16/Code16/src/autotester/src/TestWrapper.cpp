@@ -31,7 +31,7 @@ void TestWrapper::parse(std::string filename) {
     /*    std::cout << "TEST" << std::endl;*/
     input += line;
   }
-  WriteFacade writeFacade = WriteFacade(*this->pkb_ptr);
+  write_facade writeFacade = write_facade(*this->pkb_ptr);
   SourceProcessor sourceProcessor(&writeFacade);
   sourceProcessor.processSource(input);
 }

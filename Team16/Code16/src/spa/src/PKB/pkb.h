@@ -9,18 +9,18 @@
 #include <unordered_map>
 #include <memory>
 #include <stack>
-#include "Stores/VariableStore.h"
-#include "Stores/AssignStore.h"
-#include "Stores/ConstantStore.h"
-#include "Stores/StatementStore.h"
-#include "Stores/ParentStore.h"
-#include "Stores/FollowsStore.h"
-#include "Stores/RelationStore.h"
-#include "Stores/ProcedureStore.h"
-#include "Stores/IfStore.h"
-#include "Stores/WhileStore.h"
-#include "Stores/CallStore.h"
-#include "Stores/NextStore.h"
+#include "Stores/variable_store.h"
+#include "Stores/assign_store.h"
+#include "Stores/constant_store.h"
+#include "Stores/statement_store.h"
+#include "Stores/parent_store.h"
+#include "Stores/follows_store.h"
+#include "Stores/relation_store.h"
+#include "Stores/procedure_store.h"
+#include "Stores/if_store.h"
+#include "Stores/while_store.h"
+#include "Stores/call_store.h"
+#include "Stores/next_store.h"
 #include "utils/entity_types.h"
 #include "utils/clauses_types.h"
 #include "utils/hash_utils.h"
@@ -35,19 +35,19 @@ typedef std::string procedure;
 
 class PKB {
  private:
-  std::unique_ptr<AssignStore> assignStore;
-  std::unique_ptr<VariableStore> variableStore;
-  std::unique_ptr<RelationStore> usesStore;
-  std::unique_ptr<ConstantStore> constantStore;
-  std::unique_ptr<StatementStore> statementStore;
-  std::unique_ptr<ParentStore> parentStore;
-  std::unique_ptr<FollowsStore> followsStore;
-  std::unique_ptr<RelationStore> modifiesStore;
-  std::unique_ptr<ProcedureStore> procedureStore;
-  std::unique_ptr<WhileStore> whileStore;
-  std::unique_ptr<IfStore> ifStore;
-  std::unique_ptr<CallStore> callStore;
-  std::unique_ptr<NextStore> nextStore;
+  std::unique_ptr<assign_store> assignStore;
+  std::unique_ptr<variable_store> variableStore;
+  std::unique_ptr<relation_store> usesStore;
+  std::unique_ptr<constant_store> constantStore;
+  std::unique_ptr<statement_store> statementStore;
+  std::unique_ptr<parent_store> parentStore;
+  std::unique_ptr<follows_store> followsStore;
+  std::unique_ptr<relation_store> modifiesStore;
+  std::unique_ptr<procedure_store> procedureStore;
+  std::unique_ptr<while_store> whileStore;
+  std::unique_ptr<if_store> ifStore;
+  std::unique_ptr<call_store> callStore;
+  std::unique_ptr<next_store> nextStore;
   std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash> AffectsCache;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> AffectsStore;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> AffectsStoreReverse;
@@ -59,7 +59,7 @@ class PKB {
   std::unordered_set<statementNumber> getCommonStatements(std::unordered_set<statementNumber> set1,
                                                           std::unordered_set<statementNumber> set2);
 
-  // AssignStore methods
+  // assign_store methods
 
   /**
   * @brief Sets assignment information in the program.
@@ -162,7 +162,7 @@ class PKB {
   std::unordered_set<statementNumber> getAssigns(partialMatch lhs, Wildcard rhs);
 
 
-  // ProcedureStore methods
+  // procedure_store methods
 
   /**
   * @brief Adds a set of procedures to the program's procedure store.
@@ -443,7 +443,7 @@ class PKB {
 
   std::unordered_set<std::pair<procedure, variable>, PairHash> modifiesProcedure();
 
-  // ConstantStore methods
+  // constant_store methods
 
   /**
   * @brief Adds a set of constants to the program's constant store.
@@ -464,7 +464,7 @@ class PKB {
   std::unordered_set<constant> getConstants();
 
 
-  // StatementStore methods
+  // statement_store methods
 
   /**
   * @brief Adds statement information to the program.
@@ -486,7 +486,7 @@ class PKB {
   std::unordered_set<statementNumber> getStatements(StmtEntity type);
 
 
-  // ParentStore methods
+  // parent_store methods
 
   /**
   * @brief Stores parent relationship information in the program.
@@ -1072,7 +1072,7 @@ class PKB {
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> getAllWhile();
 
 
-  // CallStore methods
+  // call_store methods
 
   /**
   * @brief Stores a call relationship table.

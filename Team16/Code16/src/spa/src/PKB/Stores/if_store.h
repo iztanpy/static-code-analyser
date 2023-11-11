@@ -7,7 +7,7 @@
 #include "utils/entity_types.h"
 #include "utils/hash_utils.h"
 
-class IfStore {
+class if_store {
  private:
   typedef std::string variable;
   typedef int statementNumber;
@@ -15,7 +15,7 @@ class IfStore {
   std::unordered_map<variable, std::unordered_set<statementNumber>> reverseVariableMap;
 
  public:
-  IfStore();
+  if_store();
   /**
   * @brief Adds a mapping of statement numbers to sets of variables for use in IF statements.
   *

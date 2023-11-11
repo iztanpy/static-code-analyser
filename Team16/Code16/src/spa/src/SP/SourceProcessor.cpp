@@ -1,6 +1,6 @@
 #include "SourceProcessor.h"
 
-SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) :
+SourceProcessor::SourceProcessor(write_facade* writeFacadePtr) :
     writeFacade(writeFacadePtr), simpleParser(&this->visitor) {}
 
 void SourceProcessor::processSource(const std::string& simpleProgram) {

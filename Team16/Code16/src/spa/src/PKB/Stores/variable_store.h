@@ -2,12 +2,12 @@
 #include <string>
 #include <unordered_set>
 
-class VariableStore {
+class variable_store {
  private:
   typedef std::string variable;
   std::unordered_set<variable> variables;
  public:
-  VariableStore();
+  variable_store();
 
   /**
   * @brief Adds a set of variables to the variable store.

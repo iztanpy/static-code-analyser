@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include "utils/entity_types.h"
 
-class StatementStore {
+class statement_store {
  private:
   typedef std::string variable;
   typedef std::string constant;
@@ -14,7 +14,7 @@ class StatementStore {
   std::unordered_map<StmtEntity, std::unordered_set<statementNumber>> statementMapReverse;
 
  public:
-  StatementStore();
+  statement_store();
 
   /**
   * @brief Adds statements and their associated types to the statement store.

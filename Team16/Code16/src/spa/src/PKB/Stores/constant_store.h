@@ -2,13 +2,13 @@
 #include <string>
 #include <unordered_set>
 
-class ConstantStore {
+class constant_store {
  private:
   typedef std::string constant;
   std::unordered_set<constant> constants;
 
  public:
-  ConstantStore();
+  constant_store();
 
   /**
   * @brief Adds a set of constants to the store.

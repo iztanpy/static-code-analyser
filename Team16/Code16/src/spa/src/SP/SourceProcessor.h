@@ -12,8 +12,8 @@
 #include "SP/TNode.h"
 #include "SP/sp_tokeniser/Token.h"
 #include "SP/DesignExtractor.h"
-#include "PKB/PKB.h"
-#include "PKB/API/WriteFacade.h"
+#include "PKB/pkb.h"
+#include "PKB/API/write_facade.h"
 #include "SP/sp_tokeniser/SPTokeniser.h"
 #include "utils/Error.h"
 
@@ -31,15 +31,15 @@ class SourceProcessor {
   SPtokeniser tokeniser;
   SimpleParser simpleParser;
   ASTVisitor visitor;
-  WriteFacade* writeFacade;
+  write_facade* writeFacade;
   void populatePKB();
 
  public:
   /**
-   * @brief Constructs a SourceProcessor object with a WriteFacade for writing analysis results.
-   * @param writeFacade A pointer to the WriteFacade used for writing analysis results.
+   * @brief Constructs a SourceProcessor object with a write_facade for writing analysis results.
+   * @param writeFacade A pointer to the write_facade used for writing analysis results.
   */
-  explicit SourceProcessor(WriteFacade* writeFacade);
+  explicit SourceProcessor(write_facade* writeFacade);
   /**
   * @brief Processes the source code and performs analysis.
   * @param simpleProgram The Simple Programming Language (SPL) source code to be processed.

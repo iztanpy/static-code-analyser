@@ -3,23 +3,23 @@
 #include <iostream>
 using namespace std;
 
-#include "PKB/PKB.h"
-#include "PKB/API/ReadFacade.h"
-#include "PKB/API/WriteFacade.h"
+#include "PKB/pkb.h"
+#include "PKB/API/read_facade.h"
+#include "PKB/API/write_facade.h"
 #include "utils/entity_types.h"
 
 TEST_CASE(" 1") {
   PKB pkb = PKB();
-  auto writeFacade = WriteFacade(pkb);
+  auto writeFacade = write_facade(pkb);
   auto readFacade = ReadFacade(pkb);
 
   //make unordered map for <int, string > for assignments
-  std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
+  std::unordered_map < statementNumber, std::unordered_set < possibleCombinations >> assignmentsRHS;
   assignmentsRHS.insert({1, {"x", "y"}});
   assignmentsRHS.insert({2, {"y"}});
   assignmentsRHS.insert({3, {"x", "1", "2"}});
 
-  std::unordered_map<statementNumber, variable> assignmentsLHS;
+  std::unordered_map < statementNumber, variable > assignmentsLHS;
   assignmentsLHS.insert({1, "a"});
   assignmentsLHS.insert({2, "b"});
   assignmentsLHS.insert({3, "b"});
@@ -62,17 +62,17 @@ TEST_CASE(" 1") {
   }
 }
 
-TEST_CASE("test Facades for AssignStore") {
+TEST_CASE("test Facades for assign_store") {
   PKB pkb = PKB();
-  WriteFacade writeFacade = WriteFacade(pkb);
+  write_facade writeFacade = write_facade(pkb);
   ReadFacade readFacade = ReadFacade(pkb);
 
-  std::unordered_map<statementNumber, std::unordered_set<possibleCombinations>> assignmentsRHS;
+  std::unordered_map < statementNumber, std::unordered_set < possibleCombinations >> assignmentsRHS;
   assignmentsRHS.insert({1, {"x", "y"}});
   assignmentsRHS.insert({2, {"x"}});
   assignmentsRHS.insert({3, {"x", "1", "2"}});
 
-  std::unordered_map<statementNumber, variable> assignmentsLHS;
+  std::unordered_map < statementNumber, variable > assignmentsLHS;
   assignmentsLHS.insert({1, "a"});
   assignmentsLHS.insert({2, "b"});
   assignmentsLHS.insert({3, "b"});
@@ -110,7 +110,7 @@ TEST_CASE("test Facades for AssignStore") {
 
 TEST_CASE("Test Facades for Variable Store") {
   PKB pkb = PKB();
-  WriteFacade writeFacade = WriteFacade(pkb);
+  write_facade writeFacade = write_facade(pkb);
   ReadFacade readFacade = ReadFacade(pkb);
 
   writeFacade.storeVariables({"x", "y", "z", "a", "b"});
@@ -122,7 +122,7 @@ TEST_CASE("Test Facades for Variable Store") {
 
 TEST_CASE("Test Facades for Uses Store") {
   PKB pkb = PKB();
-  WriteFacade writeFacade = WriteFacade(pkb);
+  write_facade writeFacade = write_facade(pkb);
   ReadFacade readFacade = ReadFacade(pkb);
 
   writeFacade.storeUses({{1, {"x", "y"}}, {2, {"y", "z"}}});
@@ -156,8 +156,8 @@ TEST_CASE("Test Parent Stores 2") {
 
 
   // Test StmtEntity entity, statementNumber num
-  REQUIRE(pkb.parent(StmtEntity::kIf, 4) == std::unordered_set<statementNumber>{2});
-  REQUIRE(pkb.parent(StmtEntity::kRead, 6) == std::unordered_set<statementNumber>{});
+  REQUIRE(pkb.parent(StmtEntity::kIf, 4) == std::unordered_set < statementNumber > {2});
+  REQUIRE(pkb.parent(StmtEntity::kRead, 6) == std::unordered_set < statementNumber > {});
 
   // Test StmtEntity entity, Wildcard wildcard
   REQUIRE(pkb.parent(StmtEntity::kIf, wildcard).size() == 3);
@@ -173,21 +173,21 @@ TEST_CASE("Test Parent Stores 2") {
   REQUIRE(pkb.parent(wildcard, StmtEntity::kRead).size() == 1);
 
   // Test statementNumber num, StmtEntity entity
-  REQUIRE(pkb.parent(1, StmtEntity::kAssign) == std::unordered_set<statementNumber>{});
-  REQUIRE(pkb.parent(2, StmtEntity::kAssign) == std::unordered_set<statementNumber>{4, 5});
-  REQUIRE(pkb.parent(3, StmtEntity::kRead) == std::unordered_set<statementNumber>{7});
-  REQUIRE(pkb.parent(3, StmtEntity::kAssign) == std::unordered_set<statementNumber>{6});
+  REQUIRE(pkb.parent(1, StmtEntity::kAssign) == std::unordered_set < statementNumber > {});
+  REQUIRE(pkb.parent(2, StmtEntity::kAssign) == std::unordered_set < statementNumber > {4, 5});
+  REQUIRE(pkb.parent(3, StmtEntity::kRead) == std::unordered_set < statementNumber > {7});
+  REQUIRE(pkb.parent(3, StmtEntity::kAssign) == std::unordered_set < statementNumber > {6});
 
   // PARENTS STAR
 
   // Test StmtEntity num
-  REQUIRE(pkb.parentStar(StmtEntity::kIf, 2) == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.parentStar(StmtEntity::kIf, 4) == std::unordered_set<statementNumber>{1, 2});
+  REQUIRE(pkb.parentStar(StmtEntity::kIf, 2) == std::unordered_set < statementNumber > {1});
+  REQUIRE(pkb.parentStar(StmtEntity::kIf, 4) == std::unordered_set < statementNumber > {1, 2});
 //    for (auto value: pkb.parentStar(StmtEntity::kIf, 5)) {
 //        std::cout << "val: " << value << std::endl;
 //        REQUIRE((value == 1 || value == 2));
 //    }
-  REQUIRE(pkb.parentStar(StmtEntity::kAssign, 6) == std::unordered_set<statementNumber>{});
+  REQUIRE(pkb.parentStar(StmtEntity::kAssign, 6) == std::unordered_set < statementNumber > {});
 
 
   // Test StmtEntity entity, Wildcard wildcard
@@ -204,17 +204,17 @@ TEST_CASE("Test Parent Stores 2") {
   REQUIRE(pkb.parentStar(wildcard, StmtEntity::kRead).size() == 1);
 
   // Test statementNumber num, StmtEntity entity
-  REQUIRE(pkb.parentStar(1, StmtEntity::kAssign) == std::unordered_set<statementNumber>{4, 5, 6});
-  REQUIRE(pkb.parentStar(2, StmtEntity::kAssign) == std::unordered_set<statementNumber>{4, 5});
-  REQUIRE(pkb.parentStar(3, StmtEntity::kRead) == std::unordered_set<statementNumber>{7});
-  REQUIRE(pkb.parentStar(3, StmtEntity::kAssign) == std::unordered_set<statementNumber>{6});
+  REQUIRE(pkb.parentStar(1, StmtEntity::kAssign) == std::unordered_set < statementNumber > {4, 5, 6});
+  REQUIRE(pkb.parentStar(2, StmtEntity::kAssign) == std::unordered_set < statementNumber > {4, 5});
+  REQUIRE(pkb.parentStar(3, StmtEntity::kRead) == std::unordered_set < statementNumber > {7});
+  REQUIRE(pkb.parentStar(3, StmtEntity::kAssign) == std::unordered_set < statementNumber > {6});
 
-  REQUIRE(pkb.parent(wildcard, 2) == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.parent(wildcard, 3) == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.parent(wildcard, 4) == std::unordered_set<statementNumber>{2});
-  REQUIRE(pkb.parent(wildcard, 5) == std::unordered_set<statementNumber>{2});
-  REQUIRE(pkb.parent(wildcard, 6) == std::unordered_set<statementNumber>{3});
-  REQUIRE(pkb.parent(wildcard, 7) == std::unordered_set<statementNumber>{3});
+  REQUIRE(pkb.parent(wildcard, 2) == std::unordered_set < statementNumber > {1});
+  REQUIRE(pkb.parent(wildcard, 3) == std::unordered_set < statementNumber > {1});
+  REQUIRE(pkb.parent(wildcard, 4) == std::unordered_set < statementNumber > {2});
+  REQUIRE(pkb.parent(wildcard, 5) == std::unordered_set < statementNumber > {2});
+  REQUIRE(pkb.parent(wildcard, 6) == std::unordered_set < statementNumber > {3});
+  REQUIRE(pkb.parent(wildcard, 7) == std::unordered_set < statementNumber > {3});
 
   for (auto value : pkb.parent(1, wildcard)) {
     REQUIRE((value == 2 || value == 3));
@@ -319,22 +319,22 @@ TEST_CASE("Test Uses stores") {
   pkb.addStatements({{1, StmtEntity::kAssign}, {2, StmtEntity::kAssign}, {3, StmtEntity::kRead}});
 
   variable x = "x";
-  REQUIRE(pkb.uses(1) == std::unordered_set<variable>{"x", "y"});
-  REQUIRE(pkb.uses(2) == std::unordered_set<variable>{"y", "z"});
+  REQUIRE(pkb.uses(1) == std::unordered_set < variable > {"x", "y"});
+  REQUIRE(pkb.uses(2) == std::unordered_set < variable > {"y", "z"});
 
   StmtEntity assign = StmtEntity::kAssign;
-  REQUIRE(pkb.uses(assign, wildcard) == std::unordered_set<statementNumber>{1, 2});
-  REQUIRE(pkb.uses(assign, x) == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.uses(assign, "y") == std::unordered_set<statementNumber>{1, 2});
-  REQUIRE(pkb.uses(assign, "z") == std::unordered_set<statementNumber>{2});
+  REQUIRE(pkb.uses(assign, wildcard) == std::unordered_set < statementNumber > {1, 2});
+  REQUIRE(pkb.uses(assign, x) == std::unordered_set < statementNumber > {1});
+  REQUIRE(pkb.uses(assign, "y") == std::unordered_set < statementNumber > {1, 2});
+  REQUIRE(pkb.uses(assign, "z") == std::unordered_set < statementNumber > {2});
 
   StmtEntity read = StmtEntity::kRead;
-  REQUIRE(pkb.uses(read, wildcard) == std::unordered_set<statementNumber>{3});
-  REQUIRE(pkb.uses(read, x) == std::unordered_set<statementNumber>{});
-  REQUIRE(pkb.uses(read, "y") == std::unordered_set<statementNumber>{});
-  REQUIRE(pkb.uses(read, "z") == std::unordered_set<statementNumber>{3});
+  REQUIRE(pkb.uses(read, wildcard) == std::unordered_set < statementNumber > {3});
+  REQUIRE(pkb.uses(read, x) == std::unordered_set < statementNumber > {});
+  REQUIRE(pkb.uses(read, "y") == std::unordered_set < statementNumber > {});
+  REQUIRE(pkb.uses(read, "z") == std::unordered_set < statementNumber > {3});
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.uses(assign);
+  std::unordered_set < std::pair<statementNumber, variable>, PairHash > result = pkb.uses(assign);
 
   for (auto value : result) {
     REQUIRE((value.first == 1 || value.first == 2));
@@ -375,16 +375,16 @@ TEST_CASE("Test modifies stores") {
                      {2, StmtEntity::kAssign},
                      {3, StmtEntity::kRead}});
 
-  REQUIRE(pkb.modifies(StmtEntity::kAssign, "x") == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.modifies(StmtEntity::kAssign, "y") == std::unordered_set<statementNumber>{2, 1});
-  REQUIRE(pkb.modifies(StmtEntity::kRead, "x") == std::unordered_set<statementNumber>{3});
-  REQUIRE(pkb.modifies(StmtEntity::kRead, "y") == std::unordered_set<statementNumber>{});
+  REQUIRE(pkb.modifies(StmtEntity::kAssign, "x") == std::unordered_set < statementNumber > {1});
+  REQUIRE(pkb.modifies(StmtEntity::kAssign, "y") == std::unordered_set < statementNumber > {2, 1});
+  REQUIRE(pkb.modifies(StmtEntity::kRead, "x") == std::unordered_set < statementNumber > {3});
+  REQUIRE(pkb.modifies(StmtEntity::kRead, "y") == std::unordered_set < statementNumber > {});
 
-  REQUIRE(pkb.modifies(StmtEntity::kAssign, wildcard) == std::unordered_set<statementNumber>{1, 2});
-  REQUIRE(pkb.modifies(StmtEntity::kRead, wildcard) == std::unordered_set<statementNumber>{3});
-  REQUIRE(pkb.modifies(StmtEntity::kIf, wildcard) == std::unordered_set<statementNumber>{});
+  REQUIRE(pkb.modifies(StmtEntity::kAssign, wildcard) == std::unordered_set < statementNumber > {1, 2});
+  REQUIRE(pkb.modifies(StmtEntity::kRead, wildcard) == std::unordered_set < statementNumber > {3});
+  REQUIRE(pkb.modifies(StmtEntity::kIf, wildcard) == std::unordered_set < statementNumber > {});
 
-  std::unordered_set<std::pair<statementNumber, variable>, PairHash> result = pkb.modifies(StmtEntity::kAssign);
+  std::unordered_set < std::pair<statementNumber, variable>, PairHash > result = pkb.modifies(StmtEntity::kAssign);
 
   for (auto value : result) {
     REQUIRE((value.first == 1 || value.first == 2));
@@ -415,15 +415,15 @@ TEST_CASE("Tes follows store") {
   REQUIRE(!pkb.isFollow(2, 4));
   REQUIRE(!pkb.isFollow(1, 4));
 
-  REQUIRE(pkb.follows(StmtEntity::kAssign, 1) == std::unordered_set<statementNumber>{});
-  REQUIRE(pkb.follows(StmtEntity::kAssign, 2) == std::unordered_set<statementNumber>{1});
-  REQUIRE(pkb.follows(StmtEntity::kAssign, 3) == std::unordered_set<statementNumber>{2});
-  REQUIRE(pkb.follows(StmtEntity::kRead, 4) == std::unordered_set<statementNumber>{3});
+  REQUIRE(pkb.follows(StmtEntity::kAssign, 1) == std::unordered_set < statementNumber > {});
+  REQUIRE(pkb.follows(StmtEntity::kAssign, 2) == std::unordered_set < statementNumber > {1});
+  REQUIRE(pkb.follows(StmtEntity::kAssign, 3) == std::unordered_set < statementNumber > {2});
+  REQUIRE(pkb.follows(StmtEntity::kRead, 4) == std::unordered_set < statementNumber > {3});
 
-  REQUIRE(pkb.follows(StmtEntity::kAssign, Wildcard()) == std::unordered_set<statementNumber>{1, 2});
-  REQUIRE(pkb.follows(StmtEntity::kRead, Wildcard()) == std::unordered_set<statementNumber>{3});
+  REQUIRE(pkb.follows(StmtEntity::kAssign, Wildcard()) == std::unordered_set < statementNumber > {1, 2});
+  REQUIRE(pkb.follows(StmtEntity::kRead, Wildcard()) == std::unordered_set < statementNumber > {3});
 
-  std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>
+  std::unordered_set < std::pair<statementNumber, statementNumber>, PairHash >
       result = pkb.follows(StmtEntity::kAssign, StmtEntity::kAssign);
 
   for (auto value : result) {

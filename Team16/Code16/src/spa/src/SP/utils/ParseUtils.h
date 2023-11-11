@@ -15,7 +15,7 @@
 #include "SP/sp_parser/Parser.h"
 
 // Headers from other directories
-#include "PKB/PKB.h"
+#include "PKB/pkb.h"
 #include "utils/Error.h"
 
 typedef std::unordered_map<std::string, TokenType> EntityMap;

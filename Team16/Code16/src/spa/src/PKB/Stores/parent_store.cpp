@@ -2,17 +2,17 @@
 // Created by Isaac Tan on 17/9/23.
 //
 
-#include "ParentStore.h"
+#include "PKB/Stores/parent_store.h"
 #include <stack>
 
-ParentStore::ParentStore() {
+parent_store::parent_store() {
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> ParentMap;
-  std::unordered_map<statementNumber, statementNumber> ParentMapReverse;
+  std::unordered_map < statementNumber, statementNumber > ParentMapReverse;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> ParentStarMap;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> ParentStarMapReverse;
 }
 
-void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
+void parent_store::storeParent(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> map) {
   this->ParentMap = map;
 
   for (auto const& x : map) {
@@ -58,56 +58,56 @@ void ParentStore::storeParent(std::unordered_map<statementNumber, std::unordered
   }
 }
 
-std::unordered_set<ParentStore::statementNumber> ParentStore::getChildren(statementNumber statement) {
+std::unordered_set<parent_store::statementNumber> parent_store::getChildren(statementNumber statement) {
   std::unordered_set<statementNumber> children = this->ParentMap[statement];
   return children;
 }
 
-std::unordered_set<ParentStore::statementNumber> ParentStore::getParent(statementNumber statement) {
+std::unordered_set<parent_store::statementNumber> parent_store::getParent(statementNumber statement) {
   statementNumber parent = this->ParentMapReverse[statement];
   if (parent == 0) {
-    return std::unordered_set<ParentStore::statementNumber>{};
+    return std::unordered_set<parent_store::statementNumber>{};
   }
-  return std::unordered_set<ParentStore::statementNumber>{parent};
+  return std::unordered_set<parent_store::statementNumber>{parent};
 }
 
-bool ParentStore::isParent(statementNumber parent, statementNumber child) {
+bool parent_store::isParent(statementNumber parent, statementNumber child) {
   return this->ParentMap[parent].find(child) != this->ParentMap[parent].end();
 }
 
-bool ParentStore::isParent(statementNumber parent, Wildcard wildcard) {
+bool parent_store::isParent(statementNumber parent, Wildcard wildcard) {
   return this->ParentMap[parent].size() > 0;
 }
 
-bool ParentStore::isParent(Wildcard wildcard, statementNumber child) {
+bool parent_store::isParent(Wildcard wildcard, statementNumber child) {
   return this->ParentMapReverse[child] != 0;
 }
 
-bool ParentStore::isParent(Wildcard wildcard, Wildcard wildcard2) {
+bool parent_store::isParent(Wildcard wildcard, Wildcard wildcard2) {
   return this->ParentMap.size() > 0;
 }
 
-bool ParentStore::isParentStar(statementNumber parent, Wildcard wildcard) {
+bool parent_store::isParentStar(statementNumber parent, Wildcard wildcard) {
   return this->ParentStarMap[parent].size() > 0;
 }
 
-bool ParentStore::isParentStar(Wildcard wildcard, statementNumber child) {
+bool parent_store::isParentStar(Wildcard wildcard, statementNumber child) {
   return this->ParentStarMapReverse[child].size() > 0;
 }
 
-bool ParentStore::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
+bool parent_store::isParentStar(Wildcard wildcard, Wildcard wildcard2) {
   return this->ParentStarMap.size() > 0;
 }
 
-bool ParentStore::isParentStar(statementNumber parent, statementNumber child) {
+bool parent_store::isParentStar(statementNumber parent, statementNumber child) {
   std::unordered_set<statementNumber> childrens = getChildrens(parent);
   return childrens.find(child) != childrens.end();
 }
 
-std::unordered_set<ParentStore::statementNumber> ParentStore::getChildrens(statementNumber statement) {
+std::unordered_set<parent_store::statementNumber> parent_store::getChildrens(statementNumber statement) {
   return this->ParentStarMap[statement];
 }
 
-std::unordered_set<ParentStore::statementNumber> ParentStore::getParents(statementNumber statement) {
+std::unordered_set<parent_store::statementNumber> parent_store::getParents(statementNumber statement) {
   return this->ParentStarMapReverse[statement];
 }

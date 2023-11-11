@@ -15,7 +15,7 @@
 #include "SP/sp_cfg/CfgNode.h"
 
 // Headers from other directories
-#include "PKB/PKB.h"
+#include "PKB/pkb.h"
 #include "utils/Error.h"
 
 class DesignExtractor;

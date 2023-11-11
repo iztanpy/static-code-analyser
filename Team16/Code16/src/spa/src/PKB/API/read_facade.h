@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <set>
 #include <utility>
-#include "PKB/PKB.h"
+#include "PKB/pkb.h"
 #include "utils/entity_types.h"
 
 typedef std::string variable;
@@ -86,7 +86,7 @@ class ReadFacade {
   */
   std::unordered_set<statementNumber> getAssigns(variable lhs, Wildcard rhs);
 
-  // VariableStore methods
+  // variable_store methods
 
   /**
  * @brief Retrieves a set of all variables present in the program.
@@ -101,7 +101,7 @@ class ReadFacade {
   * @brief Retrieves a set of all procedures present in the program.
   *
   * This function returns an unordered set containing all the procedures defined within the program.
-  * Note that this function is related to the ProcedureStore, and it retrieves procedures from that store.
+  * Note that this function is related to the procedure_store, and it retrieves procedures from that store.
   *
   * @return An unordered set of procedures found in the program.
   */
@@ -266,7 +266,7 @@ class ReadFacade {
 
   std::unordered_set<std::pair<statementNumber, variable>, PairHash> modifies(StmtEntity type);
 
-  // ConstantStore methods
+  // constant_store methods
 
   /**
   * @brief Retrieves a set of all constants present in the program.

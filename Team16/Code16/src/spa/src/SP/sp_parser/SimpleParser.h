@@ -12,8 +12,8 @@
 #include "SP/sp_parser/ParserFactory.h"
 
 // Headers from other directories
-#include "PKB/PKB.h"
-#include "PKB/API/WriteFacade.h"
+#include "PKB/pkb.h"
+#include "PKB/API/write_facade.h"
 #include "utils/Error.h"
 
 class DesignExtractor;  // Forward declaration

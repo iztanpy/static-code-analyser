@@ -1,4 +1,4 @@
-#include "RelationStore.h"
+#include "PKB/Stores/relation_store.h"
 #include <unordered_map>
 #include <utility>
 
@@ -7,14 +7,14 @@ typedef std::string constant;
 typedef int statementNumber;
 typedef std::string procedure;
 
-RelationStore::RelationStore() {
+relation_store::relation_store() {
   std::unordered_map<statementNumber, std::unordered_set<variable>> ForwardVariableStore;
   std::unordered_map<variable, std::unordered_set<statementNumber>> ReverseVariableStore;
   std::unordered_map<procedure, std::unordered_set<variable>> ForwardProcedureStore;
   std::unordered_map<variable, std::unordered_set<procedure>> ReverseProcedureStore;
 }
 
-void RelationStore::storeRelation(std::unordered_map<statementNumber, std::unordered_set<variable>> relations) {
+void relation_store::storeRelation(std::unordered_map<statementNumber, std::unordered_set<variable>> relations) {
   this->ForwardVariableStore = relations;
   for (auto const& x : relations) {
     for (auto const& y : x.second) {
@@ -23,10 +23,10 @@ void RelationStore::storeRelation(std::unordered_map<statementNumber, std::unord
   }
 }
 
-void RelationStore::storeRelationProcedures(std::unordered_map<procedure,
-                                                               std::pair<int, int>> procedures,
-                                            std::unordered_map<procedure,
-                                                               std::unordered_set<procedure>> callTableStar) {
+void relation_store::storeRelationProcedures(std::unordered_map<procedure,
+                                                                std::pair<int, int>> procedures,
+                                             std::unordered_map<procedure,
+                                                                std::unordered_set<procedure>> callTableStar) {
   for (auto const& x : procedures) {
     std::unordered_set<variable> variables;
     for (int i = x.second.first; i <= x.second.second; i++) {
@@ -55,9 +55,9 @@ void RelationStore::storeRelationProcedures(std::unordered_map<procedure,
   }
 }
 
-void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls,
-                                       std::unordered_map<statementNumber,
-                                                          std::unordered_set<statementNumber>> callsParentMap) {
+void relation_store::storeRelationCalls(std::unordered_map<statementNumber, procedure> calls,
+                                        std::unordered_map<statementNumber,
+                                                           std::unordered_set<statementNumber>> callsParentMap) {
   for (auto const& x : calls) {
     if (ForwardProcedureStore[x.second].size() > 0) {
       ForwardVariableStore[x.first].insert(ForwardProcedureStore[x.second].begin(),
@@ -91,7 +91,7 @@ void RelationStore::storeRelationCalls(std::unordered_map<statementNumber, proce
   }
 }
 
-bool RelationStore::isRelation(statementNumber statement, variable variable) {
+bool relation_store::isRelation(statementNumber statement, variable variable) {
   if (ForwardVariableStore.find(statement) != ForwardVariableStore.end()) {
     if (ForwardVariableStore[statement].find(variable) != ForwardVariableStore[statement].end()) {
       return true;
@@ -100,7 +100,7 @@ bool RelationStore::isRelation(statementNumber statement, variable variable) {
   return false;
 }
 
-bool RelationStore::isRelation(statementNumber statement) {
+bool relation_store::isRelation(statementNumber statement) {
   if (ForwardVariableStore.find(statement) != ForwardVariableStore.end()) {
     if (ForwardVariableStore[statement].size() > 0) {
       return true;
@@ -109,16 +109,16 @@ bool RelationStore::isRelation(statementNumber statement) {
   return false;
 }
 
-std::unordered_set<statementNumber> RelationStore::relates(RelationStore::variable variable) {
+std::unordered_set<statementNumber> relation_store::relates(relation_store::variable variable) {
   std::unordered_set<statementNumber> statements = ReverseVariableStore[variable];
   return statements;
 }
 
-std::unordered_set<variable> RelationStore::relates(RelationStore::statementNumber statement) {
+std::unordered_set<variable> relation_store::relates(relation_store::statementNumber statement) {
   return ForwardVariableStore[statement];
 }
 
-bool RelationStore::isRelation(procedure procedure) {
+bool relation_store::isRelation(procedure procedure) {
   if (ForwardProcedureStore.find(procedure) != ForwardProcedureStore.end()) {
     if (ForwardProcedureStore[procedure].size() > 0) {
       return true;
@@ -127,11 +127,11 @@ bool RelationStore::isRelation(procedure procedure) {
   return false;
 }
 
-std::unordered_set<variable> RelationStore::relatesProcedureProc(procedure procedure) {
+std::unordered_set<variable> relation_store::relatesProcedureProc(procedure procedure) {
   return ForwardProcedureStore[procedure];
 }
 
-bool RelationStore::isRelation(procedure procedure, variable variable) {
+bool relation_store::isRelation(procedure procedure, variable variable) {
   if (ForwardProcedureStore.find(procedure) != ForwardProcedureStore.end()) {
     if (ForwardProcedureStore[procedure].find(variable) != ForwardProcedureStore[procedure].end()) {
       return true;
@@ -140,7 +140,7 @@ bool RelationStore::isRelation(procedure procedure, variable variable) {
   return false;
 }
 
-std::unordered_set<procedure> RelationStore::relatesProcedure() {
+std::unordered_set<procedure> relation_store::relatesProcedure() {
   std::unordered_set<procedure> procedures;
   for (auto const& x : ForwardProcedureStore) {
     if (x.second.size() > 0) {
@@ -150,11 +150,11 @@ std::unordered_set<procedure> RelationStore::relatesProcedure() {
   return procedures;
 }
 
-std::unordered_set<procedure> RelationStore::relatesProcedure(variable variable) {
+std::unordered_set<procedure> relation_store::relatesProcedure(variable variable) {
   return ReverseProcedureStore[variable];
 }
 
-std::unordered_set<std::pair<procedure, variable>, PairHash> RelationStore::relatesProcedurePair() {
+std::unordered_set<std::pair<procedure, variable>, PairHash> relation_store::relatesProcedurePair() {
   std::unordered_set<std::pair<procedure, variable>, PairHash> pairs;
   for (auto const& x : ForwardProcedureStore) {
     for (auto const& y : x.second) {
