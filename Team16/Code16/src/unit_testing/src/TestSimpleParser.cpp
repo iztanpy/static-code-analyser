@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "SP/sp_tokeniser/Token.h"
-#include "SP/SourceProcessor.h"
+#include "SP/sp_tokeniser/token.h"
+#include "SP/source_processor.h"
 #include "PKB/API/write_facade.h"
 #include <string>
 #include <unordered_set>
@@ -307,10 +307,10 @@ TEST_CASE("Test follows relation one level nesting") {
     REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
 
-TEST_CASE("Test SimpleParser") { // line 0: x = x + 1
+TEST_CASE("Test simple_parser") { // line 0: x = x + 1
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
     write_facade writeFacade = write_facade(*pkb_ptr);
-    SimpleParser parser(new ASTVisitor());
+    simple_parser parser(new ASTVisitor());
     std::vector<Token> my_tokens{tokenProc, tokenProcName, tokenOpenBrace, tokenX, tokenEqual, tokenX2, tokenPlus, token1,
                                  tokenEnd, tokenCloseBrace};
     REQUIRE(parser.parse(my_tokens) == 10);
@@ -630,7 +630,7 @@ TEST_CASE(("Test Print Parser")) {
 }
 
 
-TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x + 1 + w
+TEST_CASE("Test design_extractor only using variables and constants") { // x = x + 1 + w
     std::shared_ptr<TNode> nodePlus2 = std::make_shared<PlusTNode>(1);
     std::shared_ptr<TNode> nodew = std::make_shared<VariableTNode>(1, tokenW.value);
     std::shared_ptr<TNode> nodeX = std::make_shared<VariableTNode>(1, tokenX.value);
@@ -646,7 +646,7 @@ TEST_CASE("Test DesignExtractor only using variables and constants") { // x = x 
     nodePlus2->addChild(nodew);
     nodeEqual->addChild(nodePlus2);
 
-    DesignExtractor de = *new DesignExtractor();
+    design_extractor de = *new design_extractor();
     auto* visitor = new ASTVisitor();
     de.extractDesign(nodeEqual, visitor);
 
@@ -969,7 +969,7 @@ TEST_CASE(("Test SP: CFG storage")) {
   sourceProcessor.processSource(simpleProgram);
 
   // check root name in map
-  std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::shared_ptr<cfg_node> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set<int>({1, 2}));
   REQUIRE(rootSecond->getChildren().size() == 1);
@@ -979,8 +979,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   // check 456 & 7
   std::set<int> statementNumberSet456 = std::set<int>({4, 5, 6});
   std::set<int> statementNumberSet7 = std::set<int>({7});
-  std::shared_ptr<CfgNode> node7;
-  std::shared_ptr<CfgNode> node456;
+  std::shared_ptr<cfg_node> node7;
+  std::shared_ptr<cfg_node> node456;
   bool is456Found = false;
   bool is7Found = false;
   for (auto& it : rootSecond->getChildren().begin()->get()->getChildren()) {
@@ -1000,8 +1000,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(node7->getChildren().size() == 2);
   std::set<int> statementNumberSet8 = std::set<int>({8});
   std::set<int> statementNumberSet9 = std::set<int>({9});
-  std::shared_ptr<CfgNode> node8;
-  std::shared_ptr<CfgNode> node9;
+  std::shared_ptr<cfg_node> node8;
+  std::shared_ptr<cfg_node> node9;
   bool is8Found = false;
   bool is9Found = false;
   for (auto& it : node7->getChildren()) {
@@ -1025,7 +1025,7 @@ TEST_CASE(("Test SP: CFG storage")) {
 
   // PROCEDURE THIRD CHECK
   // check root name in map
-  std::shared_ptr<CfgNode> rootThird = sourceProcessor.getCfgNodesMap().at("Third");
+  std::shared_ptr<cfg_node> rootThird = sourceProcessor.getCfgNodesMap().at("Third");
   // check 13, 14, 15
   REQUIRE(rootThird->getStmtNumberSet() == std::set<int>({13, 14, 15}));
   REQUIRE(rootThird->getChildren().size() == 1);
@@ -1033,8 +1033,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(rootThird->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({16}));
   REQUIRE(rootThird->getChildren().begin()->get()->getChildren().size() == 2);
   // check 16 -> 17 && 16 -> END
-  std::shared_ptr<CfgNode> node17;
-  std::shared_ptr<CfgNode> nodeEnd;
+  std::shared_ptr<cfg_node> node17;
+  std::shared_ptr<cfg_node> nodeEnd;
   bool is17Found = false;
   bool isEndFound = false;
   for (auto& it : rootThird->getChildren().begin()->get()->getChildren()) {
@@ -1051,8 +1051,8 @@ TEST_CASE(("Test SP: CFG storage")) {
   REQUIRE(node17->getChildren().size() == 1);
   REQUIRE(node17->getChildren().begin()->get()->getStmtNumberSet() == std::set<int>({18}));
   // check 18 -> 19 && 18 -> END
-  std::shared_ptr<CfgNode> node19;
-  std::shared_ptr<CfgNode> nodeEnd2;
+  std::shared_ptr<cfg_node> node19;
+  std::shared_ptr<cfg_node> nodeEnd2;
   bool is19Found = false;
   bool isEnd2Found = false;
   for (auto& it : node17->getChildren().begin()->get()->getChildren()) {
@@ -1101,10 +1101,10 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
       }
   )";
   sourceProcessor.processSource(simpleProgram);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
 
   // check root name in map
-  std::shared_ptr<CfgNode> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::shared_ptr<cfg_node> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set < int > ({ 1, 2 }));
   REQUIRE(rootSecond->getChildren().size() == 1);
@@ -1115,8 +1115,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(rootSecond->getChildren().begin()->get()->getChildren().size() == 2);
   REQUIRE(cfgLegend.at(3) == *rootSecond->getChildren().begin());
   // check 3 -> 4 5 6 and 14 15 16 17
-  std::shared_ptr<CfgNode> node456;
-  std::shared_ptr<CfgNode> node14151617;
+  std::shared_ptr<cfg_node> node456;
+  std::shared_ptr<cfg_node> node14151617;
   bool is456Found = false;
   bool is14151617Found = false;
   for (auto& it : rootSecond->getChildren().begin()->get()->getChildren()) {
@@ -1136,8 +1136,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(7) == *node456->getChildren().begin());
   // check 7 -> 8 and 13
   REQUIRE(node456->getChildren().begin()->get()->getChildren().size() == 2);
-  std::shared_ptr<CfgNode> node8;
-  std::shared_ptr<CfgNode> node13;
+  std::shared_ptr<cfg_node> node8;
+  std::shared_ptr<cfg_node> node13;
   bool is8Found = false;
   bool is13Found = false;
   for (auto& it : node456->getChildren().begin()->get()->getChildren()) {
@@ -1153,7 +1153,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(8) == node8);
   REQUIRE(cfgLegend.at(13) == node13);
   // check 8 -> 9
-  std::shared_ptr<CfgNode> node9;
+  std::shared_ptr<cfg_node> node9;
   REQUIRE(node8->getChildren().size() == 1);
   REQUIRE(node8->getChildren().begin()->get()->getStmtNumberSet() == std::set < int > ({ 9 }));
   for (auto& it : node8->getChildren()) {
@@ -1162,8 +1162,8 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(9) == node9);
   // check 9 -> 10 and empty (end while)
   REQUIRE(node9->getChildren().size() == 2);
-  std::shared_ptr<CfgNode> node10;
-  std::shared_ptr<CfgNode> nodeEndWhile;
+  std::shared_ptr<cfg_node> node10;
+  std::shared_ptr<cfg_node> nodeEndWhile;
   bool is10Found = false;
   bool isEndWhileFound = false;
   for (auto& it : node9->getChildren()) {
@@ -1183,7 +1183,7 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
   REQUIRE(cfgLegend.at(11) == *node10->getChildren().begin());
   // check 11 -> 12
   REQUIRE(node10->getChildren().begin()->get()->getChildren().size() == 1);
-  std::shared_ptr<CfgNode> node12;
+  std::shared_ptr<cfg_node> node12;
   bool is12Found = false;
   for (auto& it : node10->getChildren().begin()->get()->getChildren()) {
     if (it->getStmtNumberSet() == std::set < int > ({ 12 })) {

@@ -7,12 +7,12 @@ typedef std::string variable;
 typedef int statementNumber;
 
 next_store::next_store() {
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots;
+  std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgRoots;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap;
   std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMapReverse;
-  std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend;
+  std::unordered_map<statementNumber, std::shared_ptr<cfg_node>> cfgLegend;
   auto NextStarMap = std::unordered_map<statementNumber,
-                                        std::unordered_set<std::shared_ptr<CfgNode>>>();
+                                        std::unordered_set<std::shared_ptr<cfg_node>>>();
 }
 
 void next_store::storeNext(std::unordered_map<statementNumber, std::unordered_set<statementNumber>> NextMap) {
@@ -24,11 +24,11 @@ void next_store::storeNext(std::unordered_map<statementNumber, std::unordered_se
   }
 }
 
-void next_store::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
+void next_store::storeCfg(std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgRoots) {
   this->cfgRoots = cfgRoots;
 }
 
-void next_store::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+void next_store::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<cfg_node>> cfgLegend) {
   this->cfgLegend = cfgLegend;
 }
 
@@ -117,7 +117,7 @@ void next_store::initialiseNextStar() {
     auto firstNode = it->second;
     auto firstNum = firstNode->getStmtNumberSet();
     std::stack<
-        std::pair<std::shared_ptr<CfgNode>, std::set<int>>
+        std::pair<std::shared_ptr<cfg_node>, std::set<int>>
     > stack;
     stack.push(std::make_pair(firstNode, firstNum));
     while (!stack.empty()) {

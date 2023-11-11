@@ -1,7 +1,7 @@
 #include "PKB/Stores/call_store.h"
 #include <stack>
 #include <iostream>
-#include "utils/Error.h"
+#include "utils/error.h"
 
 typedef int statementNumber;
 typedef std::string procedure;

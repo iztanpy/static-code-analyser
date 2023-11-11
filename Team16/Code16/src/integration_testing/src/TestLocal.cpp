@@ -9,14 +9,14 @@
 #include "PKB/API/write_facade.h"
 #include "PKB/pkb.h"
 #include "qps/qps.h"
-#include "SP/SourceProcessor.h"
+#include "SP/source_processor.h"
 
 void parse(SourceProcessor& sp, std::string filename) {
   std::ifstream file(filename);
   std::string file_contents;
 
   if (!file.is_open()) {
-    std::cerr << "Error: Unable to open file " << filename << std::endl;
+    std::cerr << "error: Unable to open file " << filename << std::endl;
   }
 
   std::string input;

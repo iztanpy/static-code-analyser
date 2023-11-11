@@ -1326,7 +1326,7 @@ class PKB {
   *
   * @param cfg The Control Flow Graph to be stored.
   */
-  void storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots);
+  void storeCfg(std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgRoots);
 
   /**
   * @brief Stores a mapping of statement numbers to corresponding CFG nodes in a CFG legend.
@@ -1334,9 +1334,9 @@ class PKB {
   * This function allows you to store a mapping of statement numbers to shared pointers to CFG nodes
   * in the provided cfgLegend.
   *
-  * @param cfgLegend An unordered_map where statementNumber is the key, and shared_ptr<CfgNode> is the associated value.
+  * @param cfgLegend An unordered_map where statementNumber is the key, and shared_ptr<cfg_node> is the associated value.
   */
-  void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend);
+  void storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<cfg_node>> cfgLegend);
 
   /**
   * @brief Retrieves pairs of statement numbers representing the Next relationship between two specified statements.

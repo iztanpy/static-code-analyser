@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "SP/sp_tokeniser/Token.h"
-#include "SP/SourceProcessor.h"
+#include "SP/sp_tokeniser/token.h"
+#include "SP/source_processor.h"
 #include "PKB/API/write_facade.h"
 #include <string>
 #include <unordered_set>

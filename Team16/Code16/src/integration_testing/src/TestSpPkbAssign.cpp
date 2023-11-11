@@ -4,8 +4,8 @@
 #include <string>
 
 #include "utils/hash_utils.h"
-#include "SP/TNode.h"
-#include "SP/SourceProcessor.h"
+#include "SP/tnode.h"
+#include "SP/source_processor.h"
 #include "PKB/API/write_facade.h"
 #include "PKB/API/read_facade.h"
 #include "qps/qps.h"

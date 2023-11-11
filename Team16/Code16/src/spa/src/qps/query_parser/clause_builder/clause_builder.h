@@ -19,11 +19,10 @@ class ClauseBuilder {
         break;
       case PQLTokenType::NORMAL_CLAUSE: this->is_not = false;
         break;
-      default:
-        throw QpsSyntaxError("Syntax Error");
+      default:throw QpsSyntaxError("Syntax error");
     }
   }
 
-  ClauseBuilder(): is_not(false) {}  // by default, it is a normal clause
+  ClauseBuilder() : is_not(false) {}  // by default, it is a normal clause
   virtual ~ClauseBuilder() = default;
 };

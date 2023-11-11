@@ -75,11 +75,11 @@ void write_facade::storeNext(std::unordered_map<statementNumber, std::unordered_
   pkb.storeNext(NextMap);
 }
 
-void write_facade::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
+void write_facade::storeCfg(std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgRoots) {
   pkb.storeCfg(cfgRoots);
 }
 
-void write_facade::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+void write_facade::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<cfg_node>> cfgLegend) {
   pkb.storeCfgLegend(cfgLegend);
 }
 

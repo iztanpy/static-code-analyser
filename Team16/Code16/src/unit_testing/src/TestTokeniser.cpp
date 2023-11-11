@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "SP/sp_tokeniser/SPTokeniser.h"
-#include "SP/sp_tokeniser/Token.h"
+#include "SP/sp_tokeniser/sp_tokeniser.h"
+#include "SP/sp_tokeniser/token.h"
 
 using namespace std;
 

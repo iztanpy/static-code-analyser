@@ -22,7 +22,7 @@ void TestWrapper::parse(std::string filename) {
   std::string file_contents;
 
   if (!file.is_open()) {
-    std::cerr << "Error: Unable to open file " << filename << std::endl;
+    std::cerr << "error: Unable to open file " << filename << std::endl;
   }
 
   std::string input;

@@ -10,7 +10,7 @@
 #include "PKB/API/write_facade.h"
 #include "PKB/pkb.h"
 #include "qps/qps.h"
-#include "SP/SourceProcessor.h"
+#include "SP/source_processor.h"
 #include "AbstractWrapper.h"
 
 class TestWrapper : public AbstractWrapper {

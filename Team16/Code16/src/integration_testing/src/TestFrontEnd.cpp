@@ -1,9 +1,9 @@
 #include <memory>
 #include <unordered_set>
 #include <string>
-#include "SP/TNode.h"
+#include "SP/tnode.h"
 #include "catch.hpp"
-#include "SP/SourceProcessor.h"
+#include "SP/source_processor.h"
 #include "PKB/API/write_facade.h"
 #include "PKB/API/read_facade.h"
 #include "qps/qps.h"

@@ -6,7 +6,7 @@
 #include "catch.hpp"
 #include "PKB/Stores/next_store.h"
 #include "utils/entity_types.h"
-#include "SP/SourceProcessor.h"
+#include "SP/source_processor.h"
 #include "PKB/API/write_facade.h"
 #include "PKB/pkb.h"
 #include "PKB/API/read_facade.h"
@@ -34,7 +34,7 @@ TEST_CASE("Test Next store") {
         a = a + b;
       })";
   sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
   writeFacade.storeNext(sourceProcessor.getNextStatementMap());
   // same node
   REQUIRE(readFacade.Next(StmtEntity::kIf, Wildcard()) == std::unordered_set<statementNumber>({1, 3}));
@@ -65,7 +65,7 @@ TEST_CASE("Test Next Star") {
         a = a + b;
       })";
   sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
   auto map = sourceProcessor.getNextStatementMap();
   writeFacade.storeCfgLegend(cfgLegend);
   writeFacade.storeNext(map);
@@ -105,7 +105,7 @@ TEST_CASE("Test Next Star") {
 //      }
 //      })";
 //    sourceProcessor.processSource(simpleProgram4);
-//    std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+//    std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
 //    auto map = sourceProcessor.getNextStatementMap();
 //    writeFacade.storeCfgLegend(cfgLegend);
 //    writeFacade.storeNext(map);

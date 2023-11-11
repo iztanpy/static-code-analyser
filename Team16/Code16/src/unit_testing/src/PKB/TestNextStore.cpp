@@ -5,7 +5,7 @@
 #include "catch.hpp"
 #include "PKB/Stores/next_store.h"
 #include "utils/entity_types.h"
-#include "SP/SourceProcessor.h"
+#include "SP/source_processor.h"
 #include "PKB/API/write_facade.h"
 #include "PKB/API/read_facade.h"
 
@@ -40,7 +40,7 @@ TEST_CASE("Test NextStar Store if") {
         a = a + b;
       })";
   sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
   auto map = sourceProcessor.getNextStatementMap();
   nextStore.storeNext(map);
   nextStore.storeCfgLegend(cfgLegend);
@@ -73,7 +73,7 @@ TEST_CASE("Test NextStar Store while") {
         a = a + b;
       })";
   sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
   nextStore.storeNext(sourceProcessor.getNextStatementMap());
   nextStore.storeCfgLegend(cfgLegend);
   nextStore.storeCfg(sourceProcessor.getCfgNodesMap());
@@ -114,7 +114,7 @@ TEST_CASE("If else in a while loop") {
         a = a + b;
       })";
   sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
   auto map = sourceProcessor.getNextStatementMap();
   nextStore.storeNext(map);
   nextStore.storeCfgLegend(cfgLegend);
@@ -145,7 +145,7 @@ TEST_CASE("While in a if else") {
         a = a + b;
       })";
   sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
   nextStore.storeNext(sourceProcessor.getNextStatementMap());
   nextStore.storeCfgLegend(cfgLegend);
   nextStore.storeCfg(sourceProcessor.getCfgNodesMap());

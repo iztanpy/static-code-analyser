@@ -834,11 +834,11 @@ void PKB::storeNext(std::unordered_map<statementNumber, std::unordered_set<state
   nextStore->storeNext(NextMap);
 }
 
-void PKB::storeCfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfgRoots) {
+void PKB::storeCfg(std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgRoots) {
   nextStore->storeCfg(cfgRoots);
 }
 
-void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<CfgNode>> cfgLegend) {
+void PKB::storeCfgLegend(std::unordered_map<statementNumber, std::shared_ptr<cfg_node>> cfgLegend) {
   nextStore->storeCfgLegend(cfgLegend);
 }
 

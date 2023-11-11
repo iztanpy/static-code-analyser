@@ -75,7 +75,7 @@ TEST_CASE("ConstraintTable::AddNewUnaryConstraint", "[ConstraintTable]") {
     std::vector<ColName> col_names = {"c"};
     std::vector<std::vector<Cell>> rows = {{"4"}, {"5"}, {"6"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
 
     Constraint c = UnaryConstraint{"d", {}};
     ct.Solve(c, false);
@@ -95,7 +95,7 @@ TEST_CASE("ConstraintTable::AddNewUnaryConstraint", "[ConstraintTable]") {
     std::vector<ColName> col_names = {"a", "b", "c"};
     std::vector<std::vector<Cell>> rows = {{"1", "3", "4"}, {"1", "3", "5"}, {"2", "4", "4"}, {"2", "4", "5"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Throw error if adding new NOT unary constraint") {
@@ -123,7 +123,7 @@ TEST_CASE("ConstraintTable::AddNewBinaryConstraint", "[ConstraintTable]") {
     std::vector<ColName> col_names = {"c", "d"};
     std::vector<std::vector<Cell>> rows = {{"6", "7"}, {"8", "9"}, {"10", "11"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Adding a new binary constraint to existing tables") {
@@ -147,7 +147,7 @@ TEST_CASE("ConstraintTable::AddNewBinaryConstraint", "[ConstraintTable]") {
         {"2", "4", "10", "11"},
     };
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Throw error if adding new NOT binary constraint") {
@@ -192,7 +192,7 @@ TEST_CASE("ConstraintTable::AddExistingUnaryConstraint", "[ConstraintTable]") {
                           col_names,
                           {{"1", "3", "5"},
                            {"9", "11", "13"}});
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   };
 
   SECTION("Adding a existing empty unary constraint") {
@@ -211,7 +211,7 @@ TEST_CASE("ConstraintTable::AddExistingUnaryConstraint", "[ConstraintTable]") {
     std::vector<ColName> col_names = {"a", "b", "c"};
     std::vector<std::vector<Cell>> rows = {{"1", "3", "5"}, {"8", "10", "12"}, {"9", "11", "13"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Adding empty NOT unary constraint to existing table") {
@@ -223,7 +223,7 @@ TEST_CASE("ConstraintTable::AddExistingUnaryConstraint", "[ConstraintTable]") {
     std::vector<std::vector<Cell>>
         rows = {{"1", "3", "5"}, {"2", "4", "6"}, {"8", "10", "12"}, {"9", "11", "13"}, {"2", "8", "32"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 }
 
@@ -244,7 +244,7 @@ TEST_CASE("ConstraintTable::AddExistingBinaryConstraint", "[ConstraintTable]") {
     std::vector<ColName> col_names = {"a", "b", "c"};
     std::vector<std::vector<Cell>> rows = {{"1", "3", "5"}, {"2", "4", "6"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Adding a existing empty unary constraint") {
@@ -281,7 +281,7 @@ TEST_CASE("ConstraintTable::AddExistingBinaryConstraint", "[ConstraintTable]") {
         {"9", "4", "6", "9"},
     };
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Adding a NOT binary constraint to existing tables") {
@@ -302,7 +302,7 @@ TEST_CASE("ConstraintTable::AddExistingBinaryConstraint", "[ConstraintTable]") {
         {"1", "5", "2"},
     };
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 }
 
@@ -323,7 +323,7 @@ TEST_CASE("ConstraintTable::AddHalfExistingBinaryConstraint", "[ConstraintTable]
     std::vector<ColName> col_names = {"a", "b", "c", "d"};
     std::vector<std::vector<Cell>> rows = {{"1", "3", "5", "4"}, {"1", "3", "5", "2"}};
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(ct.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(ct.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   SECTION("Throw error if adding new NOT binary constraint") {
@@ -333,7 +333,7 @@ TEST_CASE("ConstraintTable::AddHalfExistingBinaryConstraint", "[ConstraintTable]
   }
 }
 
-TEST_CASE("ConstraintTable::Select with Error when passing in non-existing ColName", "[ConstraintTable]") {
+TEST_CASE("ConstraintTable::Select with error when passing in non-existing ColName", "[ConstraintTable]") {
   ConstraintTable ct = ConstraintTable::ForTestingOnly(
       {
           {"a", {"1", "2", "2", "9"}},
@@ -342,19 +342,19 @@ TEST_CASE("ConstraintTable::Select with Error when passing in non-existing ColNa
       }
   );
 
-  REQUIRE(ct.Select({"a"}) == std::unordered_set<std::string>{"1", "2", "9"});
-  REQUIRE(ct.Select({"a", "a"}) == std::unordered_set<std::string>{"1 1", "2 2", "9 9"});
-  REQUIRE(ct.Select({"b"}) == std::unordered_set<std::string>{"3", "4", "10", "11"});
+  REQUIRE(ct.Select({"a"}) == std::unordered_set < std::string > {"1", "2", "9"});
+  REQUIRE(ct.Select({"a", "a"}) == std::unordered_set < std::string > {"1 1", "2 2", "9 9"});
+  REQUIRE(ct.Select({"b"}) == std::unordered_set < std::string > {"3", "4", "10", "11"});
 
-  REQUIRE(ct.Select({"b", "a", "b"}) == std::unordered_set<std::string>{"3 1 3", "4 2 4", "10 2 10", "11 9 11"});
+  REQUIRE(ct.Select({"b", "a", "b"}) == std::unordered_set < std::string > {"3 1 3", "4 2 4", "10 2 10", "11 9 11"});
 
   Constraint constraint = BinaryConstraint{{"a", "d"}, {{"1", "2"}, {"1", "4"}, {"3", "11"}}};
   ct.Solve(constraint, false);
 
-  REQUIRE(ct.Select({"a"}) == std::unordered_set<std::string>{"1"});
-  REQUIRE(ct.Select({"b"}) == std::unordered_set<std::string>{"3"});
-  REQUIRE(ct.Select({"c"}) == std::unordered_set<std::string>{"5"});
-  REQUIRE(ct.Select({"d"}) == std::unordered_set<std::string>{"4", "2"});
+  REQUIRE(ct.Select({"a"}) == std::unordered_set < std::string > {"1"});
+  REQUIRE(ct.Select({"b"}) == std::unordered_set < std::string > {"3"});
+  REQUIRE(ct.Select({"c"}) == std::unordered_set < std::string > {"5"});
+  REQUIRE(ct.Select({"d"}) == std::unordered_set < std::string > {"4", "2"});
 }
 
 TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
@@ -390,7 +390,7 @@ TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
         {"2", "4", "6", "9", "12"},
     };
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(mainTable.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 
   mainTable.Filter({"a", "b"});
@@ -403,6 +403,6 @@ TEST_CASE("ConstraintTable::JoinTable", "[ConstraintTable]") {
         {"2", "4"},
     };
     REQUIRE_TABLE_CONTENT(table, col_names, rows);
-    REQUIRE(mainTable.AvailableColName() == std::unordered_set<ColName>{col_names.begin(), col_names.end()});
+    REQUIRE(mainTable.AvailableColName() == std::unordered_set < ColName > {col_names.begin(), col_names.end()});
   }
 }
