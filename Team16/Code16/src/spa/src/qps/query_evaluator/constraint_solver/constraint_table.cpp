@@ -3,9 +3,10 @@
 // {1, 2, 3}, 2 -> {1, 1, 2, 2, 3, 3}
 std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, size_t n) {
   std::vector<std::string> result;
+  result.reserve(vec.size() * n);
   for (const std::string& val : vec) {
     for (int i = 0; i < n; ++i) {
-      result.push_back(val);
+      result.emplace_back(val);
     }
   }
   return result;
@@ -13,9 +14,10 @@ std::vector<std::string> RepeatElements(const std::vector<std::string>& vec, siz
 
 std::vector<std::string> RepeatVector(const std::vector<std::string>& vec, size_t n) {
   std::vector<std::string> result;
+  result.reserve(vec.size() * n);
   for (int i = 0; i < n; ++i) {
     for (const std::string& val : vec) {
-      result.push_back(val);
+      result.emplace_back(val);
     }
   }
   return result;
@@ -24,11 +26,10 @@ std::vector<std::string> RepeatVector(const std::vector<std::string>& vec, size_
 template<typename T>
 std::vector<T> SelectByIndex(const std::vector<T>& vec, const std::vector<std::size_t>& indices) {
   std::vector<T> result;
+  result.reserve(indices.size());
 
   for (size_t index : indices) {
-    if (index >= 0 && index < vec.size()) {
-      result.push_back(vec[index]);
-    }
+    result.emplace_back(vec[index]);
   }
 
   return result;
@@ -165,8 +166,8 @@ void ConstraintTable::AddNewBinaryConstraint(const BinaryConstraint& constraint,
   std::vector<Cell> new_values2;
 
   for (const auto& [value1, value2] : constraint.pair_values) {
-    new_values1.push_back(value1);
-    new_values2.push_back(value2);
+    new_values1.emplace_back(value1);
+    new_values2.emplace_back(value2);
   }
 
   if (table.empty()) {
@@ -200,7 +201,7 @@ void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing
   for (std::size_t i = 0; i < existing_values.size(); ++i) {
     bool value_found = filter_values.find(existing_values[i]) != filter_values.end();
     if (is_not != value_found) {
-      filter_indices.push_back(i);
+      filter_indices.emplace_back(i);
     }
   }
 
@@ -228,7 +229,7 @@ void ConstraintTable::AddExistingBinaryConstraint(const BinaryConstraint& existi
     bool value_found = existing_constraint.pair_values.find(existing_pair) != existing_constraint.pair_values.end();
 
     if (is_not != value_found) {
-      indices.push_back(i);
+      indices.emplace_back(i);
     }
   }
 
@@ -283,13 +284,13 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
     Cell existing_value = existing_col[i];
 
     if (new_values.find(existing_value) != new_values.end()) {
-      std::unordered_set < Cell > new_col_values = new_values[existing_value];
+      const auto& new_col_values = new_values[existing_value];
 
       for (const auto& new_col_value : new_col_values) {
         for (const auto& [current_colname, values] : table) {
-          result[current_colname].push_back(values[i]);
+          result[current_colname].emplace_back(values[i]);
         }
-        result[new_colname].push_back(new_col_value);
+        result[new_colname].emplace_back(new_col_value);
       }
     }
   }
@@ -348,7 +349,7 @@ void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
     if (seen_rows.find(row) == seen_rows.end()) {
       seen_rows.emplace(row);
       for (const auto& [colname, values] : table) {
-        result[colname].push_back(values[i]);
+        result[colname].emplace_back(values[i]);
       }
     }
   }
