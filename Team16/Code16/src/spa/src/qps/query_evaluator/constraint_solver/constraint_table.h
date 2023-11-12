@@ -26,7 +26,7 @@ class ConstraintTable {
    * @brief Filters the constraint table by the specified column names.
    * @param col_names
    */
-  void Filter(const std::vector<ColName>& col_names);
+  void Filter(const std::unordered_set<ColName>& col_names);
 
   /*!
    * @brief Adds a new constraint to the constraint table.

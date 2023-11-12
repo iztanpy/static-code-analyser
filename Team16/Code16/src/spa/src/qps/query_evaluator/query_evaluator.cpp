@@ -38,11 +38,11 @@ std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
     if (is_boolean_select) {
       continue;
     }
-    std::unordered_set < ColName > selects = algorithm_utils::intersect(
+    std::unordered_set < ColName > overlapping_selects = algorithm_utils::intersect(
         table.AvailableColName(),
         {query.selects.begin(), query.selects.end()});
-    if (!selects.empty()) {
-      table.Filter(query.selects);
+    if (!overlapping_selects.empty()) {
+      table.Filter(overlapping_selects);
       aggregate_table.JoinTable(table);
     }
   }
