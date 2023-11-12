@@ -34,21 +34,19 @@ std::vector<T> SelectByIndex(const std::vector<T>& vec, const std::vector<std::s
   return result;
 }
 
-std::string RowToString(const Table& table,
-                        int row_index,
-                        const std::vector<std::string>& keys) {
-  std::string result;
-  for (const auto& key : keys) {
-    // Check if the key exists in the map and the row_index is valid
-    if (table.count(key) && row_index < table.at(key).size()) {
-      // Add space separator if result is not empty
-      if (!result.empty()) {
-        result += " ";
+std::string RowToString(const Table& table, int row_index, const std::vector<ColName>& keys) {
+  std::ostringstream oss;
+  for (size_t i = 0; i < keys.size(); ++i) {
+    const auto& key = keys[i];
+    auto it = table.find(key);
+    if (it != table.end() && row_index < it->second.size()) {
+      if (i > 0) {
+        oss << " ";
       }
-      result += table.at(key)[row_index];
+      oss << it->second[row_index];
     }
   }
-  return result;
+  return oss.str();
 }
 
 ConstraintTable::ConstraintTable() {
@@ -105,7 +103,7 @@ std::unordered_set<std::string> ConstraintTable::Select(const std::vector<ColNam
     assert(table.find(key) != table.end() && "Key not found in map");
   }
 
-  std::unordered_set<std::string> result;
+  std::unordered_set < std::string > result;
 
   if (selects.empty()) {
     return result;
@@ -113,15 +111,15 @@ std::unordered_set<std::string> ConstraintTable::Select(const std::vector<ColNam
 
   size_t length = table.at(selects[0]).size();
   for (size_t i = 0; i < length; ++i) {
-    result.insert(RowToString(table, i, selects));
+    result.emplace(RowToString(table, i, selects));
   }
   return result;
 }
 
 std::unordered_set<ColName> ConstraintTable::AvailableColName() {
-  std::unordered_set<ColName> result;
+  std::unordered_set < ColName > result;
   for (const auto& [col_name, _] : table) {
-    result.insert(col_name);
+    result.emplace(col_name);
   }
   return result;
 }
@@ -194,7 +192,7 @@ void ConstraintTable::AddExistingUnaryConstraint(const UnaryConstraint& existing
   assert(table.find(existing_constraint.col_name) != table.end() && "Existing ColName not found in the table!");
 
   ColName existing_header = existing_constraint.col_name;
-  std::unordered_set<Cell> filter_values = existing_constraint.values;
+  std::unordered_set < Cell > filter_values = existing_constraint.values;
 
   std::vector<std::size_t> filter_indices;
   std::vector<Cell>& existing_values = table[existing_header];
@@ -246,7 +244,7 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
 
   ColName existing_colname;
   ColName new_colname;
-  std::unordered_map<Cell, std::unordered_set<Cell >> new_values;
+  std::unordered_map < Cell, std::unordered_set < Cell >> new_values;
 
   if (table.find(constraint.pair_col_names.first) != table.end()
       && table.find(constraint.pair_col_names.second) == table.end()
@@ -255,7 +253,7 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
     new_colname = constraint.pair_col_names.second;
 
     for (const auto& [value1, value2] : constraint.pair_values) {
-      new_values[value1].insert(value2);
+      new_values[value1].emplace(value2);
     }
 
   } else if (table.find(constraint.pair_col_names.first) == table.end()
@@ -264,7 +262,7 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
     new_colname = constraint.pair_col_names.first;
 
     for (const auto& [value1, value2] : constraint.pair_values) {
-      new_values[value2].insert(value1);
+      new_values[value2].emplace(value1);
     }
   } else {
     assert(false && "Both ColNames are either both existent or non-existent in the table");
@@ -285,7 +283,7 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
     Cell existing_value = existing_col[i];
 
     if (new_values.find(existing_value) != new_values.end()) {
-      std::unordered_set<Cell> new_col_values = new_values[existing_value];
+      std::unordered_set < Cell > new_col_values = new_values[existing_value];
 
       for (const auto& new_col_value : new_col_values) {
         for (const auto& [current_colname, values] : table) {
@@ -318,7 +316,7 @@ void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
     value = RepeatVector(value, constraint_table_len);
   }
 
-  // Transform values from constraint_table using function B and insert directly into table
+  // Transform values from constraint_table using function B and emplace directly into table
   for (const auto& [key, value] : constraint_table.table) {
     table[key] = RepeatElements(value, table_len);
   }
@@ -326,10 +324,10 @@ void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
 
 void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
   // Create an unordered_set from the vector
-  std::unordered_set<ColName> col_set(col_names.begin(), col_names.end());
+  std::unordered_set < ColName > col_set(col_names.begin(), col_names.end());
   std::vector<ColName> dedup_colnames(col_set.begin(), col_set.end());
 
-  std::unordered_set<std::string> seen_rows;
+  std::unordered_set < std::string > seen_rows;
 
   for (auto it = table.begin(); it != table.end();) {
     if (col_set.find(it->first) == col_set.end()) {
@@ -348,7 +346,7 @@ void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
   for (size_t i = 0; i < table_len; ++i) {
     std::string row = RowToString(table, i, dedup_colnames);
     if (seen_rows.find(row) == seen_rows.end()) {
-      seen_rows.insert(row);
+      seen_rows.emplace(row);
       for (const auto& [colname, values] : table) {
         result[colname].push_back(values[i]);
       }

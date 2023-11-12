@@ -8,6 +8,7 @@ StringPairSet EvaluatorUtil::ToStringPairSet(IntStringPairSet& original) {
   }
   return converted;
 }
+
 StringPairSet EvaluatorUtil::ToStringPairSet(IntPairSet& original) {
   StringPairSet converted;
   for (const auto& entry : original) {
@@ -15,10 +16,12 @@ StringPairSet EvaluatorUtil::ToStringPairSet(IntPairSet& original) {
   }
   return converted;
 }
+
 std::unordered_set<std::string> EvaluatorUtil::ToStringSet(std::unordered_set<int>& original) {
   std::unordered_set<std::string> converted;
+  converted.reserve(original.size());
   for (const auto& entry : original) {
-    converted.insert(std::to_string(entry));
+    converted.emplace(std::to_string(entry));
   }
   return converted;
 }
