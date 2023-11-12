@@ -29,20 +29,6 @@ class cfg_node {
 
   virtual ~cfg_node() = default;
 
-  bool operator==(const cfg_node& other) const {
-    if (this->statementNumberSet != other.statementNumberSet) {
-      std::cout << "statementNumberSet wrong" << std::endl;
-      for (const auto& stmtNo : this->statementNumberSet) {
-        std::cout << stmtNo << std::endl;
-      }
-      for (const auto& stmtNo : other.statementNumberSet) {
-        std::cout << stmtNo << std::endl;
-      }
-      return false;
-    }
-    return true;
-  }
-
   /**
    * @brief Add a child node to this node in the CFG.
    *
@@ -70,48 +56,6 @@ class cfg_node {
   */
   std::set<int> getStmtNumberSet() {
     return statementNumberSet;
-  }
-  /**
-   * @brief Set the parent node of this node in the CFG.
-   *
-   * @param parent A shared pointer to the parent node.
-  */
-  void setParentNode(const std::shared_ptr<cfg_node>& parent) {
-    parentNode = parent;
-  }
-
-  /**
-  * @brief Get the parent node associated with a specific statement number.
-  *
-  * This method traverses the parent nodes to find the parent associated with a specific statement number.
-  *
-  * @param stmtNumber The statement number for which to find the parent node.
-  * @return A shared pointer to the parent node, or nullptr if not found.
-  */
-  std::shared_ptr<cfg_node> getParentNode(int stmtNumber) {
-    std::shared_ptr<cfg_node> parent = parentNode;
-    while (parent != nullptr) {
-      if (parent->statementNumberSet.size() == 1 && *parent->statementNumberSet.begin() == stmtNumber) {
-        return parent;
-      } else {
-        parent = parent->parentNode;
-      }
-    }
-    return parentNode;
-  }
-
-  /**
-  * @brief Check if this node is an end node in the CFG.
-  *
-  * An end node is typically associated with a statement number of -1.
-  *
-  * @return `true` if this node is an end node, `false` otherwise.
-  */
-  bool isEndNode() {
-    if (statementNumberSet.size() == 1) {
-      return *statementNumberSet.begin() == -1;
-    }
-    return false;
   }
   /**
   * @brief Gets the last statement number within the statement number hashset.

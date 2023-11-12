@@ -30,14 +30,41 @@ class IfTNode;
  * Subclasses of this class implement specific behavior for visiting different types of AST nodes.
  */
 class Visitor {
+ protected:
+  // Procedure
+  std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
+  // Uses
+  std::unordered_map<int, std::unordered_set<std::string>> assignLinePartialRHSPatternMap;
+  std::unordered_map<int, std::string> usesLineLHSMap;
+  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
+  std::unordered_map<int, std::string> assignLineFullRHSMap;
+  // Control Variables
+  std::unordered_map<int, std::unordered_set<std::string>> ifControlVarMap;
+  std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap;
+  // Modifies
+  std::unordered_map<int, std::string> modifiesMap;
+  // Parent
+  std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
+  // Follows
+  std::unordered_map<int, int> followStatementNumberHashmap;
+  // Calls
+  std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap;
+  std::unordered_map<int, std::string> callStatementNumberEntityHashmap;
+  // Other
+  std::unordered_map<int, StmtEntity> statementTypesMap;
+  std::unordered_set<std::string> variables;
+  std::unordered_set<std::string> constants;
+  std::unordered_map<std::string, std::pair<int, int>> procedureLineNumberHashmap;
+  std::set<std::string> procedureLabels;
+
  public:
   /**
-   * @brief Visits a ProcedureTNode in the AST.
-   *
-   * This method is called when traversing a ProcedureTNode in the Abstract Syntax Tree (AST).
-   *
-   * @param node Pointer to the ProcedureTNode being visited.
-   * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
+  * @brief Visits a ProcedureTNode in the AST.
+  *
+  * This method is called when traversing a ProcedureTNode in the Abstract Syntax Tree (AST).
+  *
+  * @param node Pointer to the ProcedureTNode being visited.
+  * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
    */
   virtual void visit(const ProcedureTNode* node, std::string& key) = 0;
   /**
@@ -175,53 +202,21 @@ class Visitor {
    * @param key A string key used for visitation, typically indicating the context or purpose of the visit.
    */
   virtual void visit(const CallTNode* node, std::string& key) = 0;
-
-  // Procedure
-  std::unordered_map<std::string, std::unordered_set<int>> procedureStatementNumberHashmap;
-
-  // Uses
-  std::unordered_map<int, std::unordered_set<std::string>> assignLinePartialRHSPatternMap;
-  std::unordered_map<int, std::string> usesLineLHSMap;
-  std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap;
-  std::unordered_map<int, std::string> assignLineFullRHSMap;
-
-  // Control Variables
-  std::unordered_map<int, std::unordered_set<std::string>> ifControlVarMap;
-  std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap;
-
-  // Modifies
-  std::unordered_map<int, std::string> modifiesMap;
-
-  // Parent
-  std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap;
-
-  // Follows
-  std::unordered_map<int, int> followStatementNumberHashmap;
-
-  // Calls
-  std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap;
-  std::unordered_map<int, std::string> callStatementNumberEntityHashmap;
-
-  // Other
-  std::unordered_map<int, StmtEntity> statementTypesMap;
-  std::unordered_set<std::string> variables;
-  std::unordered_set<std::string> constants;
-  std::unordered_map<std::string, std::pair<int, int>> procedureLineNumberHashmap;
-
-  std::set<std::string> procedureLabels;
-  std::string currKey;
-
   /**
-   * @brief Get the starting to ending line numbers of a particular procedure.
-   *
-   * This method returns an unordered map that associates procedure names with its starting to ending line numbers.
-   *
-   * @return An unordered map where keys are procedure names, and values are a tuple of statement numbers.
+  * @brief Get the starting to ending line numbers of a particular procedure.
+  *
+  * This method returns an unordered map that associates procedure names with its starting to ending line numbers.
+  *
+  * @return An unordered map where keys are procedure names, and values are a tuple of statement numbers.
    */
   std::unordered_map<std::string, std::pair<int, int>> getProcedureLineNumberHashmap() const {
     return procedureLineNumberHashmap;
   }
-
+  /**
+  * @brief Set the starting and ending line numbers of a particular procedure.
+  *
+  * This method sets the starting and ending line numbers of a particular procedure.
+   */
   void setProcedureLineNumberMap(std::string procedureName, int statementNumber) {
     if (procedureLineNumberHashmap[procedureName].first) {
       procedureLineNumberHashmap[procedureName].second = statementNumber;
@@ -229,23 +224,42 @@ class Visitor {
       procedureLineNumberHashmap[procedureName].first = statementNumber;
     }
   }
-
+  /**
+  * @brief Get the map of caller procedure to callee procedure.
+  *
+  * This method returns an unordered map of caller procedure to callee procedure..
+  *
+  * @return An unordered map where keys are caller procedure names and values caller procedure names.
+   */
   std::unordered_map<std::string, std::unordered_set<std::string>> getCallerCalleeHashmap() const {
     return callerCalleeHashmap;
   }
-
+  /**
+  * @brief Set the caller and callee procedures.
+  *
+  * This method adds an associated caller procedure and callee procedure to internal map.
+   */
   void setCallerCalleeMap(std::string caller, std::string callee) {
     callerCalleeHashmap[caller].insert(callee);
   }
-
+  /**
+  * @brief Get the map of statement number to statement type.
+  *
+  * This method returns an unordered map of statement number to statement type.
+  *
+  * @return An unordered map where keys are statement numbers and values are statement types.
+   */
   std::unordered_map<int, std::string> getCallStatementNumberEntityHashmap() const {
     return callStatementNumberEntityHashmap;
   }
-
+  /**
+  * @brief Adds a call statement to an internal map.
+  *
+  * This method adds a call statement number and called procedure name to an internal map.
+   */
   void setCallStatementNumberEntityHashmap(int statementNumber, std::string entityName) {
     callStatementNumberEntityHashmap[statementNumber] = entityName;
   }
-
   /**
    * @brief Get the mapping of procedure names to the statement numbers where they are defined.
    *
@@ -444,9 +458,9 @@ class Visitor {
 class ASTVisitor : public Visitor {
  public:
   /**
-   * @brief Default constructor for the `ASTVisitor` class.
-   *
-   * The default constructor initializes an `ASTVisitor` object with default settings.
+  * @brief Default constructor for the `ASTVisitor` class.
+  *
+  * The default constructor initializes an `ASTVisitor` object with default settings.
    */
   ASTVisitor() = default;
 

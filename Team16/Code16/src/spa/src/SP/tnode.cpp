@@ -3,9 +3,13 @@
 
 TNode::TNode(int statementNumber) : statementNumber(statementNumber) {}
 
-void ProcedureTNode::setEndStatementNumber(int statementNumber) {
-  if (endStatementNumber == -1) {
-    endStatementNumber = statementNumber;
+void TNode::acceptLeftChild(ASTVisitor* visitor, std::string& key) const {
+  leftChild->accept(visitor, key);
+}
+
+void TNode::acceptRightChild(ASTVisitor* visitor, std::string& key) const {
+  if (rightChild) {
+    rightChild->accept(visitor, key);
   }
 }
 
@@ -13,7 +17,7 @@ int ProcedureTNode::getStartStatementNumber() const {
   return startStatementNumber;
 }
 
-void ProcedureTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void ProcedureTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
@@ -21,35 +25,35 @@ std::string AssignTNode::getFullRHS() const {
   return rightChild->getContent(true);
 }
 
-void AssignTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void AssignTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void VariableTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void VariableTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void ConstantTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void ConstantTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void PlusTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void PlusTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void MinusTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void MinusTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void MultiplyTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void MultiplyTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void DivideTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void DivideTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 
-void ModTNode::accept(ASTVisitor* visitor, std::string& key) const {
+void ModTNode::accept(ASTVisitor *visitor, std::string& key) const {
   visitor->visit(this, key);
 }
 

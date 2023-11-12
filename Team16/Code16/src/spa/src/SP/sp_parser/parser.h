@@ -46,7 +46,6 @@ class Parser {
   void start_parse(std::vector<Token>& tokens, int curr_index);
   static int index;
   static cfg cfgFacade;
-  static std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgNodeMap;
   /**
   * @brief Increment the index used for token parsing.
   *

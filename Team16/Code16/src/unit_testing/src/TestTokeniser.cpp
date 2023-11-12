@@ -37,10 +37,6 @@ TEST_CASE(("Test Simple Program")) {
     REQUIRE(tokens_simple[21].tokenType == TokenType::kSepSemicolon);
 }
 
-
-
-
-
 TEST_CASE("Test Delimiters") {
     SPtokeniser tokeniser;
     std::vector<struct Token> tokens = tokeniser.tokenise("cenX;");
@@ -146,24 +142,3 @@ TEST_CASE(("Test procedure")) {
     REQUIRE(tokens_simple[22].tokenType == TokenType::kSepCloseBrace);
     REQUIRE(tokens_simple.size() == 23);
 }
-
-TEST_CASE("Test split lines") {
-    SPtokeniser tokeniser;
-
-    string simpleProgram1 = "procedure p { x = 1; y = 1 + 2 + 3; } procedure x { read r;} ";
-    string simpleProgram2 = "procedure p     { x   = 1 ; y =   1 + 2 + 3;    }    procedure x { read r    ;}    ";
-    string simpleProgram3 = "procedure p{x=1;y=1+2+3;}procedure x{read r;}";
-
-    std::vector<std::string> split_words1 = tokeniser.splitLines(simpleProgram1);
-    std::vector<std::string> split_words2 = tokeniser.splitLines(simpleProgram2);
-    std::vector<std::string> split_words3 = tokeniser.splitLines(simpleProgram3);
-
-    std::vector<std::string> ans = {"procedure", "p", "{", "x", "=", "1",";", "y", "=", "1", "+", "2", "+", "3",";", "}", "procedure", "x", "{", "read", "r",";","}"};
-
-    REQUIRE(split_words1 == ans);
-    REQUIRE(split_words2 == ans);
-    REQUIRE(split_words3 == ans);
-}
-
-
-
