@@ -69,8 +69,8 @@ TEST_CASE("Query parser can extract pattern clause 'a (entRef, expr)'") {
   EntRef expected_lhs = EntRef(declarations[0]);
   ExprSpec expected_rhs = Wildcard::Value;
   REQUIRE(clause->declaration == declarations[1]);
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
+  REQUIRE(clause->lhs == expected_lhs);
+  REQUIRE(clause->rhs == expected_rhs);
 }
 
 TEST_CASE("Query Parser can return a parsed query") {
@@ -89,7 +89,10 @@ TEST_CASE("Query Parser can return a parsed query") {
 
   ClauseSet expected_clauses;
   expected_clauses.insert(std::move(expected_select_clause_ptr));
-  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1], EntRef(declarations[0]), Wildcard::Value, false));
+  expected_clauses.insert(std::make_unique<AssignPattern>(declarations[1],
+                                                          EntRef(declarations[0]),
+                                                          Wildcard::Value,
+                                                          false));
 
   REQUIRE(parsed_pattern_query.selects == expected_selects);
   REQUIRE(areClauseSetsEqual(parsed_pattern_query.clauses, expected_clauses));
@@ -376,7 +379,7 @@ TEST_CASE("Parser can parse with clause") {
   expected_clauses.insert(std::make_unique<WithClause>(expected_with_lhs, 10, false));
 
   REQUIRE(parsed_query_1.selects == expected_selects);
-   REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
+  REQUIRE(areClauseSetsEqual(parsed_query_1.clauses, expected_clauses));
 }
 
 TEST_CASE("Parser can parse select attr ref") {

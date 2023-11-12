@@ -31,14 +31,6 @@ class PatternClause : public Clause {
   }
 
   /*!
-   * Checks if two expression-specs are equal
-   * @param expr_1 first expression-spec
-   * @param expr_2 second expression-spec
-   * @return true if they are equal, else false
-   */
-  static bool are_expr_spec_equal(ExprSpec expr_1, ExprSpec expr_2);
-
-  /*!
    * Evaluate this clause given info from PKB
    * @param pkb_reader
    * @return Constraint that contains all possible valid values for this clause
