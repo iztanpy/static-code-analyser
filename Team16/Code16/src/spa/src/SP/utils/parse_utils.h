@@ -29,7 +29,7 @@ typedef std::unordered_map<std::string, TokenType> EntityMap;
  * and conditional expressions, as well as converting literals to entity types.
  */
 class parse_utils {
-private:
+ private:
   static int index;
   static int lineNumber;
   inline static std::string procedureName;
@@ -94,7 +94,7 @@ private:
    */
   static std::shared_ptr<TNode> parseRelFactor(const std::vector<Token>& tokens);
 
-public:
+ public:
   /**
    * @brief Converts a literal entity to the corresponding entity token type.
    * @param value The literal entity to be converted.
