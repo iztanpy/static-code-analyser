@@ -41,7 +41,7 @@ int PrintParser::parse(std::vector<Token>& tokens) {
   // Update the current index and create the AST node
   index = index + 3;
   std::shared_ptr<TNode> root = TNodeFactory::createNode(print, lineNumber);
-  designExtractor->extractDesign(root, visitor);
+  design_extractor::extractDesign(root, visitor);
   followsStatementStack.top().insert(lineNumber);
   cfg::handleStatement(lineNumber);
 

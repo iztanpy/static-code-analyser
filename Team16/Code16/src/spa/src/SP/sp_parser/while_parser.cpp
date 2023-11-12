@@ -42,7 +42,7 @@ int while_parser::parse(std::vector<Token>& tokens) {
   }
   index++;
 
-  designExtractor->extractDesign(whileNode, visitor);
+  design_extractor::extractDesign(whileNode, visitor);
   followsStatementStack.top().insert(lineNumber);
   std::set<int> whileFollowsSet;
   followsStatementStack.push(whileFollowsSet);

@@ -47,7 +47,7 @@ int if_parser::parse(std::vector<Token>& tokens) {
   }
   index++;
 
-  designExtractor->extractDesign(ifNode, visitor);
+  design_extractor::extractDesign(ifNode, visitor);
   followsStatementStack.top().insert(lineNumber);
   std::set<int> ifFollowsSet;
   followsStatementStack.push(ifFollowsSet);

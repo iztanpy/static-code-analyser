@@ -32,7 +32,7 @@ int assignment_parser::parse(std::vector<Token>& tokens) {
     return -1;
   }
   index += 1;
-  designExtractor->extractDesign(assignNode, visitor);
+  design_extractor::extractDesign(assignNode, visitor);
   followsStatementStack.top().insert(lineNumber);
   cfg::handleStatement(lineNumber);
   lineNumber++;

@@ -42,7 +42,7 @@ int read_parser::parse(std::vector<Token>& tokens) {
   // Update the current index and create the AST node
   index = index + 3;
   std::shared_ptr<TNode> root = TNodeFactory::createNode(read, lineNumber);
-  designExtractor->extractDesign(root, visitor);
+  design_extractor::extractDesign(root, visitor);
   followsStatementStack.top().insert(lineNumber);
   cfg::handleStatement(lineNumber);
 

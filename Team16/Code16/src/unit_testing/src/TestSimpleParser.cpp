@@ -92,7 +92,7 @@ TEST_CASE("Test Hardcore Next") {
 
     };
 
-    REQUIRE(sourceProcessor.getNextStatementMap() == r);
+    REQUIRE(Cfg::getNextStatementNumberHashmap() == r);
 }
 
 TEST_CASE("Test Sample Next") {
@@ -139,7 +139,7 @@ TEST_CASE("Test Sample Next") {
       {11, {12}},
     };
 
-    REQUIRE(sourceProcessor.getNextStatementMap() == correct_res);
+    REQUIRE(Cfg::getNextStatementNumberHashmap() == correct_res);
 }
 
 TEST_CASE("Test Complicated Next") {
@@ -179,7 +179,7 @@ TEST_CASE("Test Complicated Next") {
       {8, {1}},
     };
 
-    REQUIRE(sourceProcessor.getNextStatementMap() == r);
+    REQUIRE(Cfg::getNextStatementNumberHashmap() == r);
 }
 
 TEST_CASE("Test call sn rs.") {
@@ -646,9 +646,8 @@ TEST_CASE("Test design_extractor only using variables and constants") { // x = x
     nodePlus2->addChild(nodew);
     nodeEqual->addChild(nodePlus2);
 
-    design_extractor de = *new design_extractor();
     auto* visitor = new ASTVisitor();
-    de.extractDesign(nodeEqual, visitor);
+    design_extractor::extractDesign(nodeEqual, visitor);
 
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "x", "w" });
     std::unordered_set<std::string> constSet = std::unordered_set<std::string>({ "1" });
@@ -969,7 +968,7 @@ TEST_CASE(("Test SP: CFG storage")) {
   sourceProcessor.processSource(simpleProgram);
 
   // check root name in map
-  std::shared_ptr<cfg_node> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::shared_ptr<CfgNode> rootSecond = cfg::getCfgNodeHashmap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set<int>({1, 2}));
   REQUIRE(rootSecond->getChildren().size() == 1);
@@ -1025,7 +1024,7 @@ TEST_CASE(("Test SP: CFG storage")) {
 
   // PROCEDURE THIRD CHECK
   // check root name in map
-  std::shared_ptr<cfg_node> rootThird = sourceProcessor.getCfgNodesMap().at("Third");
+  std::shared_ptr<CfgNode> rootThird = cfg::getCfgNodeHashmap().at("Third");
   // check 13, 14, 15
   REQUIRE(rootThird->getStmtNumberSet() == std::set<int>({13, 14, 15}));
   REQUIRE(rootThird->getChildren().size() == 1);
@@ -1101,10 +1100,10 @@ TEST_CASE(("Test SP: nested if/while CFG storage")) {
       }
   )";
   sourceProcessor.processSource(simpleProgram);
-  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
+  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = cfg::getStmtNumberToCfgNodeHashmap();
 
   // check root name in map
-  std::shared_ptr<cfg_node> rootSecond = sourceProcessor.getCfgNodesMap().at("Second");
+  std::shared_ptr<cfg_node> rootSecond = cfg::getCfgNodeHashmap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set < int > ({ 1, 2 }));
   REQUIRE(rootSecond->getChildren().size() == 1);

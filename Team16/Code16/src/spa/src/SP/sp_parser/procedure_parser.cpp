@@ -39,10 +39,10 @@ int ProcedureParser::parse(std::vector<Token>& tokens) {
   // set current procedure name
   parse_utils::setProcedureName(procedure.value);
   std::shared_ptr<TNode> root = TNodeFactory::createNode(procedure, lineNumber);
-  addCfgNodeToMap(procedure.value, cfg::rootCfgNode);
+  cfg::addToCfgNodeMap(procedure.value);
 
   // set root node
-  designExtractor->extractDesign(root, visitor);
+  design_extractor::extractDesign(root, visitor);
 
   Parser::index = Parser::index + 3;
 
@@ -50,8 +50,4 @@ int ProcedureParser::parse(std::vector<Token>& tokens) {
   followsStatementStack.push(procedureFollowsSet);
   isParsingProcedure = true;
   return Parser::index;
-}
-
-void ProcedureParser::addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<cfg_node> cfgNode) {
-  Parser::cfgNodeMap[procedureName] = std::move(cfgNode);
 }

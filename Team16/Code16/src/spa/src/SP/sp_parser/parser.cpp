@@ -1,7 +1,5 @@
 #include "SP/sp_parser/parser.h"
 
-design_extractor* Parser::designExtractor = new design_extractor();
-
 int Parser::index = 0;
 
 int Parser::lineNumber = 1;
@@ -20,11 +18,6 @@ std::unordered_map<int, std::unordered_set<int>> Parser::parentStatementNumberHa
     std::unordered_map<int, std::unordered_set<int>>();
 
 std::stack<int> Parser::parentStatementStack = std::stack<int>();
-
-std::unordered_map<std::string, std::shared_ptr<cfg_node>> Parser::cfgNodeMap =
-    std::unordered_map<std::string, std::shared_ptr<cfg_node>>();
-
-cfg cfgFacade = cfg();
 
 void Parser::start_parse(std::vector<Token>& tokens, int curr_index) {
   int next_index = parse(tokens);
