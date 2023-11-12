@@ -9,15 +9,6 @@
 #include <memory>
 #include <set>
 
-// code for testing purposes
-//  for (auto& i : res2) {
-//    std::cout << i.first << ": ";
-//    for (auto& j : i.second) {
-//      std::cout << j << " ";
-//    }
-//    std::cout << std::endl;
-//  }
-
 // Define your TokenType and Token objects here (if not already defined)
 TokenType variableType = TokenType::kLiteralName;
 TokenType constantType = TokenType::kLiteralInteger;

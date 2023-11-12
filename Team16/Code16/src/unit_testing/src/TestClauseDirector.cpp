@@ -312,8 +312,8 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, subExp
   EntRef expected_lhs = EntRef(declarations[1]);
   ExprSpec expected_rhs = PartialExpr{"x+y"};
   REQUIRE(clause->declaration == (declarations[0]));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
+  REQUIRE(clause->lhs == expected_lhs);
+  REQUIRE(clause->rhs == expected_rhs);
 }
 
 TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'") {
@@ -336,8 +336,8 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (entRef, expr)'
   EntRef expected_lhs = EntRef(declarations[1]);
   ExprSpec expected_rhs = PartialExpr{"x+y"};
   REQUIRE(clause->declaration == (declarations[0]));
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
+  REQUIRE(clause->lhs == expected_lhs);
+  REQUIRE(clause->rhs == expected_rhs);
 }
 
 TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
@@ -359,6 +359,6 @@ TEST_CASE("Clause director successfully builds pattern clause 'a (_, expr)'") {
   EntRef expected_lhs = Wildcard::Value;
   ExprSpec expected_rhs = PartialExpr{"x+y"};
   REQUIRE(clause->declaration == declarations[0]);
-  REQUIRE(SuchThatClause::are_ent_ref_equal(clause->lhs, expected_lhs));
-  REQUIRE(PatternClause::are_expr_spec_equal(clause->rhs, expected_rhs));
+  REQUIRE(clause->lhs == expected_lhs);
+  REQUIRE(clause->rhs == expected_rhs);
 }

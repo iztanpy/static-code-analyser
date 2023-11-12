@@ -1,7 +1,9 @@
 #include "catch.hpp"
 
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
-#include "qps/clauses/pattern_clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/assign.h"
+#include "qps/clauses/pattern_clauses/if.h"
+#include "qps/clauses/pattern_clauses/while.h"
 #include "qps/qps_errors/qps_semantic_error.h"
 #include "utils/entity_types.h"
 #include "qps/clauses/attr_ref.h"
@@ -152,7 +154,8 @@ TEST_CASE("AssignPattern::AssignPattern", "[AssignPattern]") {
     EntRef ent_ref("a");
     PartialExpr expr_spec({"x"});
     REQUIRE_THROWS_AS(AssignPattern(syn, ent_ref, expr_spec, false), QpsSemanticError);
-    REQUIRE_THROWS_WITH(AssignPattern(syn, ent_ref, expr_spec, false), "[AssignPattern] syn-assign is not an assign synonym");
+    REQUIRE_THROWS_WITH(AssignPattern(syn, ent_ref, expr_spec, false),
+                        "[AssignPattern] syn-assign is not an assign synonym");
   }
 
   SECTION("Constructor throws semantic error") {

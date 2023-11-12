@@ -3,7 +3,8 @@
 #include "qps/qps.h"
 #include "qps/clauses/clause.h"
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
-#include "qps/clauses/pattern_clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/while.h"
+#include "qps/clauses/pattern_clauses/assign.h"
 
 TEST_CASE("Test 1") {
   std::string

@@ -3,7 +3,7 @@
 #include "qps/query_evaluator/constraint_solver/clause_grouper.h"
 #include "qps/query_evaluator/constraint_solver/clause_group.h"
 #include "qps/clauses/with_clauses/with_clause.h"
-#include "qps/clauses/pattern_clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/assign.h"
 
 TEST_CASE("ClauseGrouper::GetClauseGroupOrder", "[ClauseGrouper]") {
   ClauseGrouper clauseGrouper = ClauseGrouper();
