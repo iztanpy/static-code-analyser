@@ -33,7 +33,10 @@ struct Token {
   * @param v The value of the token.
   */
   Token(TokenType t, std::string v) : tokenType(t), value(std::move(v)) {}
-
+  /**
+  * Get value of token.
+  * @return The value of the token.
+  */
   [[nodiscard]] std::string getValue() const {
     return value;
   }

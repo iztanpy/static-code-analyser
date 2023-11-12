@@ -11,6 +11,7 @@
 class ASTVisitor;
 enum class TokenType;
 
+
 /**
  * @class TNode
  * @brief Base class for representing nodes in the Abstract Syntax Tree (AST).
@@ -19,23 +20,40 @@ enum class TokenType;
  * It provides common attributes and methods for AST nodes.
  */
 class TNode {
- public:
-  /**
-  * @brief Constructs a TNode object with a statement number.
-  * @param statementNumber The statement number associated with the node.
-  */
-  explicit TNode(int statementNumber);
-  virtual ~TNode() = default;
+ protected:
   int statementNumber = 0;
   TokenType type = TokenType::kUnknownTokenType;
   std::string content = "";
   std::shared_ptr<TNode> leftChild;
   std::shared_ptr<TNode> rightChild;
+
+ public:
+  /**
+   * @brief Constructs a TNode object with a statement number.
+   * @param statementNumber The statement number associated with the node.
+   */    explicit TNode(int statementNumber);
+  virtual ~TNode() = default;
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   virtual void accept(ASTVisitor* visitor, std::string& key) const = 0;
   /**
-    * @brief Accepts an ASTVisitor for visiting the node.
+    * @brief Accepts an ASTVisitor for visiting the left child node.
     * @param visitor A pointer to the ASTVisitor.
     * @param key A string key used for the visitation.
+   */
+  void acceptLeftChild(ASTVisitor* visitor, std::string& key) const;
+  /**
+    * @brief Accepts an ASTVisitor for visiting the right child node.
+    * @param visitor A pointer to the ASTVisitor.
+    * @param key A string key used for the visitation.
+   */
+  void acceptRightChild(ASTVisitor* visitor, std::string& key) const;
+  /**
+    * @brief Adds a child node to current node.
+    * @param child A child node.
     */
   void addChild(const std::shared_ptr<TNode>& child) {
     if (!leftChild) {
@@ -43,14 +61,16 @@ class TNode {
     } else if (!rightChild) {
       rightChild = child;
     } else {
-      throw std::invalid_argument("error: TNode already has two children");
+      throw std::invalid_argument("Error: TNode already has two children");
     }
   }
-
+  /**
+    * @brief Checks for equality of TNode objects.
+    * @param other A TNode object to be compared with current node.
+   */
   bool operator==(const TNode& other) const {
     return type == other.type && content == other.content;
   }
-
   /**
    * @brief Gets the content of the node as a string.
    * @param withBrackets A boolean indicating whether to include brackets in the string representation.
@@ -58,6 +78,20 @@ class TNode {
    */
   virtual std::string getContent(const bool withBrackets = false) const {
     return content;
+  }
+  /**
+   * @brief Gets the statement number of the node.
+   * @return The statement number of the node.
+   */
+  int getStatementNumber() const {
+    return statementNumber;
+  }
+  /**
+   * @brief Gets the type of the node.
+   * @return The type of the node.
+   */
+  TokenType getType() const {
+    return type;
   }
 };
 
@@ -79,9 +113,9 @@ class ProcedureTNode : public TNode {
    * @param procedureName The name of the procedure.
   */
   explicit ProcedureTNode(const std::string& procedureName, int startStatementNumber) : TNode(0) {
-    type = TokenType::kEntityProcedure;
-    content = procedureName;
-    this->startStatementNumber = startStatementNumber;
+      type = TokenType::kEntityProcedure;
+      content = procedureName;
+      this->startStatementNumber = startStatementNumber;
   }
   /**
    * @brief Accepts an ASTVisitor for visiting the node.
@@ -89,11 +123,6 @@ class ProcedureTNode : public TNode {
    * @param key A string key used for the visitation.
   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
-  /**
-   * @brief Sets starting or ending statement number of procedure.
-   * @param statementNumber An int representing statement number.
-  */
-  void setEndStatementNumber(int statementNumber);
   /**
    * @brief Gets starting statement number of procedure.
    * @return An int representing statement number.
@@ -111,18 +140,18 @@ class ProcedureTNode : public TNode {
 class ReadTNode : public TNode {
  public:
   /**
-   * @brief Constructs a ReadTNode object with a statement number and content.
-   * @param statementNumber The statement number of the read statement.
-   * @param c The content of the read statement.
+  * @brief Constructs a ReadTNode object with a statement number and content.
+  * @param statementNumber The statement number of the read statement.
+  * @param c The content of the read statement.
   */
   explicit ReadTNode(int statementNumber, const std::string& c) : TNode(statementNumber) {
-    type = TokenType::kEntityRead;
-    content = c;
+  type = TokenType::kEntityRead;
+  content = c;
   }
   /**
-   * @brief Accepts an ASTVisitor for visiting the node.
-   * @param visitor A pointer to the ASTVisitor.
-   * @param key A string key used for the visitation.
+  * @brief Accepts an ASTVisitor for visiting the node.
+  * @param visitor A pointer to the ASTVisitor.
+  * @param key A string key used for the visitation.
   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
 };
@@ -137,11 +166,21 @@ class ReadTNode : public TNode {
 class AssignTNode : public TNode {
  private:
   std::string fullRHS = "";
+
  public:
   explicit AssignTNode(int statementNumber) : TNode(statementNumber) {
-    type = TokenType::kEntityAssign;
+      type = TokenType::kEntityAssign;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the right-hand-side expression of an assign statement.
+   * @return the full right-hand-side expression of an assign statement.
+   */
   std::string getFullRHS() const;
 };
 
@@ -158,7 +197,17 @@ class VariableTNode : public TNode {
     type = TokenType::kLiteralName;
     content = c;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets = false) const override {
     if (withBrackets) {
       return "(" + content + ")";
@@ -180,7 +229,17 @@ class ConstantTNode : public TNode {
     type = TokenType::kLiteralInteger;
     content = c;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets = false) const override {
     if (withBrackets) {
       return "(" + content + ")";
@@ -201,7 +260,17 @@ class PlusTNode : public TNode {
   explicit PlusTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kOperatorPlus;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets) const override {
     if (withBrackets) {
       return "(" + leftChild->getContent(withBrackets) + "+" + rightChild->getContent(withBrackets) + ")";
@@ -222,7 +291,17 @@ class MinusTNode : public TNode {
   explicit MinusTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kOperatorMinus;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets) const override {
     if (withBrackets) {
       return "(" + leftChild->getContent(withBrackets) + "-" + rightChild->getContent(withBrackets) + ")";
@@ -230,6 +309,7 @@ class MinusTNode : public TNode {
     return leftChild->getContent(withBrackets) + "-" + rightChild->getContent(withBrackets);
   }
 };
+
 
 /**
  * @class WhileTNode
@@ -243,6 +323,11 @@ class WhileTNode : public TNode {
   explicit WhileTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kEntityWhile;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
@@ -259,6 +344,11 @@ class PrintTNode : public TNode {
     type = TokenType::kEntityPrint;
     content = c;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
@@ -274,6 +364,11 @@ class IfTNode : public TNode {
   explicit IfTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kEntityIf;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
@@ -290,6 +385,11 @@ class CallTNode : public TNode {
     type = TokenType::kEntityCall;
     content = c;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
 };
 
@@ -305,7 +405,17 @@ class MultiplyTNode : public TNode {
   explicit MultiplyTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kOperatorMultiply;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets) const override {
     if (withBrackets) {
       return "(" + leftChild->getContent(withBrackets) + "*" + rightChild->getContent(withBrackets) + ")";
@@ -326,7 +436,17 @@ class DivideTNode : public TNode {
   explicit DivideTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kOperatorDivide;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets) const override {
     if (withBrackets) {
       return "(" + leftChild->getContent(withBrackets) + "/" + rightChild->getContent(withBrackets) + ")";
@@ -347,7 +467,17 @@ class ModTNode : public TNode {
   explicit ModTNode(int statementNumber) : TNode(statementNumber) {
     type = TokenType::kOperatorMod;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets) const override {
     if (withBrackets) {
       return "(" + leftChild->getContent(withBrackets) + "%" + rightChild->getContent(withBrackets) + ")";
@@ -368,23 +498,40 @@ class RelOperatorTNode : public TNode {
   explicit RelOperatorTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
     type = tokenType;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets = false) const override {
     std::string rep = "";
     switch (type) {
-      case TokenType::kOperatorEqual:rep = " == ";
+      case TokenType::kOperatorEqual:
+        rep = " == ";
         break;
-      case TokenType::kOperatorNotEqual:rep = " != ";
+      case TokenType::kOperatorNotEqual:
+        rep = " != ";
         break;
-      case TokenType::kOperatorGreater:rep = " > ";
+      case TokenType::kOperatorGreater:
+        rep = " > ";
         break;
-      case TokenType::kOperatorLess:rep = " < ";
+      case TokenType::kOperatorLess:
+        rep = " < ";
         break;
-      case TokenType::kOperatorGreaterEqual:rep = " >= ";
+      case TokenType::kOperatorGreaterEqual:
+        rep = " >= ";
         break;
-      case TokenType::kOperatorLessEqual:rep = " <= ";
+      case TokenType::kOperatorLessEqual:
+        rep = " <= ";
         break;
-      default:throw InvalidTokenTypeError("error: invalid token type");
+      default:
+        throw InvalidTokenTypeError("Error: invalid token type");
     }
     return leftChild->getContent(withBrackets) + rep + rightChild->getContent(withBrackets);
   }
@@ -402,17 +549,31 @@ class CondOperatorTNode : public TNode {
   explicit CondOperatorTNode(int statementNumber, TokenType tokenType) : TNode(statementNumber) {
     type = tokenType;
   }
+  /**
+   * @brief Accepts an ASTVisitor for visiting the node.
+   * @param visitor A pointer to the ASTVisitor.
+   * @param key A string key used for the visitation.
+   */
   void accept(ASTVisitor* visitor, std::string& key) const override;
+  /**
+   * @brief Gets the content of the TNode.
+   * @param withBrackets A boolean indicating if brackets should be included in the returned value.
+   * @return A string representing content of TNode.
+   */
   std::string getContent(bool withBrackets = false) const override {
     std::string rep = "";
     switch (type) {
-      case TokenType::kOperatorLogicalNot:rep = "!";
+      case TokenType::kOperatorLogicalNot:
+        rep = "!";
         break;
-      case TokenType::kOperatorLogicalAnd:rep = " && ";
+      case TokenType::kOperatorLogicalAnd:
+        rep = " && ";
         break;
-      case TokenType::kOperatorLogicalOr:rep = "||";
+      case TokenType::kOperatorLogicalOr:
+        rep = "||";
         break;
-      default:throw InvalidTokenTypeError("error: invalid token type");
+      default:
+        throw InvalidTokenTypeError("Error: invalid token type");
     }
     if (!leftChild) {
       return rep + "(" + rightChild->getContent(withBrackets) + ")";
@@ -442,7 +603,7 @@ class TNodeFactory {
         return std::make_shared<ProcedureTNode>(token.value, statementNumber);
       }
       case TokenType::kEntityWhile: {
-        return std::make_shared<WhileTNode>(statementNumber);  // probably needs more information than this
+        return std::make_shared<WhileTNode>(statementNumber);
       }
       case TokenType::kEntityPrint: {
         return std::make_shared<PrintTNode>(statementNumber, token.value);
@@ -492,7 +653,8 @@ class TNodeFactory {
       case TokenType::kOperatorLogicalOr:
       case TokenType::kOperatorLogicalNot: {
         return std::make_shared<CondOperatorTNode>(statementNumber, token.tokenType);
-        default:throw std::invalid_argument("error: unknown token type");
+      default:
+        throw std::invalid_argument("Error: unknown token type");
       }
     }
   }

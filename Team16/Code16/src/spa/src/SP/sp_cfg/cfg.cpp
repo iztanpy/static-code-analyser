@@ -14,6 +14,9 @@ std::unordered_map<int, std::unordered_set<int>> cfg::nextStatementNumberHashmap
 std::unordered_map<int, std::shared_ptr<cfg_node>> cfg::stmtNumberToCfgNodeHashmap
     = std::unordered_map<int, std::shared_ptr<cfg_node>>();
 
+std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfg::cfgNodeMap
+    = std::unordered_map<std::string, std::shared_ptr<cfg_node>>();
+
 std::unordered_map<int, std::shared_ptr<cfg_node>> cfg::getStmtNumberToCfgNodeHashmap() {
   return stmtNumberToCfgNodeHashmap;
 }
@@ -36,7 +39,7 @@ void cfg::handleIfStatement(int stmtNumber) {
 
 void cfg::handleElseStatement() {
   std::shared_ptr<cfg_node> parent = retrieveTopKeyNode();
-  nextParentStack.push({parent->getLastStatementNumber()});
+  nextParentStack.push({ parent->getLastStatementNumber() });
   keyNodesStack.push(currNode);
   currNode = parent;
   createNewEmptyCfgNode();
@@ -74,7 +77,7 @@ void cfg::handleEndWhileStatement() {
 void cfg::handleEndIfStatement(bool hasElse) {
   if (!currNode->getStmtNumberSet().empty()) {
     int lastIfNumber = currNode->getLastStatementNumber();
-    nextParentStack.push({lastIfNumber});
+    nextParentStack.push({ lastIfNumber });
   }
   createNewEmptyCfgNode();
   if (!hasElse) {
@@ -82,8 +85,16 @@ void cfg::handleEndIfStatement(bool hasElse) {
   }
 }
 
-std::shared_ptr<cfg_node> cfg::getCfgNode() {
+std::shared_ptr<cfg_node> cfg::getRootCfgNode() {
   return rootCfgNode;
+}
+
+std::unordered_map<int, std::unordered_set<int>> cfg::getNextStatementNumberHashmap() {
+  return nextStatementNumberHashmap;
+}
+
+std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfg::getCfgNodeHashmap() {
+  return cfgNodeMap;
 }
 
 std::shared_ptr<cfg_node> cfg::retrieveTopKeyNode() {
@@ -146,6 +157,10 @@ void cfg::storeNextRelationship(int lastStmtNumber, int nextStmtNumber, bool sho
     nextStatementNumberHashmap[lastStmtNumber].insert(nextStmtNumber);
   }
   if (shouldPushToNextStack) {
-    nextParentStack.push({nextStmtNumber});
+    nextParentStack.push({ nextStmtNumber });
   }
+}
+
+void cfg::addToCfgNodeMap(const std::string& procedureName) {
+  cfgNodeMap[procedureName] = std::move(rootCfgNode);
 }

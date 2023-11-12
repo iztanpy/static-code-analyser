@@ -25,12 +25,12 @@ TEST_CASE("Test Token to TNode conversion") {
   std::shared_ptr<TNode> nodePlusCreated = TNodeFactory::createNode(tokenPlus, 1);
   std::shared_ptr<TNode> node1Created = TNodeFactory::createNode(token1, 1);
 
-  REQUIRE(nodeXCreated->type == TokenType::kLiteralName);
+  REQUIRE(nodeXCreated->getType() == TokenType::kLiteralName);
   REQUIRE(nodeXCreated->getContent() == tokenX.getValue());
-  REQUIRE(nodeEqualCreated->type == TokenType::kEntityAssign);
+  REQUIRE(nodeEqualCreated->getType() == TokenType::kEntityAssign);
   REQUIRE(nodeEqualCreated->getContent().empty());
-  REQUIRE(nodePlusCreated->type == TokenType::kOperatorPlus);
-  REQUIRE(node1Created->type == TokenType::kLiteralInteger);
+  REQUIRE(nodePlusCreated->getType() == TokenType::kOperatorPlus);
+  REQUIRE(node1Created->getType() == TokenType::kLiteralInteger);
 }
 
 

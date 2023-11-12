@@ -242,21 +242,6 @@ TokenType parse_utils::convertLiteralToEntity(const std::string& value) {
   }
 }
 
-bool parse_utils::validCondExpression(const std::vector<Token>& tokens) {
-  int i = 0;
-  int openParenCount = 0;
-  int closeParenCount = 0;
-  while (i < tokens.size()) {
-    if (tokens[i].tokenType == TokenType::kSepOpenParen) {
-      openParenCount++;
-    } else if (tokens[i].tokenType == TokenType::kSepCloseParen) {
-      closeParenCount++;
-    }
-    i++;
-  }
-  return openParenCount == closeParenCount;
-}
-
 void parse_utils::setUpCondIndexMap(const std::vector<Token>& tokens) {
   condIndexMap.clear();
   int i = index;

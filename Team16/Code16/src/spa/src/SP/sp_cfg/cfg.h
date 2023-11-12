@@ -7,8 +7,10 @@
 #include <iostream>
 #include <set>
 #include <unordered_set>
+#include <utility>
 
 #include "SP/sp_cfg/cfg_node.h"
+
 /**
  * @class cfg
  * @brief A control flow graph (CFG) representation for a program.
@@ -27,6 +29,9 @@ class cfg {
   static std::stack<std::shared_ptr<cfg_node>> keyNodesStack;
   static std::stack<std::set<int>> nextParentStack;
   static std::unordered_map<int, std::shared_ptr<cfg_node>> stmtNumberToCfgNodeHashmap;
+  static std::shared_ptr<cfg_node> rootCfgNode;
+  static std::unordered_map<int, std::unordered_set<int>> nextStatementNumberHashmap;
+  static std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgNodeMap;
   static std::shared_ptr<cfg_node> retrieveTopKeyNode();
   static void addCfgNodeToMap(int stmtNumber);
   static void createNewEmptyCfgNode();
@@ -99,19 +104,68 @@ class cfg {
    * This method is used to handle an end of an "if" statement in the program and update the CFG accordingly.
   */
   static void handleEndIfStatement(bool hasElse);
-  static std::shared_ptr<cfg_node> rootCfgNode;
-  static std::stack<std::shared_ptr<cfg_node>> elseEndNodeStack;
-  static std::unordered_map<int, std::unordered_set<int>> nextStatementNumberHashmap;
+  /**
+   * @brief Get the current CFG node.
+   *
+   * This method returns a pointer to the current CFG node being constructed.
+   *
+   * @return A shared pointer to the current CFG node.
+   */
+  static std::shared_ptr<cfg_node> getRootCfgNode();
+  /**
+   * @brief Get the map of next statement numbers.
+   *
+   * This method returns a map of statement numbers to a set of next statement numbers.
+   *
+   * @return A map of statement numbers to a set of next statement numbers.
+   */
+  static std::unordered_map<int, std::unordered_set<int>> getNextStatementNumberHashmap();
+  /**
+   * @brief Get the map of statement number to cfg nodes.
+   *
+   * This method returns a map of statement numbers to its corresponding cfg nodes.
+   *
+   * @return A map of statement numbers to its corresponding cfg nodes.
+   */
   static std::unordered_map<int, std::shared_ptr<cfg_node>> getStmtNumberToCfgNodeHashmap();
+  /**
+   * @brief Get the map of procedure names to cfg root nodes.
+   *
+   * This method returns a map of procedure names to its corresponding cfg root nodes.
+   *
+   * @return A map of procedure names to its corresponding cfg root nodes.
+   */
+  static std::unordered_map<std::string, std::shared_ptr<cfg_node>> getCfgNodeHashmap();
+  /**
+   * @brief Connects parent and child cfg nodes.
+   *
+   * This method connects parents of current cfg node to itself.
+   *
+   */
   static void retrieveParentIfNotEmpty(int stmtNumber);
+  /**
+   * @brief Resets internal maps.
+   *
+   * This method clears internal maps.
+   *
+   */
   static void resetCFG() {
     for (auto& entry : nextStatementNumberHashmap) {
-      entry.second.clear();  // Clear the set associated with the key
+        entry.second.clear();
     }
-    nextStatementNumberHashmap.clear();  // Clear the entire map
+    nextStatementNumberHashmap.clear();
     stmtNumberToCfgNodeHashmap.clear();
+    cfgNodeMap.clear();
     keyNodesStack = std::stack<std::shared_ptr<cfg_node>>();
     nextParentStack = std::stack<std::set<int>>();
   }
+  /**
+  * @brief Adds the a cfg node with its associated procedure name to internal map.
+  *
+  * This method is used to store the current root cfg node with its associated procedure name into an internal map.
+  *
+  * @param procedureName The associated procedure name.
+  */
+  static void addToCfgNodeMap(const std::string& procedureName);
 };
 

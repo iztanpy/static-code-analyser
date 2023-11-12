@@ -33,14 +33,14 @@ TEST_CASE("Test Next store") {
         }
         a = a + b;
       })";
-  sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
-  writeFacade.storeNext(sourceProcessor.getNextStatementMap());
-  // same node
-  REQUIRE(readFacade.Next(StmtEntity::kIf, Wildcard()) == std::unordered_set<statementNumber>({1, 3}));
-  REQUIRE(readFacade.Next(Wildcard(), StmtEntity::kIf) == std::unordered_set<statementNumber>({3}));
-  REQUIRE(readFacade.Next(1, StmtEntity::kIf) == std::unordered_set<statementNumber>({3}));
-  REQUIRE(readFacade.Next(StmtEntity::kIf, 4) == std::unordered_set<statementNumber>({3}));
+    sourceProcessor.processSource(simpleProgram4);
+    std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = cfg::getStmtNumberToCfgNodeHashmap();
+    writeFacade.storeNext(cfg::getNextStatementNumberHashmap());
+    // same node
+    REQUIRE(readFacade.Next(StmtEntity::kIf, Wildcard()) == std::unordered_set<statementNumber>({1, 3}));
+    REQUIRE(readFacade.Next(Wildcard(), StmtEntity::kIf) == std::unordered_set<statementNumber>({3}));
+    REQUIRE(readFacade.Next(1, StmtEntity::kIf) == std::unordered_set<statementNumber>({3}));
+    REQUIRE(readFacade.Next(StmtEntity::kIf, 4) == std::unordered_set<statementNumber>({3}));
 }
 
 TEST_CASE("Test Next Star") {
@@ -64,20 +64,20 @@ TEST_CASE("Test Next Star") {
         }
         a = a + b;
       })";
-  sourceProcessor.processSource(simpleProgram4);
-  std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
-  auto map = sourceProcessor.getNextStatementMap();
-  writeFacade.storeCfgLegend(cfgLegend);
-  writeFacade.storeNext(map);
-  // same node
-  REQUIRE(readFacade.NextStar(StmtEntity::kIf, Wildcard()) == std::unordered_set<statementNumber>({1, 4}));
-  REQUIRE(readFacade.NextStar(1, StmtEntity::kIf) == std::unordered_set<statementNumber>({4}));
-  REQUIRE(readFacade.NextStar(Wildcard(), StmtEntity::kIf) == std::unordered_set<statementNumber>({4}));
-  REQUIRE(readFacade.NextStar(StmtEntity::kIf, 9) == std::unordered_set<statementNumber>({1, 4}));
-  REQUIRE(readFacade.NextStar(StmtEntity::kIf, StmtEntity::kStmt)
-              == std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>(
-                  {{1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {1, 7}, {1, 8}, {1, 9}, {4, 5}, {4, 6}, {4, 7}, {4, 8},
-                   {4, 9}}));
+    sourceProcessor.processSource(simpleProgram4);
+    std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = cfg::getStmtNumberToCfgNodeHashmap();
+    auto map = cfg::getNextStatementNumberHashmap();
+    writeFacade.storeCfgLegend(cfgLegend);
+    writeFacade.storeNext(map);
+    // same node
+    REQUIRE(readFacade.NextStar(StmtEntity::kIf, Wildcard()) == std::unordered_set<statementNumber>({1, 4}));
+    REQUIRE(readFacade.NextStar(1, StmtEntity::kIf) == std::unordered_set<statementNumber>({4}));
+    REQUIRE(readFacade.NextStar(Wildcard(), StmtEntity::kIf) == std::unordered_set<statementNumber>({4}));
+    REQUIRE(readFacade.NextStar(StmtEntity::kIf, 9) == std::unordered_set<statementNumber>({1, 4}));
+    REQUIRE(readFacade.NextStar(StmtEntity::kIf, StmtEntity::kStmt)
+                == std::unordered_set<std::pair<statementNumber, statementNumber>, PairHash>(
+                    {{1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {1, 7}, {1, 8}, {1, 9}, {4, 5}, {4, 6}, {4, 7}, {4, 8},
+                     {4, 9}}));
 }
 
 //
@@ -105,8 +105,8 @@ TEST_CASE("Test Next Star") {
 //      }
 //      })";
 //    sourceProcessor.processSource(simpleProgram4);
-//    std::unordered_map<int, std::shared_ptr<cfg_node> > cfgLegend = sourceProcessor.getStmtNumberToCfgNodeHashmap();
-//    auto map = sourceProcessor.getNextStatementMap();
+//    std::unordered_map<int, std::shared_ptr<CfgNode> > cfgLegend = cfg::getStmtNumberToCfgNodeHashmap();
+//    auto map = cfg::getNextStatementNumberHashmap();
 //    writeFacade.storeCfgLegend(cfgLegend);
 //    writeFacade.storeNext(map);
 //    REQUIRE(readFacade.NextStar(StmtEntity::kIf, StmtEntity::kStmt) == std::set<std::pair<statementNumber, statementNumber>>(

@@ -27,6 +27,9 @@ class design_extractor;
  * procedure statements. It also contains methods for accessing information related to the parsed procedures.
  */
 class ProcedureParser : public Parser {
+ private:
+  ASTVisitor* visitor;
+
  public:
   /**
   * @brief Constructs a ProcedureParser object with an associated ASTVisitor.
@@ -44,7 +47,5 @@ class ProcedureParser : public Parser {
    * @return The index in the token vector after parsing the procedure statement.
    */
   int parse(std::vector<Token>& tokens) override;
-  static void addCfgNodeToMap(const std::string& procedureName, std::shared_ptr<cfg_node> cfgNode);
-  ASTVisitor* visitor;
 };
 

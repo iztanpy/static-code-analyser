@@ -44,10 +44,8 @@ class Parser {
   virtual ~Parser() = default;
   virtual int parse(std::vector<Token>& tokens) = 0;
   void start_parse(std::vector<Token>& tokens, int curr_index);
-  static design_extractor* designExtractor;  // Initialize to nullptr in the constructor
   static int index;
   static cfg cfgFacade;
-  static std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfgNodeMap;
   /**
   * @brief Increment the index used for token parsing.
   *
@@ -86,27 +84,6 @@ class Parser {
     index = newIndex;
   }
   /**
-   * @brief Retrieves the cfg nodes map.
-   * @return The map of cfg root nodes.
-   */
-  std::unordered_map<std::string, std::shared_ptr<cfg_node>> getCfgNodesMap() {
-    return cfgNodeMap;
-  }
-  /**
-   * @brief Retrieves the statement number to cfg nodes map.
-   * @return The map of statement numbers to cfg nodes.
-   */
-  std::unordered_map<int, std::shared_ptr<cfg_node>> getStmtNumberToCfgNodeHashmap() {
-    return cfgFacade.getStmtNumberToCfgNodeHashmap();
-  }
-  /**
-  * @brief Retrieves the next statement hashmap.
-  * @return An unordered map with a statement number as a key and its associated next statement numbers as its values.
-  */
-  std::unordered_map<int, std::unordered_set<int>> getNextStatementMap() {
-    return cfgFacade.nextStatementNumberHashmap;
-  }
-  /**
   * @brief Resets all hashmaps for testing purposes.
   */
   void reset() {
@@ -119,7 +96,7 @@ class Parser {
     controlStructureStack = std::stack<std::string>();
     parentStatementNumberHashmap = std::unordered_map<int, std::unordered_set<int>>();
     parentStatementStack = std::stack<int>();
-    cfgFacade.resetCFG();
+    cfg::resetCFG();
   }
 
  protected:
