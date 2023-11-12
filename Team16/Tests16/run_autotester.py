@@ -145,6 +145,7 @@ class Runner:
         return f"Execution completed for {test_name[:-1]} {self.check_output_xml(self.TEMP_XML_FILENAME, test_name, relative_path)}"
 
     def execute(self, folder_to_test_in, redirect_output=True):
+        start_num_tests = self.TOTAL_TESTS
         autotester_filepath = self.find_autotester_executable()
         parameters = self.get_autotester_parameters(folder_to_test_in)
 
@@ -153,6 +154,8 @@ class Runner:
             test_report += "\n" + self.execute_autotester(autotester_filepath, param, redirect_output)
 
         print(test_report)
+
+        print(f"Total number of tests for {folder_to_test_in}: {self.TOTAL_TESTS - start_num_tests}")
 
 
 if __name__ == "__main__":
