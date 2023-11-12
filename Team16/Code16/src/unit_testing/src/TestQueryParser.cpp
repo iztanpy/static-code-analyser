@@ -4,6 +4,9 @@
 #include "qps/clauses/suchthat_clauses/suchthat_clauses_all.h"
 #include "qps/qps_errors/qps_syntax_error.h"
 #include "qps/clauses/with_clauses/with_clause.h"
+#include "qps/clauses/pattern_clauses/assign.h"
+#include "qps/clauses/pattern_clauses/while.h"
+#include "qps/clauses/pattern_clauses/if.h"
 
 bool areClauseSetsEqual(const ClauseSet& lhs, const ClauseSet& rhs) {
   if (lhs.size() != rhs.size()) {

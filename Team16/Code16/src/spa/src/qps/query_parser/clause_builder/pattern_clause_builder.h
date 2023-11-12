@@ -7,7 +7,9 @@
 
 #include "qps/query_parser/clause_builder/clause_builder.h"
 #include "qps/declaration.h"
-#include "qps/clauses/pattern_clauses/pattern_clause.h"
+#include "qps/clauses/pattern_clauses/assign.h"
+#include "qps/clauses/pattern_clauses/if.h"
+#include "qps/clauses/pattern_clauses/while.h"
 #include "utils/entity_types.h"
 #include "qps/qps_errors/qps_syntax_error.h"
 #include "qps/query_parser/query_tokenizer/query_tokenizer.h"
