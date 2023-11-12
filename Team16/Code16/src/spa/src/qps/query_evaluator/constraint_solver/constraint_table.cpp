@@ -283,15 +283,17 @@ void ConstraintTable::AddHalfExistingBinaryConstraint(const BinaryConstraint& co
   for (int i = 0; i < existing_col.size(); ++i) {
     Cell existing_value = existing_col[i];
 
-    if (new_values.find(existing_value) != new_values.end()) {
-      const auto& new_col_values = new_values[existing_value];
+    if (new_values.find(existing_value) == new_values.end()) {
+      continue;
+    }
 
-      for (const auto& new_col_value : new_col_values) {
-        for (const auto& [current_colname, values] : table) {
-          result[current_colname].emplace_back(values[i]);
-        }
-        result[new_colname].emplace_back(new_col_value);
+    const auto& new_col_values = new_values[existing_value];
+
+    for (const auto& new_col_value : new_col_values) {
+      for (const auto& [current_colname, values] : table) {
+        result[current_colname].emplace_back(values[i]);
       }
+      result[new_colname].emplace_back(new_col_value);
     }
   }
 
