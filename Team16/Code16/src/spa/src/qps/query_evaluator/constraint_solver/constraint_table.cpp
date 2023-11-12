@@ -325,15 +325,9 @@ void ConstraintTable::JoinTable(const ConstraintTable& constraint_table) {
   }
 }
 
-void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
-  // Create an unordered_set from the vector
-  std::unordered_set < ColName > col_set(col_names.begin(), col_names.end());
-  std::vector<ColName> dedup_colnames(col_set.begin(), col_set.end());
-
-  std::unordered_set < std::string > seen_rows;
-
+void ConstraintTable::Filter(const std::unordered_set<ColName>& col_names) {
   for (auto it = table.begin(); it != table.end();) {
-    if (col_set.find(it->first) == col_set.end()) {
+    if (col_names.find(it->first) == col_names.end()) {
       it = table.erase(it);  // erase returns the iterator to the next element
     } else {
       ++it;
@@ -345,14 +339,17 @@ void ConstraintTable::Filter(const std::vector<ColName>& col_names) {
     result[colname] = {};
   }
 
+  std::unordered_set < std::string > seen_rows;
+
   size_t table_len = table.begin()->second.size();
   for (size_t i = 0; i < table_len; ++i) {
-    std::string row = RowToString(table, i, dedup_colnames);
-    if (seen_rows.find(row) == seen_rows.end()) {
-      seen_rows.emplace(row);
-      for (const auto& [colname, values] : table) {
-        result[colname].emplace_back(values[i]);
-      }
+    std::string row = RowToString(table, i, {col_names.begin(), col_names.end()});
+    if (seen_rows.find(row) != seen_rows.end()) {
+      continue;
+    }
+    seen_rows.emplace(row);
+    for (const auto& [colname, values] : table) {
+      result[colname].emplace_back(values[i]);
     }
   }
 
