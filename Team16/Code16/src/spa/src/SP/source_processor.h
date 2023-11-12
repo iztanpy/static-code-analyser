@@ -26,14 +26,14 @@
  * information about the program's structure and behavior by accessing methods from the SimpleParser.
  */
 class SourceProcessor {
-private:
+ private:
   std::unique_ptr<PKB> pkb_ptr;
   SPtokeniser tokeniser;
   simple_parser simpleParser;
   ASTVisitor visitor;
   write_facade* writeFacade;
 
-public:
+ public:
   /**
    * @brief Constructs a SourceProcessor object with a WriteFacade for writing analysis results.
    * @param writeFacade A pointer to the WriteFacade used for writing analysis results.

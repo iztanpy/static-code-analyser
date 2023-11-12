@@ -14,7 +14,8 @@ std::unordered_map<int, std::unordered_set<int>> cfg::nextStatementNumberHashmap
 std::unordered_map<int, std::shared_ptr<cfg_node>> cfg::stmtNumberToCfgNodeHashmap
     = std::unordered_map<int, std::shared_ptr<cfg_node>>();
 
-std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfg::cfgNodeMap = std::unordered_map<std::string, std::shared_ptr<cfg_node>>();
+std::unordered_map<std::string, std::shared_ptr<cfg_node>> cfg::cfgNodeMap
+    = std::unordered_map<std::string, std::shared_ptr<cfg_node>>();
 
 std::unordered_map<int, std::shared_ptr<cfg_node>> cfg::getStmtNumberToCfgNodeHashmap() {
   return stmtNumberToCfgNodeHashmap;
