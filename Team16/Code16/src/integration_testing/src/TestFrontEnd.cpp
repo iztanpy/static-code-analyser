@@ -24,8 +24,8 @@ TEST_CASE("One print statement 1") {
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
     std::unordered_map<int, std::unordered_set<std::string>> usesLineVariable =
         std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
-    REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineVariable);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineVariable);
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "k" }));
 
 }
@@ -47,7 +47,7 @@ TEST_CASE("One read statement 1") {
     std::unordered_set<std::string> varSet = std::unordered_set<std::string>({ "k" });
     std::unordered_map<int, std::unordered_set<std::string>>
         modifiesLineVariable = std::unordered_map<int, std::unordered_set<std::string>>({ {1, {"k"}} });
-    REQUIRE(sourceProcessor.getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
 }
 
 TEST_CASE("TEST SP-PKB-QPS UsesP ModifiesP") {
@@ -363,11 +363,11 @@ TEST_CASE("One assign statement 1") {
     std::unordered_map<int, std::unordered_set<std::string>>
         usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}}});
 
-    REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
-    REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getConstants() == constSet);
+    REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
 
     REQUIRE(qps.Evaluate(query_1) == std::unordered_set<std::string>({ "x" }));
     REQUIRE(qps.Evaluate(query_2) == std::unordered_set<std::string>({ "1" }));

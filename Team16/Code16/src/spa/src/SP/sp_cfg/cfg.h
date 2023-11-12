@@ -103,7 +103,6 @@ class cfg {
    * This method is used to handle an end of an "if" statement in the program and update the CFG accordingly.
   */
   static void handleEndIfStatement(bool hasElse);
-  static std::unordered_map<int, std::shared_ptr<cfg_node>> getStmtNumberToCfgNodeHashmap();
   /**
    * @brief Get the current CFG node.
    *

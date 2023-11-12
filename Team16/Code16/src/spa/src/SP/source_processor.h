@@ -31,14 +31,14 @@ private:
   SPtokeniser tokeniser;
   simple_parser simpleParser;
   ASTVisitor visitor;
-  WriteFacade* writeFacade;
+  write_facade* writeFacade;
 
 public:
   /**
    * @brief Constructs a SourceProcessor object with a WriteFacade for writing analysis results.
    * @param writeFacade A pointer to the WriteFacade used for writing analysis results.
    */
-  explicit SourceProcessor(WriteFacade* writeFacade);
+  explicit SourceProcessor(write_facade* writeFacade);
   /**
   * @brief Processes the source code and performs analysis.
   * @param simpleProgram The Simple Programming Language (SPL) source code to be processed.

@@ -92,7 +92,7 @@ TEST_CASE("Test Hardcore Next") {
 
     };
 
-    REQUIRE(Cfg::getNextStatementNumberHashmap() == r);
+    REQUIRE(cfg::getNextStatementNumberHashmap() == r);
 }
 
 TEST_CASE("Test Sample Next") {
@@ -139,7 +139,7 @@ TEST_CASE("Test Sample Next") {
       {11, {12}},
     };
 
-    REQUIRE(Cfg::getNextStatementNumberHashmap() == correct_res);
+    REQUIRE(cfg::getNextStatementNumberHashmap() == correct_res);
 }
 
 TEST_CASE("Test Complicated Next") {
@@ -179,7 +179,7 @@ TEST_CASE("Test Complicated Next") {
       {8, {1}},
     };
 
-    REQUIRE(Cfg::getNextStatementNumberHashmap() == r);
+    REQUIRE(cfg::getNextStatementNumberHashmap() == r);
 }
 
 TEST_CASE("Test call sn rs.") {
@@ -205,7 +205,7 @@ TEST_CASE("Test call sn rs.") {
     };
 
 
-    std::unordered_map<int, std::string> res = sourceProcessor.getCallStatementNumberEntityHashmap();
+    std::unordered_map<int, std::string> res = sourceProcessor.getVisitor().getCallStatementNumberEntityHashmap();
     REQUIRE(res == callerCalleeHashmap);
 }
 
@@ -225,7 +225,7 @@ TEST_CASE("Test caller callee rs.") {
     std::unordered_map<std::string, std::unordered_set<std::string>> callerCalleeHashmap = {
        {"p", {"b"}},
     };
-    std::unordered_map<std::string, std::unordered_set<std::string>> res = sourceProcessor.getCallerCalleeHashmap();
+    std::unordered_map<std::string, std::unordered_set<std::string>> res = sourceProcessor.getVisitor().getCallerCalleeHashmap();
 
     REQUIRE(res == callerCalleeHashmap);
 }
@@ -252,7 +252,7 @@ TEST_CASE("Test storing of procedure line numbers.") {
        {"p", {1,3}},
        {"q", {4,6}},
     };
-    std::unordered_map<std::string, std::pair<int, int>> res = sourceProcessor.getProcedureLineNumberHashmap();
+    std::unordered_map<std::string, std::pair<int, int>> res = sourceProcessor.getVisitor().getProcedureLineNumberHashmap();
     REQUIRE(res == procedureStatementNumberHashmap);
 }
 
@@ -301,10 +301,10 @@ TEST_CASE("Test follows relation one level nesting") {
        {2, {3,4}},
     };
 
-    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getVisitor().getParentStatementNumberMap();
 
-    REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
-    REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
+    REQUIRE(sourceProcessor.getVisitor().getFollowStatementNumberMap() == followStatementNumberHashmap);
+    REQUIRE(sourceProcessor.getVisitor().getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
 
 TEST_CASE("Test simple_parser") { // line 0: x = x + 1
@@ -326,8 +326,8 @@ TEST_CASE("Test key and variable same name one level nesting") {
         {1, 2},
         {2, 3},
     };
-    std::unordered_map<int, int> res = sourceProcessor.getFollowStatementNumberMap();
-    REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
+    std::unordered_map<int, int> res = sourceProcessor.getVisitor().getFollowStatementNumberMap();
+    REQUIRE(sourceProcessor.getVisitor().getFollowStatementNumberMap() == followStatementNumberHashmap);
 }
 
 TEST_CASE("Test follows & parent relation two level nesting") {
@@ -366,9 +366,9 @@ TEST_CASE("Test follows & parent relation two level nesting") {
         {9, {10}}
     };
 
-    std::unordered_map<int, int> res = sourceProcessor.getFollowStatementNumberMap();
-    REQUIRE(sourceProcessor.getFollowStatementNumberMap() == followStatementNumberHashmap);
-    REQUIRE(sourceProcessor.getParentStatementNumberMap() == parentStatementNumberHashmap);
+    std::unordered_map<int, int> res = sourceProcessor.getVisitor().getFollowStatementNumberMap();
+    REQUIRE(sourceProcessor.getVisitor().getFollowStatementNumberMap() == followStatementNumberHashmap);
+    REQUIRE(sourceProcessor.getVisitor().getParentStatementNumberMap() == parentStatementNumberHashmap);
 }
 
 
@@ -382,7 +382,7 @@ TEST_CASE("Test if else nested loop retrieval") {
         {1, {2, 4}},
         {2, {3}}
     };
-    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> res2 = sourceProcessor.getVisitor().getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap2 == res2);
 }
 
@@ -395,7 +395,7 @@ TEST_CASE("Test if else loop retrieval") {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
         {1, {2, 3}}
     };
-    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getVisitor().getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap == res);
 }
 
@@ -424,7 +424,7 @@ TEST_CASE("Test if-else-while nested retrieval") {
     };
 
     // Retrieve the actual parent statement numbers map, excluding the procedure declaration (statement 1)
-    std::unordered_map<int, std::unordered_set<int>> actualParentStatementNumberHashmap = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> actualParentStatementNumberHashmap = sourceProcessor.getVisitor().getParentStatementNumberMap();
 
     // Check if the actual map matches the expected map
     REQUIRE(expectedParentStatementNumberHashmap == actualParentStatementNumberHashmap);
@@ -442,7 +442,7 @@ TEST_CASE(("Test multiple while while nested retrieval")) {
         {2, {3}},
         {3, {4}}
     };
-    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getVisitor().getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap == res);
 }
 
@@ -461,9 +461,9 @@ TEST_CASE(("Test SP storing of assignment statements")) {
                                           {5, {"(y)", "(x)", "((y)+(x))", "(((y)+(x))+(1))", "(1)"}} });
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
         std::unordered_set<std::string>>({ {1, {"x"}}, {3, {"i"}}, {5, {"x", "y"}} });
-    REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 TEST_CASE(("Test SP Uses: nested while and if/then/else")) {
@@ -488,9 +488,9 @@ TEST_CASE(("Test SP Uses: nested while and if/then/else")) {
           {7, {"c"}},
           {8, {"x", "y"}}
       });
-  REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-  REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+  REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 
@@ -504,7 +504,7 @@ TEST_CASE(("Test Single While Loop Retrieval")) {
     std::unordered_map<int, std::unordered_set<int>> parentStatementNumberHashmap = {
         {1, {2, 3}}
     };
-    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getVisitor().getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap == res);
 }
 
@@ -520,7 +520,7 @@ TEST_CASE(("Test 2 Nested While Loops Retrieval")) {
         {1, {2}},
         {2, {3,4}}
     };
-    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getParentStatementNumberMap();
+    std::unordered_map<int, std::unordered_set<int>> res = sourceProcessor.getVisitor().getParentStatementNumberMap();
     REQUIRE(parentStatementNumberHashmap == res);
 }
 
@@ -541,12 +541,12 @@ TEST_CASE(("Test Conditional Tokens Retrieval1")) {
     std::unordered_map<int, std::unordered_set<std::string>> whileControlVarMap = {
         {1, {"x", "temp", "e"}}
     };
-    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getWhileControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getVisitor().getWhileControlVarMap();
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
         std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x", "temp", "e"}}});
 
     REQUIRE(whileControlVarMap == res);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
     REQUIRE(1 == 1);
 }
 
@@ -670,11 +670,11 @@ TEST_CASE(("Test SP single procedure")) {
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}} });
     std::unordered_map<std::string, std::unordered_set<std::string>> constUseMap = std::unordered_map<std::string, std::unordered_set<std::string>>({ {"x", constSet} });
 
-    REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
-    REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getConstants() == constSet);
+    REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
 }
 
 TEST_CASE(("Test SP multi procedure with keyword names")) {
@@ -694,13 +694,13 @@ TEST_CASE(("Test SP multi procedure with keyword names")) {
     std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>({{1, "x"}, {2, "y"}, {3, "w"} });
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int, std::unordered_set<std::string>>({{1, {"x"}}, {2, {"x", "y"}}, {3, {"w"}}});
 
-    REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getConstants() == constSet);
-    REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
-    REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getConstants() == constSet);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
+    REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
 }
 
 TEST_CASE(("Test SP storing of Uses: Assign")) {
@@ -722,11 +722,11 @@ TEST_CASE(("Test SP storing of Uses: Assign")) {
         });
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
       std::unordered_set<std::string>>({{1, {"x"}}, {2, {"x", "y"}}, {3, {"x", "y"}}});
-    REQUIRE(sourceProcessor.getVariables() == varSet);
-    REQUIRE(sourceProcessor.getConstants() == constSet);
-    REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+    REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
+    REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
@@ -740,7 +740,7 @@ TEST_CASE(("Test SP to PKB <line, RHS patterns>, <line, LHS var>")) {
         { {1, {"(x)", "(1)", "((x)+(1))"}},
           {2, {"(x)", "(y)", "(1)", "(((y)+(x))+(1))", "((y)+(x))"}},
           {4, {"(y)", "(x)", "(1)", "(((y)+(x))+(1))", "((y)+(x))"}} });
-    REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+    REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
 }
 
 TEST_CASE(("Test SP read")) {
@@ -756,8 +756,8 @@ TEST_CASE(("Test SP read")) {
              {3, {"(y)", "(x)", "(1)", "(((y)+(x))+(1))", "((y)+(x))"}}});
     std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
             {{1, "a"}, {2, "y"}, {3, "y"}});
-    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getAssignLinePartialRHSPatternMap();
-    std::unordered_map<int, std::string> res2 = sourceProcessor.getUsesLineLHSMap();
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap();
+    std::unordered_map<int, std::string> res2 = sourceProcessor.getVisitor().getUsesLineLHSMap();
     REQUIRE(res == assignLinePartialRHSPatternMap);
     REQUIRE(res2 == usesLineLHSMap);
 }
@@ -773,7 +773,7 @@ TEST_CASE(("Test SP to PKB LineUsesVar")) {
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
         std::unordered_map<int, std::unordered_set<std::string>>(
             {{1, {"x"}}, {2, {"x", "y"}}, {3, {"x"}}});
-    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getUsesLineRHSVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getVisitor().getUsesLineRHSVarMap();
     REQUIRE(res == usesLineRHSVarMap);
 }
 
@@ -795,11 +795,11 @@ TEST_CASE(("Test SP storing of Uses: Print")) {
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
       std::unordered_set<std::string>>(
           {{1, {"x"}}, {2, {"x", "y"}}, {3, {"k"}}, {4, {"x", "y"}}, {5, {"kay"}}});
-  REQUIRE(sourceProcessor.getVariables() == varSet);
-  REQUIRE(sourceProcessor.getConstants() == constSet);
-  REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-  REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+  REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+  REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
+  REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
@@ -820,13 +820,13 @@ TEST_CASE(("Test Uses: SP Assignment statement with all operators")) {
   std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap = std::unordered_map<int,
        std::unordered_set<std::string>>({{1, {"x", "y"}}, {2, {"five", "var"}}});
 
-  std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getAssignLinePartialRHSPatternMap();
+  std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap();
 
-  REQUIRE(sourceProcessor.getVariables() == varSet);
-  REQUIRE(sourceProcessor.getConstants() == constSet);
-  REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
-  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-  REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+  REQUIRE(sourceProcessor.getVisitor().getVariables() == varSet);
+  REQUIRE(sourceProcessor.getVisitor().getConstants() == constSet);
+  REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == assignLinePartialRHSPatternMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 
 TEST_CASE(("Test Uses: SP Assignment statement full RHS pattern")) {
@@ -841,8 +841,8 @@ TEST_CASE(("Test Uses: SP Assignment statement full RHS pattern")) {
         {1, "(((((x)+(1))*(y))/(5))+(1))"},
         {2, "((five)/((9)-(var)))"},
         {3, "((p)*(p))"}});
-  std::unordered_map<int, std::string> fullRHSMap2 = sourceProcessor.getAssignLineFullRHSMap();
-  REQUIRE(sourceProcessor.getAssignLineFullRHSMap() == fullRHSMap);
+  std::unordered_map<int, std::string> fullRHSMap2 = sourceProcessor.getVisitor().getAssignLineFullRHSMap();
+  REQUIRE(sourceProcessor.getVisitor().getAssignLineFullRHSMap() == fullRHSMap);
 }
 
 TEST_CASE(("Test Uses: SP Assignment statement partial RHS pattern")) {
@@ -872,9 +872,9 @@ TEST_CASE(("Test Uses: SP Assignment statement partial RHS pattern")) {
         {5, {"(p)", "((p)*(p))"}},
         {6, {"(y)", "(1)", "(z)", "((1)+(z))", "((y)+((1)+(z)))"}}
       });
-  std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getAssignLinePartialRHSPatternMap();
+  std::unordered_map<int, std::unordered_set<std::string>> res = sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap();
 
-  REQUIRE(sourceProcessor.getAssignLinePartialRHSPatternMap() == partialRHSMap);
+  REQUIRE(sourceProcessor.getVisitor().getAssignLinePartialRHSPatternMap() == partialRHSMap);
 }
 
 TEST_CASE(("Test SP Statement type storage")) {
@@ -891,7 +891,7 @@ TEST_CASE(("Test SP Statement type storage")) {
        {3, StmtEntity::kRead},
        {4, StmtEntity::kPrint},
        {5, StmtEntity::kAssign}});
-  REQUIRE(sourceProcessor.getStatementTypesMap() == statementTypesMap);
+  REQUIRE(sourceProcessor.getVisitor().getStatementTypesMap() == statementTypesMap);
 }
 
 
@@ -907,8 +907,8 @@ TEST_CASE(("Test SP Modifies storage")) {
       {{2, "x"},
          {3, "k"},
          {4, "a"}});
-  std::unordered_map<int, std::string> modifiesMap2 =sourceProcessor.getModifiesMap();
-  REQUIRE(sourceProcessor.getModifiesMap() == modifiesMap);
+  std::unordered_map<int, std::string> modifiesMap2 =sourceProcessor.getVisitor().getModifiesMap();
+  REQUIRE(sourceProcessor.getVisitor().getModifiesMap() == modifiesMap);
 }
 
 TEST_CASE(("Test SP Procedures storage")) {
@@ -919,7 +919,7 @@ TEST_CASE(("Test SP Procedures storage")) {
       "procedure p { if (i != 0) then { x = x + 1 + r; }} procedure k { read r; } procedure kay { print k; a = w; }";
   sourceProcessor.processSource(simpleProgram);
   std::set<std::string> procedures = std::set<std::string>({"p","k","kay"});
-  REQUIRE(sourceProcessor.getProcedureLabels() == procedures);
+  REQUIRE(sourceProcessor.getVisitor().getProcedureLabels() == procedures);
 }
 
 //TEST_CASE(("Test SP valid SIMPLE - keywords as names")) {
@@ -968,7 +968,7 @@ TEST_CASE(("Test SP: CFG storage")) {
   sourceProcessor.processSource(simpleProgram);
 
   // check root name in map
-  std::shared_ptr<CfgNode> rootSecond = cfg::getCfgNodeHashmap().at("Second");
+  std::shared_ptr<cfg_node> rootSecond = cfg::getCfgNodeHashmap().at("Second");
   // check 12
   REQUIRE(rootSecond->getStmtNumberSet() == std::set<int>({1, 2}));
   REQUIRE(rootSecond->getChildren().size() == 1);
@@ -1024,7 +1024,7 @@ TEST_CASE(("Test SP: CFG storage")) {
 
   // PROCEDURE THIRD CHECK
   // check root name in map
-  std::shared_ptr<CfgNode> rootThird = cfg::getCfgNodeHashmap().at("Third");
+  std::shared_ptr<cfg_node> rootThird = cfg::getCfgNodeHashmap().at("Third");
   // check 13, 14, 15
   REQUIRE(rootThird->getStmtNumberSet() == std::set<int>({13, 14, 15}));
   REQUIRE(rootThird->getChildren().size() == 1);
@@ -1299,10 +1299,10 @@ TEST_CASE(("Test SP Control Variable storage")) {
   std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
       { {6, "g"}, {8, "i"}, {11, "m"}, {15, "r"}, {17, "u"}, {22, "bb"}, {26, "hh"}, {29, "mm"}, {32, "a"}, {33, "rr"} });
 
-  std::unordered_map<int, std::string> usesLineLHSMap2 = sourceProcessor.getUsesLineLHSMap();
+  std::unordered_map<int, std::string> usesLineLHSMap2 = sourceProcessor.getVisitor().getUsesLineLHSMap();
 
-  std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getWhileControlVarMap();
-  std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getIfControlVarMap();
+  std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getVisitor().getWhileControlVarMap();
+  std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getVisitor().getIfControlVarMap();
   std::unordered_map<int, std::unordered_set<std::string>> whileMaperes =
       std::unordered_map<int, std::unordered_set<std::string>>({
         {3, {"c", "d"}}, {18, {"w", "x"}},{27, {"jj", "kk"}}, {31, {"pp", "qq"}}
@@ -1319,10 +1319,10 @@ TEST_CASE(("Test SP Control Variable storage")) {
                                          {22, {"cc"}}, {24, {"ee", "ff"}}, {25, {"gg"}}, {26, {"ii"}},
                                          {27, {"jj", "kk"}}, {28, {"ll"}}, {29, {"nn"}}, {30, {"oo"}},
                                          {31, {"pp", "qq"}}, {32, {"b"}}, {33, {"ss"}} });
-  REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-  REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
-  REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
-  REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+  REQUIRE(sourceProcessor.getVisitor().getWhileControlVarMap() == whileMaperes);
+  REQUIRE(sourceProcessor.getVisitor().getIfControlVarMap() == ifMapers);
+  REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 TEST_CASE("Test complicated conditionals") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();
@@ -1346,8 +1346,8 @@ TEST_CASE("Test complicated conditionals") {
     std::unordered_map<int, std::string> usesLineLHSMap = std::unordered_map<int, std::string>(
         { {2, "a"}, {4, "else"} });
 
-    std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getWhileControlVarMap();
-    std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getIfControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> whileMap = sourceProcessor.getVisitor().getWhileControlVarMap();
+    std::unordered_map<int, std::unordered_set<std::string>> ifMap = sourceProcessor.getVisitor().getIfControlVarMap();
     std::unordered_map<int, std::unordered_set<std::string>> whileMaperes =
         std::unordered_map<int, std::unordered_set<std::string>>({{{1,{"a", "b", "c", "else", "y", "d"}}}});
     std::unordered_map<int, std::unordered_set<std::string>> ifMapers =
@@ -1355,10 +1355,10 @@ TEST_CASE("Test complicated conditionals") {
     std::unordered_map<int, std::unordered_set<std::string>> usesLineRHSVarMap =
         std::unordered_map<int, std::unordered_set<std::string>>({{
             {1, {"a", "b", "c", "else", "y", "d"}}, {3, {"x", "y", "a", "b"}}, {4, {"else", "then"}}, {5, {"apple"}}}});
-    REQUIRE(sourceProcessor.getUsesLineLHSMap() == usesLineLHSMap);
-    REQUIRE(sourceProcessor.getWhileControlVarMap() == whileMaperes);
-    REQUIRE(sourceProcessor.getIfControlVarMap() == ifMapers);
-    REQUIRE(sourceProcessor.getUsesLineRHSVarMap() == usesLineRHSVarMap);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineLHSMap() == usesLineLHSMap);
+    REQUIRE(sourceProcessor.getVisitor().getWhileControlVarMap() == whileMaperes);
+    REQUIRE(sourceProcessor.getVisitor().getIfControlVarMap() == ifMapers);
+    REQUIRE(sourceProcessor.getVisitor().getUsesLineRHSVarMap() == usesLineRHSVarMap);
 }
 TEST_CASE("Test valid complicated conditionals for bug fix") {
     std::unique_ptr<PKB> pkb_ptr = std::make_unique<PKB>();

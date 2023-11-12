@@ -1,6 +1,6 @@
 #include "SP/source_processor.h"
 
-SourceProcessor::SourceProcessor(WriteFacade* writeFacadePtr) :
+SourceProcessor::SourceProcessor(write_facade* writeFacadePtr) :
     writeFacade(writeFacadePtr), simpleParser(&this->visitor) {}
 
 ASTVisitor SourceProcessor::getVisitor() const {
