@@ -22,7 +22,6 @@ void parse(SourceProcessor& sp, std::string filename) {
   std::string input;
   std::string line;
   while (std::getline(file, line)) {
-    /*    std::cout << "TEST" << std::endl;*/
     input += line;
   }
   sp.processSource(input);
