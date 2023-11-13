@@ -38,3 +38,19 @@ while w1; variable v1;
 Select <w1.stmt#, v1> such that Parent(_, w1) and Uses(w1, v1) with v1.varName="rose"
 46 rose, 3 rose
 5000
+9 - Timeout testing
+stmt s1, s2, s3, s4; variable v1;
+Select s1 such that Modifies(s1, "a") and Affects(s1, s2) and Uses(s2, v1) and Uses(s3, v1) with s3.stmt# = 100
+none
+5000
+10 - Affects
+stmt s1, s2; variable v;
+Select s1 such that Affects(s1, s2)
+14,34,35,37,38,39,44,49,50,6
+5000
+11 - Timeout testing 2
+procedure p1, p2, p3; stmt s1, s2, s3; variable v;
+Select <p1, p3, s1> such that Modifies(p1, "a") and Uses(p2, "bandung") and Uses(p2, "y") and Calls(p1, p2) and Parent(2, 3) and Affects(s1, s2) and Affects(s1, s3) and Calls (p2, p3) and Uses(p2, "ljfalsdfsdfdsfs") and Next*(7, 6) and Next*(8, 6) and Next*(9, 6) and Affects(s1, s1) and Affects(s3, s1) and Uses(p1, "vallelonga")
+none
+5000
+

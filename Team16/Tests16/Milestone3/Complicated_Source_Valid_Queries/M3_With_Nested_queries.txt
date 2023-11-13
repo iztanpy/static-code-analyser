@@ -1,0 +1,68 @@
+1 - Most Basic With clause
+procedure p;
+Select p with p.procName = "p1"
+p1
+5000
+2 - Basic With Clause procedure
+procedure p; variable v;
+Select p such that Modifies(p, v) with "a" = v.varName
+p1
+5000
+3 - Basic With Clause procedure 2
+procedure p; variable v;
+Select p such that Modifies(p, v) with v.varName = "a"
+p1
+5000
+4 - Basic With Clause which is not there
+procedure p; variable v;
+Select p such that Modifies(p, v) with "b" = v.varName
+none
+5000
+5 - Basic With Clause which is not there 2
+procedure p; variable v;
+Select p such that Modifies(p, v) with v.varName = "b"
+none
+5000
+6 - Combine 2 With clauses
+procedure p; variable v;
+Select p such that Modifies(p, v) with v.varName = "a" with p.procName = "p1"
+p1
+5000
+7 - Combine 2 With clauses with empty set
+procedure p; variable v;
+Select p such that Modifies(p, v) with v.varName = "a" with p.procName = "p2"
+none
+5000
+8 - Combine 2 With clauses with empty set
+procedure p; variable v;
+Select p such that Modifies(p, v) with v.varName = "b" with p.procName = "p1"
+none
+5000
+9 - Select read statement
+read r;
+Select r such that Modifies(r, "r") with r.stmt# = 9
+9
+5000
+10 - Select read statement
+read r;
+Select r such that Modifies(r, "p") with r.stmt# = 9
+none
+5000
+11 - Select read statement
+read r;
+Select r such that Modifies(r, "r") with 9 = r.stmt#
+9
+5000
+12 - Select assign statement
+assign a;
+Select a such that Affects(1, a) with a.stmt# = 6
+6
+5000
+13 - Test and clause
+stmt s1, s2; variable v;
+Select <s1, s2> such that Uses(s1, v) with s2.stmt# = s1.stmt#
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 7 7
+5000
+
+
+
