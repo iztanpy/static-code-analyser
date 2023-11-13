@@ -1,0 +1,15 @@
+procedure p1 {
+	a = b + c;
+	call p2;
+	while (! ((a > b)&&( (a == b) || ((a != b) && ((a < b) || ((a <= b) && (a>= (0+(0-(0*(0/(0%(((0))))))))))))))) {
+		a = 2 + b;
+		x = a + 2;
+	}
+	x = a + 3;
+}
+
+procedure p2 {
+	p = q + r;
+	r = 4 + 3;
+	read r;
+}
